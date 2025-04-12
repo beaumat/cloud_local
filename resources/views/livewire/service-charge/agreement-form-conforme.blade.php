@@ -1,6 +1,9 @@
 <div>
     <div class="form-group">
         PHIC INCHARGE is <b class="text-primary">{{ $PHIC_INCHARGE_NAME }}</b>
+
+
+        
     </div>
     <div class="form-group">
         <livewire:select-option name="HD_FACILITY_REP_ID" titleName="HD Facility Representative" :options="$empList"
