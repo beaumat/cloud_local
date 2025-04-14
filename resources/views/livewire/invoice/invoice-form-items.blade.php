@@ -44,6 +44,7 @@
                         @if ($editItemId === $list->ID)
                             <select wire:model='lineUnitId' name="lineUnitId"
                                 class="text-sm form-control form-control-sm ">
+                                <option value="0"></option>
                                 @foreach ($editUnitList as $listitem)
                                     <option value="{{ $listitem->ID }}">{{ $listitem->SYMBOL }}</option>
                                 @endforeach
@@ -56,8 +57,7 @@
                     <td class="text-right">
                         @if ($editItemId === $list->ID)
                             <input type="number" step="0.01" class="form-control form-control-sm text-right"
-                                name="lineRate" wire:model.live.debounce.1000ms='lineRate' wire:blur="getEditAmount"
-                             />
+                                name="lineRate" wire:model.live.debounce.1000ms='lineRate' wire:blur="getEditAmount" />
                         @else
                             {{ number_format($list->RATE, 2) }}
                         @endif
@@ -86,8 +86,7 @@
                                     <i class="fas fa-check" aria-hidden="true"></i>
                                 </button>
                                 <button title="Cancel" id="cancelbtn" href="#" wire:click="cancelItem()"
-                                    class="btn btn-warning  btn-xs"> <i class="fas fa-ban"
-                                        aria-hidden="true"></i>
+                                    class="btn btn-warning  btn-xs"> <i class="fas fa-ban" aria-hidden="true"></i>
                                 </button>
                             @else
                                 <button title="Edit" id="editbtn"
@@ -167,6 +166,7 @@
                             <select wire:model='UNIT_ID' name="UNIT_ID"
                                 class="text-sm form-control form-control-sm ,'asc'"
                                 @if ($ITEM_ID == 0) readonly @endif>
+                                <option value="0"></option>
                                 @foreach ($unitList as $list)
                                     <option value="{{ $list->ID }}">{{ $list->SYMBOL }}</option>
                                 @endforeach
