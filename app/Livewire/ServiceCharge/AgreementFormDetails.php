@@ -45,7 +45,9 @@ class AgreementFormDetails extends Component
             // Update
             $this->phicAgreementFormServices->updateDetails($this->HEMO_ID, $PHIC_AFT_ID, $STATUS);
         } else {
+            
             if ($STATUS) {
+
                 $this->phicAgreementFormServices->storeDetails($this->HEMO_ID, $PHIC_AFT_ID, $STATUS);
             }
             // INSERT
