@@ -689,7 +689,7 @@ class BillingServices
             ->where('bill_items.BILL_ID', $BILL_ID)
             ->get();
 
-    
+
         return $result;
     }
     public function getBillTaxJournal(int $BILL_ID)
@@ -813,6 +813,28 @@ class BillingServices
             Bill::where('ID', '=', $BILL_ID)
                 ->update(['DATE' => $NEW_DATE]);
         }
+
+    }
+    public function UpdateAmount(int $BILL_ID, float $AMOUNT)
+    {
+        Bill::where('ID', '=', $BILL_ID)
+            ->update(['AMOUNT' => $AMOUNT, 'BALANCE_DUE' => $AMOUNT, 'IS_XERO' => true]);
+
+
+    }
+    public function CallBillHeader($CODE, $DATE, $LOCATION_ID): int
+    {
+        $result = Bill::query()->select(['ID'])
+            ->where('CODE', '=', $CODE)
+            ->where('DATE', '=', $DATE)
+            ->where('LOCATION_ID', '=', $LOCATION_ID)
+            ->first();
+
+        if ($result) {
+            return $result->ID ?? 0;
+        }
+
+        return 0;
 
     }
 }

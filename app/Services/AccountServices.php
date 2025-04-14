@@ -71,7 +71,7 @@ class AccountServices
     }
     public function getIncome()
     {
-        return Accounts::whereIn('TYPE', ['7','8','10', '13'])
+        return Accounts::whereIn('TYPE', ['7', '8', '10', '13'])
             ->where('INACTIVE', '=', '0')
             ->orderBy('NAME', 'asc')
             ->get();
@@ -224,5 +224,15 @@ class AccountServices
             ->get();
 
         return $result;
+    }
+    public function getAccountNameIntoId(string $Name): int
+    {
+        $result = Accounts::query()->select('account.ID')->where('NAME', '=', $Name)->first();
+
+        if ($result) {
+            return (int) $result->ID ?? 0;
+        }
+        return 0;
+
     }
 }
