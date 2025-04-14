@@ -85,7 +85,7 @@ class XeroImportForm extends Component
                 }
 
                 $CONTACT_ID = $this->xeroDataServices->getCONTACT_NAME_VIA_DESCRIPTION($list->DESCRIPTION);
-                $this->newEntry(
+                $result = (bool) $this->newEntry(
                     $docTypeId,
                     $accountId,
                     $list->REFERENCE,
@@ -95,6 +95,10 @@ class XeroImportForm extends Component
                     $list->CREDIT,
                     $list->DESCRIPTION
                 );
+
+                if ($result) {
+
+                }
 
             }
             DB::commit();
