@@ -62,7 +62,7 @@
                             <div class="text-lg">
                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 This is to certify that the said patient has
-                                been diagnosed CHRONIC KIDNEY DISEASE STAGE 5 SECONDARY TO {{ $FINAL_DIAGNOSIS }}, schedule thrice a
+                                been diagnosed CHRONIC KIDNEY DISEASE STAGE 5 SECONDARY TO {{ $FINAL_DIAGNOSIS }}, scheduled thrice a
                                 week at <b>{{ $BRANCH_NAME }}</b> and has
                                 <b>{{ $TOTAL_DAYS }}</b> days for the year {{ $YEAR }}.
                             </div>
