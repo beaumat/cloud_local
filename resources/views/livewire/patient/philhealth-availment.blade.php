@@ -62,7 +62,7 @@
                             <div class="text-lg">
                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 This is to certify that the said patient has
-                                been diagnosed End Stage Renal Disease sec to {{ $FINAL_DIAGNOSIS }}, schedule trice a
+                                been diagnosed {{ $FINAL_DIAGNOSIS }}, schedule trice a
                                 week at <b>{{ $BRANCH_NAME }}</b> and has
                                 <b>{{ $TOTAL_DAYS }}</b> days for the year {{ $YEAR }}.
                             </div>
