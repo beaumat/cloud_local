@@ -85,6 +85,7 @@ class XeroImportForm extends Component
                 }
 
                 $CONTACT_ID = $this->xeroDataServices->getCONTACT_NAME_VIA_DESCRIPTION($list->DESCRIPTION);
+                
                 $result = (bool) $this->newEntry(
                     $docTypeId,
                     $accountId,

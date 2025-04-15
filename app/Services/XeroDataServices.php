@@ -92,9 +92,11 @@ class XeroDataServices
 
         return $docType;
     }
-    public function getCONTACT_NAME_VIA_DESCRIPTION($DESCRIPTION): int
+    public function getCONTACT_NAME_VIA_DESCRIPTION(string $DESCRIPTION): string
     {
-        return 0;
+        $result = str_replace("Payment: ", "", $DESCRIPTION);
+    
+        return $result;
     }
 
 }
