@@ -38,37 +38,27 @@
                                                     @endforeach
                                                 </select>
                                             </div>
-                                            <button class="btn btn-danger btn-xs mt-2"
-                                                wire:click='generate()'>Generate</button>
+                                            <div wire:loading.delay>
+                                                <span class='spinner'></span>
+                                            </div>
+                                            <div>
+
+                                            </div>
+                                            <button class="btn btn-danger btn-xs mt-2" wire:click='generate()'
+                                                wire:loading.attr='hidden'>2024</button>
+                                            <button class="btn btn-secondary btn-xs mt-2"
+                                                wire:click='generateNoReference()'
+                                                wire:loading.attr='hidden'>2023</button>
+
                                         </div>
                                         <div class="col-md-3">
 
                                         </div>
                                         <div class="col-md-3">
-                                            <div class="mt-0">
-                                                <label class="text-sm">Year:</label>
-                                                <select name="location" wire:model.live='year'
-                                                    class="form-control form-control-sm">
-                                                    <option value="0"></option>
-                                                    @foreach ($yearList as $item)
-                                                        <option value="{{ $item['ID'] }}"> {{ $item['NAME'] }}
-                                                        </option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
+
                                         </div>
                                         <div class="col-md-3">
-                                            <div class="mt-0">
-                                                <label class="text-sm">Month:</label>
-                                                <select name="location" wire:model.live='month'
-                                                    class="form-control form-control-sm">
-                                                    <option value="0"></option>
-                                                    @foreach ($monthList as $item)
-                                                        <option value="{{ $item['ID'] }}"> {{ $item['NAME'] }}
-                                                        </option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
+
                                         </div>
                                     </div>
                                 </div>
@@ -89,6 +79,7 @@
                                                     <th class="text-center ">BALANCE</th>
                                                     <th class="text-center ">GROSS</th>
                                                     <th class="text-center ">TAX</th>
+                                                    <th></th>
                                                 </tr>
                                             </thead>
 
@@ -106,6 +97,14 @@
                                                         <td>{{ $list->BALANCE }}</td>
                                                         <td>{{ $list->GROSS }}</td>
                                                         <td>{{ $list->TAX }}</td>
+                                                        @if ($list->REFERENCE)
+                                                            <td><button class="btn btn-primary btn-xs"
+                                                                    wire:click="onMake('{{ $list->DATE }}','{{ $list->SOURCE_TYPE }}','{{ $list->REFERENCE }}')">Create</button>
+                                                            </td>
+                                                        @else
+                                                            <td><button class="btn btn-secondary btn-xs">Create</button>
+                                                        @endif
+
                                                     </tr>
                                                 @endforeach
                                             </tbody>
@@ -120,4 +119,6 @@
             </div>
         </div>
     </section>
+
+    @livewire('import.xero-import-modal')
 </div>

@@ -235,4 +235,11 @@ class AccountServices
         return 0;
 
     }
+    public  static function getAccountNameExist(string $Name): bool
+    {
+        return (bool) Accounts::where('NAME', '=', $Name)->exists();
+
+
+
+    }
 }

@@ -26,18 +26,11 @@ class XeroImportForm extends Component
 
     public $dataList = [];
     public $locationList = [];
-    public $year;
-    public $month;
-
-    public $yearList = [];
-    public $monthList = [];
 
     public $locationid = 0;
     private $locationServices;
     private $xeroDataServices;
     private $dateServices;
-
-
     private $billingServices;
     private $accountServices;
     public function boot(LocationServices $locationServices, XeroDataServices $xeroDataServices, DateServices $dateServices, BillingServices $billingServices, AccountServices $accountServices)
@@ -48,66 +41,42 @@ class XeroImportForm extends Component
         $this->dateServices = $dateServices;
         $this->billingServices = $billingServices;
     }
+    public function onMake(string $DATE, string $SOURCE_TYPE, string $REFERENCE) {
 
+        $dataSend = [
+            'DATE' => $DATE,
+            'SOURCE_TYPE' => $SOURCE_TYPE,
+            'REFERENCE' => $REFERENCE,
+            'locationid' => $this->locationid
+        ];
+        
+
+        $this->dispatch('dataSend', $dataSend);
+    }   
     public function generate()
     {
-
+        $this->dataList = [];
         $this->validate([
             'locationid' => 'required|exists:location,id'
         ], [], [
             'locationid' => 'Location'
         ]);
 
-        $this->dataList = $this->xeroDataServices->viewData($this->locationid, $this->year, $this->month);
+        $this->dataList = $this->xeroDataServices->viewData($this->locationid);
+    }
+    public function generateNoReference() {
+        $this->dataList = [];
+        $this->validate([
+            'locationid' => 'required|exists:location,id'
+        ], [], [
+            'locationid' => 'Location'
+        ]);
+
+        $this->dataList = $this->xeroDataServices->viewNoRefrence($this->locationid);
     }
     public function makeEntry()
     {
 
-    }
-    public function GetReferenceEntry(string $REF)
-    {
-        $data = $this->xeroDataServices->callReference($REF);
-        DB::beginTransaction();
-        try {
-            foreach ($data as $list) {
-                $docTypeId = (int) $this->xeroDataServices->DocumentType($list->SOURCE_TYPE);
-                $accountId = (int) $this->accountServices->getAccountNameIntoId($list->ACCOUNT);
-
-                if ($docTypeId == 0) {
-                    DB::rollBack();
-                    session()->flash('error', 'Error entry: document ID not found');
-                }
-
-
-                if ($accountId == 0) {
-                    DB::rollBack();
-                    session()->flash('error', 'Error entry: Account ID not found');
-                }
-
-                $CONTACT_ID = $this->xeroDataServices->getCONTACT_NAME_VIA_DESCRIPTION($list->DESCRIPTION);
-                
-                $result = (bool) $this->newEntry(
-                    $docTypeId,
-                    $accountId,
-                    $list->REFERENCE,
-                    $list->DATE,
-                    $CONTACT_ID,
-                    $list->DEBIT,
-                    $list->CREDIT,
-                    $list->DESCRIPTION
-                );
-
-                if ($result) {
-
-                }
-
-            }
-            DB::commit();
-        } catch (\Throwable $th) {
-            DB::rollBack();
-            session()->flash('error', 'Error entry:' . $th->getMessage());
-
-        }
     }
 
     public function newEntry(int $doctTypeId, int $accountId, string $CODE, $DATE, int $CONTACT_ID, float $DEBIT, float $CREDIT, string $DESCRIPTION): bool
@@ -158,11 +127,7 @@ class XeroImportForm extends Component
     public function mount()
     {
         $this->locationList = $this->locationServices->getList();
-        $this->yearList = $this->dateServices->YearList();
-        $this->monthList = $this->dateServices->MonthList();
 
-        $this->year = $this->dateServices->NowYear();
-        $this->month = $this->dateServices->NowMonth();
     }
     public function render()
     {

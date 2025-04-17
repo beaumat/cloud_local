@@ -12,23 +12,31 @@ class XeroDataServices
 
     }
 
-
-
-    public function viewData(int $locationId, int $year = 0, int $month = 0)
+    public function viewData(int $locationId)
     {
 
-        $result = XeroData::where('LOCATION_ID', '=', $locationId)
+
+        $result = XeroData::query()
+            ->where('LOCATION_ID', '=', $locationId)
             ->where('POSTED', '=', 0)
-            ->when($year > 0, function ($query) use (&$year) {
-                $query->whereYear('DATE', $year);
-            })
-            ->when($month > 0, function ($query) use (&$month) {
-                $query->whereMonth('DATE', $month);
-            })
+            ->whereNotNull('REFERENCE')
+            ->orderBy('DATE')
+            ->orderBy('REFERENCE')
+            ->orderBy('SOURCE_TYPE')
+            ->limit(1000)
             ->get();
 
         return $result;
 
+    }
+    public function viewNoRefrence(int $locationId)
+    {
+        $result = XeroData::where('LOCATION_ID', '=', $locationId)
+            ->where('POSTED', '=', 0)
+            ->whereNull('REFERENCE')
+            ->get();
+
+        return $result;
     }
     public function viewDataPerGroupReference(int $locationId, int $year = 0, int $month = 0)
     {
@@ -45,45 +53,62 @@ class XeroDataServices
 
         return $result;
     }
-    public function callReference(string $ref)
+    public function callReference(string $REFERENCE, string $date, string $SOURCE_TYPE)
     {
         $result = XeroData::query()
-            ->where('REFERENCE', '=', $ref)
+            ->where('REFERENCE', '=', $REFERENCE)
+            ->where('DATE', '=', $date)
+            ->where('SOURCE_TYPE', '=', $SOURCE_TYPE)
             ->where('POSTED', '=', 0)
-            ->orderBy('DATE')
-            ->orderBy('SOURCE_TYPE')
-            ->orderBy('REFERENCE')
             ->get();
 
         return $result;
     }
-    public function DocumentType(string $SOURCE_TYPE): int
+    public function callReferenceFirst(string $REFERENCE, string $date, string $SOURCE_TYPE)
     {
-        $docType = 0;
+        $result = XeroData::query()
+            ->where('REFERENCE', '=', $REFERENCE)
+            ->where('DATE', '=', $date)
+            ->where('SOURCE_TYPE', '=', $SOURCE_TYPE)
+            ->where('POSTED', '=', 0)
+            ->first();
+
+        return $result;
+    }
+    public function DocumentType(string $SOURCE_TYPE): array
+    {   
+
+       
+        $docType = ['ID' => 0, 'NAME' => ''];
         switch ($SOURCE_TYPE) {
             case 'Payable Invoice':
-                $docType = 1; //bill
+                $docType = ['ID' => 1, 'NAME' => 'BILL']; //bill
                 break;
             case 'Payable Payment':
-                $docType = 2; // bill payment
+                $docType = ['ID' => 2, 'NAME' => 'BILL PAYMENT']; // bill payment
                 break;
             case 'Receivable Invoice':
-                $docType = 10; // invoice
+                $docType = ['ID' => 10, 'NAME' => 'INVOICE']; // invoice
+
                 break;
             case 'Receivable Payment':
-                $docType = 11; //payment;
+                $docType = ['ID' => 11, 'NAME' => 'PAYMENT']; //payment;
                 break;
             case 'Manual Journal':
-                $docType = 23; //General Journal;
+                $docType = ['ID' => 23, 'NAME' => 'GENERAL JOURNAL']; //General Journal;
                 break;
             case 'Bank Transfer':
-                $docType = 26; //Fund Transfer;
+                $docType = ['ID' => 26,'NAME' => 'Fund Transfer']; //Fund Transfer;
+            
+
                 break;
             case 'Receive Money':
-                $docType = 26; //Fund Transfer;
+                $docType = ['ID' => 26,'NAME' => 'Fund Transfer']; //Fund Transfer;
+                
+
                 break;
             case 'Spend Money':
-                $docType = 26; //Fund Transfer;
+                $docType = ['ID' => 26,'NAME' => 'Fund Transfer']; //Fund Transfer;
                 break;
             default:
                 # code...
@@ -92,11 +117,6 @@ class XeroDataServices
 
         return $docType;
     }
-    public function getCONTACT_NAME_VIA_DESCRIPTION(string $DESCRIPTION): string
-    {
-        $result = str_replace("Payment: ", "", $DESCRIPTION);
-    
-        return $result;
-    }
+
 
 }
