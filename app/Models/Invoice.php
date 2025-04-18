@@ -50,7 +50,8 @@ class Invoice extends Model
         'CUSTOM_FIELD3',
         'CUSTOM_FIELD4',
         'CUSTOM_FIELD5',
-        'TRANSACTION_REF_ID'
+        'TRANSACTION_REF_ID',
+        'IS_XERO'
     ];
 
 

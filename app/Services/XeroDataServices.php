@@ -7,11 +7,6 @@ use App\Models\XeroData;
 class XeroDataServices
 {
 
-    public function __construct()
-    {
-
-    }
-
     public function viewData(int $locationId)
     {
 
@@ -99,13 +94,9 @@ class XeroDataServices
                 break;
             case 'Bank Transfer':
                 $docType = ['ID' => 26,'NAME' => 'Fund Transfer']; //Fund Transfer;
-            
-
                 break;
             case 'Receive Money':
                 $docType = ['ID' => 26,'NAME' => 'Fund Transfer']; //Fund Transfer;
-                
-
                 break;
             case 'Spend Money':
                 $docType = ['ID' => 26,'NAME' => 'Fund Transfer']; //Fund Transfer;
@@ -118,5 +109,17 @@ class XeroDataServices
         return $docType;
     }
 
+
+    public function updatePosted(int $ID, int $OBJECT_ID, int $OBJECT_TYPE ) {
+
+        $result = XeroData::where('ID', $ID)
+            ->update([
+                'POSTED' => 1,
+                'OBJECT_ID' => $OBJECT_ID,
+                'OBJECT_TYPE' => $OBJECT_TYPE
+            ]);
+
+        return $result;
+    }   
 
 }

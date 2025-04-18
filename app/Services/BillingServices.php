@@ -815,6 +815,20 @@ class BillingServices
         }
 
     }
+    public function getBillByXero(string $CODE)
+    {
+        $result = Bill::query()
+            ->select(['ID'])
+            ->where('CODE', '=', $CODE)
+            ->where('IS_XERO', '=', true)
+            ->first();
+
+        if ($result) {
+            return $result->ID ?? 0;
+        }
+
+        return 0;
+    }
     public function UpdateAmount(int $BILL_ID, float $AMOUNT)
     {
         Bill::where('ID', '=', $BILL_ID)
@@ -836,5 +850,22 @@ class BillingServices
 
         return 0;
 
+    }
+    public function isXero(int $BILL_ID): bool
+    {
+        $result = Bill::query()->select(['IS_XERO'])
+            ->where('ID', '=', $BILL_ID)
+            ->first();
+
+        if ($result) {
+            return (bool) $result->IS_XERO;
+        }
+
+        return false;
+    }
+    public function updateXero(int $BILL_ID, bool $IS_XERO)
+    {
+        Bill::where('ID', '=', $BILL_ID)
+            ->update(['IS_XERO' => $IS_XERO]);
     }
 }

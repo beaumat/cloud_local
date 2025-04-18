@@ -76,10 +76,10 @@
                                                     <th class="text-center ">REFERENCE</th>
                                                     <th class="text-center ">DEBIT</th>
                                                     <th class="text-center ">CREDIT</th>
-                                                    <th class="text-center ">BALANCE</th>
-                                                    <th class="text-center ">GROSS</th>
-                                                    <th class="text-center ">TAX</th>
-                                                    <th></th>
+                                                    <th class="text-center ">POSTED</th>
+                                                    <th class="text-center ">OBJECT_ID</th>
+                                                    <th class="text-center ">OBJECT_TYPE</th>
+                                                    <th>Action</th>
                                                 </tr>
                                             </thead>
 
@@ -94,9 +94,9 @@
                                                         <td>{{ $list->REFERENCE }}</td>
                                                         <td>{{ $list->DEBIT }}</td>
                                                         <td>{{ $list->CREDIT }}</td>
-                                                        <td>{{ $list->BALANCE }}</td>
-                                                        <td>{{ $list->GROSS }}</td>
-                                                        <td>{{ $list->TAX }}</td>
+                                                        <td>{{ $list->POSTED }}</td>
+                                                        <td>{{ $list->OBJECT_ID }}</td>
+                                                        <td>{{ $list->OBJECT_TYPE }}</td>
                                                         @if ($list->REFERENCE)
                                                             <td><button class="btn btn-primary btn-xs"
                                                                     wire:click="onMake('{{ $list->DATE }}','{{ $list->SOURCE_TYPE }}','{{ $list->REFERENCE }}')">Create</button>
@@ -118,7 +118,8 @@
 
             </div>
         </div>
-    </section>
 
-    @livewire('import.xero-import-modal')
+
+    </section>
+    @livewire('Import.XeroImportModal')
 </div>

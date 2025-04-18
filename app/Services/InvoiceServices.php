@@ -435,7 +435,7 @@ class InvoiceServices
                 ->get();
 
 
-
+                 
             $paymentApplied = (float) $this->GetPaymentApplied($ID);
             $creditApplied = (float) $this->GetCreditApplied($ID);
             $taxCredit = (float) $this->GetTaxCredit($ID);
@@ -753,6 +753,13 @@ class InvoiceServices
         return 0;
     }
 
+    public function updateXero(int $INVOICE_ID, bool $IS_XERO): void
+    {
+        Invoice::where('ID', '=', $INVOICE_ID)
+            ->update([
+                'IS_XERO' => $IS_XERO
+            ]);
+    }
 
 
 }

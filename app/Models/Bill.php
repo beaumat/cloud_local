@@ -40,7 +40,8 @@ class Bill extends Model
         'CUSTOM_FIELD5',
         'DATE_CONFIRM',
         'FILE_NAME',
-        'FILE_PATH'
+        'FILE_PATH',
+        'IS_XERO'
 
     ];
 }

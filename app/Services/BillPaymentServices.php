@@ -10,7 +10,7 @@ class BillPaymentServices
 {
     private int $CHECK_TYPE_ID = 1;
     public int $object_type_check = 57;
-    public int $object_type_check_bills  = 58;
+    public int $object_type_check_bills = 58;
 
     private $object;
     private $compute;
@@ -51,20 +51,20 @@ class BillPaymentServices
         $isLocRef = boolval($this->systemSettingServices->GetValue('IncRefNoByLocation'));
 
         Check::create([
-            'ID'                    => $ID,
-            'RECORDED_ON'           => $this->dateServices->Now(),
-            'CODE'                  => $CODE !== '' ? $CODE : $this->object->GetSequence($OBJECT_TYPE, $isLocRef ? $LOCATION_ID : null),
-            'DATE'                  => $DATE,
-            'TYPE'                  => $this->CHECK_TYPE_ID,
-            'BANK_ACCOUNT_ID'       => $BANK_ACCOUNT_ID,
-            'PAY_TO_ID'             => $PAY_TO_ID,
-            'LOCATION_ID'           => $LOCATION_ID,
-            'AMOUNT'                => $AMOUNT,
-            'NOTES'                 => $NOTES,
-            'PRINTED'               => false,
-            'STATUS'                => 0,
-            'STATUS_DATE'           => $this->dateServices->NowDate(),
-            'ACCOUNTS_PAYABLE_ID'   => $ACCOUNTS_PAYABLE_ID ?? null
+            'ID' => $ID,
+            'RECORDED_ON' => $this->dateServices->Now(),
+            'CODE' => $CODE !== '' ? $CODE : $this->object->GetSequence($OBJECT_TYPE, $isLocRef ? $LOCATION_ID : null),
+            'DATE' => $DATE,
+            'TYPE' => $this->CHECK_TYPE_ID,
+            'BANK_ACCOUNT_ID' => $BANK_ACCOUNT_ID,
+            'PAY_TO_ID' => $PAY_TO_ID,
+            'LOCATION_ID' => $LOCATION_ID,
+            'AMOUNT' => $AMOUNT,
+            'NOTES' => $NOTES,
+            'PRINTED' => false,
+            'STATUS' => 0,
+            'STATUS_DATE' => $this->dateServices->NowDate(),
+            'ACCOUNTS_PAYABLE_ID' => $ACCOUNTS_PAYABLE_ID ?? null
 
         ]);
 
@@ -74,8 +74,8 @@ class BillPaymentServices
     {
         Check::where('ID', $ID)
             ->update([
-                'STATUS'        => $STATUS,
-                'STATUS_DATE'   => $this->dateServices->NowDate()
+                'STATUS' => $STATUS,
+                'STATUS_DATE' => $this->dateServices->NowDate()
             ]);
     }
     public function UpdateAmount(int $ID, float $AMOUNT)
@@ -83,7 +83,7 @@ class BillPaymentServices
         Check::where('ID', $ID)
             ->where('TYPE', '=', $this->CHECK_TYPE_ID)
             ->update([
-                'AMOUNT'    => $AMOUNT
+                'AMOUNT' => $AMOUNT
             ]);
     }
     public function Update(
@@ -98,14 +98,14 @@ class BillPaymentServices
         Check::where('ID', '=', $ID)
             ->where('TYPE', '=', $this->CHECK_TYPE_ID)
             ->update([
-                'ID'                => $ID,
-                'CODE'              => $CODE,
-                'BANK_ACCOUNT_ID'   => $BANK_ACCOUNT_ID,
-                'PAY_TO_ID'         => $PAY_TO_ID,
-                'LOCATION_ID'       => $LOCATION_ID,
-                'AMOUNT'            => $AMOUNT,
-                'NOTES'             => $NOTES,
-                'PRINTED'           => false
+                'ID' => $ID,
+                'CODE' => $CODE,
+                'BANK_ACCOUNT_ID' => $BANK_ACCOUNT_ID,
+                'PAY_TO_ID' => $PAY_TO_ID,
+                'LOCATION_ID' => $LOCATION_ID,
+                'AMOUNT' => $AMOUNT,
+                'NOTES' => $NOTES,
+                'PRINTED' => false
             ]);
     }
     public function UpdateBillPaymentApplied(int $CHECK_ID): float
@@ -201,14 +201,14 @@ class BillPaymentServices
                 'philhealth.DATE_DISCHARGED',
                 DB::raw('(select count(*) from hemodialysis where hemodialysis.STATUS_ID = 2 and hemodialysis.CUSTOMER_ID = philhealth.CONTACT_ID and hemodialysis.DATE between philhealth.DATE_ADMITTED and philhealth.DATE_DISCHARGED) as NO_TREATMENT '),
                 DB::raw("(SELECT SUM(withholding_tax_bills.AMOUNT_WITHHELD) from withholding_tax_bills where withholding_tax_bills.BILL_ID = check_bills.BILL_ID) as TAX_AMOUNT")
-                ])
+            ])
             ->join('bill', 'bill.ID', '=', 'check_bills.BILL_ID')
             ->join('philhealth_prof_fee', 'philhealth_prof_fee.BILL_ID', '=', 'check_bills.BILL_ID')
             ->join('philhealth', 'philhealth.ID', '=', 'philhealth_prof_fee.PHIC_ID')
             ->join('contact', 'contact.ID', '=', 'philhealth.CONTACT_ID')
             ->where('check_bills.CHECK_ID', '=', $CHECK_ID)
             ->get();
-               
+
         return $result;
     }
     public function billPaymentBills(int $CHECK_ID): object
@@ -230,7 +230,7 @@ class BillPaymentServices
             ->where('check_bills.CHECK_ID', '=', $CHECK_ID)
             ->get();
 
-       
+
         return $result;
     }
     public function getTotalApplied(int $CHECK_ID): float
@@ -257,7 +257,7 @@ class BillPaymentServices
     }
     public function billPaymentBills_Get(int $ID, int $CHECK_ID, int $BILL_ID): object
     {
-        return  CheckBills::where('ID', $ID)
+        return CheckBills::where('ID', $ID)
             ->where('CHECK_ID', $CHECK_ID)
             ->where('BILL_ID', $BILL_ID)
             ->first();
@@ -271,16 +271,18 @@ class BillPaymentServices
         int $ACCOUNTS_PAYABLE_ID
     ) {
 
-        $ID = $this->object->ObjectNextID('CHECK_BILLS');
+        $ID = (int) $this->object->ObjectNextID('CHECK_BILLS');
         CheckBills::create([
-            'ID'                    => $ID,
-            'CHECK_ID'              => $CHECK_ID,
-            'BILL_ID'               => $BILL_ID,
-            'DISCOUNT'              => $DISCOUNT,
-            'AMOUNT_PAID'           => $AMOUNT_PAID,
-            'DISCOUNT_ACCOUNT_ID'   => $DISCOUNT_ACCOUNT_ID > 0 ? $DISCOUNT_ACCOUNT_ID : null,
-            'ACCOUNTS_PAYABLE_ID'   => $ACCOUNTS_PAYABLE_ID > 0 ? $ACCOUNTS_PAYABLE_ID : null
+            'ID' => $ID,
+            'CHECK_ID' => $CHECK_ID,
+            'BILL_ID' => $BILL_ID,
+            'DISCOUNT' => $DISCOUNT,
+            'AMOUNT_PAID' => $AMOUNT_PAID,
+            'DISCOUNT_ACCOUNT_ID' => $DISCOUNT_ACCOUNT_ID > 0 ? $DISCOUNT_ACCOUNT_ID : null,
+            'ACCOUNTS_PAYABLE_ID' => $ACCOUNTS_PAYABLE_ID > 0 ? $ACCOUNTS_PAYABLE_ID : null
         ]);
+
+        return $ID;
     }
     public function getTotalPay(int $BILL_ID, int $EXECPT_CHECK_ID): float
     {
@@ -302,8 +304,8 @@ class BillPaymentServices
             ->where('CHECK_ID', $CHECK_ID)
             ->where('BILL_ID', $BILL_ID)
             ->update([
-                'DISCOUNT'      => $DISCOUNT,
-                'AMOUNT_PAID'   => $AMOUNT_PAID
+                'DISCOUNT' => $DISCOUNT,
+                'AMOUNT_PAID' => $AMOUNT_PAID
             ]);
     }
 
@@ -318,7 +320,7 @@ class BillPaymentServices
                 DB::raw(' 1 as ENTRY_TYPE')
             ])
             ->where('ID', $CHECK_ID)
-            ->where('TYPE',  '=', $this->CHECK_TYPE_ID)
+            ->where('TYPE', '=', $this->CHECK_TYPE_ID)
             ->get();
 
         return $result;
@@ -376,5 +378,14 @@ class BillPaymentServices
             ->get();
 
         return $result;
+    }
+
+    public function updateXero(int $ID, bool $IS_XERO, float $AMOUNT)
+    {
+        Check::where('ID', $ID)
+            ->update([
+                'IS_XERO' => $IS_XERO,
+                'AMOUNT' => $AMOUNT	
+            ]);
     }
 }
