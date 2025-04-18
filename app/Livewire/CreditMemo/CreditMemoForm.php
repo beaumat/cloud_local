@@ -146,7 +146,7 @@ class CreditMemoForm extends Component
         $this->CLASS_ID = 0;
         $this->NOTES = '';
         $this->AMOUNT = 0;
-        $this->ACCOUNTS_RECEIVABLE_ID = (int) $this->accountServices->getByName('Accounts Receivable');
+        $this->ACCOUNTS_RECEIVABLE_ID = (int) $this->accountServices->getByName('Accounts Receivables');
         $this->STATUS = 0;
         $this->OUTPUT_TAX_ID = (int) $this->systemSettingServices->GetValue('OutputTaxId');
         $this->OUTPUT_TAX_RATE = 0;

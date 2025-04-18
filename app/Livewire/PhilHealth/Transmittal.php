@@ -80,7 +80,7 @@ class Transmittal extends Component
             $this->PHIL_ACCOUNT_ID =  $acctData->ID ?? 0;
         }
 
-        $this->ACCOUNTS_RECEIVABLE_ID = (int) $this->accountServices->getByName('Accounts Receivable');
+        $this->ACCOUNTS_RECEIVABLE_ID = (int) $this->accountServices->getByName('Accounts Receivables');
     }
     public function makeInvoice()
     {

@@ -67,14 +67,22 @@
                         </div>
                         <div class="container-flud">
                             <div class="row">
-                                <div class="col-4 form-group">
-                                    <livewire:select-option-type name="CONTACT_ID" titleName="Contact Name"
-                                        :options="$contactList" :zero="true" :isDisabled="false" wire:model='CONTACT_ID' />
-                                </div>
-                                <div class="col-4 form-group">
-                                    <livewire:select-option-type name="ACCOUNT_ID" titleName="BANK ACCOUNT"
-                                        :options="$accountList" :zero="true" :isDisabled="false" wire:model='ACCOUNT_ID' />
-                                </div>
+                                @if ($contactList)
+                                    <div class="col-4 form-group">
+                                        <livewire:select-option-type name="CONTACT_ID" titleName="Contact Name"
+                                            :options="$contactList" :zero="true" :isDisabled="false"
+                                            wire:model='CONTACT_ID' />
+                                    </div>
+                                @endif
+
+                                @if ($accountList)
+                                    <div class="col-4 form-group">
+                                        <livewire:select-option-type name="ACCOUNT_ID" titleName="BANK ACCOUNT"
+                                            :options="$accountList" :zero="true" :isDisabled="false"
+                                            wire:model='ACCOUNT_ID' />
+                                    </div>
+                                @endif
+
                             </div>
 
                         </div>

@@ -175,7 +175,7 @@ class PatientPaymentForm extends Component
         $this->NOTES = '';
         $this->UNDEPOSITED_FUNDS_ACCOUNT_ID = 0;
         $this->OVERPAYMENT_ACCOUNT_ID = 0;
-        $this->ACCOUNTS_RECEIVABLE_ID = (int) $this->accountServices->getByName('Accounts Receivable');
+        $this->ACCOUNTS_RECEIVABLE_ID = (int) $this->accountServices->getByName('Accounts Receivables');
         $this->STATUS = 0;
         $this->DEPOSITED = 0;
         $this->Modify = true;

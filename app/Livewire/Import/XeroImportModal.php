@@ -45,6 +45,8 @@ class XeroImportModal extends Component
     {
         $this->CONTACT_ID = 0;
         $this->ACCOUNT_ID = 0;
+        $this->contactList = [];    
+        $this->accountList = [];
         $this->DATE = $dataSend['DATE'];
         $this->SOURCE_TYPE = $dataSend['SOURCE_TYPE'];
         $this->REFERENCE = $dataSend['REFERENCE'];
@@ -96,7 +98,7 @@ class XeroImportModal extends Component
         switch ($this->DOC_ID) {
             case 1: // bill
         
-                
+
 
                 break;
             
