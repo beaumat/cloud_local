@@ -43,6 +43,7 @@
                     <td class="text-center">
                         @if ($editItemId === $list->ID)
                             <select wire:model='lineUnitId' name="lineUnitId" class="form-control form-control-sm">
+                                <option value="0"></option>
                                 @foreach ($editUnitList as $listitem)
                                     <option value="{{ $listitem->ID }}">{{ $listitem->SYMBOL }}</option>
                                 @endforeach
@@ -184,6 +185,7 @@
                     <td>
                         <select wire:model='UNIT_ID' name="UNIT_ID" @if ($ITEM_ID == 0) readonly @endif
                             class="text-xs text-center form-control form-control-sm ">
+                               <option value="0"></option>
                             @foreach ($unitList as $list)
                                 <option value="{{ $list->ID }}">{{ $list->SYMBOL }}</option>
                             @endforeach

@@ -365,8 +365,6 @@ class XeroImportModal extends Component
             DB::rollBack();
         }
     }
-
-
     private function AccountJournalInvoice(): bool
     {
         try {
@@ -435,7 +433,7 @@ class XeroImportModal extends Component
 
 
     }
-    private function InvoceEntry()
+    private function InvoiceEntry()
     {
         $this->validate([
             'CONTACT_ID' => 'required|exists:contact,id',
@@ -463,7 +461,7 @@ class XeroImportModal extends Component
         try {
 
 
-            $INVOICE_ID = (int) $this->invoiceServices->Store( $this->REFERENCE, $this->DATE, $this->CONTACT_ID, $this->locationid, 0, 0, '', 0, 0, null, 1, $DUE_DATE, null, 0, '', $AR_ID, 0, $OutputTaxId, $OUTPUT_TAX_RATE, $OUTPUT_TAX_VAT_METHOD, $OUTPUT_TAX_ACCOUNT_ID );
+            $INVOICE_ID = (int) $this->invoiceServices->Store($this->REFERENCE, $this->DATE, $this->CONTACT_ID, $this->locationid, 0, 0, '', 0, 0, null, 1, $DUE_DATE, null, 0, '', $AR_ID, 0, $OutputTaxId, $OUTPUT_TAX_RATE, $OUTPUT_TAX_VAT_METHOD, $OUTPUT_TAX_ACCOUNT_ID);
 
             $this->ID = $INVOICE_ID;
 
@@ -477,7 +475,7 @@ class XeroImportModal extends Component
 
                 if ($ACCOUNT_ID <> $AR_ID && $ACCOUNT_ID > 0) {
                     if ($data->CREDIT > 0) {
-                        $ID = $this->invoiceServices->ItemStore( $INVOICE_ID, 420, 1, 0, (float) $data->CREDIT, (float) $data->CREDIT, 0, (float) $data->CREDIT, false, 0, 0, 0, 0, $ACCOUNT_ID, 0, 0, 0, 0, 0, 0 );
+                        $ID = $this->invoiceServices->ItemStore($INVOICE_ID, 420, 1, 0, (float) $data->CREDIT, (float) $data->CREDIT, 0, (float) $data->CREDIT, false, 0, 0, 0, 0, $ACCOUNT_ID, 0, 0, 0, 0, 0, 0);
                         $this->xeroDataServices->updatePosted($data->ID, $ID, $this->invoiceServices->object_type_invoice_item);
                     }
                 } else {
@@ -503,27 +501,48 @@ class XeroImportModal extends Component
         }
     }
 
+    private function InvoicePayment()
+    {
+        $this->validate([
+            'CONTACT_ID' => 'required|exists:contact,id',
+            'locationid' => 'required|exists:location,id',
+            'ACCOUNT_ID' => 'required|exists:account,id'
+
+        ], [], [
+            'CONTACT_ID' => 'Contact',
+            'locationid' => 'Location',
+            'ACCOUNT_ID' => 'Account'
+        ]);
+
+
+        DB::beginTransaction();
+        try {
+
+
+            DB::commit();
+        } catch (\Throwable $th) {
+            //throw $th;
+            DB::rollBack();
+            session()->flash('error', 'Error: ' . $th->getMessage());
+        }
+    }
 
     public function save()
     {
         switch ($this->DOC_ID) {
             case 1: // bill
-
                 $this->billEntry();
-
                 break;
             case 2: // bill payment
                 $this->billPayment();
 
                 break;
             case 10: // invoice
-
-              
-                $this->InvoceEntry();
+                $this->InvoiceEntry();
 
                 break;
             case 11: // invoice payment 
-
+                $this->InvoicePayment();
                 break;
             default:
                 # code...
