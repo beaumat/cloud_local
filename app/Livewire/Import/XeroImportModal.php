@@ -7,8 +7,10 @@ use App\Services\AccountServices;
 use App\Services\BillingServices;
 use App\Services\BillPaymentServices;
 use App\Services\ContactServices;
+use App\Services\GeneralJournalServices;
 use App\Services\InvoiceServices;
 use App\Services\PaymentMethodServices;
+use App\Services\PaymentServices;
 use App\Services\PaymentTermServices;
 use App\Services\SystemSettingServices;
 use App\Services\TaxServices;
@@ -46,6 +48,8 @@ class XeroImportModal extends Component
     private $systemSettingServices;
     private $billPaymentServices;
     private $invoiceServices;
+    private $paymentServices;
+    private $generalJournalServices;
     public function boot(
         XeroDataServices $xero,
         ContactServices $contact,
@@ -56,7 +60,9 @@ class XeroImportModal extends Component
         TaxServices $taxServices,
         SystemSettingServices $systemSettingServices,
         BillPaymentServices $billPaymentServices,
-        InvoiceServices $invoiceServices
+        InvoiceServices $invoiceServices,
+        PaymentServices $paymentServices,
+        GeneralJournalServices $generalJournalServices
 
     ) {
         $this->xeroDataServices = $xero;
@@ -69,6 +75,8 @@ class XeroImportModal extends Component
         $this->systemSettingServices = $systemSettingServices;
         $this->billPaymentServices = $billPaymentServices;
         $this->invoiceServices = $invoiceServices;
+        $this->paymentServices = $paymentServices;
+        $this->generalJournalServices = $generalJournalServices;
     }
 
     #[On('dataSend')]
@@ -107,6 +115,10 @@ class XeroImportModal extends Component
                 break;
             case 11;
                 $this->accountList = $this->accountServices->getBankAccount();
+                $this->contactList = $this->contactServices->getListAllType();
+                break;
+
+            case 23;
                 $this->contactList = $this->contactServices->getListAllType();
                 break;
             default:
@@ -248,7 +260,6 @@ class XeroImportModal extends Component
 
         }
     }
-
     private function getPostedBillPayment()
     {
 
@@ -500,7 +511,37 @@ class XeroImportModal extends Component
             session()->flash('error', 'Error: ' . $th->getMessage());
         }
     }
+    private function getPostedInvoicePayment(): bool
+    {
 
+        $payment = $this->paymentServices->object_type_payment;
+        $paymentInvoicesId = $this->paymentServices->object_type_payment_invoices;
+
+        $JOURNAL_NO = (int) $this->accountJournalServices->getRecord($payment, $this->ID);
+        if ($JOURNAL_NO == 0) {
+            $JOURNAL_NO = (int) $this->accountJournalServices->getJournalNo($payment, $this->ID) + 1;
+        }
+
+        $paymentData = $this->paymentServices->PaymentJournal($this->ID);
+        $this->accountJournalServices->JournalExecute($JOURNAL_NO, $paymentData, $this->locationid, $payment, $this->DATE, "UF");
+        $paymentDataR = $this->paymentServices->PaymentJournalRemaining($this->ID);
+        $this->accountJournalServices->JournalExecute($JOURNAL_NO, $paymentDataR, $this->locationid, $payment, $this->DATE, "A/R");
+        $paymentInvoiceData = $this->paymentServices->PaymentInvoicejournal($this->ID);
+        $this->accountJournalServices->JournalExecute($JOURNAL_NO, $paymentInvoiceData, $this->locationid, $paymentInvoicesId, $this->DATE, "A/R");
+
+        $data = $this->accountJournalServices->getSumDebitCredit($JOURNAL_NO);
+        $debit_sum = (float) $data['DEBIT'];
+        $credit_sum = (float) $data['CREDIT'];
+
+        if ($debit_sum == $credit_sum) {
+            $this->paymentServices->StatusUpdate($this->ID, 15);
+
+            return true;
+        }
+
+        return false;
+
+    }
     private function InvoicePayment()
     {
         $this->validate([
@@ -518,15 +559,136 @@ class XeroImportModal extends Component
         DB::beginTransaction();
         try {
 
+            $BANK_ACCOUNT_ID = (int) $this->ACCOUNT_ID;
+            $PAYMENT_METHOD_ID = 5;
+            $PAYMENT_ID = $this->paymentServices->Store($this->REFERENCE, $this->DATE, $this->CONTACT_ID, $this->locationid, 0, 0, $PAYMENT_METHOD_ID, '', null, '', null, '', $BANK_ACCOUNT_ID, 0, 0, 4, 0);
+            foreach ($this->dataList as $data) {
+                $ACCOUNT_ID = $this->accountServices->getAccountNameIntoId($data->ACCOUNT);
+                if ($ACCOUNT_ID <> $BANK_ACCOUNT_ID && $ACCOUNT_ID > 0) {
+                    $INVOICE_ID = $this->invoiceServices->getInvoiceByXero($this->REFERENCE);
+                    if ($INVOICE_ID == 0) {
+                        session()->flash('error', 'Invoice not found.');
+                        DB::rollBack();
+                        return;
+                    }
 
-            DB::commit();
+                    $ID = (int) $this->paymentServices->paymentInvoiceStore($PAYMENT_ID, $INVOICE_ID, 0, (float) $data->CREDIT, 0, $ACCOUNT_ID);
+                    $this->xeroDataServices->updatePosted($data->ID, $ID, $this->paymentServices->object_type_payment);
+                    $this->invoiceServices->updateInvoiceBalance($INVOICE_ID);
+
+                } else {
+
+                    $this->xeroDataServices->updatePosted($data->ID, $PAYMENT_ID, $this->paymentServices->object_type_payment_invoices);
+                    $this->paymentServices->updateXero($PAYMENT_ID, true, (float) $data->DEBIT);
+                }
+            }
+            if ($this->getPostedInvoicePayment() == true) {
+                DB::commit();
+                $this->closeModal();
+            } else {
+                DB::rollBack();
+            }
+
         } catch (\Throwable $th) {
-            //throw $th;
+
             DB::rollBack();
             session()->flash('error', 'Error: ' . $th->getMessage());
         }
     }
+    private function AccountJournalGeneralJournal(): bool
+    {
 
+        $generaljournal = $this->generalJournalServices->object_type_general_journal_details_id;
+        $getFirstId = (int) $this->generalJournalServices->getFirstDetailsID($this->ID);
+        $JOURNAL_NO = $this->accountJournalServices->getRecord($generaljournal, $getFirstId);
+        if ($JOURNAL_NO == 0) {
+            $JOURNAL_NO = $this->accountJournalServices->getJournalNo($generaljournal, $getFirstId) + 1;
+        }
+
+        //Main
+        $generalJournalData = $this->generalJournalServices->getGeneralJournalEntries($this->ID);
+        $this->accountJournalServices->JournalExecute($JOURNAL_NO, $generalJournalData, $this->locationid, $generaljournal, $this->DATE);
+        $data = $this->accountJournalServices->getSumDebitCredit($JOURNAL_NO);
+
+        $debit_sum = (float) $data['DEBIT'];
+        $credit_sum = (float) $data['CREDIT'];
+
+        if ($debit_sum == $credit_sum && $debit_sum > 0 && $credit_sum > 0) {
+            return true;
+        }
+
+        return false;
+
+    }
+
+    private function postedGeneralJournal(): bool
+    {
+
+        $total_result = $this->generalJournalServices->GetTotal($this->ID);
+        $total_debit = (float) $total_result['TOTAL_DEBIT'];
+        $total_credit = (float) $total_result['TOTAL_CREDIT'];
+        if ($total_debit == 0) {
+            Session()->flash('error', 'No debit entry');
+            return false;
+        }
+        if ($total_credit == 0) {
+            Session()->flash('error', 'No credit entry');
+            return false;
+        }
+
+        if ($total_debit == $total_credit) {
+            if (!$this->AccountJournalGeneralJournal()) {
+                return false;
+            }
+            $this->generalJournalServices->StatusUpdate($this->ID, 15);
+
+            return true;
+        }
+
+        return false;
+
+    }
+    private function GeneralJournal()
+    {
+        $this->validate([
+            'CONTACT_ID' => 'required|exists:contact,id',
+            'locationid' => 'required|exists:location,id'
+        ], [], [
+            'CONTACT_ID' => 'Contact',
+            'locationid' => 'Location'
+        ]);
+
+
+        DB::beginTransaction();
+        try {
+            //code...
+
+            $GJ_ID = $this->generalJournalServices->Store($this->DATE, $this->REFERENCE, $this->locationid, false, '', $this->CONTACT_ID, );
+            $this->ID = $GJ_ID;
+            foreach ($this->dataList as $data) {
+                $ACCOUNT_ID = $this->accountServices->getAccountNameIntoId($data->ACCOUNT);
+                if ($ACCOUNT_ID > 0) {
+                    $ID = $this->generalJournalServices->StoreDetails($GJ_ID, $ACCOUNT_ID, (float) $data->DEBIT, (float) $data->CREDIT, $data->DESCRIPTION, 0);
+                    $this->xeroDataServices->updatePosted($data->ID, $ID, $this->generalJournalServices->object_type_general_journal_details_id);
+
+                }
+            }
+
+            $this->generalJournalServices->updateIsXero($GJ_ID, true);
+
+            if ($this->postedGeneralJournal() == true) {
+                DB::commit();
+                $this->closeModal();
+            } else {
+                DB::rollBack();
+            }
+        } catch (\Throwable $th) {
+            //throw $th;
+
+            DB::rollBack();
+            session()->flash('error', 'Error: ' . $th->getMessage());
+        }
+    }
     public function save()
     {
         switch ($this->DOC_ID) {
@@ -535,15 +697,17 @@ class XeroImportModal extends Component
                 break;
             case 2: // bill payment
                 $this->billPayment();
-
                 break;
             case 10: // invoice
                 $this->InvoiceEntry();
-
                 break;
             case 11: // invoice payment 
                 $this->InvoicePayment();
                 break;
+            case 23:
+                $this->GeneralJournal();
+                break;
+
             default:
                 # code...
                 break;

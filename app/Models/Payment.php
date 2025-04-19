@@ -33,6 +33,7 @@ class Payment extends Model
         'STATUS_DATE',
         'DEPOSITED',
         'ACCOUNTS_RECEIVABLE_ID',
-        'PAYMENT_PERIOD_ID'
+        'PAYMENT_PERIOD_ID',
+        'IS_XERO',
     ];
 }

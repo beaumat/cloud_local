@@ -41,7 +41,7 @@ class PaymentForm extends Component
     public bool $BANK_MODE = true;
     public bool $DEPOSITED;
     public int $ACCOUNTS_RECEIVABLE_ID;
-    public bool $UNPOSTED  = true;
+    public bool $UNPOSTED = true;
     public $locationList = [];
     public $contactList = [];
     public $paymentMethodList = [];
@@ -113,7 +113,7 @@ class PaymentForm extends Component
     {
         $this->AMOUNT_APPLIED = (float) $this->paymentServices->UpdatePaymentApplied($this->ID);
     }
-    private  function LoadDropDown()
+    private function LoadDropDown()
     {
         if ($this->BANK_MODE) {
             $this->accountList = $this->accountServices->getBankAccount();
@@ -165,25 +165,25 @@ class PaymentForm extends Component
 
         $this->validate(
             [
-                'CUSTOMER_ID'                       => 'required|integer|exists:contact,id',
-                'CODE'                              => $this->ID > 0 ? 'required|unique:payment,code,' . $this->ID  : 'nullable',
-                'PAYMENT_METHOD_ID'                 => 'required|integer|exists:payment_method,id',
-                'DATE'                              => 'required|date',
-                'LOCATION_ID'                       => 'required|integer|exists:location,id',
-                'AMOUNT'                            => 'required|not_in:0',
-                'ACCOUNTS_RECEIVABLE_ID'            => 'required|integer|exists:account,id',
-                'UNDEPOSITED_FUNDS_ACCOUNT_ID'      => 'required|integer|exists:account,id',
+                'CUSTOMER_ID' => 'required|integer|exists:contact,id',
+                'CODE' => $this->ID > 0 ? 'required|unique:payment,code,' . $this->ID : 'nullable',
+                'PAYMENT_METHOD_ID' => 'required|integer|exists:payment_method,id',
+                'DATE' => 'required|date',
+                'LOCATION_ID' => 'required|integer|exists:location,id',
+                'AMOUNT' => 'required|not_in:0',
+                'ACCOUNTS_RECEIVABLE_ID' => 'required|integer|exists:account,id',
+                'UNDEPOSITED_FUNDS_ACCOUNT_ID' => 'required|integer|exists:account,id',
             ],
             [],
             [
-                'CUSTOMER_ID'                       => 'Customer',
-                'CODE'                              => 'Reference No.',
-                'PAYMENT_METHOD_ID'                 => 'Payment Method',
-                'DATE'                              => 'Date',
-                'LOCATION_ID'                       => 'Location',
-                'AMOUNT'                            => 'Amount',
-                'ACCOUNTS_RECEIVABLE_ID'            => 'Accounts Receivable',
-                'UNDEPOSITED_FUNDS_ACCOUNT_ID'      => 'Deposit to Bank Account'
+                'CUSTOMER_ID' => 'Customer',
+                'CODE' => 'Reference No.',
+                'PAYMENT_METHOD_ID' => 'Payment Method',
+                'DATE' => 'Date',
+                'LOCATION_ID' => 'Location',
+                'AMOUNT' => 'Amount',
+                'ACCOUNTS_RECEIVABLE_ID' => 'Accounts Receivable',
+                'UNDEPOSITED_FUNDS_ACCOUNT_ID' => 'Deposit to Bank Account'
             ]
         );
         DB::beginTransaction();
@@ -216,7 +216,7 @@ class PaymentForm extends Component
             } else {
 
 
-                $data =  $this->paymentServices->Get($this->ID);
+                $data = $this->paymentServices->Get($this->ID);
                 if ($data) {
                     if ($this->STATUS == 16) {
                         $JNO = $this->accountJournalServices->getRecord($this->paymentServices->object_type_payment, $this->ID);
@@ -236,24 +236,7 @@ class PaymentForm extends Component
                         }
                     }
 
-                    $this->paymentServices->Update(
-                        $this->ID,
-                        $this->CODE,
-                        $this->DATE,
-                        $this->CUSTOMER_ID,
-                        $this->LOCATION_ID,
-                        $this->AMOUNT,
-                        $this->PAYMENT_METHOD_ID,
-                        $this->CARD_NO,
-                        $this->CARD_EXPIRY_DATE,
-                        $this->RECEIPT_REF_NO,
-                        $this->RECEIPT_DATE,
-                        $this->NOTES,
-                        $this->UNDEPOSITED_FUNDS_ACCOUNT_ID,
-                        $this->OVERPAYMENT_ACCOUNT_ID,
-                        $this->DEPOSITED,
-                        $this->ACCOUNTS_RECEIVABLE_ID
-                    );
+                    $this->paymentServices->Update($this->ID, $this->CODE, $this->DATE, $this->CUSTOMER_ID, $this->LOCATION_ID, $this->AMOUNT, $this->PAYMENT_METHOD_ID, $this->CARD_NO, $this->CARD_EXPIRY_DATE, $this->RECEIPT_REF_NO, $this->RECEIPT_DATE, $this->NOTES, $this->UNDEPOSITED_FUNDS_ACCOUNT_ID, $this->OVERPAYMENT_ACCOUNT_ID, $this->DEPOSITED, $this->ACCOUNTS_RECEIVABLE_ID);
 
                     DB::commit();
                 }
@@ -311,44 +294,17 @@ class PaymentForm extends Component
             $payment = $this->paymentServices->object_type_payment;
             $paymentInvoicesId = $this->paymentServices->object_type_payment_invoices;
 
-            $JOURNAL_NO  = (int) $this->accountJournalServices->getRecord($payment, $this->ID);
-            if ($JOURNAL_NO  == 0) {
+            $JOURNAL_NO = (int) $this->accountJournalServices->getRecord($payment, $this->ID);
+            if ($JOURNAL_NO == 0) {
                 $JOURNAL_NO = (int) $this->accountJournalServices->getJournalNo($payment, $this->ID) + 1;
             }
 
             $paymentData = $this->paymentServices->PaymentJournal($this->ID);
-
-            $this->accountJournalServices->JournalExecute(
-                $JOURNAL_NO,
-                $paymentData,
-                $this->LOCATION_ID,
-                $payment,
-                $this->DATE,
-                "UF"
-            );
-
-
+            $this->accountJournalServices->JournalExecute($JOURNAL_NO, $paymentData, $this->LOCATION_ID, $payment, $this->DATE, "UF");
             $paymentDataR = $this->paymentServices->PaymentJournalRemaining($this->ID);
-
-            $this->accountJournalServices->JournalExecute(
-                $JOURNAL_NO,
-                $paymentDataR,
-                $this->LOCATION_ID,
-                $payment,
-                $this->DATE,
-                "A/R"
-            );
-
-
+            $this->accountJournalServices->JournalExecute($JOURNAL_NO, $paymentDataR, $this->LOCATION_ID, $payment, $this->DATE, "A/R");
             $paymentInvoiceData = $this->paymentServices->PaymentInvoicejournal($this->ID);
-            $this->accountJournalServices->JournalExecute(
-                $JOURNAL_NO,
-                $paymentInvoiceData,
-                $this->LOCATION_ID,
-                $paymentInvoicesId,
-                $this->DATE,
-                "A/R"
-            );
+            $this->accountJournalServices->JournalExecute($JOURNAL_NO, $paymentInvoiceData, $this->LOCATION_ID, $paymentInvoicesId, $this->DATE, "A/R");
 
 
             $data = $this->accountJournalServices->getSumDebitCredit($JOURNAL_NO);

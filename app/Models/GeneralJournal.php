@@ -21,6 +21,7 @@ class GeneralJournal extends Model
         'NOTES',
         'STATUS',
         'STATUS_DATE',
-        'CONTACT_ID'
+        'CONTACT_ID',
+        'IS_XERO',
     ];
 }

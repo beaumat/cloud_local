@@ -537,4 +537,12 @@ class PaymentServices
 
         return 0;
     }
+    public function updateXero(int $ID, bool $IS_XERO, float $AMOUNT): void
+    {
+        Payment::where('ID', $ID)
+            ->update([
+                'IS_XERO' => $IS_XERO,
+                'AMOUNT' => $AMOUNT
+            ]);
+    }
 }

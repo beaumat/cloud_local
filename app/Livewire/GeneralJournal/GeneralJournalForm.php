@@ -57,44 +57,7 @@ class GeneralJournalForm extends Component
         $this->contactList = $this->contactServices->getListAllType();
     }
 
-    public function AccountJournal(): bool
-    {
-        try {
-            $generaljournal = $this->generalJournalServices->object_type_general_journal_details_id;
-            $getFirstId = (int) $this->generalJournalServices->getFirstDetailsID($this->ID);
-            $JOURNAL_NO = $this->accountJournalServices->getRecord($generaljournal, $getFirstId);
-            if ($JOURNAL_NO  == 0) {
-                $JOURNAL_NO = $this->accountJournalServices->getJournalNo($generaljournal, $getFirstId) + 1;
-            }
-
-            //Main
-            $generalJournalData = $this->generalJournalServices->getGeneralJournalEntries($this->ID);
-
-            $this->accountJournalServices->JournalExecute(
-                $JOURNAL_NO,
-                $generalJournalData,
-                $this->LOCATION_ID,
-                $generaljournal,
-                $this->DATE
-            );
-
-            $data = $this->accountJournalServices->getSumDebitCredit($JOURNAL_NO);
-
-            $debit_sum = (float) $data['DEBIT'];
-            $credit_sum = (float) $data['CREDIT'];
-
-            if ($debit_sum == $credit_sum && $debit_sum > 0 && $credit_sum > 0) {
-                return true;
-            }
-            session()->flash('error', 'debit:' . $debit_sum . ' and credit:' . $credit_sum . ' is not balance');
-            return false;
-        } catch (\Exception $e) {
-            $errorMessage = 'Error occurred: ' . $e->getMessage();
-            session()->flash('error', $errorMessage);
-            return false;
-        }
-    }
-
+   
     private function getInfo($data)
     {
         $this->ID = $data->ID;
@@ -206,6 +169,44 @@ class GeneralJournalForm extends Component
         session()->forget('message');
         session()->forget('error');
     }
+    private function AccountJournal(): bool
+    {
+        try {
+            $generaljournal = $this->generalJournalServices->object_type_general_journal_details_id;
+            $getFirstId = (int) $this->generalJournalServices->getFirstDetailsID($this->ID);
+            $JOURNAL_NO = $this->accountJournalServices->getRecord($generaljournal, $getFirstId);
+            if ($JOURNAL_NO  == 0) {
+                $JOURNAL_NO = $this->accountJournalServices->getJournalNo($generaljournal, $getFirstId) + 1;
+            }
+
+            //Main
+            $generalJournalData = $this->generalJournalServices->getGeneralJournalEntries($this->ID);
+
+            $this->accountJournalServices->JournalExecute(
+                $JOURNAL_NO,
+                $generalJournalData,
+                $this->LOCATION_ID,
+                $generaljournal,
+                $this->DATE
+            );
+
+            $data = $this->accountJournalServices->getSumDebitCredit($JOURNAL_NO);
+
+            $debit_sum = (float) $data['DEBIT'];
+            $credit_sum = (float) $data['CREDIT'];
+
+            if ($debit_sum == $credit_sum && $debit_sum > 0 && $credit_sum > 0) {
+                return true;
+            }
+            session()->flash('error', 'debit:' . $debit_sum . ' and credit:' . $credit_sum . ' is not balance');
+            return false;
+        } catch (\Exception $e) {
+            $errorMessage = 'Error occurred: ' . $e->getMessage();
+            session()->flash('error', $errorMessage);
+            return false;
+        }
+    }
+
     public function posted()
     {
         try {

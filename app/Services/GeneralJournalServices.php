@@ -134,6 +134,8 @@ class GeneralJournalServices
             'NOTES'                     => $NOTES,
             'CLASS_ID'                  => $CLASS_ID > 0 ? $CLASS_ID : null
         ]);
+
+        return $ID;
     }
     public function UpdateDetails(int $ID, int $GENERAL_JOURNAL_ID, int $ACCOUNT_ID, float $DEBIT, float $CREDIT, string $NOTES, int $CLASS_ID = 0)
     {
@@ -270,5 +272,12 @@ class GeneralJournalServices
                 0
             );
         }
+    }
+    public function updateIsXero(int $ID, bool $IS_XERO)
+    {
+        GeneralJournal::where('ID', $ID)
+            ->update([
+                'IS_XERO' => $IS_XERO
+            ]);
     }
 }

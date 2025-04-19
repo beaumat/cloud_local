@@ -761,5 +761,19 @@ class InvoiceServices
             ]);
     }
 
+    public function getInvoiceByXero(string $CODE)
+    {
+        $result = Invoice::query()
+            ->select(['ID'])
+            ->where('CODE', '=', $CODE)
+            ->where('IS_XERO', '=', true)
+            ->first();
+
+        if ($result) {
+            return $result->ID ?? 0;
+        }
+
+        return 0;
+    }
 
 }
