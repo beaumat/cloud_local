@@ -52,5 +52,25 @@
             </li>
         @endcan
 
+        @can('banking.spend-money.view')
+            <li class="nav-item">
+                <a href="{{ route('bankingspend_money') }}"
+                    class="nav-link  {{ request()->is('banking/spend-money*') ? 'text-warning font-weight-bold' : '' }}">
+                    <i class="fa fa-money nav-icon"></i>
+                    <p>Spend Money</p>
+                </a>
+            </li>
+        @endcan
+
+
+        @can('banking.receive-money.view')
+            <li class="nav-item">
+                <a href="{{ route('bankingreceive_money') }}"
+                    class="nav-link  {{ request()->is('banking/receive-money*') ? 'text-warning font-weight-bold' : '' }}">
+                    <i class="fa fa-money nav-icon"></i>
+                    <p>Receive Money</p>
+                </a>
+            </li>
+        @endcan
     </ul>
 </li>

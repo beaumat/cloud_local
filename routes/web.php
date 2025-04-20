@@ -168,12 +168,16 @@ use App\Livewire\PurchaseOrder\PurchaseOrderForm;
 use App\Livewire\PurchaseOrder\PurchaseOrderList;
 use App\Livewire\ReceivableReport\AccountReceivableAging;
 use App\Livewire\ReceivableReport\CustomerBalance;
+use App\Livewire\ReceiveMoney\ReceiveMoneyForm;
+use App\Livewire\ReceiveMoney\ReceiveMoneyList;
 use App\Livewire\RolePermissionPage\RolePermissionConfig;
 use App\Livewire\RolePermissionPage\RolePermissionList;
 use App\Livewire\SalesReceipt\SalesReceiptForm;
 use App\Livewire\SalesReceipt\SalesReceiptList;
 use App\Livewire\ShipViaPage\ShipViaForm;
 use App\Livewire\ShipViaPage\ShipViaList;
+use App\Livewire\SpendMoney\SpendMoneyForm;
+use App\Livewire\SpendMoney\SpendMoneyList;
 use App\Livewire\StockBinPage\StockBinForm;
 use App\Livewire\StockBinPage\StockBinList;
 use App\Livewire\Tax\TaxForm;
@@ -418,6 +422,17 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/{id}/edit', BankTransferForm::class)->name('bank_transfer_edit')->middleware(['permission:banking.bank-transfer.view']);
         });
 
+        Route::prefix('/spend-money')->group(function () {
+            Route::get('/', SpendMoneyList::class)->name('spend_money')->middleware(['permission:banking.spend-money.view']);
+            Route::get('/create', SpendMoneyForm::class)->name('spend_money_create')->middleware(['permission:banking.spend-money.create']);
+            Route::get('/{id}/edit', SpendMoneyForm::class)->name('spend_money_edit')->middleware(['permission:banking.spend-money.view']);
+        });
+
+        Route::prefix('/receive-money')->group(function () {
+            Route::get('/', ReceiveMoneyList::class)->name('receive_money')->middleware(['permission:banking.receive-money.view']);
+            Route::get('/create', ReceiveMoneyForm::class)->name('receive_money_create')->middleware(['permission:banking.receive-money.create']);
+            Route::get('/{id}/edit', ReceiveMoneyForm::class)->name('receive_money_edit')->middleware(['permission:banking.receive-money.view']);
+        });
 
         Route::prefix('/make-cheque')->group(function () {
             Route::get('/', WriteCheckList::class)->name('make_cheque')->middleware(['permission:banking.make-cheque.view']);
