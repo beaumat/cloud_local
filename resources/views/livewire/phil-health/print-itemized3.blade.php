@@ -7,7 +7,7 @@ use App\Services\ItemSoaServices;
     <div class="col-12 font-weight-bold text-center text-danger">
         ITEMIZED CHARGES
     </div>
-    <div class="col-8">
+    <div class="col-12">
         <table class="w-100" border="1">
             <thead>
                 <tr class="text-center text-sm">
@@ -142,93 +142,7 @@ use App\Services\ItemSoaServices;
         </table>
 
     </div>
-    <div class="col-4">
-        {{-- <table class="w-100" border="1">
-            <thead class="text-sm">
-                <tr class="text-center">
-                    <th class="">ROUTINE MONTHLY LABORATORIES</th>
-                </tr>
-            </thead>
 
-            <tbody class='text-sm'>
-                <tr>
-                    <th class="text-center  pb-0 pt-0">(CLINICAL CHEMISTRY)</th>
-                </tr>
-                <tr>
-                    <td class="text-center pb-0 pt-0">PRE AND POST DIALYSIS BUN</td>
-                </tr>
-                <tr>
-                    <td class="text-center  pb-0 pt-0"> SERUM CREATININE </td>
-                </tr>
-                <tr>
-                    <td class="text-center pb-0 pt-0"> POTASSIUM </td>
-                </tr>
-                <tr>
-                    <td class="text-center  pb-0 pt-0"> PHOSPHORUS </td>
-                </tr>
-                <tr>
-                    <td class="text-center  pb-0 pt-0"> CALCIUM </td>
-                </tr>
-                <tr>
-                    <td class="text-center  pb-0 pt-0"> SERUM SODIUM </td>
-                </tr>
-                <tr>
-                    <td class="text-center  pb-0 pt-0"> KT/V </td>
-                </tr>
-                <tr>
-                    <td class="text-center  pb-0 pt-0"> URR </td>
-                </tr>
-                <tr>
-                    <td class="text-center  pb-0 pt-0"> ALBUMIN </td>
-                </tr>
-
-                <tr>
-                    <td class="text-center "> URIC ACID </td>
-                </tr>
-
-                <tr>
-                    <th class="text-center  pb-0 pt-0">(HEMATOLOGY) COMPLETE BLOOD COUNT</th>
-                </tr>
-
-                <tr>
-                    <td class="text-center  pb-0 pt-0">HEMOGLOBIN</td>
-                </tr>
-                <tr>
-                    <td class="text-center  pb-0 pt-0"> HEMATOCRIT</td>
-                </tr>
-                <tr>
-                    <td class="text-center  pb-0 pt-0"> RED BLOOD CELLS </td>
-                </tr>
-                <tr>
-                    <td class="text-center  pb-0 pt-0"> MCV </td>
-                </tr>
-                <tr>
-                    <td class="text-center  pb-0 pt-0"> MCH </td>
-                </tr>
-                <tr>
-                    <td class="text-center  pb-0 pt-0"> MCHC</td>
-                </tr>
-                <tr>
-                    <td class="text-center  pb-0 pt-0"> WHTE BLOODCELLS </td>
-                </tr>
-                <tr>
-                    <td class="text-center  pb-0 pt-0"> NEUTROPHILS </td>
-                </tr>
-                <tr>
-                    <td class="text-center  pb-0 pt-0"> LYMPHOCYTES </td>
-                </tr>
-                <tr>
-                    <td class="text-center  pb-0 pt-0"> EOSINOPHILS </td>
-                </tr>
-                <tr>
-                    <td class="text-center  pb-0 pt-0"> BASOPHILS </td>
-                </tr>
-                <tr>
-                    <td class="text-center  pb-0 pt-0"> PLATELET COUNT </td>
-                </tr>
-            </tbody>
-        </table> --}}
-    </div>
     <div class="col-12 pb-1">
 
     </div>
