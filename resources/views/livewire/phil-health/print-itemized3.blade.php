@@ -16,7 +16,7 @@ use App\Services\ItemSoaServices;
                     <th>UNIT OF MEASUREMENT</th>
                     <th>PRICE</th>
                     <th>QTY</th>
-                    <th>AMOUNT</th>
+                    <th class="col-3">AMOUNT</th>
                 </tr>
             </thead>
             @php
