@@ -1,12 +1,12 @@
 <div>
-    @livewire('alert-layout', [ 'errors' => $errors->any() ? $errors->all() : '', 'message' => session('message'), 'error' => session('error'), ])
+    @livewire('alert-layout', ['errors' => $errors->any() ? $errors->all() : '', 'message' => session('message'), 'error' => session('error')])
     <table class="table table-sm table-bordered table-hover">
         <thead class="text-xs bg-sky">
             <tr>
                 <th class="col-1">Account Code</th>
                 <th class="col-3">Account Name</th>
-                <th class="col-1 text-right">Debit</th>
-                <th class="col-1 text-right">Credit</th>
+                <th class="col-1 text-right">Amount</th>
+
                 <th class="col-3">Particular</th>
                 @if ($STATUS == 0 || $STATUS == 16)
                     <th class="text-center col-1">Action</th>
@@ -22,17 +22,9 @@
                     <td class="text-right">
                         @if ($editId === $list->ID)
                             <input step="0.01" type="number" class="form-control form-control-sm"
-                                wire:model='editDebit' name="editDebit" />
+                                wire:model='editAmount' name="editAmount" />
                         @else
-                            {{ number_format($list->DEBIT, 2) }}
-                        @endif
-                    </td>
-                    <td class="text-right">
-                        @if ($editId === $list->ID)
-                            <input step="0.01" type="number" class="form-control form-control-sm"
-                                wire:model='editCredit' name="editCredit" />
-                        @else
-                            {{ number_format($list->CREDIT, 2) }}
+                            {{ number_format($list->AMOUNT, 2) }}
                         @endif
                     </td>
 
@@ -114,14 +106,9 @@
                                 @endif
                             @endif
                         </td>
-
                         <td>
                             <input step="0.01" type="number" class="form-control form-control-sm  text-right"
-                                name="DEBIT" wire:model='DEBIT' />
-                        </td>
-                        <td>
-                            <input step="0.01" type="number" class="form-control form-control-sm  text-right"
-                                name="CREDIT" wire:model='CREDIT' />
+                                name="AMOUNT" wire:model='AMOUNT' />
                         </td>
                         <td class="text-left">
                             <input type="text" class="form-control form-control-sm " wire:model='NOTES'
@@ -149,10 +136,7 @@
 
                 </td>
                 <td class='text-right'>
-                    <label class='text-primary text-xs'>{{ number_format($TOTAL_DEBIT, 2) }}</label>
-                </td>
-                <td class='text-right'>
-                    <label class='text-primary text-xs'>{{ number_format($TOTAL_CREDIT, 2) }}</label>
+                    <label class='text-primary text-xs'>{{ number_format($TOTAL_AMOUNT, 2) }}</label>
                 </td>
                 <td></td>
                 {{-- <td></td> --}}
@@ -167,7 +151,4 @@
         <livewire:custom-check-box name="codeBaseAcct" titleName="Use choose account code" :isDisabled=false
             wire:model.live='codeBase' />
     @endif
-
-
-    {{-- @livewire('GeneralJournal.GeneralJournalTempleteModal', ['GENERAL_JOURNAL_ID' => $GENERAL_JOURNAL_ID]) --}}
 </div>

@@ -35,9 +35,9 @@ class SalesReceiptServices
     public function getViaUndeposit(int $ID)
     {
         $result = SalesReceipt::where('ID', '=', $ID)
-        ->where('DEPOSITED', '=', 0)
-        ->first();
-        
+            ->where('DEPOSITED', '=', 0)
+            ->first();
+
         if ($result) {
             return $result;
         }
@@ -64,7 +64,7 @@ class SalesReceiptServices
         int $PAYMENT_METHOD_ID,
         string $PAYMENT_REF_NO,
         string $CARD_NO,
-        int $CASH_COUNT_ID = null,
+        int $CASH_COUNT_ID = 0,
         int $CASHIER_ID = 0,
         string $NOTES,
         int $UNDEPOSITED_FUNDS_ACCOUNT_ID,
@@ -81,31 +81,31 @@ class SalesReceiptServices
         $isLocRef = boolval($this->systemSettingServices->GetValue('IncRefNoByLocation'));
 
         SalesReceipt::create([
-            'ID'                            => $ID,
-            'RECORDED_ON'                   => $this->dateServices->Now(),
-            'CODE'                          => $CODE !== '' ? $CODE : $this->object->GetSequence($OBJECT_TYPE, $isLocRef ? $LOCATION_ID : null),
-            'DATE'                          => $DATE,
-            'POS_TIMESTAMP'                 => null,
-            'CUSTOMER_ID'                   => $CUSTOMER_ID,
-            'LOCATION_ID'                   => $LOCATION_ID,
-            'CLASS_ID'                      => $CLASS_ID  > 0 ? $CLASS_ID : null,
-            'SALES_REP_ID'                  => $SALES_REP_ID > 0 ? $SALES_REP_ID : null,
-            'AMOUNT'                        => $AMOUNT,
-            'PAYMENT_AMOUNT'                => $PAYMENT_AMOUNT,
-            'PAYMENT_METHOD_ID'             => $PAYMENT_METHOD_ID,
-            'PAYMENT_REF_NO'                => $PAYMENT_REF_NO,
-            'CARD_NO'                       => $CARD_NO,
-            'CASHIER_ID'                    => $CASHIER_ID > 0 ? $CASHIER_ID : null,
-            'CASH_COUNT_ID'                 => $CASH_COUNT_ID > 0 ? $CASH_COUNT_ID : null,
-            'NOTES'                         => $NOTES,
-            'UNDEPOSITED_FUNDS_ACCOUNT_ID'  => $UNDEPOSITED_FUNDS_ACCOUNT_ID,
-            'OUTPUT_TAX_ID'                 => $OUTPUT_TAX_ID,
-            'OUTPUT_TAX_RATE'               => $OUTPUT_TAX_RATE,
-            'OUTPUT_TAX_AMOUNT'             => $OUTPUT_TAX_AMOUNT,
-            'OUTPUT_TAX_VAT_METHOD'         => $OUTPUT_TAX_VAT_METHOD,
-            'OUTPUT_TAX_ACCOUNT_ID'         => $OUTPUT_TAX_ACCOUNT_ID,
-            'STATUS'                        => $STATUS,
-            'DEPOSITED'                     => 0,
+            'ID' => $ID,
+            'RECORDED_ON' => $this->dateServices->Now(),
+            'CODE' => $CODE !== '' ? $CODE : $this->object->GetSequence($OBJECT_TYPE, $isLocRef ? $LOCATION_ID : null),
+            'DATE' => $DATE,
+            'POS_TIMESTAMP' => null,
+            'CUSTOMER_ID' => $CUSTOMER_ID,
+            'LOCATION_ID' => $LOCATION_ID,
+            'CLASS_ID' => $CLASS_ID > 0 ? $CLASS_ID : null,
+            'SALES_REP_ID' => $SALES_REP_ID > 0 ? $SALES_REP_ID : null,
+            'AMOUNT' => $AMOUNT,
+            'PAYMENT_AMOUNT' => $PAYMENT_AMOUNT,
+            'PAYMENT_METHOD_ID' => $PAYMENT_METHOD_ID,
+            'PAYMENT_REF_NO' => $PAYMENT_REF_NO,
+            'CARD_NO' => $CARD_NO,
+            'CASHIER_ID' => $CASHIER_ID > 0 ? $CASHIER_ID : null,
+            'CASH_COUNT_ID' => $CASH_COUNT_ID > 0 ? $CASH_COUNT_ID : null,
+            'NOTES' => $NOTES,
+            'UNDEPOSITED_FUNDS_ACCOUNT_ID' => $UNDEPOSITED_FUNDS_ACCOUNT_ID,
+            'OUTPUT_TAX_ID' => $OUTPUT_TAX_ID,
+            'OUTPUT_TAX_RATE' => $OUTPUT_TAX_RATE,
+            'OUTPUT_TAX_AMOUNT' => $OUTPUT_TAX_AMOUNT,
+            'OUTPUT_TAX_VAT_METHOD' => $OUTPUT_TAX_VAT_METHOD,
+            'OUTPUT_TAX_ACCOUNT_ID' => $OUTPUT_TAX_ACCOUNT_ID,
+            'STATUS' => $STATUS,
+            'DEPOSITED' => 0,
         ]);
 
         return $ID;
@@ -138,27 +138,27 @@ class SalesReceiptServices
         SalesReceipt::where('ID', '=', $ID)
             ->where('LOCATION_ID', '=', $LOCATION_ID)
             ->update([
-                'CODE'                          => $CODE,
-                'CUSTOMER_ID'                   => $CUSTOMER_ID,
-                'LOCATION_ID'                   => $LOCATION_ID,
-                'CLASS_ID'                      => $CLASS_ID  > 0 ? $CLASS_ID : null,
-                'SALES_REP_ID'                  => $SALES_REP_ID > 0 ? $SALES_REP_ID : null,
-                'AMOUNT'                        => $AMOUNT,
-                'PAYMENT_AMOUNT'                => $PAYMENT_AMOUNT,
-                'PAYMENT_METHOD_ID'             => $PAYMENT_METHOD_ID,
-                'PAYMENT_REF_NO'                => $PAYMENT_REF_NO,
-                'CARD_NO'                       => $CARD_NO,
-                'CASHIER_ID'                    => $CASHIER_ID > 0 ? $CASHIER_ID : null,
-                'CASH_COUNT_ID'                 => $CASH_COUNT_ID > 0 ? $CASH_COUNT_ID : null,
-                'NOTES'                         => $NOTES,
-                'UNDEPOSITED_FUNDS_ACCOUNT_ID'  => $UNDEPOSITED_FUNDS_ACCOUNT_ID,
-                'OUTPUT_TAX_ID'                 => $OUTPUT_TAX_ID,
-                'OUTPUT_TAX_RATE'               => $OUTPUT_TAX_RATE,
-                'OUTPUT_TAX_AMOUNT'             => $OUTPUT_TAX_AMOUNT,
-                'OUTPUT_TAX_VAT_METHOD'         => $OUTPUT_TAX_VAT_METHOD,
-                'OUTPUT_TAX_ACCOUNT_ID'         => $OUTPUT_TAX_ACCOUNT_ID,
-                'STATUS'                        => $STATUS,
-                'DEPOSITED'                     => 0,
+                'CODE' => $CODE,
+                'CUSTOMER_ID' => $CUSTOMER_ID,
+                'LOCATION_ID' => $LOCATION_ID,
+                'CLASS_ID' => $CLASS_ID > 0 ? $CLASS_ID : null,
+                'SALES_REP_ID' => $SALES_REP_ID > 0 ? $SALES_REP_ID : null,
+                'AMOUNT' => $AMOUNT,
+                'PAYMENT_AMOUNT' => $PAYMENT_AMOUNT,
+                'PAYMENT_METHOD_ID' => $PAYMENT_METHOD_ID,
+                'PAYMENT_REF_NO' => $PAYMENT_REF_NO,
+                'CARD_NO' => $CARD_NO,
+                'CASHIER_ID' => $CASHIER_ID > 0 ? $CASHIER_ID : null,
+                'CASH_COUNT_ID' => $CASH_COUNT_ID > 0 ? $CASH_COUNT_ID : null,
+                'NOTES' => $NOTES,
+                'UNDEPOSITED_FUNDS_ACCOUNT_ID' => $UNDEPOSITED_FUNDS_ACCOUNT_ID,
+                'OUTPUT_TAX_ID' => $OUTPUT_TAX_ID,
+                'OUTPUT_TAX_RATE' => $OUTPUT_TAX_RATE,
+                'OUTPUT_TAX_AMOUNT' => $OUTPUT_TAX_AMOUNT,
+                'OUTPUT_TAX_VAT_METHOD' => $OUTPUT_TAX_VAT_METHOD,
+                'OUTPUT_TAX_ACCOUNT_ID' => $OUTPUT_TAX_ACCOUNT_ID,
+                'STATUS' => $STATUS,
+                'DEPOSITED' => 0,
             ]);
     }
     public function Delete(int $ID)
@@ -240,35 +240,35 @@ class SalesReceiptServices
         $ID = $this->object->ObjectNextID('SALES_RECEIPT_ITEMS');
 
         SalesReceiptItems::create([
-            'ID'                    => $ID,
-            'SALES_RECEIPT_ID'      => $SALES_RECEIPT_ID,
-            'LINE_NO'               => $LINE_NO,
-            'ITEM_ID'               => $ITEM_ID,
-            'DESCRIPTION'           => null,
-            'QUANTITY'              => $QUANTITY,
-            'UNIT_ID'               => $UNIT_ID > 0 ? $UNIT_ID : null,
-            'UNIT_BASE_QUANTITY'    => $UNIT_BASE_QUANTITY,
-            'RATE'                  => $RATE,
-            'RATE_TYPE'             => $RATE_TYPE,
-            'AMOUNT'                => $AMOUNT,
-            'TAXABLE'               => $TAXABLE,
-            'TAXABLE_AMOUNT'        => $TAXABLE_AMOUNT,
-            'TAX_AMOUNT'            => $TAX_AMOUNT,
-            'COGS_ACCOUNT_ID'       => $COGS_ACCOUNT_ID > 0 ? $COGS_ACCOUNT_ID : null,
-            'ASSET_ACCOUNT_ID'      => $ASSET_ACCOUNT_ID > 0 ? $ASSET_ACCOUNT_ID : null,
-            'INCOME_ACCOUNT_ID'     => $INCOME_ACCOUNT_ID > 0 ? $INCOME_ACCOUNT_ID : null,
-            'BATCH_ID'              => $BATCH_ID > 0 ? $BATCH_ID : null,
-            'GROUP_LINE_ID'         => $GROUP_LINE_ID > 0,
-            'PRINT_IN_FORMS'        => $PRINT_IN_FORMS,
-            'DEPOSITED'             => $DEPOSITED,
-            'PRICE_LEVEL_ID'        => $PRICE_LEVEL_ID > 0 ? $PRICE_LEVEL_ID : null
+            'ID' => $ID,
+            'SALES_RECEIPT_ID' => $SALES_RECEIPT_ID,
+            'LINE_NO' => $LINE_NO,
+            'ITEM_ID' => $ITEM_ID,
+            'DESCRIPTION' => null,
+            'QUANTITY' => $QUANTITY,
+            'UNIT_ID' => $UNIT_ID > 0 ? $UNIT_ID : null,
+            'UNIT_BASE_QUANTITY' => $UNIT_BASE_QUANTITY,
+            'RATE' => $RATE,
+            'RATE_TYPE' => $RATE_TYPE,
+            'AMOUNT' => $AMOUNT,
+            'TAXABLE' => $TAXABLE,
+            'TAXABLE_AMOUNT' => $TAXABLE_AMOUNT,
+            'TAX_AMOUNT' => $TAX_AMOUNT,
+            'COGS_ACCOUNT_ID' => $COGS_ACCOUNT_ID > 0 ? $COGS_ACCOUNT_ID : null,
+            'ASSET_ACCOUNT_ID' => $ASSET_ACCOUNT_ID > 0 ? $ASSET_ACCOUNT_ID : null,
+            'INCOME_ACCOUNT_ID' => $INCOME_ACCOUNT_ID > 0 ? $INCOME_ACCOUNT_ID : null,
+            'BATCH_ID' => $BATCH_ID > 0 ? $BATCH_ID : null,
+            'GROUP_LINE_ID' => $GROUP_LINE_ID > 0,
+            'PRINT_IN_FORMS' => $PRINT_IN_FORMS,
+            'DEPOSITED' => $DEPOSITED,
+            'PRICE_LEVEL_ID' => $PRICE_LEVEL_ID > 0 ? $PRICE_LEVEL_ID : null
         ]);
 
         return $ID;
     }
     public function ItemGet(int $ID, int $SALES_RECEIPT_ID)
     {
-        return  SalesReceiptItems::where('ID', '=', $ID)
+        return SalesReceiptItems::where('ID', '=', $ID)
             ->where('SALES_RECEIPT_ID', '=', $SALES_RECEIPT_ID)
             ->first();
     }
@@ -290,22 +290,22 @@ class SalesReceiptServices
         int $PRICE_LEVEL_ID,
         int $INCOME_ACCOUNT_ID
     ) {
-        $data =  $this->ItemGet($ID, $SALES_RECEIPT_ID);
+        $data = $this->ItemGet($ID, $SALES_RECEIPT_ID);
 
         if ($data) {
             $data->update([
-                'QUANTITY'              => $QUANTITY,
-                'UNIT_ID'               => $UNIT_ID > 0 ? $UNIT_ID : null,
-                'UNIT_BASE_QUANTITY'    => $UNIT_BASE_QUANTITY,
-                'RATE'                  => $RATE,
-                'RATE_TYPE'             => $RATE_TYPE,
-                'AMOUNT'                => $AMOUNT,
-                'TAXABLE'               => $TAXABLE,
-                'TAXABLE_AMOUNT'        => $TAXABLE_AMOUNT,
-                'TAX_AMOUNT'            => $TAX_AMOUNT,
-                'BATCH_ID'              => $BATCH_ID > 0 ? $BATCH_ID : null,
-                'PRICE_LEVEL_ID'        => $PRICE_LEVEL_ID > 0 ? $PRICE_LEVEL_ID : null,
-                'INCOME_ACCOUNT_ID'     => $INCOME_ACCOUNT_ID > 0 ? $INCOME_ACCOUNT_ID : null
+                'QUANTITY' => $QUANTITY,
+                'UNIT_ID' => $UNIT_ID > 0 ? $UNIT_ID : null,
+                'UNIT_BASE_QUANTITY' => $UNIT_BASE_QUANTITY,
+                'RATE' => $RATE,
+                'RATE_TYPE' => $RATE_TYPE,
+                'AMOUNT' => $AMOUNT,
+                'TAXABLE' => $TAXABLE,
+                'TAXABLE_AMOUNT' => $TAXABLE_AMOUNT,
+                'TAX_AMOUNT' => $TAX_AMOUNT,
+                'BATCH_ID' => $BATCH_ID > 0 ? $BATCH_ID : null,
+                'PRICE_LEVEL_ID' => $PRICE_LEVEL_ID > 0 ? $PRICE_LEVEL_ID : null,
+                'INCOME_ACCOUNT_ID' => $INCOME_ACCOUNT_ID > 0 ? $INCOME_ACCOUNT_ID : null
             ]);
         }
     }
@@ -382,17 +382,17 @@ class SalesReceiptServices
 
                 SalesReceipt::where('ID', '=', $ID)
                     ->update([
-                        'AMOUNT'            => $originalAmount,
+                        'AMOUNT' => $originalAmount,
                         'OUTPUT_TAX_AMOUNT' => $list['TAX_AMOUNT'],
-                        'TAXABLE_AMOUNT'    => $list['TAXABLE_AMOUNT'],
+                        'TAXABLE_AMOUNT' => $list['TAXABLE_AMOUNT'],
                         'NONTAXABLE_AMOUNT' => $list['NONTAXABLE_AMOUNT']
                     ]);
 
                 $result = array(
                     [
-                        'AMOUNT'            => $originalAmount,
-                        'TAX_AMOUNT'        => $list['TAX_AMOUNT'],
-                        'TAXABLE_AMOUNT'    => $list['TAXABLE_AMOUNT'],
+                        'AMOUNT' => $originalAmount,
+                        'TAX_AMOUNT' => $list['TAX_AMOUNT'],
+                        'TAXABLE_AMOUNT' => $list['TAXABLE_AMOUNT'],
                         'NONTAXABLE_AMOUNT' => $list['NONTAXABLE_AMOUNT']
                     ]
                 );
