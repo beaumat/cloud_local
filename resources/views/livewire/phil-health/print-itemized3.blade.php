@@ -14,9 +14,9 @@ use App\Services\ItemSoaServices;
                     <th>SERVICE DATE</th>
                     <th>ITEM NAME</th>
                     <th>UNIT OF MEASUREMENT</th>
-                    <th>PRICE</th>
-                    <th>QTY</th>
-                    <th class="col-3">AMOUNT</th>
+                    <th class="col-1">PRICE</th>
+                    <th class="col-1">QTY</th>
+                    <th class="col-2">AMOUNT</th>
                 </tr>
             </thead>
             @php
