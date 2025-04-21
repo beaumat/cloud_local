@@ -6,7 +6,6 @@
                 <th class="col-1">Account Code</th>
                 <th class="col-3">Account Name</th>
                 <th class="col-1 text-right">Amount</th>
-
                 <th class="col-3">Particular</th>
                 @if ($STATUS == 0 || $STATUS == 16)
                     <th class="text-center col-1">Action</th>
@@ -17,20 +16,20 @@
         <tbody class="text-xs">
             @foreach ($dataList as $list)
                 <tr>
-                    <td>{{ $list->CODE }}</td>
-                    <td>{{ $list->ACCOUNT_DESCRIPTION }}</td>
+                    <td>{{ $list->ACCOUNT_CODE }}</td>
+                    <td>{{ $list->ACCOUNT_NAME }}</td>
                     <td class="text-right">
-                        @if ($editId === $list->ID)
+                        @if ($editID === $list->ID)
                             <input step="0.01" type="number" class="form-control form-control-sm"
-                                wire:model='editAmount' name="editAmount" />
+                                wire:model='editAMOUNT' name="editAMOUNT" />
                         @else
                             {{ number_format($list->AMOUNT, 2) }}
                         @endif
                     </td>
 
                     <td>
-                        @if ($editId === $list->ID)
-                            <input wire:model='editNotes' name="editNotes" type="text"
+                        @if ($editID === $list->ID)
+                            <input wire:model='editNOTES' name="editNOTES" type="text"
                                 class="form-control form-control-sm" />
                         @else
                             {{ $list->NOTES }}
@@ -40,8 +39,8 @@
 
                     @if ($STATUS == 0 || $STATUS == 16)
                         <td class="text-center">
-                            @if ($editId === $list->ID)
-                                <button title="Update" id="updatebtn" wire:click="update({{ $list->ID }})"
+                            @if ($editID === $list->ID)
+                                <button title="Update" id="updatebtn" wire:click="update()"
                                     class="btn btn-xs btn-success">
                                     <i class="fas fa-check" aria-hidden="true"></i>
                                 </button>

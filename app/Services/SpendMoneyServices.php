@@ -3,9 +3,13 @@ namespace App\Services;
 
 use App\Models\SpendMoney;
 use App\Models\SpendMoneyDetails;
+use Illuminate\Support\Facades\DB;
 
 class SpendMoneyServices
 {
+
+    public int $object_type_map_spend_money = 136;
+    public int $object_type_map_spend_money_details = 137;
     private $objectServices;
     private $dateServices;
     private $systemSettingServices;
@@ -42,7 +46,14 @@ class SpendMoneyServices
 
         return $ID;
     }
-
+    public function StatusUpdate(int $ID, int $STATUS)
+    {
+        SpendMoney::where('ID', '=', $ID)
+            ->update([
+                'STATUS' => $STATUS,
+                'STATUS_DATE' => $this->dateServices->Now(),
+            ]);
+    }
     public function Update(int $ID, string $DATE, string $CODE, int $LOCATION_ID, int $ACCOUNT_ID, string $NOTES)
     {
         SpendMoney::where('ID', '=', $ID)
@@ -70,6 +81,7 @@ class SpendMoneyServices
                 'spend_money.DATE',
                 'spend_money.CODE',
                 'spend_money.NOTES',
+                'spend_money.AMOUNT',
                 'l.NAME as LOCATION_NAME',
                 'document_status_map.DESCRIPTION as STATUS',
                 'account.NAME as ACCOUNT_NAME',
@@ -103,14 +115,7 @@ class SpendMoneyServices
 
         $ID = (int) $this->objectServices->ObjectNextID('SPEND_MONEY_DETAILS');
         $LINE = (int) $this->getLine($SPEND_MONEY_ID) + 1;
-        SpendMoneyDetails::create([
-            'ID' => $ID,
-            'LINE_NO' => $LINE,
-            'SPEND_MONEY_ID' => $SPEND_MONEY_ID,
-            'ACCOUNT_ID' => $ACCOUNT_ID,
-            'AMOUNT' => $AMOUNT,
-            'NOTES' => $NOTES,
-        ]);
+        SpendMoneyDetails::create(['ID' => $ID, 'LINE_NO' => $LINE, 'SPEND_MONEY_ID' => $SPEND_MONEY_ID, 'ACCOUNT_ID' => $ACCOUNT_ID, 'AMOUNT' => $AMOUNT, 'NOTES' => $NOTES,]);
         return $ID;
     }
     public function UpdateDetails(int $ID, int $ACCOUNT_ID, float $AMOUNT, string $NOTES)
@@ -125,27 +130,72 @@ class SpendMoneyServices
     public function DeleteDetails(int $ID)
     {
         SpendMoneyDetails::where('ID', '=', $ID)->delete();
-        
+
     }
     public function ListDetails(int $SPEND_MONEY_ID)
     {
-        $result =  SpendMoneyDetails::where('SPEND_MONEY_ID', '=', $SPEND_MONEY_ID)->get();
+        $result = SpendMoneyDetails::where('SPEND_MONEY_ID', '=', $SPEND_MONEY_ID)->get();
 
         return $result;
     }
-    public function ReCalculate(int $SPEND_MONEY_ID)
+    public function ReCalculate(int $SPEND_MONEY_ID): float
     {
         $total = SpendMoneyDetails::where('SPEND_MONEY_ID', '=', $SPEND_MONEY_ID)->sum('AMOUNT');
         SpendMoney::where('ID', '=', $SPEND_MONEY_ID)->update(['AMOUNT' => $total]);
+        return (float) $total;
     }
     public function getDetailsList(int $ID)
     {
-        $result = SpendMoneyDetails::where('SPEND_MONEY_ID', '=', $ID)->get();
+        $result = SpendMoneyDetails::query()
+            ->select([
+                'spend_money_details.ID',
+                'spend_money_details.LINE_NO',
+                'spend_money_details.AMOUNT',
+                'spend_money_details.NOTES',
+                'spend_money_details.ACCOUNT_ID',
+                'account.NAME as ACCOUNT_NAME',
+                'account.TAG as ACCOUNT_CODE',
+
+            ])
+            ->join('account', 'account.ID', '=', 'spend_money_details.ACCOUNT_ID')
+            ->where('SPEND_MONEY_ID', '=', $ID)
+            ->get();
         return $result;
     }
     public function getDetails(int $ID)
     {
         $result = SpendMoneyDetails::where('ID', '=', $ID)->first();
+        return $result;
+    }
+    public function JournalEntry(int $ID)
+    {
+        $result = SpendMoney::query()
+            ->select([
+                'ID',
+                'ACCOUNT_ID',
+                DB::raw('0 as SUBSIDIARY_ID'),
+                'AMOUNT',
+                DB::raw('1 as ENTRY_TYPE'),
+            ])
+            ->where('ID', $ID)
+            ->get();
+
+        return $result;
+    }
+    public function JournalEntryDetails(int $ID)
+    {
+        $result = SpendMoneyDetails::query()
+            ->select([
+                'ID',
+                'ACCOUNT_ID',
+                DB::raw('0 as SUBSIDIARY_ID'),
+                'AMOUNT',
+                DB::raw('0 as ENTRY_TYPE'),
+            ])
+            ->where('SPEND_MONEY_ID', $ID)
+            ->orderBy('LINE_NO', 'asc')
+            ->get();
+
         return $result;
     }
 }

@@ -170,7 +170,7 @@
                                         <a class="nav-link active" id="custom-tabs-four-item-tab" data-toggle="pill"
                                             href="#custom-tabs-four-item" role="tab"
                                             aria-controls="custom-tabs-four-item" aria-selected="true">
-                                            Journal Entries
+                                            Account Entries
                                         </a>
                                     </li>
                                 </ul>
@@ -182,7 +182,7 @@
                                         <div class="row">
                                             <div class="col-md-12"
                                                 @if ($Modify == true) style="opacity: 0.5;pointer-events: none;" @endif>
-                                                @livewire('SpendMoney.SpendMoneyDetails', ['SPEND_MONEY_ID' => $ID, 'LOCATION_ID' => $LOCATION_ID, 'STATUS' => $STATUS])
+                                                @livewire('SpendMoney.SpendMoneyDetails', ['SPEND_MONEY_ID' => $ID, 'LOCATION_ID' => $LOCATION_ID, 'STATUS' => $STATUS,'TOTAL' => $AMOUNT])
                                             </div>
                                         </div>
                                     </div>

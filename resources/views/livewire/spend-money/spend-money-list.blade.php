@@ -55,6 +55,7 @@
                                         <th>Ref No.</th>
                                         <th>Date</th>
                                         <th class="col-2">Bank Account</th>
+                                        <th class="col-1 text-right">Amount</th>
                                         <th class="col-3">Notes</th>
                                         <th class="col-1">Location</th>
                                         <th class="col-1">Status</th>
@@ -77,7 +78,7 @@
                                             </td>
                                             <td> {{ date('m/d/Y', strtotime($list->DATE)) }}</td>
                                             <td>{{ $list->ACCOUNT_NAME }}</td>
-
+                                            <td class="text-right"> {{ number_format($list->AMOUNT, 2) }}</td>
                                             <td> {{ $list->NOTES }}</td>
 
                                             <td> {{ $list->LOCATION_NAME }}</td>

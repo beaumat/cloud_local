@@ -112,11 +112,13 @@ class GeneralJournalFormDetails extends Component
 
         $this->validate(
             [
-                'ACCOUNT_ID' => 'required',
+                'ACCOUNT_ID' => 'required|exists:account,id',
+              
             ],
             [],
             [
-                'ACCOUNT_ID' => 'Account'
+                'ACCOUNT_ID' => 'Account',
+          
             ]
         );
 
