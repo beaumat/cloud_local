@@ -125,6 +125,7 @@ class SpendMoneyServices
     public function DeleteDetails(int $ID)
     {
         SpendMoneyDetails::where('ID', '=', $ID)->delete();
+        
     }
     public function ListDetails(int $SPEND_MONEY_ID)
     {
@@ -132,7 +133,16 @@ class SpendMoneyServices
 
         return $result;
     }
-
+    public function ReCalculate(int $SPEND_MONEY_ID)
+    {
+        $total = SpendMoneyDetails::where('SPEND_MONEY_ID', '=', $SPEND_MONEY_ID)->sum('AMOUNT');
+        SpendMoney::where('ID', '=', $SPEND_MONEY_ID)->update(['AMOUNT' => $total]);
+    }
+    public function getDetailsList(int $ID)
+    {
+        $result = SpendMoneyDetails::where('SPEND_MONEY_ID', '=', $ID)->get();
+        return $result;
+    }
     public function getDetails(int $ID)
     {
         $result = SpendMoneyDetails::where('ID', '=', $ID)->first();

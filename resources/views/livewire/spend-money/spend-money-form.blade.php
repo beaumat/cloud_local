@@ -182,7 +182,7 @@
                                         <div class="row">
                                             <div class="col-md-12"
                                                 @if ($Modify == true) style="opacity: 0.5;pointer-events: none;" @endif>
-                                                @livewire('GeneralJournal.GeneralJournalFormDetails', ['GENERAL_JOURNAL_ID' => $ID, 'LOCATION_ID' => $LOCATION_ID, 'STATUS' => $STATUS])
+                                                @livewire('SpendMoney.SpendMoneyDetails', ['SPEND_MONEY_ID' => $ID, 'LOCATION_ID' => $LOCATION_ID, 'STATUS' => $STATUS])
                                             </div>
                                         </div>
                                     </div>

@@ -8,6 +8,7 @@ use App\Services\DocumentStatusServices;
 use App\Services\LocationServices;
 use App\Services\SpendMoneyServices;
 use App\Services\UserServices;
+use Illuminate\Support\Facades\Redirect;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 
@@ -18,7 +19,6 @@ class SpendMoneyForm extends Component
 
     public $locationList = [];
     public $accountList = [];
-
     public bool $Modify = false;
     public int $ID;
     public string $DATE;
@@ -135,7 +135,7 @@ class SpendMoneyForm extends Component
                     $this->NOTES
                 );
 
-                return redirect()->route('spendmoney_edit', ['id' => $this->ID])->with('message', 'Successfully created');
+                return Redirect::route('bankingspend_money_edit', ['id' => $this->ID])->with('message', 'Successfully created');
 
             }
 
@@ -150,7 +150,7 @@ class SpendMoneyForm extends Component
     public function getModify()
     {
         $this->Modify = true;
-      
+
     }
     public function updatedlocationid()
     {
