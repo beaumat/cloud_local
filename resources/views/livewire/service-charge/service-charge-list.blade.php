@@ -42,7 +42,7 @@
                                             <input type="date" class="form-control form-control-sm"
                                                 wire:model.live='DATE_TO' /> --}}
 
-                                            <label class="text-sm">Nurse Remarks:</label>
+                                            <label class="text-sm">Use Nurse Remarks:</label>
                                             <input type="checkbox" wire:model.live='nurseMark' name="nurseMark" />
 
                                         </div>
@@ -108,11 +108,22 @@
                                             <td class="text-right"> {{ number_format($list->AMOUNT, 2) }}</td>
                                             <td class="text-right"> {{ number_format($list->BALANCE_DUE, 2) }}</td>
                                             @if ($nurseMark)
-                                                <td class="text-center @if ($list->got_charge) bg-success @endif"> @if ($list->got_charge) <i class="fa fa-check" aria-hidden="true"></i> @endif </td>
-                                                <td class="text-center @if ($list->STATUS_ID == 0) bg-warning @elseif ($list->STATUS_ID == 2) bg-primary  @elseif ($list->STATUS_ID == 11) bg-success @else bg-secondary @endif "> {{ substr($list->STATUS, 0, 1) }}</td>
-                                                <td class="text-center @if ($list->TR_STATUS == 'Draft') bg-warning  @elseif ($list->TR_STATUS == 'Posted') bg-success  @elseif ($list->TR_STATUS == 'Unposted') bg-secondary @else bg-danger @endif "> {{ substr($list->TR_STATUS, 0, 1) }}</td>
+                                                <td
+                                                    class="text-center @if ($list->got_charge) bg-success @endif">
+                                                    @if ($list->got_charge)
+                                                        <i class="fa fa-check" aria-hidden="true"></i>
+                                                    @endif
+                                                </td>
+                                                <td
+                                                    class="text-center @if ($list->STATUS_ID == 0) bg-warning @elseif ($list->STATUS_ID == 2) bg-primary  @elseif ($list->STATUS_ID == 11) bg-success @else bg-secondary @endif ">
+                                                    {{ substr($list->STATUS, 0, 1) }}</td>
+                                                <td
+                                                    class="text-center @if ($list->TR_STATUS == 'Draft') bg-warning  @elseif ($list->TR_STATUS == 'Posted') bg-success  @elseif ($list->TR_STATUS == 'Unposted') bg-secondary @else bg-danger @endif ">
+                                                    {{ substr($list->TR_STATUS, 0, 1) }}</td>
                                             @else
-                                                <td class="text-center @if ($list->STATUS_ID == 0) bg-warning @elseif ($list->STATUS_ID == 2) bg-primary  @elseif ($list->STATUS_ID == 11) bg-success @else bg-secondary @endif "> {{ substr($list->STATUS, 0, 1) }}</td>
+                                                <td
+                                                    class="text-center @if ($list->STATUS_ID == 0) bg-warning @elseif ($list->STATUS_ID == 2) bg-primary  @elseif ($list->STATUS_ID == 11) bg-success @else bg-secondary @endif ">
+                                                    {{ substr($list->STATUS, 0, 1) }}</td>
                                             @endif
 
 
