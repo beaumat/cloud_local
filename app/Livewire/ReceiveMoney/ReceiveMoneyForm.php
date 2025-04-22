@@ -11,8 +11,10 @@ use App\Services\ReceiveMoneyServices;
 use App\Services\UserServices;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
+use Livewire\Attributes\Title;
 use Livewire\Component;
 
+#[Title('Receive Money')]
 class ReceiveMoneyForm extends Component
 {
 
