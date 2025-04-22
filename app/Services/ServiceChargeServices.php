@@ -44,7 +44,7 @@ class ServiceChargeServices
     public function setItemPaidAmount(int $SERVICE_CHARGES_ITEM_ID, float $PAID_AMOUNT)
     {
 
-        ServiceChargesItems::where('ID','=', $SERVICE_CHARGES_ITEM_ID)
+        ServiceChargesItems::where('ID', '=', $SERVICE_CHARGES_ITEM_ID)
             ->update([
                 'PAID_AMOUNT' => $PAID_AMOUNT
             ]);
@@ -377,6 +377,7 @@ class ServiceChargeServices
             ->whereBetween('service_charges.DATE', [$dateFrom, $dateTo])
             ->where('service_charges.USE_PHIC', '=', 0)
             ->orderByDesc('service_charges.DATE')
+            ->limit(1000)
             ->paginate($perPage);
 
         return $query;
