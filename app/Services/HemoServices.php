@@ -990,7 +990,7 @@ class HemoServices
                 }
             })
             ->where('hemodialysis.STATUS_ID', '<>', 4)
-            ->orderBy('hemodialysis.DATE', 'asc')
+            ->orderBy('hemodialysis.DATE', 'desc')
             ->paginate($perPage);
         return $result;
     }

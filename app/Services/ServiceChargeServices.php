@@ -293,7 +293,10 @@ class ServiceChargeServices
 
     public function ServicesChargesGetFirst(string $DATE, int $PATIENT_ID, int $LOCATION_ID)
     {
-        $data = ServiceCharges::where('DATE', $DATE)->where('PATIENT_ID', $PATIENT_ID)->where('LOCATION_ID', $LOCATION_ID)->first();
+        $data = ServiceCharges::where('DATE', $DATE)
+            ->where('PATIENT_ID', $PATIENT_ID)
+            ->where('LOCATION_ID', $LOCATION_ID)
+            ->first();
 
         if ($data) {
             return $data;
