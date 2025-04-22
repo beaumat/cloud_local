@@ -120,7 +120,7 @@
                                                         class="btn btn-xs btn-info">
                                                         <i class="fas fa-eye" aria-hidden="true"></i>
                                                     </a>
-                                                    @if ($list->AMOUNT > 0 || ($list->STATUS_ID == 0 && Auth()->user()->can('patient.service-charges.delete')))
+                                                    @if ($list->AMOUNT == 0 || ($list->STATUS_ID == 0 && Auth()->user()->can('patient.service-charges.delete')))
                                                         <button type="button" title="Delete active"
                                                             wire:click='delete({{ $list->ID }})'
                                                             wire:confirm="Are you sure you want to delete this?"
