@@ -9,6 +9,8 @@ use App\Models\Tax;
 use Illuminate\Support\Facades\DB;
 use Livewire\WithPagination;
 
+use function Laravel\Prompts\search;
+
 class ServiceChargeServices
 {
     private int $PRIMING_FEE_ID = 176;
@@ -341,7 +343,7 @@ class ServiceChargeServices
     //     return $result;
     // }
 
-    public function Search($search, int $locationId, int $perPage, string $dateFrom, string $dateTo)
+    public function Search($search, int $locationId, int $perPage, string $dateEntry)
     {
         $query = ServiceCharges::query()
             ->select([
@@ -357,8 +359,8 @@ class ServiceChargeServices
                 't.NAME as TAX_NAME',
                 's.DESCRIPTION as STATUS',
                 's.ID as STATUS_ID',
-                DB::raw('(SELECT s.DESCRIPTION FROM hemodialysis AS h JOIN hemo_status AS s ON s.ID = h.STATUS_ID WHERE h.CUSTOMER_ID = service_charges.PATIENT_ID AND h.DATE = service_charges.DATE AND h.LOCATION_ID = service_charges.LOCATION_ID LIMIT 1) as TR_STATUS'),
-                DB::raw('(SELECT IF(COUNT(*) > 0, TRUE, FALSE) FROM hemodialysis_items INNER JOIN service_charges_items ON service_charges_items.ID = hemodialysis_items.SC_ITEM_ID WHERE service_charges_items.SERVICE_CHARGES_ID = service_charges.ID AND hemodialysis_items.IS_CASHIER = 1) as got_charge')
+                // DB::raw('(SELECT s.DESCRIPTION FROM hemodialysis AS h JOIN hemo_status AS s ON s.ID = h.STATUS_ID WHERE h.CUSTOMER_ID = service_charges.PATIENT_ID AND h.DATE = service_charges.DATE AND h.LOCATION_ID = service_charges.LOCATION_ID LIMIT 1) as TR_STATUS'),
+                // DB::raw('(SELECT IF(COUNT(*) > 0, TRUE, FALSE) FROM hemodialysis_items INNER JOIN service_charges_items ON service_charges_items.ID = hemodialysis_items.SC_ITEM_ID WHERE service_charges_items.SERVICE_CHARGES_ID = service_charges.ID AND hemodialysis_items.IS_CASHIER = 1) as got_charge')
             ])
             ->join('contact as c', 'c.ID', '=', 'service_charges.PATIENT_ID')
             ->join('location as l', 'l.ID', '=', 'service_charges.LOCATION_ID')
@@ -374,7 +376,9 @@ class ServiceChargeServices
                         ->orWhere('c.PRINT_NAME_AS', 'like', '%' . $search . '%');
                 });
             })
-            ->whereBetween('service_charges.DATE', [$dateFrom, $dateTo])
+            ->when(!$search, function ($query) use ($dateEntry) {
+                $query->whereDate('service_charges.DATE', $dateEntry);
+            })
             ->where('service_charges.USE_PHIC', '=', 0)
             ->orderByDesc('service_charges.DATE')
             ->limit(1000)

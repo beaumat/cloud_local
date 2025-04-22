@@ -19,7 +19,7 @@ class ServiceChargeList extends Component
     public $search = '';
     public int $perPage = 100;
     public string $DATE_FROM;
-    public string $DATE_TO;
+
     public string $DATE_NOW;
     public int $locationid;
     public $locationList = [];
@@ -41,7 +41,6 @@ class ServiceChargeList extends Component
     public function mount()
     {
         $this->DATE_FROM = $this->dateServices->NowDate();
-        $this->DATE_TO = $this->dateServices->NowDate();
         $this->locationList = $this->locationServices->getList();
         $this->locationid = $this->userServices->getLocationDefault();
     }
@@ -62,20 +61,6 @@ class ServiceChargeList extends Component
         session()->forget('message');
         session()->forget('error');
     }
-    public function render()
-    {
-        $this->DATE_NOW  = $this->dateServices->NowDate();
-        
-        $dataList = $this->serviceChargeServices->Search(
-            $this->search,
-            $this->locationid,
-            $this->perPage,
-            $this->DATE_FROM == '' ?  $this->dateServices->NowDate() : $this->DATE_FROM,
-            $this->DATE_TO == '' ? $this->dateServices->NowDate() : $this->DATE_TO
-        );
-
-        return view('livewire.service-charge.service-charge-list', ['dataList' => $dataList]);
-    }
     public function updatedlocationid()
     {
 
@@ -86,4 +71,18 @@ class ServiceChargeList extends Component
             session()->flash('error', $errorMessage);
         }
     }
+    public function render()
+    {
+        $this->DATE_NOW  = $this->dateServices->NowDate();
+        
+        $dataList = $this->serviceChargeServices->Search(
+            $this->search,
+            $this->locationid,
+            $this->perPage,
+            $this->DATE_FROM == '' ?  $this->dateServices->NowDate() : $this->DATE_FROM
+        );
+
+        return view('livewire.service-charge.service-charge-list', ['dataList' => $dataList]);
+    }
+   
 }

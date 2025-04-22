@@ -984,7 +984,11 @@ class HemoServices
             ->when($statusId > 0, function ($query) use (&$statusId) {
                 $query->where('hemodialysis.STATUS_ID', $statusId);
             })
-            ->whereBetween('hemodialysis.DATE', [$DateFrom, $DateTo])
+            ->when(!$search, function ($query) use ($DateFrom, $DateTo) {
+                if ($DateFrom != null && $DateTo != null) {
+                    $query->whereBetween('hemodialysis.DATE', [$DateFrom, $DateTo]);
+                }
+            })
             ->where('hemodialysis.STATUS_ID', '<>', 4)
             ->orderBy('hemodialysis.DATE', 'asc')
             ->paginate($perPage);

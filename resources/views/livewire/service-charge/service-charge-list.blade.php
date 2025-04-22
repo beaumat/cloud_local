@@ -33,14 +33,14 @@
                                             </div>
                                         </div>
                                         <div class ="col-md-2">
-                                            <label class="text-sm">Date From:</label>
+                                            <label class="text-sm">Date:</label>
                                             <input type="date" class="form-control form-control-sm"
                                                 wire:model.live='DATE_FROM' />
                                         </div>
                                         <div class="col-md-2">
-                                            <label class="text-sm">Date To:</label>
+                                            {{-- <label class="text-sm">Date To:</label>
                                             <input type="date" class="form-control form-control-sm"
-                                                wire:model.live='DATE_TO' />
+                                                wire:model.live='DATE_TO' /> --}}
                                         </div>
                                         <div class="col-md-2">
                                             <div class="mt-0">
@@ -70,10 +70,10 @@
                                         <th class="col-1">Location</th>
                                         <th class="col-1">Amount</th>
                                         <th class="col-1">Balance</th>
-                                        <th class="text-center">C</th>
-                                        <th class="text-center">S</th>
-                                        </th>
-                                        <th class="text-center">T</th>
+                                        {{-- <th class="text-center">C</th> --}}
+                                        <th class="text-center">Status</th>
+                        
+                                        {{-- <th class="text-center">T</th> --}}
                                         @can('patient.service-charges.create')
                                             <th class="text-center col-2 bg-success">
                                                 <a href="{{ route('patientsservice_charges_create') }}"
@@ -99,19 +99,19 @@
                                             <td> {{ $list->LOCATION_NAME }}</td>
                                             <td class="text-right"> {{ number_format($list->AMOUNT, 2) }}</td>
                                             <td class="text-right"> {{ number_format($list->BALANCE_DUE, 2) }}</td>
-                                            <td class="text-center    @if ($list->got_charge) bg-success @endif">
+                                            {{-- <td class="text-center    @if ($list->got_charge) bg-success @endif">
                                                 @if ($list->got_charge)
                                                     <i class="fa fa-check" aria-hidden="true"></i>
                                                 @endif
-                                            </td>
+                                            </td> --}}
                                             <td
                                                 class="text-center
                                             @if ($list->STATUS_ID == 0) bg-warning @elseif ($list->STATUS_ID == 2) bg-primary  @elseif ($list->STATUS_ID == 11) bg-success @else bg-secondary @endif
                                             ">
                                                 {{ substr($list->STATUS, 0, 1) }}</td>
-                                            <td
+                                            {{-- <td
                                                 class="text-center @if ($list->TR_STATUS == 'Draft') bg-warning  @elseif ($list->TR_STATUS == 'Posted') bg-success  @elseif ($list->TR_STATUS == 'Unposted') bg-secondary @else bg-danger @endif ">
-                                                {{ substr($list->TR_STATUS, 0, 1) }}</td>
+                                                {{ substr($list->TR_STATUS, 0, 1) }}</td> --}}
 
                                             @can('patient.service-charges.create')
                                                 <td class="text-center">
