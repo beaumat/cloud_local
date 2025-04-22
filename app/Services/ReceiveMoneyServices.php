@@ -175,7 +175,7 @@ class ReceiveMoneyServices
                 'ACCOUNT_ID',
                 DB::raw('0 as SUBSIDIARY_ID'),
                 'AMOUNT',
-                DB::raw('1 as ENTRY_TYPE'),
+                DB::raw('0 as ENTRY_TYPE'),
             ])
             ->where('ID', $ID)
             ->get();
@@ -190,7 +190,7 @@ class ReceiveMoneyServices
                 'ACCOUNT_ID',
                 DB::raw('0 as SUBSIDIARY_ID'),
                 'AMOUNT',
-                DB::raw('0 as ENTRY_TYPE'),
+                DB::raw('1 as ENTRY_TYPE'),
             ])
             ->where('RECEIVE_MONEY_ID', $ID)
             ->orderBy('LINE_NO', 'asc')

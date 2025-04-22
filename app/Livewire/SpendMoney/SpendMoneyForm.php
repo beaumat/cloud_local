@@ -203,9 +203,9 @@ class SpendMoneyForm extends Component
     public function posted()
     {
         try {
+            $detailsList = $this->spendMoneyServices->getDetailsList($this->ID);
 
-
-            if ($this->AMOUNT > 0) {
+            if ($detailsList) {
                 DB::beginTransaction();
                 if (!$this->AccountJournal()) {
                     DB::rollBack();
