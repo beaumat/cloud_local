@@ -86,7 +86,6 @@ class SpendMoneyServices
                 'document_status_map.DESCRIPTION as STATUS',
                 'account.NAME as ACCOUNT_NAME',
             ])
-
             ->join('account', 'account.ID', '=', 'spend_money.ACCOUNT_ID')
             ->join('document_status_map', 'document_status_map.ID', '=', 'spend_money.STATUS')
             ->join('location as l', function ($join) use (&$locationId) {
