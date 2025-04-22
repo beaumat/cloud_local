@@ -346,7 +346,7 @@ class ServiceChargeServices
     //     return $result;
     // }
 
-    public function Search($search, int $locationId, int $perPage, string $dateEntry)
+    public function Search($search, int $locationId, int $perPage, string $dateEntry, bool $showNurseEntry = false)
     {
         $query = ServiceCharges::query()
             ->select([
@@ -363,8 +363,17 @@ class ServiceChargeServices
                 's.DESCRIPTION as STATUS',
                 's.ID as STATUS_ID',
                 // DB::raw('(SELECT s.DESCRIPTION FROM hemodialysis AS h JOIN hemo_status AS s ON s.ID = h.STATUS_ID WHERE h.CUSTOMER_ID = service_charges.PATIENT_ID AND h.DATE = service_charges.DATE AND h.LOCATION_ID = service_charges.LOCATION_ID LIMIT 1) as TR_STATUS'),
-                // DB::raw('(SELECT IF(COUNT(*) > 0, TRUE, FALSE) FROM hemodialysis_items INNER JOIN service_charges_items ON service_charges_items.ID = hemodialysis_items.SC_ITEM_ID WHERE service_charges_items.SERVICE_CHARGES_ID = service_charges.ID AND hemodialysis_items.IS_CASHIER = 1) as got_charge')
+                // DB::raw('(SELECT IF(COUNT(*) > 0, TRUE, FALSE) FROM hemodialysis_items INNER JOIN service_charges_items ON service_charges_items.ID = hemodialysis_items.SC_ITEM_ID WHERE service_charges_items.SERVICE_CHARGES_ID = service_charges.ID AND hemodialysis_items.IS_CASHIER = 1 limit 1) as got_charge')
             ])
+            ->when($showNurseEntry, function ($query) use ($showNurseEntry) {
+                if ($showNurseEntry) {
+                    $query->addSelect([
+                        DB::raw('(SELECT s.DESCRIPTION FROM hemodialysis AS h JOIN hemo_status AS s ON s.ID = h.STATUS_ID WHERE h.CUSTOMER_ID = service_charges.PATIENT_ID AND h.DATE = service_charges.DATE AND h.LOCATION_ID = service_charges.LOCATION_ID LIMIT 1) as TR_STATUS'),
+                        DB::raw('(SELECT IF(COUNT(*) > 0, TRUE, FALSE) FROM hemodialysis_items INNER JOIN service_charges_items ON service_charges_items.ID = hemodialysis_items.SC_ITEM_ID WHERE service_charges_items.SERVICE_CHARGES_ID = service_charges.ID AND hemodialysis_items.IS_CASHIER = 1 limit 1) as got_charge')
+                    ]);
+                }
+            })
+      
             ->join('contact as c', 'c.ID', '=', 'service_charges.PATIENT_ID')
             ->join('location as l', 'l.ID', '=', 'service_charges.LOCATION_ID')
             ->join('document_status_map as s', 's.ID', '=', 'service_charges.STATUS')

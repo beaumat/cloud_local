@@ -19,7 +19,7 @@ class ServiceChargeList extends Component
     public $search = '';
     public int $perPage = 100;
     public string $DATE_FROM;
-
+    public bool $nurseMark = false;
     public string $DATE_NOW;
     public int $locationid;
     public $locationList = [];
@@ -79,7 +79,8 @@ class ServiceChargeList extends Component
             $this->search,
             $this->locationid,
             $this->perPage,
-            $this->DATE_FROM == '' ?  $this->dateServices->NowDate() : $this->DATE_FROM
+            $this->DATE_FROM == '' ?  $this->dateServices->NowDate() : $this->DATE_FROM,
+            $this->nurseMark
         );
 
         return view('livewire.service-charge.service-charge-list', ['dataList' => $dataList]);
