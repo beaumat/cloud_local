@@ -139,7 +139,18 @@ class SpendMoneyForm extends Component
             session()->flash('error', $errorMessage);
         }
     }
-
+    public function getInfo($data)
+    {
+        $this->ID = $data->ID;
+        $this->DATE = $data->DATE;
+        $this->CODE = $data->CODE;
+        $this->LOCATION_ID = $data->LOCATION_ID;
+        $this->ACCOUNT_ID = $data->ACCOUNT_ID;
+        $this->NOTES = $data->NOTES;
+        $this->STATUS = $data->STATUS;
+        $this->AMOUNT = $data->AMOUNT;
+        $this->STATUS_DESCRIPTION = $this->documentStatusServices->getDesc($this->STATUS);
+    }
     private function AccountJournal(): bool
     {
         try {
@@ -188,18 +199,7 @@ class SpendMoneyForm extends Component
         }
     }
 
-    public function getInfo($data)
-    {
-        $this->ID = $data->ID;
-        $this->DATE = $data->DATE;
-        $this->CODE = $data->CODE;
-        $this->LOCATION_ID = $data->LOCATION_ID;
-        $this->ACCOUNT_ID = $data->ACCOUNT_ID;
-        $this->NOTES = $data->NOTES;
-        $this->STATUS = $data->STATUS;
-        $this->AMOUNT = $data->AMOUNT;
-        $this->STATUS_DESCRIPTION = $this->documentStatusServices->getDesc($this->STATUS);
-    }
+ 
     public function posted()
     {
         try {

@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Import;
 
+use App\Models\ReceiveMoney;
 use App\Services\AccountJournalServices;
 use App\Services\AccountServices;
 use App\Services\BillingServices;
@@ -12,6 +13,8 @@ use App\Services\InvoiceServices;
 use App\Services\PaymentMethodServices;
 use App\Services\PaymentServices;
 use App\Services\PaymentTermServices;
+use App\Services\ReceiveMoneyServices;
+use App\Services\SpendMoneyServices;
 use App\Services\SystemSettingServices;
 use App\Services\TaxServices;
 use App\Services\XeroDataServices;
@@ -50,6 +53,8 @@ class XeroImportModal extends Component
     private $invoiceServices;
     private $paymentServices;
     private $generalJournalServices;
+    private $spendMoneyServices;
+    private $receiveMoneyServices;
     public function boot(
         XeroDataServices $xero,
         ContactServices $contact,
@@ -62,7 +67,9 @@ class XeroImportModal extends Component
         BillPaymentServices $billPaymentServices,
         InvoiceServices $invoiceServices,
         PaymentServices $paymentServices,
-        GeneralJournalServices $generalJournalServices
+        GeneralJournalServices $generalJournalServices,
+        SpendMoneyServices $spendMoneyServices,
+        ReceiveMoneyServices $receiveMoneyServices
 
     ) {
         $this->xeroDataServices = $xero;
@@ -77,6 +84,9 @@ class XeroImportModal extends Component
         $this->invoiceServices = $invoiceServices;
         $this->paymentServices = $paymentServices;
         $this->generalJournalServices = $generalJournalServices;
+        $this->spendMoneyServices = $spendMoneyServices;
+        $this->receiveMoneyServices = $receiveMoneyServices;
+
     }
 
     #[On('dataSend')]
@@ -120,6 +130,14 @@ class XeroImportModal extends Component
 
             case 23;
                 $this->contactList = $this->contactServices->getListAllType();
+                break;
+
+            case 35:
+                $this->accountList = $this->accountServices->getBankAccount();
+                break;
+
+            case 36:
+                $this->accountList = $this->accountServices->getBankAccount();
                 break;
             default:
 
@@ -689,6 +707,110 @@ class XeroImportModal extends Component
             session()->flash('error', 'Error: ' . $th->getMessage());
         }
     }
+
+    private function AccountJournalSpendMoney(): bool
+    {
+
+        $JOURNAL_NO = $this->accountJournalServices->getRecord($this->spendMoneyServices->object_type_map_spend_money, $this->ID);
+        if ($JOURNAL_NO == 0) {
+            $JOURNAL_NO = $this->accountJournalServices->getJournalNo($this->spendMoneyServices->object_type_map_spend_money, $this->ID) + 1;
+        }
+        //Main
+        $main = $this->spendMoneyServices->JournalEntry($this->ID);
+        $this->accountJournalServices->JournalExecute(
+            $JOURNAL_NO,
+            $main,
+            $this->locationid,
+            $this->spendMoneyServices->object_type_map_spend_money,
+            $this->DATE
+        );
+
+        //Details
+        $details = $this->spendMoneyServices->JournalEntryDetails($this->ID);
+        $this->accountJournalServices->JournalExecute(
+            $JOURNAL_NO,
+            $details,
+            $this->locationid,
+            $this->spendMoneyServices->object_type_map_spend_money_details,
+            $this->DATE
+        );
+
+        $data = $this->accountJournalServices->getSumDebitCredit($JOURNAL_NO);
+
+        $debit_sum = (float) $data['DEBIT'];
+        $credit_sum = (float) $data['CREDIT'];
+
+        if ($debit_sum == $credit_sum && $debit_sum > 0 && $credit_sum > 0) {
+            return true;
+        }
+        session()->flash('error', 'debit:' . $debit_sum . ' and credit:' . $credit_sum . ' is not balance');
+        return false;
+
+    }
+
+
+    public function postedSpendMoney()
+    {
+        $detailsList = $this->spendMoneyServices->getDetailsList($this->ID);
+        if ($detailsList) {
+
+            if (!$this->AccountJournalSpendMoney()) {
+                return false;
+            }
+            $this->spendMoneyServices->StatusUpdate($this->ID, 15);
+
+            return true;
+        }
+        return false;
+    }
+
+
+    private function SpendMoney()
+    {
+        $this->validate([
+            'CONTACT_ID' => 'required|exists:contact,id',
+            'locationid' => 'required|exists:location,id',
+            'ACCOUNT_ID' => 'required|exists:account,id'
+
+        ], [], [
+            'CONTACT_ID' => 'Contact',
+            'locationid' => 'Location',
+            'ACCOUNT_ID' => 'Account'
+        ]);
+        DB::beginTransaction();
+
+        try {
+
+            $SPEND_MONEY_ID = (int) $this->spendMoneyServices->Store($this->DATE, $this->REFERENCE, $this->locationid, $this->ACCOUNT_ID, '', true);
+            $this->ID = $SPEND_MONEY_ID;
+
+            foreach ($this->dataList as $data) {
+                $ACCOUNT_ID = $this->accountServices->getAccountNameIntoId($data->ACCOUNT);
+                if ($ACCOUNT_ID > 0 && (float) $data->DEBIT > 0) {
+                    $ID = $this->spendMoneyServices->StoreDetails($SPEND_MONEY_ID, $ACCOUNT_ID, (float) $data->DEBIT, $data->DESCRIPTION);
+                    $this->xeroDataServices->updatePosted($data->ID, $ID, $this->spendMoneyServices->object_type_map_spend_money_details);
+
+                }
+            }
+            $this->spendMoneyServices->ReCalculate($SPEND_MONEY_ID);
+
+            if ($this->postedSpendMoney() == true) {
+                DB::commit();
+                $this->closeModal();
+            } else {
+                DB::rollBack();
+            }
+        } catch (\Throwable $th) {
+            //throw $th;
+            DB::rollBack();
+            session()->flash('error', 'Error: ' . $th->getMessage());
+        }
+
+    }
+    private function ReceiveMoney()
+    {
+
+    }
     public function save()
     {
         switch ($this->DOC_ID) {
@@ -707,7 +829,12 @@ class XeroImportModal extends Component
             case 23:
                 $this->GeneralJournal();
                 break;
-
+            case 35:
+                $this->SpendMoney();
+                break;
+            case 36:
+                $this->ReceiveMoney();
+                break;
             default:
                 # code...
                 break;

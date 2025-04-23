@@ -71,9 +71,9 @@ class XeroDataServices
         return $result;
     }
     public function DocumentType(string $SOURCE_TYPE): array
-    {   
+    {
 
-       
+
         $docType = ['ID' => 0, 'NAME' => ''];
         switch ($SOURCE_TYPE) {
             case 'Payable Invoice':
@@ -93,13 +93,13 @@ class XeroDataServices
                 $docType = ['ID' => 23, 'NAME' => 'GENERAL JOURNAL']; //General Journal;
                 break;
             case 'Bank Transfer':
-                $docType = ['ID' => 26,'NAME' => 'Fund Transfer']; //Fund Transfer;
+                $docType = ['ID' => 26, 'NAME' => 'Fund Transfer']; //Fund Transfer;
                 break;
             case 'Receive Money':
-                $docType = ['ID' => 26,'NAME' => 'Fund Transfer']; //Fund Transfer;
+                $docType = ['ID' => 36, 'NAME' => 'Receive Money']; //Fund Transfer;
                 break;
             case 'Spend Money':
-                $docType = ['ID' => 26,'NAME' => 'Fund Transfer']; //Fund Transfer;
+                $docType = ['ID' => 35, 'NAME' => 'Spend Money']; //Fund Transfer;
                 break;
             default:
                 # code...
@@ -110,7 +110,8 @@ class XeroDataServices
     }
 
 
-    public function updatePosted(int $ID, int $OBJECT_ID, int $OBJECT_TYPE ) {
+    public function updatePosted(int $ID, int $OBJECT_ID, int $OBJECT_TYPE)
+    {
 
         $result = XeroData::where('ID', $ID)
             ->update([
@@ -120,6 +121,6 @@ class XeroDataServices
             ]);
 
         return $result;
-    }   
+    }
 
 }
