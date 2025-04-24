@@ -763,17 +763,15 @@ class XeroImportModal extends Component
         }
         return false;
     }
-
-
     private function SpendMoney()
     {
         $this->validate([
-            'CONTACT_ID' => 'required|exists:contact,id',
+
             'locationid' => 'required|exists:location,id',
             'ACCOUNT_ID' => 'required|exists:account,id'
 
         ], [], [
-            'CONTACT_ID' => 'Contact',
+    
             'locationid' => 'Location',
             'ACCOUNT_ID' => 'Account'
         ]);
@@ -791,9 +789,13 @@ class XeroImportModal extends Component
                     $this->xeroDataServices->updatePosted($data->ID, $ID, $this->spendMoneyServices->object_type_map_spend_money_details);
 
                 }
+                else{
+                    $this->xeroDataServices->updatePosted($data->ID, $SPEND_MONEY_ID, $this->spendMoneyServices->object_type_map_spend_money);
+
+                }
             }
             $this->spendMoneyServices->ReCalculate($SPEND_MONEY_ID);
-
+       
             if ($this->postedSpendMoney() == true) {
                 DB::commit();
                 $this->closeModal();
@@ -807,9 +809,113 @@ class XeroImportModal extends Component
         }
 
     }
+
+    private function AccountJournalReceiveMoney(): bool
+    {
+      
+            $JOURNAL_NO = $this->accountJournalServices->getRecord($this->receiveMoneyServices->object_type_map_receive_money, $this->ID);
+            if ($JOURNAL_NO == 0) {
+                $JOURNAL_NO = $this->accountJournalServices->getJournalNo($this->receiveMoneyServices->object_type_map_receive_money, $this->ID) + 1;
+            }
+            //Main
+            $main = $this->receiveMoneyServices->JournalEntry($this->ID);
+            $this->accountJournalServices->JournalExecute(
+                $JOURNAL_NO,
+                $main,
+                $this->locationid,
+                $this->receiveMoneyServices->object_type_map_receive_money,
+                $this->DATE
+            );
+
+            //Details
+            $details = $this->receiveMoneyServices->JournalEntryDetails($this->ID);
+            $this->accountJournalServices->JournalExecute(
+                $JOURNAL_NO,
+                $details,
+                $this->locationid,
+                $this->receiveMoneyServices->object_type_map_receive_money_details,
+                $this->DATE
+            );
+
+            $data = $this->accountJournalServices->getSumDebitCredit($JOURNAL_NO);
+
+            $debit_sum = (float) $data['DEBIT'];
+            $credit_sum = (float) $data['CREDIT'];
+
+            if ($debit_sum == $credit_sum && $debit_sum > 0 && $credit_sum > 0) {
+                return true;
+            }
+           
+            return false;
+       
+    }
+
+ 
+    public function postedReceiveMoney()
+    {
+        
+            $detailsList = $this->receiveMoneyServices->getDetailsList($this->ID);
+
+            if ($detailsList) {
+         
+                if (!$this->AccountJournalReceiveMoney()) {      
+                    return false;
+                }
+                $this->receiveMoneyServices->StatusUpdate($this->ID, 15);
+            
+                return true;
+            }
+
+            return false;
+
+    }
+
+
+
+
+
     private function ReceiveMoney()
     {
+        $this->validate([
+       
+            'locationid' => 'required|exists:location,id',
+            'ACCOUNT_ID' => 'required|exists:account,id'
 
+        ], [], [
+         
+            'locationid' => 'Location',
+            'ACCOUNT_ID' => 'Account'
+        ]);
+
+        DB::beginTransaction();
+
+        try {
+            $RECEIVE_MONEY_ID = (int) $this->receiveMoneyServices->Store($this->DATE, $this->REFERENCE, $this->locationid, $this->ACCOUNT_ID, '', true);
+            $this->ID = $RECEIVE_MONEY_ID;
+            foreach ($this->dataList as $data) {
+                $ACCOUNT_ID = $this->accountServices->getAccountNameIntoId($data->ACCOUNT);
+                if ($ACCOUNT_ID > 0 && (float) $data->CREDIT > 0) {
+                    $ID = $this->receiveMoneyServices->StoreDetails($RECEIVE_MONEY_ID, $ACCOUNT_ID, (float) $data->CREDIT, $data->DESCRIPTION);
+                    $this->xeroDataServices->updatePosted($data->ID, $ID, $this->receiveMoneyServices->object_type_map_receive_money_details);
+
+                }
+                else{
+                    $this->xeroDataServices->updatePosted($data->ID, $RECEIVE_MONEY_ID, $this->receiveMoneyServices->object_type_map_receive_money);
+                }
+            }
+            $this->receiveMoneyServices->ReCalculate($RECEIVE_MONEY_ID);
+            if ($this->postedReceiveMoney() == true) {
+                DB::commit();
+                $this->closeModal();
+            } else {
+                DB::rollBack();
+            }
+
+            DB::commit();
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            session()->flash('error', 'Error: ' . $th->getMessage());
+        }
     }
     public function save()
     {
