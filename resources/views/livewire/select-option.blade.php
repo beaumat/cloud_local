@@ -1,7 +1,7 @@
 <div wire:ignore  class="text-md">
     @if ($vertical)
         <div class="row">
-            <div class="col-3">
+            <div class="col-3 text-right">
                 @if ($withLabel)
                     <label for="{{ $name }}" class="text-xs"> {{ $titleName }}</label>
                 @endif
@@ -33,10 +33,12 @@
             </div>
         </div>
     @else
+  
+
         @if ($withLabel)
-            <label for="{{ $name }}" class="text-xs"> {{ $titleName }}</label>
+            <label for="{{ $name }}" class="text-xs text-right"> {{ $titleName }}</label>
         @endif
-        <select wire:model='value' id="{{ $name }}" class="form-control form-control-sm"
+        <select wire:model='value' id="{{ $name }}" class="form-control form-control-sm text-left"
             @if ($isDisabled) disabled @endif>
             @if ($zero)
                 <option value="0">

@@ -61,8 +61,8 @@
     
 
               <livewire:select-option name="PHILHEALTH_INCHARGE_ID" :options="$contactList"
-                                                isDisabled="{{ false }}" :zero="false" titleName="Availment Prepaired By "
-                                                wire:model.live='PHILHEALTH_INCHARGE_ID' />
+                                                isDisabled="{{ false }}" :zero="false" titleName="Prepaired By"
+                                                wire:model.live='PHILHEALTH_INCHARGE_ID' vertical="{{ true }}" />
         </div>
         <div class="col-4 col-md-4 text-right">
             Year : <select wire:model.live='YEAR' class="text-md">
