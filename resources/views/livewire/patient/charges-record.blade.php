@@ -54,10 +54,17 @@
                 </div>
             </div>
         </div>
-        <div class="col-6 col-md-6">
+        <div class="col-4 col-md-4">
             {{ $dataList->links() }}
         </div>
-        <div class="col-6 col-md-6 text-right">
+        <div class="col-4 col-md-4 text-sm">
+    
+
+              <livewire:select-option name="PHILHEALTH_INCHARGE_ID" :options="$contactList"
+                                                isDisabled="{{ false }}" :zero="false" titleName="Availment Prepaired By "
+                                                wire:model.live='PHILHEALTH_INCHARGE_ID' />
+        </div>
+        <div class="col-4 col-md-4 text-right">
             Year : <select wire:model.live='YEAR' class="text-md">
                 @foreach ($yearList as $list)
                     <option value="{{ $list['ID'] }}">{{ $list['NAME'] }}</option>

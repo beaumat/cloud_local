@@ -79,9 +79,12 @@ class PhilhealthAvailment extends Component
                 $this->REPORT_HEADER_1 = $locData->REPORT_HEADER_1 ?? '';
                 $this->LOGO_FILE = $locData->LOGO_FILE ?? '';
                 $this->BRANCH_NAME = $locData->NAME_OF_BUSINESS ?? '';
+        
                 $user = $this->contactServices->get($locData->PHIC_INCHARGE2_ID > 0 ? $locData->PHIC_INCHARGE2_ID : Auth()->user()->contact_id, 2);
                 if ($user) {
                     $this->USER_NAME = $user->PRINT_NAME_AS ?? ' ';
+
+             
                 }
             }
             $this->dataList = $this->serviceChargeServices->getAvailList($contact->ID, $year, $locationid);

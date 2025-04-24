@@ -244,6 +244,20 @@ class ContactServices
 
 		return $result;
 	}
+	public function getEmployeeList() {
+		$result = Contacts::query()
+			->select([
+				'contact.ID',
+				'contact.NAME',
+				't.DESCRIPTION as TYPE'
+			])
+			->join('contact_type_map as t', 't.ID', '=', 'contact.TYPE')
+			->whereIn('contact.TYPE', [2])
+			->where('contact.INACTIVE', '=', false)
+			->get();
+
+		return $result;
+	}
 	public function getPatientList(int $LOCATION_ID): object
 	{
 
