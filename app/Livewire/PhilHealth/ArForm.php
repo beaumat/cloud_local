@@ -18,7 +18,7 @@ use Livewire\Attributes\On;
 use Livewire\Component;
 
 class ArForm extends Component
-{   
+{
     public int $INVOICE_ID;
     public string $INVOICE_CODE;
     public string $INVOICE_AMOUNT;
@@ -170,10 +170,17 @@ class ArForm extends Component
             }
         }
 
-    
+        if ($dataPhic->AR_DATE == '') {
+            return [
+                'STATUS' => false,
+                'MESSAGE' => '',
+                'INVOICE_ID' => 0
+            ];
+        }
+
         $QTY = $this->philHealthServices->getNumberOfTreatment($dataPhic->CONTACT_ID, $dataPhic->LOCATION_ID, $dataPhic->DATE_ADMITTED, $dataPhic->DATE_DISCHARGED);
         $RATE = (float) $dataPhic->P1_TOTAL / $QTY;
-        $INVOICE_ID = $this->makeInvoice($dataPhic, $this->philHealthServices->TERM_ID, $PHILHEALTH_ID, $QTY, $this->philHealthServices->PHIL_HEALTH_ITEM_ID, $this->philHealthServices->TAX_ID , $RATE);
+        $INVOICE_ID = $this->makeInvoice($dataPhic, $this->philHealthServices->TERM_ID, $PHILHEALTH_ID, $QTY, $this->philHealthServices->PHIL_HEALTH_ITEM_ID, $this->philHealthServices->TAX_ID, $RATE);
         $this->INVOICE_ID = $INVOICE_ID;
         return [
             'STATUS' => true,
@@ -182,8 +189,8 @@ class ArForm extends Component
         ];
     }
     private function makeInvoice($data, int $TERM_ID, int $PHILHEALTH_ID, int $QTY, int $PHIL_HEALTH_ITEM_ID, int $TAX_ID, float $RATE): int
-    {   
-        
+    {
+
 
 
         $DUE_DATE = (string) $this->paymentTermServices->getDueDate($TERM_ID, $data->AR_DATE);
@@ -396,8 +403,8 @@ class ArForm extends Component
     private function invoiceRefresh()
     {
         $invoice_data = $this->invoiceServices->get($this->INVOICE_ID);
-        if($invoice_data) {
-            $this->INVOICE_CODE =$invoice_data->CODE;
+        if ($invoice_data) {
+            $this->INVOICE_CODE = $invoice_data->CODE;
             $this->INVOICE_AMOUNT = $invoice_data->AMOUNT;
             return;
         }
@@ -405,11 +412,11 @@ class ArForm extends Component
         $this->INVOICE_AMOUNT = 0;
     }
     public function render()
-    {   
-        if($this->showModal) {
+    {
+        if ($this->showModal) {
             $this->invoiceRefresh();
         }
-        
+
         return view('livewire.phil-health.ar-form');
     }
 }
