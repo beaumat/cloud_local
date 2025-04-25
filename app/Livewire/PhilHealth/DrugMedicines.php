@@ -222,7 +222,7 @@ class DrugMedicines extends Component
                     $GEN_NAME = $list->BRAND ? ' (' . $list->BRAND . ')' : '';
                     $this->philhealthDrugsMedicineServices->DrugMedicineStore(
                         $this->PHILHEALTH_ID,
-                        $list->ITEM_NAME . $GEN_NAME,
+                        $list->GENERIC_NAME . $GEN_NAME,
                         $defult_Qty,
                         $list->DOSAGE ?? '',
                         $list->ROUTE ?? '',

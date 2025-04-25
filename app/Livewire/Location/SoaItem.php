@@ -30,6 +30,10 @@ class SoaItem extends Component
     public int $GROUP_ID = 0;
     public bool $SC_BASE = false;
     public bool $SOA_BASE = false;
+
+    public string $GENERIC_NAME = '';
+
+
     public $locationList = [];
     public $TO_LOCATION_ID;
     public bool $ACTUAL_BASE;
@@ -48,6 +52,7 @@ class SoaItem extends Component
     public int $editGROUP_ID;
     public bool $editSC_BASE;
     public bool $editSOA_BASE;
+    public string $editGENERIC_NAME;
     public $dataList = [];
     public $search;
     public $typeList = [];
@@ -88,6 +93,7 @@ class SoaItem extends Component
         $this->BRAND = '';
         $this->GROUP_ID = 0;
         $this->SC_BASE = false;
+        $this->GENERIC_NAME = '';
     }
     public function Add()
     {
@@ -124,7 +130,8 @@ class SoaItem extends Component
                 $this->BRAND,
                 $this->GROUP_ID,
                 $this->SC_BASE,
-                $this->SOA_BASE
+                $this->SOA_BASE,
+                $this->GENERIC_NAME
             );
 
             $this->CleanAdd();
@@ -154,6 +161,7 @@ class SoaItem extends Component
             $this->editGROUP_ID = $data->GROUP_ID ?? 0;
             $this->editSC_BASE = $data->SC_BASE ?? false;
             $this->editSOA_BASE = $data->SOA_BASE ?? false;
+            $this->editGENERIC_NAME = $data->GENERIC_NAME ?? '';
         }
     }
     public function Update()
@@ -177,7 +185,23 @@ class SoaItem extends Component
 
 
         try {
-            $this->itemSoaServices->update($this->editid, $this->editTYPE, $this->editLINE, $this->editITEM_NAME, $this->editUNIT_NAME, $this->editRATE, $this->editACTUAL_BASE, $this->editDOSAGE, $this->editROUTE, $this->editFREQUENCY, $this->editBRAND, $this->editGROUP_ID, $this->editSC_BASE, $this->editSOA_BASE);
+            $this->itemSoaServices->update(
+                $this->editid,
+                $this->editTYPE,
+                $this->editLINE,
+                $this->editITEM_NAME,
+                $this->editUNIT_NAME,
+                $this->editRATE,
+                $this->editACTUAL_BASE,
+                $this->editDOSAGE,
+                $this->editROUTE,
+                $this->editFREQUENCY,
+                $this->editBRAND,
+                $this->editGROUP_ID,
+                $this->editSC_BASE,
+                $this->editSOA_BASE,
+                $this->editGENERIC_NAME
+            );
             $this->Canceled();
         } catch (\Exception $e) {
             session()->flash('error', $e->getMessage());

@@ -58,6 +58,7 @@
                                         <th class=" text-center">SC Base</th>
                                         <th class=" text-center">SOA Base</th>
                                         <th class="col-1 text-center">Group</th>
+                                        <th class=" text-left">Generic Name</th>
                                         <th class="col-2 text-center">Action</th>
                                     </tr>
                                 </thead>
@@ -202,10 +203,17 @@
                                                     {{ $list->GROUP_ID }}
                                                 @endif
                                             </td>
+                                            <td class="col-1">
+                                                @if ($list->ID == $editid)
+                                                    <input name="editGENERIC_NAME" type="text" class="w-100"
+                                                        wire:model='editGENERIC_NAME' />
+                                                @else
+                                                    {{ $list->GENERIC_NAME }}
+                                                @endif
+                                            </td>
+
                                             <td class="text-center">
                                                 <div class="row">
-
-
 
                                                     @if ($editid === $list->ID)
                                                         <div class="col-6">
@@ -300,7 +308,6 @@
                                             <td>
                                                 <input type="text" class="w-100" wire:model='ROUTE' />
                                             </td>
-
                                             <td>
                                                 <input type="text" class="w-100" wire:model='FREQUENCY' />
                                             </td>
@@ -319,6 +326,10 @@
                                             <td>
                                                 <input name="GROUP_ID" type="number" class="w-100"
                                                     wire:model='GROUP_ID' />
+                                            </td>
+                                            <td>
+                                                <input name="GENERIC_NAME" type="text" class="w-100"
+                                                    wire:model='GENERIC_NAME' />
                                             </td>
                                             <td>
                                                 <button type="submit" class="btn btn-xs btn-success w-100">
