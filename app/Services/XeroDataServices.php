@@ -15,6 +15,7 @@ class XeroDataServices
             ->where('LOCATION_ID', '=', $locationId)
             ->where('POSTED', '=', 0)
             ->whereNotNull('REFERENCE')
+            ->where('OBJECT_ID', '=', 0)
             ->orderBy('DATE')
             ->orderBy('REFERENCE')
             ->orderBy('SOURCE_TYPE')

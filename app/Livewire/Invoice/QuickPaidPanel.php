@@ -187,7 +187,7 @@ class QuickPaidPanel extends Component
         if ($tax) {
             $this->EWT_RATE = $tax->RATE ?? 0;
             $this->AMOUNT_WITHHELD = $this->BALANCE_DUE * ($this->EWT_RATE / 100);
-            $this->EWT_ACCOUNT_ID = $tax->TAX_ACCOUNT_ID ?? 0;
+            $this->EWT_ACCOUNT_ID = $tax->ASSET_ACCOUNT_ID ?? 0;
             $acctData = $this->accountServices->Get($this->EWT_ACCOUNT_ID);
             if ($acctData) {
                 $this->TAX_DESCRIPTION = $acctData->NAME ?? '';

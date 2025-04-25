@@ -494,10 +494,31 @@ class AccountJournalServices
                 ]);
         }
     }
-    public function JournalModify(int $ACCOUNT_ID, int $LOCATION_ID, int $JOURNAL_NO, int $SUBSIDIARY_ID, int $OBJECT_ID, int $OBJECT_TYPE, string $OBJECT_DATE, int $ENTRY_TYPE, float $AMOUNT, int $SEQUENCE_GROUP, string $EXTENDED_OPTIONS)
-    {
+    public function JournalModify(
+        int $ACCOUNT_ID,
+        int $LOCATION_ID,
+        int $JOURNAL_NO,
+        int $SUBSIDIARY_ID,
+        int $OBJECT_ID,
+        int $OBJECT_TYPE,
+        string $OBJECT_DATE,
+        int $ENTRY_TYPE,
+        float $AMOUNT,
+        int $SEQUENCE_GROUP,
+        string $EXTENDED_OPTIONS
+    ) {
 
-        if (!$this->JournalExists($ACCOUNT_ID, $ENTRY_TYPE, $OBJECT_ID, $OBJECT_TYPE, $OBJECT_DATE, $LOCATION_ID, $SUBSIDIARY_ID, )) {
+        if (
+            !$this->JournalExists(
+                $ACCOUNT_ID,
+                $ENTRY_TYPE,
+                $OBJECT_ID,
+                $OBJECT_TYPE,
+                $OBJECT_DATE,
+                $LOCATION_ID,
+                $SUBSIDIARY_ID,
+            )
+        ) {
 
             if ($ACCOUNT_ID == 0) {
                 return;

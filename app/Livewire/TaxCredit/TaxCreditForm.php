@@ -52,7 +52,7 @@ class TaxCreditForm extends Component
         AccountJournalServices $accountJournalServices
     ) {
         $this->taxCreditServices = $taxCreditServices;
-        $this->contactServices  = $contactServices;
+        $this->contactServices = $contactServices;
         $this->userServices = $userServices;
         $this->locationServices = $locationServices;
         $this->taxServices = $taxServices;
@@ -62,14 +62,14 @@ class TaxCreditForm extends Component
     {
         $this->contactList = $this->contactServices->getCustoPatientList();
         $this->locationList = $this->locationServices->getList();
-        $this->taxList = $this->taxServices->getWTax();
+        $this->taxList = $this->taxServices->getWtax();
     }
     private function getInfo($data)
     {
         $this->ID = $data->ID;
         $this->CODE = $data->CODE ?? '';
         $this->CUSTOMER_ID = $data->CUSTOMER_ID ?? 0;
-        $this->LOCATION_ID  = $data->LOCATION_ID ?? 0;
+        $this->LOCATION_ID = $data->LOCATION_ID ?? 0;
         $this->DATE = $data->DATE;
         $this->EWT_ACCOUNT_ID = $data->EWT_ACCOUNT_ID ?? 0;
         $this->ACCOUNTS_RECEIVABLE_ID = $data->ACCOUNTS_RECEIVABLE_ID ?? 0;
@@ -84,11 +84,11 @@ class TaxCreditForm extends Component
     {
         $data = $this->taxServices->get($this->EWT_ID);
         if ($data) {
-            $this->EWT_RATE  = $data->RATE ?? 0;
-            $this->EWT_ACCOUNT_ID = $data->TAX_ACCOUNT_ID ?? 0;
+            $this->EWT_RATE = $data->RATE ?? 0;
+            $this->EWT_ACCOUNT_ID = $data->ASSET_ACCOUNT_ID ?? 0;
             return;
         }
-        $this->EWT_RATE  = 0;
+        $this->EWT_RATE = 0;
         $this->EWT_ACCOUNT_ID = 0;
     }
     public function mount($id = null)
@@ -113,7 +113,7 @@ class TaxCreditForm extends Component
         $this->EWT_ACCOUNT_ID = 0;
         $this->ACCOUNTS_RECEIVABLE_ID = 12;
         $this->AMOUNT = 0;
-        $this->EWT_RATE =  0;
+        $this->EWT_RATE = 0;
         $this->EWT_ID = 0;
         $this->ID = 0;
         $this->NOTES = '';
@@ -132,19 +132,19 @@ class TaxCreditForm extends Component
 
         $this->validate(
             [
-                'EWT_ID'        => 'required|integer|exists:tax,id',
-                'CODE'          => 'nullable|max:20|unique:tax_credit,code,' . ($this->ID > 0 ? $this->ID : 'NULL') . ',id',
-                'CUSTOMER_ID'   => 'required|integer|exists:contact,id',
-                'LOCATION_ID'   => 'required|integer|exists:location,id',
-                'DATE'          => 'required|date|string'
+                'EWT_ID' => 'required|integer|exists:tax,id',
+                'CODE' => 'nullable|max:20|unique:tax_credit,code,' . ($this->ID > 0 ? $this->ID : 'NULL') . ',id',
+                'CUSTOMER_ID' => 'required|integer|exists:contact,id',
+                'LOCATION_ID' => 'required|integer|exists:location,id',
+                'DATE' => 'required|date|string'
             ],
             [],
             [
-                'EWT_ID'        => 'Withholding Tax Type',
-                'CODE'          => 'Reference No.',
-                'CUSTOMER_ID'   => 'Customer',
-                'LOCATION_ID'   => 'Location',
-                'DATE'          => 'Date'
+                'EWT_ID' => 'Withholding Tax Type',
+                'CODE' => 'Reference No.',
+                'CUSTOMER_ID' => 'Customer',
+                'LOCATION_ID' => 'Location',
+                'DATE' => 'Date'
             ]
         );
 
@@ -152,7 +152,7 @@ class TaxCreditForm extends Component
         try {
 
             if ($this->ID == 0) {
-                $this->ID =  $this->taxCreditServices->Store(
+                $this->ID = $this->taxCreditServices->Store(
                     $this->CODE,
                     $this->DATE,
                     $this->CUSTOMER_ID,
@@ -163,32 +163,20 @@ class TaxCreditForm extends Component
                     $this->NOTES,
                     $this->ACCOUNTS_RECEIVABLE_ID
                 );
-
                 DB::commit();
                 return Redirect::route('customerstax_credit_edit', ['id' => $this->ID])->with('message', 'Successfully created');
             }
 
-
-            $data =  $this->taxCreditServices->Get($this->ID);
+            $data = $this->taxCreditServices->Get($this->ID);
             if ($data) {
                 if ($this->STATUS == 16) {
                     $JNO = $this->accountJournalServices->getRecord($this->taxCreditServices->object_type_tax_credit, $this->ID);
                     if ($JNO > 0) {
-                        $this->accountJournalServices->AccountSwitch(
-                            $this->EWT_ACCOUNT_ID,
-                            $data->EWT_ACCOUNT_ID,
-                            $this->LOCATION_ID,
-                            $JNO,
-                            $data->CUSTOMER_ID,
-                            $this->ID,
-                            $this->taxCreditServices->object_type_tax_credit,
-                            $this->DATE,
-                            0
-                        );
+                        $this->accountJournalServices->AccountSwitch($this->EWT_ACCOUNT_ID, $data->EWT_ACCOUNT_ID, $this->LOCATION_ID, $JNO, $data->CUSTOMER_ID, $this->ID, $this->taxCreditServices->object_type_tax_credit, $this->DATE, 0);
                     }
                 }
 
-                $this->AMOUNT = (float)  $this->taxCreditServices->UpdateAMOUNT_WITHHELD($this->ID, $this->EWT_RATE);
+                $this->AMOUNT = (float) $this->taxCreditServices->UpdateAMOUNT_WITHHELD($this->ID, $this->EWT_RATE);
                 $this->taxCreditServices->Update(
                     $this->ID,
                     $this->CODE,
@@ -236,8 +224,8 @@ class TaxCreditForm extends Component
         try {
 
             DB::beginTransaction();
-            $JOURNAL_NO  = (int) $this->accountJournalServices->getRecord($this->taxCreditServices->object_type_tax_credit, $this->ID);
-            if ($JOURNAL_NO  == 0) {
+            $JOURNAL_NO = (int) $this->accountJournalServices->getRecord($this->taxCreditServices->object_type_tax_credit, $this->ID);
+            if ($JOURNAL_NO == 0) {
                 $JOURNAL_NO = (int) $this->accountJournalServices->getJournalNo($this->taxCreditServices->object_type_tax_credit, $this->ID) + 1;
             }
 
