@@ -29,42 +29,46 @@
                     </td>
                 </tr>
             @endforeach
-            @if ($INVOICE_STATUS_ID != $openStatus)
-                <form wire:submit.prevent='AddPayment' wire:loading.attr='disabled'>
-                    <tr>
-                        <td> </td>
-                        <td> </td>
-                        <td>
-                            <select class="form-control form-control-sm" wire:model.live='EWT_ID'>
-                                <option value="0"></option>
-                                @foreach ($taxList as $list)
-                                    <option value="{{ $list->ID }}">{{ $list->NAME }}</option>
-                                @endforeach
-                            </select>
-                        </td>
-                        <td class='text-center'>
-                            <label>{{ number_format($AMOUNT_WITHHELD, 2) }}</label>
-                        </td>
-                        <td>
-                            {{ $TAX_DESCRIPTION }}
-                        </td>
+
+
+            @if ($dataList->count() == 0)
+                @if ($INVOICE_STATUS_ID != $openStatus)
+                    <form wire:submit.prevent='AddPayment' wire:loading.attr='disabled'>
+                        <tr>
+                            <td> </td>
+                            <td> </td>
+                            <td>
+                                <select class="form-control form-control-sm" wire:model.live='EWT_ID'>
+                                    <option value="0"></option>
+                                    @foreach ($taxList as $list)
+                                        <option value="{{ $list->ID }}">{{ $list->NAME }}</option>
+                                    @endforeach
+                                </select>
+                            </td>
+                            <td class='text-center'>
+                                <label>{{ number_format($AMOUNT_WITHHELD, 2) }}</label>
+                            </td>
+                            <td>
+                                {{ $TAX_DESCRIPTION }}
+                            </td>
 
 
 
-                        <td> <input type="text" class="form-control form-control-sm" wire:model='NOTES' /> </td>
-                        <td>
-                            <div class="">
-                                <button title="Add" type="submit" wire:loading.attr='hidden'
-                                    class="text-white btn bg-sky btn-sm w-100">
-                                    <i class="fas fa-plus"></i>
-                                </button>
-                                <div wire:loading.delay>
-                                    <span class="spinner"></span>
+                            <td> <input type="text" class="form-control form-control-sm" wire:model='NOTES' /> </td>
+                            <td>
+                                <div class="">
+                                    <button title="Add" type="submit" wire:loading.attr='hidden'
+                                        class="text-white btn bg-sky btn-sm w-100">
+                                        <i class="fas fa-plus"></i>
+                                    </button>
+                                    <div wire:loading.delay>
+                                        <span class="spinner"></span>
+                                    </div>
                                 </div>
-                            </div>
-                        </td>
-                    </tr>
-                </form>
+                            </td>
+                        </tr>
+                    </form>
+                @endif
             @endif
         </tbody>
 

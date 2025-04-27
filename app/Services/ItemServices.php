@@ -55,6 +55,12 @@ class ItemServices
             ->orderBy('DESCRIPTION', 'asc')
             ->get();
     }
+    public function isInventoryItem(int $ITEM_ID): bool
+    {
+        return (bool) items::where('ID', '=', $ITEM_ID)
+            ->whereIn('TYPE', [0, 1])
+            ->exists();
+    }
     public function InventoryItemToFixedAsset($search, int $LOCATION_ID)
     {
         $result = items::query()
@@ -533,7 +539,7 @@ class ItemServices
             )
             ->selectSub(function ($query) use (&$locationId, &$dateAsof) {
                 $query->from('item_inventory')
-                ->select('item_inventory.ENDING_QUANTITY')
+                    ->select('item_inventory.ENDING_QUANTITY')
                     ->whereColumn('item_inventory.ITEM_ID', 'item.ID')
                     ->where('item_inventory.LOCATION_ID', $locationId)
                     ->where('item_inventory.SOURCE_REF_DATE', '<=', $dateAsof)

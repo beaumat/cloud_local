@@ -2,10 +2,12 @@
 
 namespace App\Livewire\ServiceCharge;
 
+use App\Models\ItemInventory;
 use App\Services\ComputeServices;
 use App\Services\DateServices;
 use App\Services\HemoServices;
 use App\Services\ItemAccountServices;
+use App\Services\ItemInventoryServices;
 use App\Services\ItemServices;
 use App\Services\ItemSubClassServices;
 use App\Services\LocationServices;
@@ -78,7 +80,7 @@ class ServiceChargeFormItems extends Component
     public int $linePriceLevelId;
     public $editUnitList = [];
     public $accountList = [];
-    public $editAccountList   = [];
+    public $editAccountList = [];
     public int $lineINCOME_ACCOUNT_ID = 0;
     public int $lineItemId = 0;
     private $serviceChargeServices;
@@ -97,6 +99,7 @@ class ServiceChargeFormItems extends Component
     private $priceLevelLineServices;
     private $itemAccountServices;
     private $philhealthItemAdjustmentServices;
+    private $itemInventoryServices;
     public function boot(
         PhilHealthServices $philHealthServices,
         ServiceChargeServices $serviceChargeServices,
@@ -110,7 +113,8 @@ class ServiceChargeFormItems extends Component
         LocationServices $locationServices,
         PriceLevelLineServices $priceLevelLineServices,
         ItemAccountServices $itemAccountServices,
-        PhilhealthItemAdjustmentServices $philhealthItemAdjustmentServices
+        PhilhealthItemAdjustmentServices $philhealthItemAdjustmentServices,
+        ItemInventoryServices $itemInventoryServices
     ) {
         $this->philHealthServices = $philHealthServices;
         $this->serviceChargeServices = $serviceChargeServices;
@@ -125,6 +129,7 @@ class ServiceChargeFormItems extends Component
         $this->priceLevelLineServices = $priceLevelLineServices;
         $this->itemAccountServices = $itemAccountServices;
         $this->philhealthItemAdjustmentServices = $philhealthItemAdjustmentServices;
+        $this->itemInventoryServices = $itemInventoryServices;
     }
     public function updatedcodeBase()
     {
@@ -170,8 +175,8 @@ class ServiceChargeFormItems extends Component
     public function cashPayment(int $ID, float $AMOUNT)
     {
         $itemdata = [
-            'SERVICE_CHARGES_ITEM_ID'       => $ID,
-            'SERVICE_CHARGES_ITEM_AMOUNT'   => $AMOUNT
+            'SERVICE_CHARGES_ITEM_ID' => $ID,
+            'SERVICE_CHARGES_ITEM_AMOUNT' => $AMOUNT
         ];
         $this->getRefershItem($ID);
         $this->dispatch('cash-payment-prompt', itemdata: $itemdata);
@@ -205,7 +210,7 @@ class ServiceChargeFormItems extends Component
                 if ($this->PRICE_LEVEL_ID > 0) {
                     $this->RATE = $this->priceLevelLineServices->GetPriceByLocation($this->LOCATION_ID, $this->ITEM_ID);
                 } else {
-                    $this->RATE =  $item->RATE;
+                    $this->RATE = $item->RATE;
                 }
 
                 $this->AccountLoad();
@@ -250,7 +255,7 @@ class ServiceChargeFormItems extends Component
         $this->AMOUNT = 0.00;
         $this->updatedcodeBase();
         if (Auth::user()->name == 'admin') {
-            $this->isAdmin  =  true;
+            $this->isAdmin = true;
             $this->canBeQtyEdit = true;
         }
     }
@@ -258,15 +263,15 @@ class ServiceChargeFormItems extends Component
     {
         $this->validate(
             [
-                'ITEM_ID'   => 'required|not_in:0',
-                'QUANTITY'  => 'required|numeric|not_in:0',
-                'RATE'      => 'required|numeric'
+                'ITEM_ID' => 'required|not_in:0',
+                'QUANTITY' => 'required|numeric|not_in:0',
+                'RATE' => 'required|numeric'
             ],
             [],
             [
-                'ITEM_ID'   => 'Item',
-                'QUANTITY'  => 'Quantity',
-                'RATE'      => 'Rate'
+                'ITEM_ID' => 'Item',
+                'QUANTITY' => 'Quantity',
+                'RATE' => 'Rate'
             ]
         );
         DB::beginTransaction();
@@ -280,7 +285,7 @@ class ServiceChargeFormItems extends Component
             }
             $unitRelated = $this->unitOfMeasureServices->GetItemUnitDetails($this->ITEM_ID, $this->UNIT_ID ?? 0);
 
-            $SK_ID =  $this->serviceChargeServices->ItemStore(
+            $SK_ID = $this->serviceChargeServices->ItemStore(
                 $this->SERVICE_CHARGES_ID,
                 $this->ITEM_ID,
                 $this->QUANTITY,
@@ -319,7 +324,7 @@ class ServiceChargeFormItems extends Component
             $getResult = $this->serviceChargeServices->ReComputed($this->SERVICE_CHARGES_ID);
             $this->dispatch('update-amount', result: $getResult);
             // Philhealth Purpose
-            $prime_item_id =  $this->ITEM_ID;
+            $prime_item_id = $this->ITEM_ID;
 
             $this->ITEM_ID = 0;
             $this->QUANTITY = 0;
@@ -403,7 +408,7 @@ class ServiceChargeFormItems extends Component
         int $itemId
     ) {
 
-        $data =  $this->serviceChargeServices->getItem($lineId);
+        $data = $this->serviceChargeServices->getItem($lineId);
         if ($data) {
             $this->editAccountList = $this->itemAccountServices->AccountList($itemId);
             $this->lineINCOME_ACCOUNT_ID = $data->INCOME_ACCOUNT_ID ?? 0;
@@ -438,13 +443,13 @@ class ServiceChargeFormItems extends Component
 
         $this->validate(
             [
-                'lineQty'   => 'required|numeric|not_in:0',
-                'lineRate'  => 'required|numeric'
+                'lineQty' => 'required|numeric|not_in:0',
+                'lineRate' => 'required|numeric'
             ],
             [],
             [
-                'lineQty'   => 'Quantity',
-                'lineRate'  => 'Rate'
+                'lineQty' => 'Quantity',
+                'lineRate' => 'Rate'
             ]
         );
 
@@ -535,7 +540,10 @@ class ServiceChargeFormItems extends Component
                 $dataSC = $this->serviceChargeServices->get($this->SERVICE_CHARGES_ID);
                 if ($dataSC) {
                     $this->hemoServices->ItemQuery($dataSC->PATIENT_ID, $dataSC->DATE, $dataSC->LOCATION_ID, $getItemInfo->ITEM_ID, 0, true, $getItemInfo->UNIT_ID ?? 0, $Id);
+                    $this->itemInventoryServices->RecomputedOnhand($getItemInfo->ITEM_ID, $this->LOCATION_ID, $dataSC->DATE);
                 }
+
+
             }
             DB::commit();
             $getResult = $this->serviceChargeServices->ReComputed($this->SERVICE_CHARGES_ID);

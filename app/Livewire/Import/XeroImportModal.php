@@ -851,7 +851,7 @@ class XeroImportModal extends Component
     }
 
  
-    public function postedReceiveMoney()
+    public function postedReceiveMoney() 
     {
         
             $detailsList = $this->receiveMoneyServices->getDetailsList($this->ID);
@@ -869,10 +869,6 @@ class XeroImportModal extends Component
             return false;
 
     }
-
-
-
-
 
     private function ReceiveMoney()
     {

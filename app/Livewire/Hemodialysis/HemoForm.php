@@ -378,8 +378,6 @@ class HemoForm extends Component
         );
         if ($this->IS_INCOMPLETE == false) {
             if ($this->ID > 0) {
-
-
                 //Make it restricted
                 if (empty($this->PRE_WEIGHT) && empty($this->PRE_BLOOD_PRESSURE) && empty($this->PRE_BLOOD_PRESSURE2) && empty($this->PRE_HEART_RATE) && empty($this->PRE_O2_SATURATION) && empty($this->PRE_TEMPERATURE) && empty($this->TIME_START) && empty($this->POST_WEIGHT) && empty($this->POST_BLOOD_PRESSURE) && empty($this->POST_BLOOD_PRESSURE2) && empty($this->POST_HEART_RATE) && empty($this->POST_O2_SATURATION) && empty($this->POST_TEMPERATURE) && empty($this->TIME_END)) {
 
@@ -430,7 +428,6 @@ class HemoForm extends Component
                                         ],
                                         [],
                                         [
-
                                             'POST_WEIGHT' => 'Post weight',
                                             'POST_BLOOD_PRESSURE' => 'Post blood pressure [1]',
                                             'POST_BLOOD_PRESSURE2' => 'Post blood pressure [2]',
@@ -438,7 +435,6 @@ class HemoForm extends Component
                                             'POST_O2_SATURATION' => 'Post 02 saturation',
                                             'POST_TEMPERATURE' => 'Post temperature',
                                             'TIME_END' => 'Time End',
-
                                         ]
                                     );
                                 }
@@ -455,9 +451,23 @@ class HemoForm extends Component
             DB::beginTransaction();
             if ($this->ID == 0) {
 
-                $this->ID = (int) $this->hemoServices->PreSave($this->DATE, $this->CODE, $this->CUSTOMER_ID, $this->LOCATION_ID);
-                $this->hemoServices->GetOtherDetailsDefault($this->ID, $this->CUSTOMER_ID, $this->DATE, $this->LOCATION_ID);
-                $NO = (int) $this->hemoServices->GetNoTreatment($this->CUSTOMER_ID, $this->LOCATION_ID, $this->DATE);
+                $this->ID = (int) $this->hemoServices->PreSave(
+                    $this->DATE,
+                    $this->CODE,
+                    $this->CUSTOMER_ID,
+                    $this->LOCATION_ID
+                );
+                $this->hemoServices->GetOtherDetailsDefault(
+                    $this->ID,
+                    $this->CUSTOMER_ID,
+                    $this->DATE,
+                    $this->LOCATION_ID
+                );
+                $NO = (int) $this->hemoServices->GetNoTreatment(
+                    $this->CUSTOMER_ID,
+                    $this->LOCATION_ID,
+                    $this->DATE
+                );
                 $this->hemoServices->AutoDefaultItem($NO, $this->ID, $this->LOCATION_ID);
                 DB::commit();
                 return Redirect::route('patientshemo_edit', ['id' => $this->ID])->with('message', 'Successfully created');
@@ -498,6 +508,8 @@ class HemoForm extends Component
     {
         $this->hemoServices->StatusUpdate($this->ID, 3);
         $this->scheduleServices->StatusUpdate($this->CUSTOMER_ID, $this->DATE, $this->LOCATION_ID, 3);
+
+
         return Redirect::route('patientshemo_edit', ['id' => $this->ID])->with('message', 'Successfully void');
     }
     public function getUnposted()

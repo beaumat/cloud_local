@@ -12,8 +12,13 @@ class ItemInventoryServices
     private $priceLevelLineServices;
     private $numberServices;
     private $dateServices;
-    public function __construct(ObjectServices $objectService, ItemServices $itemServices, PriceLevelLineServices $priceLevelLineServices, NumberServices $numberServices, DateServices $dateServices)
-    {
+    public function __construct(
+        ObjectServices $objectService,
+        ItemServices $itemServices,
+        PriceLevelLineServices $priceLevelLineServices,
+        NumberServices $numberServices,
+        DateServices $dateServices
+    ) {
         $this->object = $objectService;
         $this->itemServices = $itemServices;
         $this->priceLevelLineServices = $priceLevelLineServices;
@@ -21,8 +26,21 @@ class ItemInventoryServices
         $this->dateServices = $dateServices;
     }
 
-    private function Store(int $PREVIOUS_ID, int $SEQUENCE_NO, int $ITEM_ID, int $LOCATION_ID, int $BATCH_ID, int $SOURCE_REF_TYPE, int $SOURCE_REF_ID, string $SOURCE_REF_DATE, float $QUANTITY, float $COST = 0, float $ENDING_QUANTITY = 0, float $ENDING_UNIT_COST = 0, float $ENDING_COST = 0)
-    {
+    private function Store(
+        int $PREVIOUS_ID,
+        int $SEQUENCE_NO,
+        int $ITEM_ID,
+        int $LOCATION_ID,
+        int $BATCH_ID,
+        int $SOURCE_REF_TYPE,
+        int $SOURCE_REF_ID,
+        string $SOURCE_REF_DATE,
+        float $QUANTITY,
+        float $COST = 0,
+        float $ENDING_QUANTITY = 0,
+        float $ENDING_UNIT_COST = 0,
+        float $ENDING_COST = 0
+    ) {
 
         $ID = (int) $this->object->ObjectNextID('ITEM_INVENTORY');
 
@@ -65,8 +83,15 @@ class ItemInventoryServices
             );
         }
     }
-    private function Update(int $ITEM_ID, int $LOCATION_ID, int $SOURCE_REF_TYPE, int $SOURCE_REF_ID, string $SOURCE_REF_DATE, float $QUANTITY, float $COST = 0)
-    {
+    private function Update(
+        int $ITEM_ID,
+        int $LOCATION_ID,
+        int $SOURCE_REF_TYPE,
+        int $SOURCE_REF_ID,
+        string $SOURCE_REF_DATE,
+        float $QUANTITY,
+        float $COST = 0
+    ) {
         $data = ItemInventory::where('ITEM_ID', '=', $ITEM_ID)
             ->where('LOCATION_ID', $LOCATION_ID)
             ->where('SOURCE_REF_TYPE', $SOURCE_REF_TYPE)
@@ -679,12 +704,16 @@ class ItemInventoryServices
             ->where('item_inventory.SOURCE_REF_TYPE', '=', 6)
             ->exists();
     }
-    public function RecomputedOnhand(int $ITEM_ID, int $LOCATION_ID, string $DATE_FROM_ADJUSTMENT_START)
+    public function RecomputedOnhand(int $ITEM_ID, int $LOCATION_ID, string $DATE_START, string $DATE_BY = '')
     {
+        $isInventory = $this->itemServices->isInventoryItem($ITEM_ID);
+        if ($isInventory == false) {
+            return;
+        }
 
 
-        $DATE_FROM = $DATE_FROM_ADJUSTMENT_START;
-        $DATE_TO = $this->dateServices->NowDate();
+        $DATE_FROM = $DATE_START;
+        $DATE_TO = $DATE_BY == '' ? $this->dateServices->NowDate() : $DATE_BY;
 
         $dataList = ItemInventory::query()
             ->select([
@@ -701,15 +730,12 @@ class ItemInventoryServices
             ->orderBy('item_inventory.ID', 'asc')
             ->get();
 
-
         $RUNNING_BALANCE = 0.0;
-
         foreach ($dataList as $list) {
 
             if ($list->SOURCE_REF_TYPE == 6)
                 $RUNNING_BALANCE = (float) $list->ENDING_QUANTITY;
             else {
-
                 $RUNNING_BALANCE = (float) $RUNNING_BALANCE + $list->QUANTITY;
                 $this->reFixEndQuantity($list->ID, $ITEM_ID, $LOCATION_ID, $RUNNING_BALANCE);
             }

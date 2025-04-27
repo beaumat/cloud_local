@@ -17,8 +17,6 @@ use Livewire\Component;
 #[Title('Spend Money')]
 class SpendMoneyForm extends Component
 {
-
-
     public $locationList = [];
     public $accountList = [];
     public bool $Modify = false;
@@ -85,8 +83,6 @@ class SpendMoneyForm extends Component
         $this->ID = 0;
         $this->STATUS = 0;
         $this->STATUS_DESCRIPTION = $this->documentStatusServices->getDesc($this->STATUS);
-
-
         // Initialize any properties or perform actions when the component is mounted
     }
     public function save()

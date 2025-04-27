@@ -120,7 +120,7 @@
                                             @if ($STATUS != 3)
                                                 @can('patient.treatment.delete')
                                                     <button name="btnCanceled" type='button' class="btn btn-sm btn-danger"
-                                                        wire:confirm="Are you sure you want to void?"
+                                                        wire:confirm="Are you sure you want to void? please make sure the item include manual deleted."
                                                         wire:click='getCanceled()'>
                                                         <i class="fa fa-times" aria-hidden="true"></i> Void
                                                     </button>
@@ -139,7 +139,8 @@
                                         @can('patient.treatment.print')
                                             @if (!$Modify)
                                                 <a target="_blank" href="{{ route('patientshemo_print', ['id' => $ID]) }}"
-                                                    class="btn btn-sm btn-dark"><i class="fa fa-print" aria-hidden="true"></i> Print</a>
+                                                    class="btn btn-sm btn-dark"><i class="fa fa-print"
+                                                        aria-hidden="true"></i> Print</a>
                                             @endif
                                         @endcan
 

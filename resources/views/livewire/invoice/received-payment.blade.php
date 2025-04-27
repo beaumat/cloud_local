@@ -32,49 +32,54 @@
                     </td>
                 </tr>
             @endforeach
-            @if ($INVOICE_STATUS_ID != $openStatus)
-                <form wire:submit.prevent='AddPayment' wire:loading.attr='disabled'>
-                    <tr>
-                        <td> </td>
-                        <td> </td>
-                        <td>
-                            <select class="form-control form-control-sm" wire:model='PAYMENT_METHOD_ID'>
-                                <option value="0"></option>
-                                @foreach ($paymentMethodList as $list)
-                                    <option value="{{ $list->ID }}">{{ $list->DESCRIPTION }}</option>
-                                @endforeach
-                            </select>
-                        </td>
-                        <td> <input type="number" class="form-control form-control-sm text-right" wire:model='AMOUNT'
-                                step="0.01" />
-                        </td>
 
-                        <td> <input type="text" class="form-control form-control-sm" wire:model='RECEIPT_REF_NO' />
-                        </td>
-                        <td>
-                            <select class="form-control form-control-sm" wire:model='UNDEPOSITED_FUNDS_ACCOUNT_ID'>
-                                <option value="0"></option>
-                                @foreach ($accountList as $list)
-                                    <option value="{{ $list->ID }}">{{ $list->NAME }}</option>
-                                @endforeach
-                            </select>
-                        </td>
+            @if ($dataList->count() == 0)
+                @if ($INVOICE_STATUS_ID != $openStatus)
+                    <form wire:submit.prevent='AddPayment' wire:loading.attr='disabled'>
+                        <tr>
+                            <td> </td>
+                            <td> </td>
+                            <td>
+                                <select class="form-control form-control-sm" wire:model='PAYMENT_METHOD_ID'>
+                                    <option value="0"></option>
+                                    @foreach ($paymentMethodList as $list)
+                                        <option value="{{ $list->ID }}">{{ $list->DESCRIPTION }}</option>
+                                    @endforeach
+                                </select>
+                            </td>
+                            <td> <input type="number" class="form-control form-control-sm text-right"
+                                    wire:model='AMOUNT' step="0.01" />
+                            </td>
 
-                        <td> <input type="text" class="form-control form-control-sm" wire:model='NOTES' /> </td>
-                        <td>
-                            <div class="">
-                                <button title="Add" type="submit" wire:loading.attr='hidden'
-                                    class="text-white btn bg-sky btn-sm w-100">
-                                    <i class="fas fa-plus"></i>
-                                </button>
-                                <div wire:loading.delay>
-                                    <span class="spinner"></span>
+                            <td> <input type="text" class="form-control form-control-sm"
+                                    wire:model='RECEIPT_REF_NO' />
+                            </td>
+                            <td>
+                                <select class="form-control form-control-sm" wire:model='UNDEPOSITED_FUNDS_ACCOUNT_ID'>
+                                    <option value="0"></option>
+                                    @foreach ($accountList as $list)
+                                        <option value="{{ $list->ID }}">{{ $list->NAME }}</option>
+                                    @endforeach
+                                </select>
+                            </td>
+
+                            <td> <input type="text" class="form-control form-control-sm" wire:model='NOTES' /> </td>
+                            <td>
+                                <div class="">
+                                    <button title="Add" type="submit" wire:loading.attr='hidden'
+                                        class="text-white btn bg-sky btn-sm w-100">
+                                        <i class="fas fa-plus"></i>
+                                    </button>
+                                    <div wire:loading.delay>
+                                        <span class="spinner"></span>
+                                    </div>
                                 </div>
-                            </div>
-                        </td>
-                    </tr>
-                </form>
+                            </td>
+                        </tr>
+                    </form>
+                @endif
             @endif
+
         </tbody>
 
     </table>

@@ -677,9 +677,11 @@ Route::middleware(['auth'])->group(function () {
         });
 
         Route::prefix('/accounting')->name('accounting')->group(function () {
+            
             Route::prefix('/general-ledger')->middleware(['permission:report.accounting.general-ledger'])->group(function () {
                 Route::get('/', GeneralLedgerReport::class)->name('general_ledeger_report');
             });
+
             Route::prefix('/trial-balance')->middleware(['permission:report.accounting.trial-balance'])->group(function () {
                 Route::get('/', TrialBalanceReport::class)->name('trial_balance_report');
             });

@@ -4,6 +4,7 @@ namespace App\Livewire\Hemodialysis;
 
 use App\Services\AccountJournalServices;
 use App\Services\HemoServices;
+use App\Services\ItemInventoryServices;
 use App\Services\ItemServices;
 use App\Services\ItemSubClassServices;
 use App\Services\ItemTreatmentServices;
@@ -37,6 +38,7 @@ class InventoryTreatment extends Component
     private $itemSubClassServices;
     private $serviceChargeServices;
     private $timerServices;
+    private $iteminventoryServices;
     private $accountJournalServices;
     public function boot(
         HemoServices $hemoServices,
@@ -45,8 +47,8 @@ class InventoryTreatment extends Component
         ItemTreatmentServices $itemTreatmentServices,
         ItemSubClassServices $itemSubClassServices,
         ServiceChargeServices $serviceChargeServices,
-        AccountJournalServices $accountJournalServices
-
+        AccountJournalServices $accountJournalServices,
+        ItemInventoryServices $iteminventoryServices
     ) {
         $this->hemoServices = $hemoServices;
         $this->itemServices = $itemServices;
@@ -54,8 +56,8 @@ class InventoryTreatment extends Component
         $this->itemTreatmentServices = $itemTreatmentServices;
         $this->itemSubClassServices = $itemSubClassServices;
         $this->serviceChargeServices = $serviceChargeServices;
-
         $this->accountJournalServices = $accountJournalServices;
+        $this->iteminventoryServices = $iteminventoryServices;
     }
 
     public string $ITEM_CODE;
@@ -106,13 +108,24 @@ class InventoryTreatment extends Component
     }
     public function deleteItem(int $ID, int $ITEM_ID)
     {
-        $this->hemoServices->ItemDelete($ID, $this->HEMO_ID, $ITEM_ID, true);
-        $this->hemoServices->ItemDeleteTrigger($ID, $this->HEMO_ID);
-        session()->flash('message', 'Successfully deleted');
+        DB::beginTransaction();
+        try {
+            $this->hemoServices->ItemDelete($ID, $this->HEMO_ID, $ITEM_ID, true);
+            $this->hemoServices->ItemDeleteTrigger($ID, $this->HEMO_ID);
+            $this->iteminventoryServices->RecomputedOnhand($ITEM_ID, $this->LOCATION_ID, $this->hemoServices->get($this->HEMO_ID)->DATE);
+            session()->flash('message', 'Successfully deleted');
+            DB::commit();
+        } catch (\Throwable $th) {
+
+            DB::rollBack();
+            session()->flash('error', $th->getMessage());
+        }
+
+
     }
     public function deleteItemInCash(int $ID, int $ITEM_ID)
     {
-        $data =  $this->hemoServices->ItemGet($ID);
+        $data = $this->hemoServices->ItemGet($ID);
         if ($data) {
             DB::beginTransaction();
             try {
@@ -123,7 +136,7 @@ class InventoryTreatment extends Component
                             session()->flash('error', 'Delete action cannot proceed. This item has already been paid.');
                             return;
                         }
-                        $SC_ID  = $dataItem->SERVICE_CHARGES_ID;
+                        $SC_ID = $dataItem->SERVICE_CHARGES_ID;
                         $this->serviceChargeServices->ItemDelete($dataItem->ID, $SC_ID);
                         $this->serviceChargeServices->ReComputed($SC_ID);
                     }
@@ -131,7 +144,7 @@ class InventoryTreatment extends Component
 
                 $this->hemoServices->ItemDelete($ID, $this->HEMO_ID, $ITEM_ID, false);
                 $this->hemoServices->ItemDeleteTrigger($ID, $this->HEMO_ID);
-
+                $this->iteminventoryServices->RecomputedOnhand($ITEM_ID, $this->LOCATION_ID, $this->hemoServices->get($this->HEMO_ID)->DATE);
                 DB::commit();
                 session()->flash('message', 'Successfully deleted');
             } catch (\Throwable $th) {
@@ -193,11 +206,11 @@ class InventoryTreatment extends Component
 
         $data = $this->hemoServices->ItemGet($editId);
         if ($data) {
-            $this->lineId       = $data->ID;
-            $this->lineItemId   = $data->ITEM_ID;
-            $this->lineUnitId   = $data->UNIT_ID ?? 0;
-            $this->lineQty      = $data->QUANTITY ?? 0;
-            $this->lineIsNew    = $data->IS_NEW;
+            $this->lineId = $data->ID;
+            $this->lineItemId = $data->ITEM_ID;
+            $this->lineUnitId = $data->UNIT_ID ?? 0;
+            $this->lineQty = $data->QUANTITY ?? 0;
+            $this->lineIsNew = $data->IS_NEW;
             if ($this->lineItemId > 0) {
                 $this->editUnitList = $this->unitOfMeasureServices->ItemUnit($this->lineItemId);
             }
@@ -233,7 +246,7 @@ class InventoryTreatment extends Component
             $this->lineItemId,
             $this->lineQty,
             $this->lineUnitId,
-            (float)  $unitRelated['QUANTITY'],
+            (float) $unitRelated['QUANTITY'],
             $this->lineIsNew,
             true
         );
@@ -246,7 +259,7 @@ class InventoryTreatment extends Component
     public function loadItemRequired()
     {
         if ($this->ActiveRequired) {
-            $this->ItemRequiredList =  $this->itemTreatmentServices->getItemRequired($this->LOCATION_ID, $this->HEMO_ID);
+            $this->ItemRequiredList = $this->itemTreatmentServices->getItemRequired($this->LOCATION_ID, $this->HEMO_ID);
         }
     }
     public function addItem(int $ItemTreatmentId)
@@ -258,22 +271,24 @@ class InventoryTreatment extends Component
                 $unitRelated = $this->unitOfMeasureServices->GetItemUnitDetails($data->ITEM_ID, $data->UNIT_ID ?? 0);
                 $UNIT_BASE_QUANTITY = (float) $unitRelated['QUANTITY'];
 
-                if ($this->hemoServices->ItemStoreExists(
-                    $this->HEMO_ID,
-                    $data->ITEM_ID,
-                    $data->QUANTITY,
-                    $data->UNIT_ID ?? 0,
-                    $UNIT_BASE_QUANTITY,
-                    $gotNew,
-                    true
-                )) {
+                if (
+                    $this->hemoServices->ItemStoreExists(
+                        $this->HEMO_ID,
+                        $data->ITEM_ID,
+                        $data->QUANTITY,
+                        $data->UNIT_ID ?? 0,
+                        $UNIT_BASE_QUANTITY,
+                        $gotNew,
+                        true
+                    )
+                ) {
                     $this->dispatch('refresh-item-treatment');
                     session()->flash('error', 'Item already exists');
                     return;
                 }
                 $this->hemoServices->ItemStore($this->HEMO_ID, $data->ITEM_ID, $data->QUANTITY, $data->UNIT_ID ?? 0, $UNIT_BASE_QUANTITY, $gotNew, true);
                 $dataTrigger = $this->itemTreatmentServices->listItemTrigger($ItemTreatmentId);
-                foreach ($dataTrigger  as $list) {
+                foreach ($dataTrigger as $list) {
                     $trUnitRelated = $this->unitOfMeasureServices->GetItemUnitDetails($list->ITEM_ID, $list->UNIT_ID ?? 0);
                     $TR_UNIT_BASE_QUANTITY = (float) $trUnitRelated['QUANTITY'];
                     $this->hemoServices->ItemStore($this->HEMO_ID, $list->ITEM_ID, $list->QUANTITY, $list->UNIT_ID ?? 0, $TR_UNIT_BASE_QUANTITY, true, true);
@@ -290,10 +305,10 @@ class InventoryTreatment extends Component
         $data = $this->hemoServices->get($this->HEMO_ID);
         if ($data) {
             $result = [
-                'DATE'          => $data->DATE,
-                'LOCATION_ID'   => $data->LOCATION_ID,
-                'ITEM_ID'       => $ITEM_ID,
-                'CONTACT_ID'    => $data->CUSTOMER_ID
+                'DATE' => $data->DATE,
+                'LOCATION_ID' => $data->LOCATION_ID,
+                'ITEM_ID' => $ITEM_ID,
+                'CONTACT_ID' => $data->CUSTOMER_ID
             ];
 
             $this->dispatch('usage-modal-open', result: $result);
@@ -319,12 +334,12 @@ class InventoryTreatment extends Component
 
         $this->hemoServices->makeJournal($this->HEMO_ID);
         $this->gotInventory();
-        
+
     }
     public function gotInventory()
     {
-            $this->hemoServices->makeItemInventory($this->HEMO_ID);
-    }   
+        $this->hemoServices->makeItemInventory($this->HEMO_ID);
+    }
     public function OpenJournal()
     {
 

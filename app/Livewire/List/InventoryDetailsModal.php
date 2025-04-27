@@ -63,9 +63,7 @@ class InventoryDetailsModal extends Component
     {
        
         if ($this->itemInventoryServices->isHaveInventoryAdjustmet($this->ITEM_ID, $this->LOCATION_ID, $DATE_START)) {
-
             $this->itemInventoryServices->RecomputedOnhand($this->ITEM_ID, $this->LOCATION_ID, $DATE_START);
-
             session()->flash('message', 'Successfully fixed');
             return;
         }
