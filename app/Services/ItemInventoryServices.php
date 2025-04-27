@@ -704,40 +704,82 @@ class ItemInventoryServices
             ->where('item_inventory.SOURCE_REF_TYPE', '=', 6)
             ->exists();
     }
-    public function RecomputedOnhand(int $ITEM_ID, int $LOCATION_ID, string $DATE_START, string $DATE_BY = '')
+    public function getAdjustmentDate(int $ITEM_ID, int $LOCATION_ID, string $DATE_FROM_ADJUSTMENT_START)
+    {
+        $result = ItemInventory::where('item_inventory.ITEM_ID', '=', $ITEM_ID)
+            ->where('item_inventory.LOCATION_ID', '=', $LOCATION_ID)
+            ->where('item_inventory.SOURCE_REF_DATE', '<=', $DATE_FROM_ADJUSTMENT_START)
+            ->where('item_inventory.SOURCE_REF_TYPE', '=', 6)
+            ->orderby('item_inventory.SOURCE_REF_DATE', 'desc')
+            ->first();
+
+        if ($result) {
+            return $result->SOURCE_REF_DATE;
+        }
+
+        $result = ItemInventory::where('item_inventory.ITEM_ID', '=', $ITEM_ID)
+            ->where('item_inventory.LOCATION_ID', '=', $LOCATION_ID)
+            ->orderby('item_inventory.SOURCE_REF_DATE', 'asc')
+            ->orderBy('item_inventory.ID', 'asc')
+            ->limit(1)
+            ->first();
+
+        if ($result) {
+            return $result->SOURCE_REF_DATE;
+        }
+        return null;
+    }
+    public function RecomputedOnhand(int $ITEM_ID, int $LOCATION_ID, string $DATE_START = '', string $DATE_BY = '')
     {
         $isInventory = $this->itemServices->isInventoryItem($ITEM_ID);
         if ($isInventory == false) {
             return;
         }
 
-
+        if ($DATE_START == '') {
+            $gotDATE = $this->getAdjustmentDate($ITEM_ID, $LOCATION_ID, $DATE_START);
+            if ($gotDATE == null) {
+                $DATE_FROM = $this->dateServices->NowDate();
+            }else{
+                $DATE_FROM = $gotDATE;
+            }       
+        } else {
+            $DATE_FROM = $DATE_START;
+        }
         $DATE_FROM = $DATE_START;
         $DATE_TO = $DATE_BY == '' ? $this->dateServices->NowDate() : $DATE_BY;
 
         $dataList = ItemInventory::query()
             ->select([
-                'item_inventory.ID',
-                'item_inventory.SOURCE_REF_TYPE',
-                'item_inventory.SOURCE_REF_DATE',
-                'item_inventory.QUANTITY',
-                'item_inventory.ENDING_QUANTITY',
-            ])
+                    'item_inventory.ID',
+                    'item_inventory.SOURCE_REF_TYPE',
+                    'item_inventory.SOURCE_REF_DATE',
+                    'item_inventory.QUANTITY',
+                    'item_inventory.ENDING_QUANTITY',
+                ])
             ->where('item_inventory.ITEM_ID', '=', $ITEM_ID)
             ->where('item_inventory.LOCATION_ID', '=', $LOCATION_ID)
             ->whereBetween('item_inventory.SOURCE_REF_DATE', [$DATE_FROM, $DATE_TO])
             ->orderBy('item_inventory.SOURCE_REF_DATE', 'asc')
             ->orderBy('item_inventory.ID', 'asc')
             ->get();
-
+        $IS_FIRST = true;
         $RUNNING_BALANCE = 0.0;
         foreach ($dataList as $list) {
 
-            if ($list->SOURCE_REF_TYPE == 6)
+            if ($list->SOURCE_REF_TYPE == 6) {
+                $IS_FIRST = false;
                 $RUNNING_BALANCE = (float) $list->ENDING_QUANTITY;
-            else {
-                $RUNNING_BALANCE = (float) $RUNNING_BALANCE + $list->QUANTITY;
-                $this->reFixEndQuantity($list->ID, $ITEM_ID, $LOCATION_ID, $RUNNING_BALANCE);
+            } else {
+                if ($IS_FIRST) {
+                    $RUNNING_BALANCE = (float) $list->ENDING_QUANTITY;
+                    $IS_FIRST = false;
+                } else {
+                    $RUNNING_BALANCE = (float) $RUNNING_BALANCE + $list->QUANTITY;
+                    $this->reFixEndQuantity($list->ID, $ITEM_ID, $LOCATION_ID, $RUNNING_BALANCE);
+                }
+
+
             }
         }
     }

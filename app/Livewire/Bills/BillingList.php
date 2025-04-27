@@ -43,7 +43,7 @@ class BillingList extends Component
         $this->billingServices = $billingServices;
         $this->locationServices = $locationServices;
         $this->userServices = $userServices;
-        $this->accountJournalServices =  $accountJournalServices;
+        $this->accountJournalServices = $accountJournalServices;
         $this->objectServices = $objectServices;
         $this->itemInventoryServices = $itemInventoryServices;
         $this->documentTypeServices = $documentTypeServices;
@@ -66,9 +66,9 @@ class BillingList extends Component
     }
     private function DeleteJournal(int $BILL_ID)
     {
-        $billData =   $this->billingServices->get($BILL_ID);
+        $billData = $this->billingServices->get($BILL_ID);
         if ($billData) {
-            $JOURNAL_NO  = (int) $this->accountJournalServices->getRecord($this->billingServices->object_type_map_bill, $BILL_ID);
+            $JOURNAL_NO = (int) $this->accountJournalServices->getRecord($this->billingServices->object_type_map_bill, $BILL_ID);
 
             $billItem = $this->billingServices->ItemView($BILL_ID);
             foreach ($billItem as $list) {
@@ -93,6 +93,12 @@ class BillingList extends Component
                     $list->ID,
                     $billData->DATE
                 );
+
+                $this->itemInventoryServices->RecomputedOnhand(
+                    $list->ITEM_ID,
+                    $billData->LOCATION_ID,
+                    $billData->DATE
+                );
             }
 
             $billExpense = $this->billingServices->ExpenseView($BILL_ID);
@@ -105,7 +111,7 @@ class BillingList extends Component
                     $list->ID,
                     $this->billingServices->object_type_map_bill_expenses,
                     $billData->DATE,
-                    $list->AMOUNT >= 0 ?  0 : 1
+                    $list->AMOUNT >= 0 ? 0 : 1
                 );
             }
 
@@ -153,7 +159,7 @@ class BillingList extends Component
             session()->flash('error', $errorMessage);
         }
     }
-    
+
     public function render()
     {
         $dataList = $this->billingServices->Search($this->search, $this->locationid, $this->perPage);

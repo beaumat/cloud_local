@@ -6,6 +6,7 @@ use App\Services\AccountJournalServices;
 use App\Services\AccountServices;
 use App\Services\BillingServices;
 use App\Services\ContactServices;
+use App\Services\DateServices;
 use App\Services\DocumentStatusServices;
 use App\Services\DocumentTypeServices;
 use App\Services\ItemInventoryServices;
@@ -78,6 +79,7 @@ class BillingForm extends Component
     private $documentTypeServices;
     private $itemInventoryServices;
     private $uploadServices;
+    private $dateServices;
     public function boot(
         ItemInventoryServices $itemInventoryServices,
         DocumentTypeServices $documentTypeServices,
@@ -92,7 +94,8 @@ class BillingForm extends Component
         ObjectServices $objectServices,
         AccountJournalServices $accountJournalServices,
         AccountServices $accountServices,
-        UploadServices $uploadServices
+        UploadServices $uploadServices,
+        DateServices $dateServices
     ) {
         $this->billingServices = $billingServices;
         $this->locationServices = $locationServices;
@@ -108,6 +111,7 @@ class BillingForm extends Component
         $this->documentTypeServices = $documentTypeServices;
         $this->itemInventoryServices = $itemInventoryServices;
         $this->uploadServices = $uploadServices;
+        $this->dateServices = $dateServices;
     }
 
     public function updatedCUSTOMFIELD1()
@@ -258,7 +262,7 @@ class BillingForm extends Component
         $this->ACCOUNTS_PAYABLE_ID = $this->accountServices->getByName('Accounts Payable');
         $this->getTax();
 
-        $this->FILE_NAME =  '';
+        $this->FILE_NAME = '';
         $this->FILE_PATH = '';
         $this->DATE_CONFIRM = '';
         $this->IS_CONFIRM = false;
@@ -274,25 +278,25 @@ class BillingForm extends Component
 
         $this->validate(
             [
-                'VENDOR_ID'             => 'required|integer|exists:contact,id',
-                'CODE'                  => 'nullable|max:20|unique:bill,code,' . ($this->ID > 0 ? $this->ID : 'NULL') . ',id',
-                'INPUT_TAX_ID'          => 'required|not_in:0|exists:tax,id',
-                'DATE'                  => 'required|string|date_format:Y-m-d',
-                'LOCATION_ID'           => 'required|integer|exists:location,id',
-                'PAYMENT_TERMS_ID'      => 'required|integer|exists:payment_terms,id',
-                'ACCOUNTS_PAYABLE_ID'   => 'required|integer|exists:account,id',
-                'INPUT_TAX_ACCOUNT_ID'  => 'required|integer|exists:account,id'
+                'VENDOR_ID' => 'required|integer|exists:contact,id',
+                'CODE' => 'nullable|max:20|unique:bill,code,' . ($this->ID > 0 ? $this->ID : 'NULL') . ',id',
+                'INPUT_TAX_ID' => 'required|not_in:0|exists:tax,id',
+                'DATE' => 'required|string|date_format:Y-m-d',
+                'LOCATION_ID' => 'required|integer|exists:location,id',
+                'PAYMENT_TERMS_ID' => 'required|integer|exists:payment_terms,id',
+                'ACCOUNTS_PAYABLE_ID' => 'required|integer|exists:account,id',
+                'INPUT_TAX_ACCOUNT_ID' => 'required|integer|exists:account,id'
             ],
             [],
             [
-                'VENDOR_ID'             => 'Vendor',
-                'CODE'                  => 'Reference No.',
-                'INPUT_TAX_ID'          => 'Tax',
-                'DATE'                  => 'Date',
-                'LOCATION_ID'           => 'Location',
-                'PAYMENT_TERMS_ID'      => 'Payment Terms',
-                'ACCOUNTS_PAYABLE_ID'   => 'Account Payables',
-                'INPUT_TAX_ACCOUNT_ID'  => 'Account Tax'
+                'VENDOR_ID' => 'Vendor',
+                'CODE' => 'Reference No.',
+                'INPUT_TAX_ID' => 'Tax',
+                'DATE' => 'Date',
+                'LOCATION_ID' => 'Location',
+                'PAYMENT_TERMS_ID' => 'Payment Terms',
+                'ACCOUNTS_PAYABLE_ID' => 'Account Payables',
+                'INPUT_TAX_ACCOUNT_ID' => 'Account Tax'
             ]
         );
 
@@ -335,7 +339,7 @@ class BillingForm extends Component
                 DB::beginTransaction();
 
 
-                $data =  $this->billingServices->Get($this->ID);
+                $data = $this->billingServices->Get($this->ID);
                 if ($data) {
                     if ($this->STATUS == 16) {
                         $JNO = $this->accountJournalServices->getRecord($this->billingServices->object_type_map_bill, $this->ID);
@@ -439,7 +443,24 @@ class BillingForm extends Component
             $SOURCE_REF_TYPE = (int) $this->documentTypeServices->getId('Bill');
             $data = $this->billingServices->ItemInventory($this->ID);
             if ($data) {
-                $this->itemInventoryServices->InventoryExecute($data, $this->LOCATION_ID, $SOURCE_REF_TYPE, $this->DATE, true);
+                $this->itemInventoryServices->InventoryExecute(
+                    $data,
+                    $this->LOCATION_ID,
+                    $SOURCE_REF_TYPE,
+                    $this->DATE,
+                    true
+                );
+                if ($this->DATE != $this->dateServices->NowDate()) {
+                    foreach ($data as $list) {
+                        $this->itemInventoryServices->RecomputedOnhand(
+                            $list->ITEM_ID,
+                            $this->LOCATION_ID,
+                            $this->DATE
+                        );
+                    }
+                }
+
+
             }
             return true;
         } catch (\Exception $e) {
@@ -466,7 +487,7 @@ class BillingForm extends Component
             $billExpenses = (int) $this->billingServices->object_type_map_bill_expenses;
 
             $JOURNAL_NO = $this->accountJournalServices->getRecord($this->billingServices->object_type_map_bill, $this->ID);
-            if ($JOURNAL_NO  ==  0) {
+            if ($JOURNAL_NO == 0) {
                 $JOURNAL_NO = $this->accountJournalServices->getJournalNo($this->billingServices->object_type_map_bill, $this->ID) + 1;
             }
 
@@ -541,7 +562,7 @@ class BillingForm extends Component
     }
     public function getUnposted()
     {
-        if ($this->BALANCE_DUE  == $this->AMOUNT) {
+        if ($this->BALANCE_DUE == $this->AMOUNT) {
             try {
                 DB::beginTransaction();
                 $this->billingServices->StatusUpdate($this->ID, 16);
