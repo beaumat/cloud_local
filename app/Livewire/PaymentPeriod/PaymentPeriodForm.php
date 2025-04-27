@@ -112,13 +112,29 @@ class PaymentPeriodForm extends Component
             ]
         );
 
+        $isBankAccountExist = (bool) $this->paymentPeriodServices->bankAccountExists($this->ID, $this->BANK_ACCOUNT_ID);
         $isDateExist = (bool) $this->paymentPeriodServices->dateExists($this->ID, $this->DATE);
-        $this->paymentPeriodServices->Update($this->ID, $this->RECEIPT_NO, $this->DATE_FROM, $this->DATE_TO, $this->DATE, $this->TOTAL_PAYMENT);
+
+        $this->paymentPeriodServices->Update(
+            $this->ID,
+            $this->RECEIPT_NO,
+            $this->DATE_FROM,
+            $this->DATE_TO,
+            $this->DATE,
+            $this->TOTAL_PAYMENT,
+            $this->BANK_ACCOUNT_ID
+        );
+
         if (!$isDateExist) {
             //DATE UPDATE
             $this->getUpdateOrderDate();
             return;
         }
+        if (!$isBankAccountExist) {
+            //BANK ACCOUNT UPDATE
+            $this->getUpdateBankAccount();
+        }
+
         $this->Modify = false;
         session()->flash('message', 'Successfully update');
     }
@@ -159,7 +175,27 @@ class PaymentPeriodForm extends Component
 
 
     }
+    private function getUpdateBankAccount()
+    {
+        $dataList = $this->paymentServices->getPaymentbyPaymentPeriod($this->ID);
+        foreach ($dataList as $list) {
+            $dataPay = $this->paymentServices->getUpdateUndeposit(
+                $list->ID,
+                $this->BANK_ACCOUNT_ID
+            );
+            if ($dataPay) {
+                $this->accountJournalServices->updateAccount(
+                    $dataPay->ID,
+                    $this->paymentServices->object_type_payment,
+                    $this->DATE,
+                    $this->LOCATION_ID,
+                    $dataPay->UNDEPOSITED_FUNDS_ACCOUNT_ID,
+                    $this->BANK_ACCOUNT_ID
+                );
+            }
 
+        }
+    }
     public function updateCancel()
     {
         return Redirect::route('patientspayment_period_details', ['id' => $this->ID]);

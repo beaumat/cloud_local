@@ -94,7 +94,11 @@ class PaymentPeriodServices
 
         return PaymentPeriod::where('ID', '=', $ID)->where('DATE', '=', $DATE)->exists();
     }
-    public function Update(int $ID, string $RECEIPT_NO, string $DATE_FROM, string $DATE_TO, string $DATE, float $TOTAL_PAYMENT)
+    public function bankAccountExists(int $ID, int $BANK_ACCOUNT_ID): bool
+    {
+        return (bool) PaymentPeriod::where('ID', '=', $ID)->where('BANK_ACCOUNT_ID', '=', $BANK_ACCOUNT_ID)->exists();
+    }
+    public function Update(int $ID, string $RECEIPT_NO, string $DATE_FROM, string $DATE_TO, string $DATE, float $TOTAL_PAYMENT,int $BANK_ACCOUNT_ID)
     {
         PaymentPeriod::where('ID', '=', $ID)
             ->update([
@@ -102,7 +106,8 @@ class PaymentPeriodServices
                 'DATE_FROM' => $DATE_FROM,
                 'DATE_TO' => $DATE_TO,
                 'DATE' => $DATE,
-                'TOTAL_PAYMENT' => $TOTAL_PAYMENT
+                'TOTAL_PAYMENT' => $TOTAL_PAYMENT,
+                'BANK_ACCOUNT_ID' => $BANK_ACCOUNT_ID
             ]);
     }
     public function Delete(int $ID)

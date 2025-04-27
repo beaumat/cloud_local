@@ -41,12 +41,17 @@ use App\Services\OtherServices;
 
                     <td class=""> {{ OtherServices::formatDates($list->CONFINE_PERIOD) }}</td>
                     <td class="text-right">{{ number_format($list->INVOICE_AMOUNT, 2) }} </td>
-                    <td class="text-right">{{ number_format($list->PAYMENT_AMOUNT, 2) }}</td>
+                    <td class="text-right"><a target="_blank"
+                            href="{{ route('customerspayment_edit', ['id' => $list->PAYMENT_ID]) }}">{{ number_format($list->PAYMENT_AMOUNT, 2) }}</a>
+                    </td>
 
-                    <td class="text-right">{{ number_format($list->TAX_AMOUNT, 2) }}</td>
+                    <td class="text-right"><a target="_blank"
+                            href="{{ route('customerstax_credit_edit', ['id' => $list->TAX_CREDIT_ID]) }}">
+                            {{ number_format($list->TAX_AMOUNT, 2) }}</a></td>
                     <td class="text-right text-info">{{ number_format($list->BILL_AMOUNT, 2) }}</td>
                     <td class="text-info">{{ $list->DOCTOR_NAME }}</td>
-                    <td><button class="btn btn-xs btn-danger w-100" wire:confirm='Are you sure to delete this paid?' wire:click='DeletePaid({{ $list->INVOICE_ID }})'>
+                    <td><button class="btn btn-xs btn-danger w-100" wire:confirm='Are you sure to delete this paid?'
+                            wire:click='DeletePaid({{ $list->INVOICE_ID }})'>
                             <i class="fa fa-trash" aria-hidden="true"></i>
                         </button></td>
                     @php

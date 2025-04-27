@@ -56,6 +56,20 @@ class PaymentServices
 
         return 0;
     }
+    public function getUpdateUndeposit(int $ID, int $UNDEPOSITED_FUNDS_ACCOUNT_ID)
+    {       
+        $data = $this->get($ID); 
+            if ($data) {
+               
+                Payment::where('ID', '=', $ID)
+                ->update(['UNDEPOSITED_FUNDS_ACCOUNT_ID' => $UNDEPOSITED_FUNDS_ACCOUNT_ID]);
+           
+                return $data;
+            }
+    
+            return null;
+       
+    }
     public function Store(
         string $CODE,
         $DATE,

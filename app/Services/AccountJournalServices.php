@@ -886,6 +886,19 @@ class AccountJournalServices
         }
 
     }
+    public function updateAccount(int $OBJECT_ID, int $OBJECT_TYPE, string $OBJECT_DATE, int $LOCATION_ID, int $OLD_ACCOUNT_ID, int $NEW_ACCOUNT_ID)
+    {
+        AccountJournal::where('OBJECT_ID', '=', $OBJECT_ID)
+            ->where('OBJECT_TYPE', '=', $OBJECT_TYPE)
+            ->where('OBJECT_DATE', '=', $OBJECT_DATE)
+            ->where('LOCATION_ID', '=', $LOCATION_ID)
+            ->where('ACCOUNT_ID', '=', $OLD_ACCOUNT_ID)
+            ->update([
+                'ACCOUNT_ID' => $NEW_ACCOUNT_ID
+            ]);
+
+
+    }
     public function parameterUpdate($where = [], $update = [])
     {
 
