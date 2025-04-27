@@ -428,6 +428,7 @@ class InvoiceFormItems extends Component
                 }
                 $invoiceDate = $this->invoiceServices->get($this->INVOICE_ID);
                 if ($invoiceDate) {
+                    // Force Delete
                     $invoiceItemData = $this->invoiceServices->ItemGet($Id, $this->INVOICE_ID,);
                     if ($invoiceItemData) {
 
@@ -441,6 +442,13 @@ class InvoiceFormItems extends Component
                             0,
                             0,
                             0
+                        );
+
+
+                        $this->itemInventoryServices->RecomputedOnhand(
+                            $invoiceItemData->ITEM_ID,
+                            $invoiceDate->LOCATION_ID,
+                            $invoiceDate->DATE
                         );
 
                         // INCOME_ACCOUNT_ID

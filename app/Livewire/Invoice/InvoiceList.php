@@ -64,6 +64,12 @@ class InvoiceList extends Component
                     0
                 );
 
+                $this->itemInventoryServices->RecomputedOnhand(
+                    $invoiceItemData->ITEM_ID,
+                    $invoiceDate->LOCATION_ID,
+                    $invoiceDate->DATE
+                );
+
                 // INCOME_ACCOUNT_ID
                 $this->accountJournalServices->DeleteJournal(
                     $invoiceItemData->INCOME_ACCOUNT_ID ?? 0,
@@ -164,14 +170,14 @@ class InvoiceList extends Component
         session()->forget('error');
     }
     public function updatedlocationid()
-    {   
+    {
         try {
-            $this->userServices->SwapLocation($this->locationid );
+            $this->userServices->SwapLocation($this->locationid);
         } catch (\Exception $e) {
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
         }
- 
+
     }
     #[On('quick-paid-reload')]
     public function render()
@@ -179,5 +185,5 @@ class InvoiceList extends Component
         $dataList = $this->invoiceServices->Search($this->search, $this->locationid, $this->perPage);
         return view('livewire.invoice.invoice-list', ['dataList' => $dataList]);
     }
-   
+
 }

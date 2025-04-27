@@ -140,7 +140,7 @@ class BillingFormItems extends Component
             $item = $this->itemServices->get($this->ITEM_ID);
             if ($item) {
 
-                $this->RATE =   $this->priceLevelLineServices->GetCostByLocation($this->LOCATION_ID, $this->ITEM_ID);
+                $this->RATE = $this->priceLevelLineServices->GetCostByLocation($this->LOCATION_ID, $this->ITEM_ID);
                 $this->ITEM_CODE = $item->CODE;
                 $this->ITEM_DESCRIPTION = $item->PURCHASE_DESCRIPTION;
                 $this->TAXABLE = $item->TAXABLE;
@@ -164,15 +164,15 @@ class BillingFormItems extends Component
     {
         $this->validate(
             [
-                'ITEM_ID'   => 'required|not_in:0',
-                'QUANTITY'  => 'required|numeric|not_in:0',
-                'RATE'      => 'required'
+                'ITEM_ID' => 'required|not_in:0',
+                'QUANTITY' => 'required|numeric|not_in:0',
+                'RATE' => 'required'
             ],
             [],
             [
-                'ITEM_ID'   => 'Item',
-                'QUANTITY'  => 'Quantitity',
-                'RATE'      => 'Cost'
+                'ITEM_ID' => 'Item',
+                'QUANTITY' => 'Quantitity',
+                'RATE' => 'Cost'
             ]
         );
 
@@ -331,13 +331,13 @@ class BillingFormItems extends Component
 
             if ($this->STATUS == 16) {
                 $JOURNAL_NO = $this->accountJournalServices->getRecord($this->billingServices->object_type_map_bill, $this->BILL_ID);
-                if ($JOURNAL_NO  ==  0) {
+                if ($JOURNAL_NO == 0) {
                     session()->flash('message', 'journal not found');
                     return;
                 }
                 $billData = $this->billingServices->get($this->BILL_ID);
                 if ($billData) {
-                    $billDataItem = $this->billingServices->ItemGet($Id, $this->BILL_ID,);
+                    $billDataItem = $this->billingServices->ItemGet($Id, $this->BILL_ID, );
                     if ($billDataItem) {
 
                         // Inventory
@@ -351,6 +351,13 @@ class BillingFormItems extends Component
                             0,
                             0
                         );
+
+                        $this->itemInventoryServices->RecomputedOnhand(
+                            $billDataItem->ITEM_ID,
+                            $billData->LOCATION_ID,
+                            $billData->DATE
+                        );
+
 
                         // ACCOUNT_ID
                         $this->accountJournalServices->DeleteJournal(
