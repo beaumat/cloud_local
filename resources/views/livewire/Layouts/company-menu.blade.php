@@ -13,6 +13,17 @@
                 </a>
             </li>
         @endcan
+
+        @can('company.stock-received')
+            <li class="nav-item">
+                <a href="{{ route('companystock_received') }}"
+                    class="nav-link {{ request()->is('company/stock-received*') ? 'text-warning font-weight-bold' : '' }}">
+                    <i class="fa fa-truck nav-icon"></i>
+                    <p>Stock Received</p>
+                </a>
+            </li>
+        @endcan
+
         @can('company.inventory-adjustment.view')
             <li class="nav-item">
                 <a href="{{ route('companyinventory_adjustment') }}"
@@ -31,7 +42,7 @@
                 </a>
             </li>
         @endif
-        
+
         @can('company.pull-out.view')
             <li class="nav-item">
                 <a href="{{ route('companypull_out') }}"

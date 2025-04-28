@@ -93,11 +93,6 @@ class StockTransferList extends Component
             session()->flash('error', 'Invalid. this file cannot be deleted.');
         }
     }
-    public function render()
-    {
-        $dataList = $this->stockTransferServices->Search($this->search, $this->locationid, $this->perPage);
-        return view('livewire.stock-transfer.stock-transfer-list', ['dataList' => $dataList]);
-    }
     public function updatedlocationid()
     {
 
@@ -108,4 +103,10 @@ class StockTransferList extends Component
             session()->flash('error', $errorMessage);
         }
     }
+    public function render()
+    {
+        $dataList = $this->stockTransferServices->Search($this->search, $this->locationid, $this->perPage);
+        return view('livewire.stock-transfer.stock-transfer-list', ['dataList' => $dataList]);
+    }
+ 
 }

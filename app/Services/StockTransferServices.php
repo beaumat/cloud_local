@@ -203,7 +203,7 @@ class StockTransferServices
 
     public function ItemGet(int $ID, int $STOCK_TRANSFER_ID)
     {
-        $result =  StockTransferItems::where('ID', '=', $ID)
+        $result = StockTransferItems::where('ID', '=', $ID)
             ->where('STOCK_TRANSFER_ID', '=', $STOCK_TRANSFER_ID)
             ->first();
 
@@ -377,6 +377,40 @@ class StockTransferServices
             ->where('STOCK_TRANSFER_ID', $STOCK_TRANSFER_ID)
             ->orderBy('LINE_NO', 'asc')
             ->get();
+
+        return $result;
+    }
+    public function getStockTransferReceiver($search, int $LOCATION_ID, int $perPage)
+    {
+        $result = StockTransfer::query()
+            ->select([
+                'stock_transfer.ID',
+                'stock_transfer.CODE',
+                'stock_transfer.DATE',
+                'stock_transfer.NOTES',
+                'l.NAME as LOCATION_NAME',
+                's.DESCRIPTION as STATUS',
+                't.NAME as TRANSFER_FROM',
+                'c.NAME as PREPARED_BY',
+                'stock_transfer.RECORDED_ON',
+            ])
+            ->leftJoin('contact as c', 'c.ID', '=', 'stock_transfer.PREPARED_BY_ID')
+            ->join('location as t', 't.ID', '=', 'stock_transfer.LOCATION_ID')
+            ->join('document_status_map as s', 's.ID', '=', 'stock_transfer.STATUS')
+            ->join('location as l', function ($join) use (&$LOCATION_ID) {
+                $join->on('l.ID', '=', 'stock_transfer.TRANSFER_TO_ID');
+                if ($LOCATION_ID > 0) {
+                    $join->where('l.ID', $LOCATION_ID);
+                }
+            })
+            ->when($search, function ($query) use (&$search) {
+                $query->where('stock_transfer.CODE', 'like', '%' . $search . '%')
+                    ->orWhere('stock_transfer.AMOUNT', 'like', '%' . $search . '%')
+                    ->orWhere('stock_transfer.NOTES', 'like', '%' . $search . '%');
+            })
+            ->where('STATUS', '=', 15)
+            ->orderBy('stock_transfer.ID', 'desc')
+            ->paginate($perPage);
 
         return $result;
     }

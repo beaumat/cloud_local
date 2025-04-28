@@ -92,6 +92,7 @@ use App\Livewire\Shift\ShiftForm;
 use App\Livewire\Shift\ShiftList;
 use App\Livewire\Statement\Statement;
 use App\Livewire\StatementOfAccount\SoaModule;
+use App\Livewire\StockTransfer\StockReceived;
 use App\Livewire\StockTransfer\StockTransferForm;
 use App\Livewire\StockTransfer\StockTransferList;
 use App\Livewire\TaxCredit\TaxCreditForm;
@@ -386,7 +387,13 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/', StockTransferList::class)->name('stock_transfer')->middleware(['permission:company.stock-transfer.view']);
             Route::get('/create', StockTransferForm::class)->name('stock_transfer_create')->middleware(['permission:company.stock-transfer.create']);
             Route::get('/{id}/edit', StockTransferForm::class)->name('stock_transfer_edit')->middleware(['permission:company.stock-transfer.view']);
+
+
         });
+
+        Route::get('/stock-received', StockReceived::class)->name('stock_received')->middleware(['permission:company.stock-received']);
+
+
         // temporary
         Route::prefix('/pull-out')->group(function () {
             Route::get('/', PullOutList::class)->name('pull_out')->middleware(['permission:company.pull-out.view']);
@@ -677,7 +684,7 @@ Route::middleware(['auth'])->group(function () {
         });
 
         Route::prefix('/accounting')->name('accounting')->group(function () {
-            
+
             Route::prefix('/general-ledger')->middleware(['permission:report.accounting.general-ledger'])->group(function () {
                 Route::get('/', GeneralLedgerReport::class)->name('general_ledeger_report');
             });
