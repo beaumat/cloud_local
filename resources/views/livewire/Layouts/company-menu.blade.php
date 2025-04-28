@@ -18,7 +18,7 @@
             <li class="nav-item">
                 <a href="{{ route('companystock_received') }}"
                     class="nav-link {{ request()->is('company/stock-received*') ? 'text-warning font-weight-bold' : '' }}">
-                    <i class="fa fa-truck nav-icon"></i>
+                    <i class="fa fa-archive nav-icon"></i>
                     <p>Stock Received</p>
                 </a>
             </li>
