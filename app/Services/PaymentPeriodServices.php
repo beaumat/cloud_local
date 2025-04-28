@@ -94,6 +94,10 @@ class PaymentPeriodServices
 
         return PaymentPeriod::where('ID', '=', $ID)->where('DATE', '=', $DATE)->exists();
     }
+    public function orNumberExists(int $ID, string $RECEIPT_NO): bool
+    {
+        return PaymentPeriod::where('ID', '=', $ID)->where('RECEIPT_NO', '=', $RECEIPT_NO)->exists();
+    }
     public function bankAccountExists(int $ID, int $BANK_ACCOUNT_ID): bool
     {
         return (bool) PaymentPeriod::where('ID', '=', $ID)->where('BANK_ACCOUNT_ID', '=', $BANK_ACCOUNT_ID)->exists();

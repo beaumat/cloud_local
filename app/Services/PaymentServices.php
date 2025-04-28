@@ -57,18 +57,25 @@ class PaymentServices
         return 0;
     }
     public function getUpdateUndeposit(int $ID, int $UNDEPOSITED_FUNDS_ACCOUNT_ID)
-    {       
-        $data = $this->get($ID); 
-            if ($data) {
-               
-                Payment::where('ID', '=', $ID)
+    {
+        $data = $this->get($ID);
+        if ($data) {
+
+            Payment::where('ID', '=', $ID)
                 ->update(['UNDEPOSITED_FUNDS_ACCOUNT_ID' => $UNDEPOSITED_FUNDS_ACCOUNT_ID]);
-           
-                return $data;
-            }
-    
-            return null;
-       
+
+            return $data;
+        }
+
+        return null;
+
+    }
+
+    public function getUpdateReceiptNo(int $ID, string $RECEIPT_REF_NO)
+    {
+        Payment::where('ID', '=', $ID)
+            ->update(['RECEIPT_REF_NO' => $RECEIPT_REF_NO]);
+
     }
     public function Store(
         string $CODE,

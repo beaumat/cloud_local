@@ -114,7 +114,8 @@ class PaymentPeriodForm extends Component
 
         $isBankAccountExist = (bool) $this->paymentPeriodServices->bankAccountExists($this->ID, $this->BANK_ACCOUNT_ID);
         $isDateExist = (bool) $this->paymentPeriodServices->dateExists($this->ID, $this->DATE);
-
+        $isORnumberExist = (bool) $this->paymentPeriodServices->orNumberExists($this->ID, $this->RECEIPT_NO);
+        
         $this->paymentPeriodServices->Update(
             $this->ID,
             $this->RECEIPT_NO,
@@ -134,6 +135,11 @@ class PaymentPeriodForm extends Component
             //BANK ACCOUNT UPDATE
             $this->getUpdateBankAccount();
         }
+        if (!$isORnumberExist) {
+            //OR NUMBER UPDATE
+            $this->getUpdateOrNumber();
+        }
+
 
         $this->Modify = false;
         session()->flash('message', 'Successfully update');
@@ -194,6 +200,14 @@ class PaymentPeriodForm extends Component
                 );
             }
 
+        }
+    }
+
+    private function getUpdateOrNumber()
+    {
+        $dataList = $this->paymentServices->getPaymentbyPaymentPeriod($this->ID);
+        foreach ($dataList as $list) {
+            $this->paymentServices->getUpdateReceiptNo($list->ID, $this->RECEIPT_NO);
         }
     }
     public function updateCancel()
