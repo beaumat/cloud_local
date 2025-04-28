@@ -60,7 +60,10 @@ class StockTransferList extends Component
 
                 // Inventory
                 $this->itemInventoryServices->DeleteInv($list->ITEM_ID, $data->LOCATION_ID, $this->stockTransferServices->document_type_id, $list->ID, $data->DATE);
+                $this->itemInventoryServices->RecomputedOnhand($list->ITEM_ID, $data->LOCATION_ID, $data->DATE);
+             
                 $this->itemInventoryServices->DeleteInv($list->ITEM_ID, $data->TRANSFER_TO_ID, $this->stockTransferServices->document_type_id, $list->ID, $data->DATE);
+                $this->itemInventoryServices->RecomputedOnhand($list->ITEM_ID, $data->TRANSFER_TO_ID, $data->DATE);
             }
         }
 
