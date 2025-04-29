@@ -1,13 +1,13 @@
 <div>
-    <button wire:click="openModal" class="btn btn-primary btn-sm text-xs ">
-       P.O List
+    <button wire:click="openModal" class="btn btn-danger btn-xs text-xs w-100">
+       PO History
     </button>
     @if ($showModal)
         <div class="modal" tabindex="-1" role="dialog" style="display: block; background-color: rgba(0, 0, 0, 0.5);">
-            <div class="modal-dialog modal-md" role="document">
+            <div class="modal-dialog modal-xl" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h6 class="modal-title">Purchase Order List</h6>
+                        <h6 class="modal-title">Purchase Order History</h6>
                         <button type="button" class="close" wire:click="closeModal">
                             <span aria-hidden="true">&times;</span>
                         </button>

@@ -1,14 +1,14 @@
 <div>
-    <button wire:click="openModal" class="btn btn-info btn-sm text-xs ">
-        Payment List
+    <button wire:click="openModal" class="btn btn-warning btn-xs text-xs w-100">
+        Payment History
     </button>
 
     @if ($showModal)
         <div class="modal" tabindex="-1" role="dialog" style="display: block; background-color: rgba(0, 0, 0, 0.5);">
-            <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-dialog modal-xl" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h6 class="modal-title"> Payment List Applied </h6>
+                        <h6 class="modal-title"> Payment History </h6>
                         <button type="button" class="close" wire:click="closeModal">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -34,6 +34,9 @@
                                             @elseif ($list->TYPE == 'Bill Credits')
                                                 <a target="_BLANK"
                                                     href="{{ route('vendorsbill_credit_edit', ['id' => $list->MAIN_ID]) }}">{{ $list->CODE }}</a>
+                                            @elseif ($list->TYPE == 'Withholding Tax')
+                                                <a target="_BLANK"
+                                                    href="{{ route('vendorswithholding_tax_edit', ['id' => $list->MAIN_ID]) }}">{{ $list->CODE }}</a>
                                             @endif
                                         </td>
                                         <td>{{ \Carbon\Carbon::parse($list->DATE)->format('m/d/Y') }} </td>

@@ -282,36 +282,39 @@
                             </div>
                             <div class="card-footer">
                                 <div class="row">
-                                    <div class="col-md-6 text-left">
+                                    <div class="col-md-4 text-left">
                                         <div class="row">
-                                            <div class="col-md-2">
-                                                {{-- @livewire('Bills.PurchaseOrderListPromp', ['VENDOR_ID' => $VENDOR_ID, 'BILL_ID' => $ID, 'LOCATION_ID' => $LOCATION_ID]) --}}
+                                            <div class="col-md-6">
+                                                @livewire('Bills.PurchaseOrderListPromp', ['VENDOR_ID' => $VENDOR_ID, 'BILL_ID' => $ID, 'LOCATION_ID' => $LOCATION_ID])
                                             </div>
-                                            <div class="col-md-2">
-                                                {{-- @livewire('Bills.BillPaymentModal', ['BILL_ID' => $ID]) --}}
+                                            <div class="col-md-6">
+                                                @livewire('Bills.BillPaymentModal', ['BILL_ID' => $ID])
                                             </div>
-                                            <div class="col-md-2">
-
-                                            </div>
+                                           
                                         </div>
 
                                     </div>
-                                    <div class="col-md-6">
+                                    <div class="col-md-8">
                                         <div class="row">
-                                            <div class="col-md-4 text-right">
+                                            <div class="col-md-3 text-right">
                                                 <label class="text-sm">Input Tax:</label>
                                                 <label
                                                     class="text-info text-lg">{{ number_format($INPUT_TAX_AMOUNT, 2) }}</label>
                                             </div>
-                                            <div class="col-md-4 text-right">
+                                            <div class="col-md-3 text-right">
                                                 <label class="text-sm">Total:</label>
                                                 <label
                                                     class="text-primary text-lg">{{ number_format($AMOUNT, 2) }}</label>
                                             </div>
-                                            <div class="col-md-4 text-right">
+                                            <div class="col-md-3 text-right">
+                                                <label class="text-sm">Payment:</label>
+                                                <label
+                                                    class="text-purple text-lg">{{ number_format($PAYMENT, 2) }}</label>
+                                            </div>
+                                            <div class="col-md-3 text-right">
                                                 <label class="text-sm">Balance:</label>
                                                 <label
-                                                    class="text-primary text-lg">{{ number_format($BALANCE_DUE, 2) }}</label>
+                                                    class="text-danger text-lg">{{ number_format($BALANCE_DUE, 2) }}</label>
                                             </div>
                                         </div>
                                     </div>
