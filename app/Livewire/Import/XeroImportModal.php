@@ -44,6 +44,7 @@ class XeroImportModal extends Component
     public $DOC_TYPE = [];
     public int $DOC_ID;
     public string $DOC_NAME;
+    public bool $isForwarded;
     private $billingServices;
     private $accountJournalServices;
     private $paymentTermServices;
@@ -55,6 +56,7 @@ class XeroImportModal extends Component
     private $generalJournalServices;
     private $spendMoneyServices;
     private $receiveMoneyServices;
+
     public function boot(
         XeroDataServices $xero,
         ContactServices $contact,
@@ -92,22 +94,44 @@ class XeroImportModal extends Component
     #[On('dataSend')]
     public function openModal($dataSend)
     {
+
+
         $this->CONTACT_ID = 0;
         $this->ACCOUNT_ID = 0;
         $this->contactList = [];
         $this->accountList = [];
-        $this->DATE = $dataSend['DATE'];
-        $this->SOURCE_TYPE = $dataSend['SOURCE_TYPE'];
-        $this->REFERENCE = $dataSend['REFERENCE'];
-        $this->locationid = $dataSend['locationid'];
-        $this->dataList = $this->xeroDataServices->callReference(
-            $this->REFERENCE,
-            $this->DATE,
-            $this->SOURCE_TYPE
-        );
+        $this->isForwarded = $dataSend['is_forwarded'];
+
+        if ($this->isForwarded == false) {
+            $this->DATE = $dataSend['DATE'];
+            $this->SOURCE_TYPE = $dataSend['SOURCE_TYPE'];
+            $this->REFERENCE = $dataSend['REFERENCE'];
+            $this->locationid = $dataSend['locationid'];
+
+            $this->dataList = $this->xeroDataServices->callReference(
+                $this->REFERENCE,
+                $this->DATE,
+                $this->SOURCE_TYPE,
+                $this->locationid
+            );
+           
+        }else{
+
+            $this->dataList = $this->xeroDataServices->callReference(
+                '',
+                '',
+                0,
+                $this->locationid
+            );
+        }
+
+
+
+
+
 
         foreach ($this->dataList as $data) {
-            $this->DOC_TYPE = $this->xeroDataServices->DocumentType($data->SOURCE_TYPE);
+            $this->DOC_TYPE = $this->xeroDataServices->DocumentType($this->isForwarded ? 0 : $data->SOURCE_TYPE);
             break;
         }
         $this->DOC_NAME = $this->DOC_TYPE['NAME'];
@@ -771,7 +795,7 @@ class XeroImportModal extends Component
             'ACCOUNT_ID' => 'required|exists:account,id'
 
         ], [], [
-    
+
             'locationid' => 'Location',
             'ACCOUNT_ID' => 'Account'
         ]);
@@ -788,14 +812,13 @@ class XeroImportModal extends Component
                     $ID = $this->spendMoneyServices->StoreDetails($SPEND_MONEY_ID, $ACCOUNT_ID, (float) $data->DEBIT, $data->DESCRIPTION);
                     $this->xeroDataServices->updatePosted($data->ID, $ID, $this->spendMoneyServices->object_type_map_spend_money_details);
 
-                }
-                else{
+                } else {
                     $this->xeroDataServices->updatePosted($data->ID, $SPEND_MONEY_ID, $this->spendMoneyServices->object_type_map_spend_money);
 
                 }
             }
             $this->spendMoneyServices->ReCalculate($SPEND_MONEY_ID);
-       
+
             if ($this->postedSpendMoney() == true) {
                 DB::commit();
                 $this->closeModal();
@@ -812,73 +835,73 @@ class XeroImportModal extends Component
 
     private function AccountJournalReceiveMoney(): bool
     {
-      
-            $JOURNAL_NO = $this->accountJournalServices->getRecord($this->receiveMoneyServices->object_type_map_receive_money, $this->ID);
-            if ($JOURNAL_NO == 0) {
-                $JOURNAL_NO = $this->accountJournalServices->getJournalNo($this->receiveMoneyServices->object_type_map_receive_money, $this->ID) + 1;
-            }
-            //Main
-            $main = $this->receiveMoneyServices->JournalEntry($this->ID);
-            $this->accountJournalServices->JournalExecute(
-                $JOURNAL_NO,
-                $main,
-                $this->locationid,
-                $this->receiveMoneyServices->object_type_map_receive_money,
-                $this->DATE
-            );
 
-            //Details
-            $details = $this->receiveMoneyServices->JournalEntryDetails($this->ID);
-            $this->accountJournalServices->JournalExecute(
-                $JOURNAL_NO,
-                $details,
-                $this->locationid,
-                $this->receiveMoneyServices->object_type_map_receive_money_details,
-                $this->DATE
-            );
+        $JOURNAL_NO = $this->accountJournalServices->getRecord($this->receiveMoneyServices->object_type_map_receive_money, $this->ID);
+        if ($JOURNAL_NO == 0) {
+            $JOURNAL_NO = $this->accountJournalServices->getJournalNo($this->receiveMoneyServices->object_type_map_receive_money, $this->ID) + 1;
+        }
+        //Main
+        $main = $this->receiveMoneyServices->JournalEntry($this->ID);
+        $this->accountJournalServices->JournalExecute(
+            $JOURNAL_NO,
+            $main,
+            $this->locationid,
+            $this->receiveMoneyServices->object_type_map_receive_money,
+            $this->DATE
+        );
 
-            $data = $this->accountJournalServices->getSumDebitCredit($JOURNAL_NO);
+        //Details
+        $details = $this->receiveMoneyServices->JournalEntryDetails($this->ID);
+        $this->accountJournalServices->JournalExecute(
+            $JOURNAL_NO,
+            $details,
+            $this->locationid,
+            $this->receiveMoneyServices->object_type_map_receive_money_details,
+            $this->DATE
+        );
 
-            $debit_sum = (float) $data['DEBIT'];
-            $credit_sum = (float) $data['CREDIT'];
+        $data = $this->accountJournalServices->getSumDebitCredit($JOURNAL_NO);
 
-            if ($debit_sum == $credit_sum && $debit_sum > 0 && $credit_sum > 0) {
-                return true;
-            }
-           
-            return false;
-       
+        $debit_sum = (float) $data['DEBIT'];
+        $credit_sum = (float) $data['CREDIT'];
+
+        if ($debit_sum == $credit_sum && $debit_sum > 0 && $credit_sum > 0) {
+            return true;
+        }
+
+        return false;
+
     }
 
- 
-    public function postedReceiveMoney() 
+
+    public function postedReceiveMoney()
     {
-        
-            $detailsList = $this->receiveMoneyServices->getDetailsList($this->ID);
 
-            if ($detailsList) {
-         
-                if (!$this->AccountJournalReceiveMoney()) {      
-                    return false;
-                }
-                $this->receiveMoneyServices->StatusUpdate($this->ID, 15);
-            
-                return true;
+        $detailsList = $this->receiveMoneyServices->getDetailsList($this->ID);
+
+        if ($detailsList) {
+
+            if (!$this->AccountJournalReceiveMoney()) {
+                return false;
             }
+            $this->receiveMoneyServices->StatusUpdate($this->ID, 15);
 
-            return false;
+            return true;
+        }
+
+        return false;
 
     }
 
     private function ReceiveMoney()
     {
         $this->validate([
-       
+
             'locationid' => 'required|exists:location,id',
             'ACCOUNT_ID' => 'required|exists:account,id'
 
         ], [], [
-         
+
             'locationid' => 'Location',
             'ACCOUNT_ID' => 'Account'
         ]);
@@ -894,8 +917,7 @@ class XeroImportModal extends Component
                     $ID = $this->receiveMoneyServices->StoreDetails($RECEIVE_MONEY_ID, $ACCOUNT_ID, (float) $data->CREDIT, $data->DESCRIPTION);
                     $this->xeroDataServices->updatePosted($data->ID, $ID, $this->receiveMoneyServices->object_type_map_receive_money_details);
 
-                }
-                else{
+                } else {
                     $this->xeroDataServices->updatePosted($data->ID, $RECEIVE_MONEY_ID, $this->receiveMoneyServices->object_type_map_receive_money);
                 }
             }

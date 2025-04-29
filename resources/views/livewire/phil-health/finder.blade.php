@@ -6,7 +6,11 @@
         <div class="modal" tabindex="-1" role="dialog" style="display: block; background-color: rgba(0, 0, 0, 0.5);">
             <div class="modal-dialog modal-xl modal-dialog-scrollable" role="document">
                 <div class="modal-content text-left">
-                    <div class="modal-header">Philheatlh Form Finder</div>
+                    <div class="modal-header">Philheatlh Form Finder
+                        <button type="button" class="close" wire:click="closeModal">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
                     <div class="modal-body">
 
                         <section class="content">
@@ -85,7 +89,7 @@
                                                             <th class="text-right">Paid Amt.</th>
                                                             <th>Status</th>
                                                             <th>Location</th>
-                                                          
+
                                                         </tr>
                                                     </thead>
                                                     <tbody class="text-xs">
@@ -129,7 +133,7 @@
                                                                     {{ $list->STATUS }}
                                                                 </td>
                                                                 <td> {{ $list->LOCATION_NAME }}</td>
-                                                              
+
                                                             </tr>
                                                         @endforeach
 

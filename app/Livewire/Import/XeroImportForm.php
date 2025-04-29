@@ -14,6 +14,7 @@ use Livewire\WithFileUploads;
 class XeroImportForm extends Component
 {
 
+    public $isForwarded = false;
     public $file = null;
 
     public $dataList = [];
@@ -30,18 +31,20 @@ class XeroImportForm extends Component
 
 
     }
-    public function onMake(string $DATE, string $SOURCE_TYPE, string $REFERENCE) {
+    public function onMake(string $DATE, string $SOURCE_TYPE, string $REFERENCE)
+    {
 
         $dataSend = [
             'DATE' => $DATE,
             'SOURCE_TYPE' => $SOURCE_TYPE,
             'REFERENCE' => $REFERENCE,
-            'locationid' => $this->locationid
+            'locationid' => $this->locationid,
+            'is_forwarded' => $this->isForwarded,
         ];
-        
+
 
         $this->dispatch('dataSend', $dataSend);
-    }   
+    }
     public function generate()
     {
         $this->dataList = [];
@@ -51,16 +54,18 @@ class XeroImportForm extends Component
             'locationid' => 'Location'
         ]);
 
+        $this->isForwarded = false;
         $this->dataList = $this->xeroDataServices->viewData($this->locationid);
     }
-    public function generateNoReference() {
+    public function generateNoReference()
+    {
         $this->dataList = [];
         $this->validate([
             'locationid' => 'required|exists:location,id'
         ], [], [
             'locationid' => 'Location'
         ]);
-
+        $this->isForwarded = true;
         $this->dataList = $this->xeroDataServices->viewNoRefrence($this->locationid);
     }
 

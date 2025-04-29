@@ -49,13 +49,21 @@ class XeroDataServices
 
         return $result;
     }
-    public function callReference(string $REFERENCE, string $date, string $SOURCE_TYPE)
+    public function callReference(string $REFERENCE, string $date, string $SOURCE_TYPE, int $locationid)
     {
         $result = XeroData::query()
-            ->where('REFERENCE', '=', $REFERENCE)
-            ->where('DATE', '=', $date)
-            ->where('SOURCE_TYPE', '=', $SOURCE_TYPE)
-            ->where('POSTED', '=', 0)
+            ->when($REFERENCE != '', function ($query) use (&$REFERENCE, &$date, &$SOURCE_TYPE, &$locationid) {
+                $query->where('REFERENCE', '=', $REFERENCE)
+                    ->where('DATE', '=', $date)
+                    ->where('SOURCE_TYPE', '=', $SOURCE_TYPE)
+                    ->where('LOCATION_ID', '=', $locationid)
+                    ->where('POSTED', '=', 0);
+            })
+            ->when($REFERENCE == '', function ($query) use (&$locationid) {
+                $query->whereNull('REFERENCE')
+                    ->where('LOCATION_ID', '=', $locationid)
+                    ->where('POSTED', '=', 0);
+            })
             ->get();
 
         return $result;
@@ -103,7 +111,7 @@ class XeroDataServices
                 $docType = ['ID' => 35, 'NAME' => 'Spend Money']; //Fund Transfer;
                 break;
             default:
-                # code...
+                $docType = ['ID' => 23, 'NAME' => 'GENERAL JOURNAL']; //General Journal;
                 break;
         }
 

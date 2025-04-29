@@ -230,11 +230,7 @@ class ArForm extends Component
 
         $dataItem = $this->itemServices->get($PHIL_HEALTH_ITEM_ID);
         if ($dataItem) {
-
-
-
             // $RATE = $this->priceLevelLineServices->GetPriceByLocation($data->LOCATION_ID, $PHIL_HEALTH_ITEM_ID);
-
             $AMOUNT = $RATE * $QTY;
 
             $taxRate = $this->taxServices->getRate($TAX_ID);

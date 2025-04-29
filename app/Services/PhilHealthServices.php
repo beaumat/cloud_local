@@ -757,7 +757,7 @@ class PhilHealthServices
             })
             ->where('IS_TEMP', '0')
             ->orderBy('philhealth.ID', 'desc')      
-            ->limit(1000)   
+            ->limit(100)   
             ->get();
 
         return $result;

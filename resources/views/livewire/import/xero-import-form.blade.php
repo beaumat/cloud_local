@@ -3,7 +3,7 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-sm-6">
-                    <h5 class="m-0"><a href="{{ route('companygeneral_journal') }}"> Xero Import </a></h5>
+                    <h5 class="m-0"><a href="{{ route('maintenancesettingsimport') }}"> Xero Import </a></h5>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -97,13 +97,11 @@
                                                         <td>{{ $list->POSTED }}</td>
                                                         <td>{{ $list->OBJECT_ID }}</td>
                                                         <td>{{ $list->OBJECT_TYPE }}</td>
-                                                        @if ($list->REFERENCE)
-                                                            <td><button class="btn btn-primary btn-xs"
-                                                                    wire:click="onMake('{{ $list->DATE }}','{{ $list->SOURCE_TYPE }}','{{ $list->REFERENCE }}')">Create</button>
-                                                            </td>
-                                                        @else
-                                                            <td><button class="btn btn-secondary btn-xs">Create</button>
-                                                        @endif
+
+                                                        <td><button class="btn btn-primary btn-xs"
+                                                                wire:click="onMake('{{ $list->DATE }}','{{ $list->SOURCE_TYPE }}','{{ $list->REFERENCE }}')">Create</button>
+                                                        </td>
+
 
                                                     </tr>
                                                 @endforeach
