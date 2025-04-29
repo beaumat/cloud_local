@@ -115,10 +115,9 @@ class TaxCreditList extends Component
                     if ($data->STATUS == 16) {
                         $this->deleteJournal($data, $id);
                     }
-                    $invoiceList = $this->taxCreditServices->GetInvoiceList($id); // get first invoice Tax Credit
-                    $this->taxCreditServices->Delete($id); // Delete Main and Invoice tax credit
-                    foreach ($invoiceList as $list) {
-                        // UPDATE invoice balance
+                    $invoiceList = $this->taxCreditServices->GetInvoiceList($id); 
+                    $this->taxCreditServices->Delete($id);
+                    foreach ($invoiceList as $list) {         
                         $this->invoiceServices->updateInvoiceBalance($list->INVOICE_ID);
                     }
                     DB::commit();

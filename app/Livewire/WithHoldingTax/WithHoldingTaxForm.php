@@ -3,7 +3,9 @@
 namespace App\Livewire\WithHoldingTax;
 
 use App\Services\AccountJournalServices;
+use App\Services\BillingServices;
 use App\Services\ContactServices;
+use App\Services\DocumentStatusServices;
 use App\Services\LocationServices;
 use App\Services\TaxServices;
 use App\Services\UserServices;
@@ -31,7 +33,7 @@ class WithHoldingTaxForm extends Component
     public float $AMOUNT;
     public string $NOTES;
     public int $STATUS = 0;
-    public int $STATUS_DESCRIPTION;
+    public string $STATUS_DESCRIPTION;
     public int $ACCOUNTS_PAYABLE_ID;
     public $contactList = [];
     public $locationList = [];
@@ -43,24 +45,36 @@ class WithHoldingTaxForm extends Component
     private $taxServices;
     private $accountJournalServices;
     private $contactServices;
-    public function boot(WithholdingTaxServices $withholdingTaxService, UserServices $userServices, LocationServices $locationServices, TaxServices $taxServices, AccountJournalServices $accountJournalServices, ContactServices $contactServices)
-    {
+    private $documentStatusServices;
+    private $billingServices;
+    public function boot(
+        WithholdingTaxServices $withholdingTaxService,
+        UserServices $userServices,
+        LocationServices $locationServices,
+        TaxServices $taxServices,
+        AccountJournalServices $accountJournalServices,
+        ContactServices $contactServices,
+        DocumentStatusServices $documentStatusServices,
+        BillingServices $billingServices
+    ) {
         $this->withholdingTaxServices = $withholdingTaxService;
         $this->userServices = $userServices;
         $this->locationServices = $locationServices;
         $this->taxServices = $taxServices;
         $this->accountJournalServices = $accountJournalServices;
         $this->contactServices = $contactServices;
+        $this->documentStatusServices = $documentStatusServices;
+        $this->billingServices = $billingServices;
     }
     public function updatedEwtId()
     {
         $data = $this->taxServices->get($this->EWT_ID);
         if ($data) {
-            $this->EWT_RATE  = $data->RATE ?? 0;
+            $this->EWT_RATE = $data->RATE ?? 0;
             $this->EWT_ACCOUNT_ID = $data->TAX_ACCOUNT_ID ?? 0;
             return;
         }
-        $this->EWT_RATE  = 0;
+        $this->EWT_RATE = 0;
         $this->EWT_ACCOUNT_ID = 0;
     }
     private function LoadDropdown()
@@ -91,31 +105,32 @@ class WithHoldingTaxForm extends Component
         $this->EWT_ACCOUNT_ID = 0;
         $this->ACCOUNTS_PAYABLE_ID = 21;
         $this->AMOUNT = 0;
-        $this->EWT_RATE =  0;
+        $this->EWT_RATE = 0;
         $this->EWT_ID = 0;
         $this->ID = 0;
         $this->NOTES = '';
         $this->Modify = true;
         $this->STATUS = 0;
+        $this->STATUS_DESCRIPTION = "";
     }
     public function save()
     {
 
         $this->validate(
             [
-                'EWT_ID'             => 'required|integer|exists:tax,id',
-                'CODE'               => 'nullable|max:20|unique:withholding_tax,code,' . ($this->ID > 0 ? $this->ID : 'NULL') . ',id',
-                'WITHHELD_FROM_ID'   => 'required|integer|exists:contact,id',
-                'LOCATION_ID'        => 'required|integer|exists:location,id',
-                'DATE'               => 'required|date|string'
+                'EWT_ID' => 'required|integer|exists:tax,id',
+                'CODE' => 'nullable|max:20|unique:withholding_tax,code,' . ($this->ID > 0 ? $this->ID : 'NULL') . ',id',
+                'WITHHELD_FROM_ID' => 'required|integer|exists:contact,id',
+                'LOCATION_ID' => 'required|integer|exists:location,id',
+                'DATE' => 'required|date|string'
             ],
             [],
             [
-                'EWT_ID'            => 'Withholding Tax Type',
-                'CODE'              => 'Reference No.',
-                'WITHHELD_FROM_ID'  => 'Vendor',
-                'LOCATION_ID'       => 'Location',
-                'DATE'              => 'Date'
+                'EWT_ID' => 'Withholding Tax Type',
+                'CODE' => 'Reference No.',
+                'WITHHELD_FROM_ID' => 'Vendor',
+                'LOCATION_ID' => 'Location',
+                'DATE' => 'Date'
             ]
         );
 
@@ -123,7 +138,7 @@ class WithHoldingTaxForm extends Component
         try {
 
             if ($this->ID == 0) {
-                $this->ID = (int)  $this->withholdingTaxServices->Store(
+                $this->ID = (int) $this->withholdingTaxServices->Store(
                     $this->CODE,
                     $this->DATE,
                     $this->WITHHELD_FROM_ID,
@@ -140,7 +155,7 @@ class WithHoldingTaxForm extends Component
             }
 
 
-            $data =  $this->withholdingTaxServices->Get($this->ID);
+            $data = $this->withholdingTaxServices->Get($this->ID);
             if ($data) {
                 if ($this->STATUS == 16) {
                     $JNO = $this->accountJournalServices->getRecord($this->withholdingTaxServices->object_type_withholding_tax_id, $this->ID);
@@ -159,7 +174,7 @@ class WithHoldingTaxForm extends Component
                     }
                 }
 
-                $this->AMOUNT = (float)  $this->withholdingTaxServices->UpdateAMOUNT_WITHHELD($this->ID, $this->EWT_RATE);
+                $this->AMOUNT = (float) $this->withholdingTaxServices->UpdateAMOUNT_WITHHELD($this->ID, $this->EWT_RATE);
                 $this->withholdingTaxServices->Update(
                     $this->ID,
                     $this->CODE,
@@ -190,7 +205,7 @@ class WithHoldingTaxForm extends Component
         $this->ID = $data->ID;
         $this->CODE = $data->CODE ?? '';
         $this->WITHHELD_FROM_ID = $data->WITHHELD_FROM_ID ?? 0;
-        $this->LOCATION_ID  = $data->LOCATION_ID ?? 0;
+        $this->LOCATION_ID = $data->LOCATION_ID ?? 0;
         $this->DATE = $data->DATE;
         $this->EWT_ACCOUNT_ID = $data->EWT_ACCOUNT_ID ?? 0;
         $this->WITHHELD_FROM_ID = $data->WITHHELD_FROM_ID ?? 0;
@@ -198,9 +213,10 @@ class WithHoldingTaxForm extends Component
         $this->ACCOUNTS_PAYABLE_ID = $data->ACCOUNTS_PAYABLE_ID ?? 0;
         $this->EWT_RATE = $data->EWT_RATE ?? 0;
         $this->EWT_ID = $data->EWT_ID ?? 0;
-    
+
         $this->NOTES = $data->NOTES ?? '';
-        $this->STATUS =   $data->STATUS ?? 0;
+        $this->STATUS = $data->STATUS ?? 0;
+        $this->STATUS_DESCRIPTION = $this->documentStatusServices->getDesc($this->STATUS);
     }
 
     #[On('reload_bill')]
@@ -235,8 +251,8 @@ class WithHoldingTaxForm extends Component
         try {
 
             DB::beginTransaction();
-            $JOURNAL_NO  = (int) $this->accountJournalServices->getRecord($this->withholdingTaxServices->object_type_withholding_tax_id, $this->ID);
-            if ($JOURNAL_NO  == 0) {
+            $JOURNAL_NO = (int) $this->accountJournalServices->getRecord($this->withholdingTaxServices->object_type_withholding_tax_id, $this->ID);
+            if ($JOURNAL_NO == 0) {
                 $JOURNAL_NO = (int) $this->accountJournalServices->getJournalNo($this->withholdingTaxServices->object_type_withholding_tax_id, $this->ID) + 1;
             }
 
@@ -321,7 +337,90 @@ class WithHoldingTaxForm extends Component
             $this->dispatch('open-journal', result: $data);
         }
     }
+    private function deleteJournal($data, int $id)
+    {
 
+        $JOURNAL_NO = (int) $this->accountJournalServices->getRecord($this->withholdingTaxServices->object_type_withholding_tax_id, $id);
+
+        if ($JOURNAL_NO > 0) {
+            $this->accountJournalServices->DeleteJournal(
+                $data->EWT_ACCOUNT_ID,
+                $data->LOCATION_ID,
+                $JOURNAL_NO,
+                $data->WITHHELD_FROM_ID,
+                $data->ID,
+                $this->withholdingTaxServices->object_type_withholding_tax_id,
+                $data->DATE,
+                1
+            );
+            $billListData = $this->withholdingTaxServices->GetBillList($id);
+            foreach ($billListData as $list) {
+                $this->accountJournalServices->DeleteJournal(
+                    $list->ACCOUNTS_PAYABLE_ID,
+                    $data->LOCATION_ID,
+                    $JOURNAL_NO,
+                    $list->BILL_ID,
+                    $list->ID,
+                    $this->withholdingTaxServices->object_type_witholding_tax_bills_id,
+                    $data->DATE,
+                    0
+                );
+            }
+
+            // optional if remaining
+            $this->accountJournalServices->DeleteJournal(
+                $data->ACCOUNTS_PAYABLE_ID,
+                $data->LOCATION_ID,
+                $JOURNAL_NO,
+                $data->WITHHELD_FROM_ID,
+                $data->ID,
+                $this->withholdingTaxServices->object_type_withholding_tax_id,
+                $data->DATE,
+                0
+            );
+        }
+
+    }
+    private function delete(int $ID)
+    {
+        try {
+            $data = $this->withholdingTaxServices->Get($ID);
+            if ($data) {
+                if ($data->STATUS == 0 || $data->STATUS == 16) {
+                    DB::beginTransaction();
+                    try {
+                        if ($data->STATUS == 16) {
+                            $this->deleteJournal($data, $ID);
+                        }
+                        $billList = $this->withholdingTaxServices->GetBillList($ID);
+                        $this->withholdingTaxServices->Delete($ID);
+                        foreach ($billList as $list) {
+                            $this->billingServices->UpdateBalance($list->BILL_ID);
+                        }
+                        DB::commit();
+
+                        Redirect::route('vendorswithholding_tax')->with('message', 'Successfully deleted');
+                    } catch (\Exception $e) {
+                        DB::rollBack();
+                        $errorMessage = 'Error occurred: ' . $e->getMessage();
+                        session()->flash('error', $errorMessage);
+                    }
+                    return;
+                }
+
+                session()->flash('error', 'Invalid. this file cannot be deleted.');
+            }
+        } catch (\Throwable $th) {
+
+            session()->flash('error', 'Error:' . $th->getMessage());
+        }
+
+    }
+
+    public function DeleteEntry()
+    {
+        $this->delete($this->ID);
+    }
     public function render()
     {
         return view('livewire.with-holding-tax.with-holding-tax-form');

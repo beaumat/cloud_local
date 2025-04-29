@@ -85,7 +85,9 @@ class WithholdingTaxServices
 
     public function Delete(int $ID)
     {
+        WithholdingTaxBills::where('WITHHOLDING_TAX_ID', '=', $ID)->delete();
         WithholdingTax::where('ID', '=', $ID)->delete();
+
     }
 
     public function Search($search, int $LOCATION_ID, int $perPage): LengthAwarePaginator
@@ -293,11 +295,13 @@ class WithholdingTaxServices
                 'withholding_tax_bills.ID',
                 'withholding_tax_bills.BILL_ID',
                 'withholding_tax_bills.AMOUNT_WITHHELD',
+                'withholding_tax_bills.ACCOUNTS_PAYABLE_ID',
                 'i.CODE',
                 'i.DATE',
                 'i.AMOUNT as ORG_AMOUNT',
                 'i.INPUT_TAX_AMOUNT',
-                'i.BALANCE_DUE'
+                'i.BALANCE_DUE',
+                
             ])
             ->join('bill as i', 'i.ID', '=', 'withholding_tax_bills.BILL_ID')
             ->where('withholding_tax_bills.WITHHOLDING_TAX_ID', '=', $WITHHOLDING_TAX_ID)

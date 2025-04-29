@@ -134,7 +134,7 @@
                                         @endif
 
                                         @if ($STATUS == 15)
-                                            @can('company.stock-transfer.update')
+                                            @can('vendor.withholding-tax.edit')
                                                 <button type="button" wire:click='getUnposted()'
                                                     class="btn btn-sm btn-secondary"
                                                     wire:confirm="Are you sure you want to unpost?">
@@ -142,7 +142,18 @@
                                                 </button>
                                             @endcan
                                         @endif
+
+                                        @if ($STATUS == 16 || $STATUS == 0)
+                                            @can('vendor.withholding-tax.delete')
+                                                <button type="button" wire:click='DeleteEntry()'
+                                                    class="btn btn-sm btn-danger"
+                                                    wire:confirm="Are you sure you want to Delete?">
+                                                    <i class="fa fa-trash" aria-hidden="true"></i> Delete
+                                                </button>
+                                            @endcan
+                                        @endif
                                     </div>
+                                    
                                     <div class="text-right col-6 col-md-6">
                                         @if ($STATUS != 16)
                                             @if ($ID > 0 && $STATUS > 0)

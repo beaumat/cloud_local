@@ -661,7 +661,7 @@ class BillingServices
             SELECT \'Pay Bills\' AS `TYPE`, check_bills.`ID`, check_bills.`CHECK_ID` AS MAIN_ID, check_bills.`BILL_ID`, check_bills.AMOUNT_PAID as `AMOUNT_APPLIED`, `check`.`RECORDED_ON`,`check`.CODE,`check`.DATE
             FROM check_bills  
             INNER JOIN `check` ON `check`.`ID` = check_bills.`CHECK_ID`
-            
+
             UNION 
             SELECT \'Bill Credits\' AS `TYPE`, bill_credit_bills.`ID`, bill_credit_bills.`BILL_CREDIT_ID` AS MAIN_ID, bill_credit_bills.`BILL_ID`, bill_credit_bills.`AMOUNT_APPLIED`, bill_credit.`RECORDED_ON`,bill_credit.CODE,bill_credit.DATE
             FROM bill_credit_bills 
@@ -673,6 +673,7 @@ class BillingServices
             INNER JOIN withholding_tax ON withholding_tax.`ID` = withholding_tax_bills.`WITHHOLDING_TAX_ID`
 
         ) AS pay'))
+         
             ->select('pay.TYPE', 'pay.ID', 'pay.MAIN_ID', 'pay.BILL_ID', 'pay.AMOUNT_APPLIED', 'pay.RECORDED_ON', 'pay.CODE', 'pay.DATE')
             ->where('pay.BILL_ID', '=', $BILL_ID)
             ->orderBy('pay.RECORDED_ON')
