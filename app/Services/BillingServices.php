@@ -124,7 +124,8 @@ class BillingServices
         float $INPUT_TAX_RATE,
         float $INPUT_TAX_AMOUNT,
         int $INPUT_TAX_VAT_METHOD,
-        int $INPUT_TAX_ACCOUNT_ID
+        int $INPUT_TAX_ACCOUNT_ID,
+        string $DATE,
     ) {
 
 
@@ -141,6 +142,7 @@ class BillingServices
                 'INPUT_TAX_AMOUNT' => $INPUT_TAX_AMOUNT,
                 'INPUT_TAX_VAT_METHOD' => $INPUT_TAX_VAT_METHOD,
                 'INPUT_TAX_ACCOUNT_ID' => $INPUT_TAX_ACCOUNT_ID,
+                'DATE' => $DATE
             ]);
     }
 
@@ -692,6 +694,7 @@ class BillingServices
 
         return $result;
     }
+
     public function getBillTaxJournal(int $BILL_ID)
     {
         $result = Bill::query()

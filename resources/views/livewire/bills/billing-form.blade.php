@@ -66,7 +66,7 @@
                                         <div class="col-md-6">
                                             <div class="row">
                                                 <div class="col-md-4">
-                                                    @if ($ID == 0 && auth()->user()->date_enabled)
+                                                    @if (($ID == 0 && auth()->user()->date_enabled) || ($Modify && auth()->user()->date_enabled))
                                                         <livewire:date-input name="DATE" titleName="Date"
                                                             wire:model.live='DATE' :isDisabled="false" />
                                                     @else

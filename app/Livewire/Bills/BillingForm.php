@@ -304,8 +304,6 @@ class BillingForm extends Component
         try {
             if ($this->ID == 0) {
 
-
-
                 $this->getTax();
                 DB::beginTransaction();
                 $this->ID = $this->billingServices->Store(
@@ -334,16 +332,17 @@ class BillingForm extends Component
                 return Redirect::route('vendorsbills_edit', ['id' => $this->ID])->with('message', 'Successfully created');
             } else {
 
-
-
                 DB::beginTransaction();
-
-
                 $data = $this->billingServices->Get($this->ID);
                 if ($data) {
                     if ($this->STATUS == 16) {
-                        $JNO = $this->accountJournalServices->getRecord($this->billingServices->object_type_map_bill, $this->ID);
+
+                        // possible having change date
+                        $JNO = (int) $this->accountJournalServices->getRecord($this->billingServices->object_type_map_bill, $this->ID);
+
                         if ($JNO > 0) {
+
+                            $this->accountJournalServices->updateObjectDate($JNO, $this->DATE);
                             // ACCOUNTS_PAYABLE_ID
                             $this->accountJournalServices->AccountSwitch(
                                 $this->ACCOUNTS_PAYABLE_ID,
@@ -385,7 +384,8 @@ class BillingForm extends Component
                     $this->INPUT_TAX_RATE,
                     $this->INPUT_TAX_AMOUNT,
                     $this->INPUT_TAX_VAT_METHOD,
-                    $this->INPUT_TAX_ACCOUNT_ID
+                    $this->INPUT_TAX_ACCOUNT_ID,
+                    $this->DATE
                 );
 
 
@@ -443,6 +443,15 @@ class BillingForm extends Component
             $SOURCE_REF_TYPE = (int) $this->documentTypeServices->getId('Bill');
             $data = $this->billingServices->ItemInventory($this->ID);
             if ($data) {
+
+                $noProblem = (bool) $this->itemInventoryServices->ChangeDate($data, $this->LOCATION_ID, $SOURCE_REF_TYPE, $this->DATE);
+
+                if ($noProblem == false) {
+                    session()->flash('error', 'change date have problem');
+                    return false;
+                }
+
+
                 $this->itemInventoryServices->InventoryExecute(
                     $data,
                     $this->LOCATION_ID,

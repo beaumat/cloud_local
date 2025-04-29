@@ -740,9 +740,9 @@ class ItemInventoryServices
             $gotDATE = $this->getAdjustmentDate($ITEM_ID, $LOCATION_ID, $DATE_START);
             if ($gotDATE == null) {
                 $DATE_FROM = $this->dateServices->NowDate();
-            }else{
+            } else {
                 $DATE_FROM = $gotDATE;
-            }       
+            }
         } else {
             $DATE_FROM = $DATE_START;
         }
@@ -751,12 +751,12 @@ class ItemInventoryServices
 
         $dataList = ItemInventory::query()
             ->select([
-                    'item_inventory.ID',
-                    'item_inventory.SOURCE_REF_TYPE',
-                    'item_inventory.SOURCE_REF_DATE',
-                    'item_inventory.QUANTITY',
-                    'item_inventory.ENDING_QUANTITY',
-                ])
+                'item_inventory.ID',
+                'item_inventory.SOURCE_REF_TYPE',
+                'item_inventory.SOURCE_REF_DATE',
+                'item_inventory.QUANTITY',
+                'item_inventory.ENDING_QUANTITY',
+            ])
             ->where('item_inventory.ITEM_ID', '=', $ITEM_ID)
             ->where('item_inventory.LOCATION_ID', '=', $LOCATION_ID)
             ->whereBetween('item_inventory.SOURCE_REF_DATE', [$DATE_FROM, $DATE_TO])
@@ -792,6 +792,28 @@ class ItemInventoryServices
             ->update([
                 'ENDING_QUANTITY' => $ENDING_QUANTITY
             ]);
+
+    }
+    public function ChangeDate($data, int $LOCATION_ID, int $SOURCE_REF_TYPE, string $NEW_DATE): bool
+    {
+        try {
+            foreach ($data as $list) {
+                ItemInventory::where('ITEM_ID', '=', $list->ITEM_ID)
+                    ->where('LOCATION_ID', '=', $LOCATION_ID)
+                    ->where("SOURCE_REF_TYPE", '=', $SOURCE_REF_TYPE)
+                    ->where('SOURCE_REF_ID', '=', $list->ID)
+                    ->update([
+                        'DATE' => $NEW_DATE,
+                    ]);
+            }
+
+            return true;
+        } catch (\Throwable $th) {
+            //throw $th;
+
+            return false;
+        }
+
 
     }
 }
