@@ -46,7 +46,7 @@
                 <a href="{{ route('customerstax_credit') }}"
                     class="nav-link {{ request()->is('customers/tax-credit*') ? 'text-warning font-weight-bold' : '' }}">
                     <i class="fas fa-university nav-icon"></i>
-                    <p>WTax Credit</p>
+                    <p>Tax Credit</p>
                 </a>
             </li>
         @endcan
