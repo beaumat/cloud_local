@@ -96,11 +96,9 @@ class BillPaymentList extends Component
             if ($data->STATUS == 0 || $data->STATUS == 16) {
                 DB::beginTransaction();
                 try {
-
                     if ($data->STATUS  == 16) {
                         $this->deleteJournal($data, $id);
                     }
-
                     $billList = $this->billPaymentServices->billPaymentBills($id);
                     $this->billPaymentServices->Delete($id);
 

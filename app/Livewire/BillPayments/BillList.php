@@ -184,7 +184,13 @@ class BillList extends Component
     }
     public function addingTax(int $ID, int $BILL_ID, float $AMOUNT)
     {
+        if($this->withholdingTaxServices->BillExists($BILL_ID)) {
+            session()->flash('error', 'Bill already has withholding tax.');
+            return;
+        }
+
         DB::beginTransaction();
+        
         try {
             $isGood = (bool) $this->addTax($BILL_ID, $AMOUNT);
 
@@ -207,12 +213,12 @@ class BillList extends Component
     public function addTax(int $BILL_ID, float $AMOUNT)
     {
 
-
-
+    
         if ($this->EWT_ID == 0) {
             return false;
         }
 
+   
 
         $this->getSetTax($AMOUNT);
 
@@ -235,6 +241,7 @@ class BillList extends Component
             $this->AMOUNT_WITHHELD,
             $this->billingServices->ACCOUNTS_PAYABLE_ID
         );
+
         $total = $this->withholdingTaxServices->GetTotal($ID);
         $this->withholdingTaxServices->setTotal($ID, $total);
         $this->billingServices->UpdateBalance($BILL_ID);

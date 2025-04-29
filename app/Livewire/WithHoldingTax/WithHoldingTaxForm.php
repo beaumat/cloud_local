@@ -267,9 +267,7 @@ class WithHoldingTaxForm extends Component
                 "TAX"
             );
 
-
             $paymentDataR = $this->withholdingTaxServices->WtaxRemaining($this->ID);
-
             $this->accountJournalServices->JournalExecute(
                 $JOURNAL_NO,
                 $paymentDataR,
@@ -281,7 +279,6 @@ class WithHoldingTaxForm extends Component
 
 
             $taxBillData = $this->withholdingTaxServices->WTaxBillJournal($this->ID);
-
             $this->accountJournalServices->JournalExecute(
                 $JOURNAL_NO,
                 $taxBillData,
@@ -290,7 +287,6 @@ class WithHoldingTaxForm extends Component
                 $this->DATE,
                 "A/P"
             );
-
 
             $data = $this->accountJournalServices->getSumDebitCredit($JOURNAL_NO);
             $debit_sum = (float) $data['DEBIT'];
