@@ -66,9 +66,7 @@ class TaxCreditList extends Component
     {
 
         $JOURNAL_NO = (int) $this->accountJournalServices->getRecord($this->taxCreditServices->object_type_tax_credit, $id);
-
         $invoiceListData = $this->taxCreditServices->GetInvoiceList($id);
-
         $this->accountJournalServices->DeleteJournal(
             $data->EWT_ACCOUNT_ID,
             $data->LOCATION_ID,

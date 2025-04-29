@@ -263,8 +263,7 @@ class WithholdingTaxServices
     }
     public function BillExists( int $BILL_ID): bool
     {
-        return WithholdingTaxBills::where('BILL_ID', '=', $BILL_ID)
-            ->exists();
+        return WithholdingTaxBills::where('BILL_ID', '=', $BILL_ID)->exists();
     }
     public function GetWTaxBillExists(int $ID, int $WITHHOLDING_TAX_ID, int $BILL_ID)
     {

@@ -716,6 +716,52 @@ class PhilHealthServices
 
         return $result;
     }
+    public function SearchFinder($search, int $locationId)
+    {
+        $result = PhilHealth::query()
+            ->select([
+                'philhealth.ID',
+                'philhealth.RECORDED_ON',
+                'philhealth.CODE',
+                'philhealth.DATE',
+                'philhealth.DATE_ADMITTED',
+                'philhealth.DATE_DISCHARGED',
+                'philhealth.CHARGE_TOTAL',
+                DB::raw("CONCAT(c.LAST_NAME, ', ', c.FIRST_NAME, ' .', LEFT(c.MIDDLE_NAME, 1), IF(c.SALUTATION IS NOT NULL AND c.SALUTATION != '', CONCAT(' .', c.SALUTATION), '')) as CONTACT_NAME"),
+                'l.NAME as LOCATION_NAME',
+                's.DESCRIPTION as STATUS',
+                DB::raw('(select count(*) from service_charges inner join service_charges_items on service_charges_items.SERVICE_CHARGES_ID = service_charges.ID where service_charges_items.ITEM_ID = ' . $this->PHIL_HEALTH_ITEM_ID . ' and service_charges.LOCATION_ID = philhealth.LOCATION_ID  and service_charges.PATIENT_ID = philhealth.CONTACT_ID and service_charges.DATE between philhealth.DATE_ADMITTED and philhealth.DATE_DISCHARGED) as HEMO_TOTAL '),
+                'philhealth.P1_TOTAL',
+                'philhealth.PAYMENT_AMOUNT',
+                'philhealth.AR_NO',
+                'philhealth.AR_DATE',
+                DB::raw('if(ISNULL(philhealth.AR_DATE),false,true)  as IN_PROGRESS')
+            ])
+            ->join('contact as c', 'c.ID', '=', 'philhealth.CONTACT_ID')
+            ->join('location as l', function ($join) use (&$locationId) {
+                $join->on('l.ID', '=', 'philhealth.LOCATION_ID');
+                if ($locationId > 0) {
+                    $join->where('l.ID', $locationId);
+                }
+            })
+            ->join('document_status_map as s', 's.ID', '=', 'philhealth.STATUS_ID')
+            ->when($search, function ($query) use (&$search) {
+                $query->where(function ($q) use ($search) {
+                    $q->where('philhealth.CODE', 'like', '%' . $search . '%')
+                        ->orWhere('philhealth.CHARGE_TOTAL', 'like', '%' . $search . '%')
+                        ->orWhere('c.NAME', 'like', '%' . $search . '%')
+                        ->orWhere('c.LAST_NAME', 'like', '%' . $search . '%')
+                        ->orWhere('c.FIRST_NAME', 'like', '%' . $search . '%')
+                        ->orWhere('philhealth.AR_NO', 'like', '%' . $search . '%');
+                });
+            })
+            ->where('IS_TEMP', '0')
+            ->orderBy('philhealth.ID', 'desc')      
+            ->limit(1000)   
+            ->get();
+
+        return $result;
+    }
     public function UpdateAR(int $ID, string $AR_NO, string $AR_DATE)
     {
         PhilHealth::where('ID', '=', $ID)

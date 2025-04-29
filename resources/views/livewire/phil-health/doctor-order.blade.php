@@ -5,8 +5,7 @@
                 <div class="modal-content text-left">
                     <div class="modal-header">
                         <span wire:confirm='Are u sure?' wire:click='AutoSetDefault()'>
-                            Doctor
-                            Order/Action
+                            Doctor Order/Action
                         </span>
                     </div>
                     <div class="modal-body">
@@ -31,10 +30,12 @@
                                         </td>
                                         <td class="text-center">
                                             @if ($editID == $item->ID)
-                                                <button title="save" wire:click='save()' class="btn btn-sm btn-success"><i
-                                                        class="fa fa-floppy-o" aria-hidden="true"></i></button>
-                                                <button title="cancel" wire:click='cancel()' class="btn btn-sm btn-warning"><i
-                                                        class="fa fa-ban" aria-hidden="true"></i></button>
+                                                <button title="save" wire:click='save()'
+                                                    class="btn btn-sm btn-success"><i class="fa fa-floppy-o"
+                                                        aria-hidden="true"></i></button>
+                                                <button title="cancel" wire:click='cancel()'
+                                                    class="btn btn-sm btn-warning"><i class="fa fa-ban"
+                                                        aria-hidden="true"></i></button>
                                             @else
                                                 <button title="edit" wire:click='edit({{ $item->ID }})'
                                                     class="btn btn-sm btn-info"><i class="fa fa-pencil"

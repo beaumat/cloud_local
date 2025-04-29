@@ -203,7 +203,12 @@
                                                     New </a>
                                             @endif
                                         @endcan
-
+                                        @if ($ID > 0)
+                                            <button type="button" class="btn btn-sm btn-info text-xs"
+                                                wire:click='finder()'>
+                                                <i class="fa fa-search" aria-hidden="true"></i> Find
+                                            </button>
+                                        @endif
                                     </div>
                                 </div>
                             </div>
@@ -329,4 +334,5 @@
     @livewire('PhilHealth.ArForm')
     @livewire('PhilHealth.PrintModal')
     @livewire('PhilHealth.ChangeProFeeModal', ['PHILHEALTH_ID' => $ID, 'LOCATION_ID' => $LOCATION_ID])
+    @livewire('PhilHealth.Finder')
 </div>

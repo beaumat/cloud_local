@@ -291,7 +291,9 @@ class PhilHealthForm extends Component
         session()->forget('message');
         session()->forget('error');
     }
-
+    public function finder() {
+        $this->dispatch('open-finder');
+    }
     public function render()
     {
         return view('livewire.phil-health.phil-health-form');

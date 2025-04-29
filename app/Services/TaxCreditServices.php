@@ -345,7 +345,6 @@ class TaxCreditServices
             ->where('tax_credit.CUSTOMER_ID', '=', $CUSTOMER_ID)
             ->get();
     }
-
     public function getTotalPay(int $INVOICE_ID, int $EXCEPT_TAX_CREDIT_ID): float
     {
         $data = TaxCreditInvoices::query()

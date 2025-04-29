@@ -161,7 +161,6 @@ class BillList extends Component
         $this->LOCATION_ID = $LOCATION_ID;
         $this->AMOUNT = $AMOUNT;
         $this->AMOUNT_APPLIED = $AMOUNT_APPLIED;
-
         $locData = $this->locationServices->get($this->LOCATION_ID);
         if ($locData) {
             $this->EWT_ID = $locData->PF_TAX_ID ?? 10;
@@ -193,7 +192,6 @@ class BillList extends Component
         
         try {
             $isGood = (bool) $this->addTax($BILL_ID, $AMOUNT);
-
             if (!$isGood) {
                 DB::rollBack();
                 return;
