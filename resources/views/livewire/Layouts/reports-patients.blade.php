@@ -12,7 +12,15 @@
                     <p>Sales</p>
                 </a>
             </li>
+            <li class="nav-item ">
+                <a href="{{ route('reportspatient_inventory_report') }}"
+                    class="nav-link {{ request()->is('reports/patients/inventory*') ? 'text-warning font-weight-bold' : '' }}">
+                    <i class="fa fa-print nav-icon"></i>
+                    <p>Inventory</p>
+                </a>
+            </li>
         @endif
+
         @if (Auth::user()->can('report.patient.treatment'))
             <li class="nav-item ">
                 <a href="{{ route('reportspatient_treatment_report') }}"

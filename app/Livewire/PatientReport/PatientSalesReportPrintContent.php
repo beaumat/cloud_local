@@ -80,9 +80,6 @@ class PatientSalesReportPrintContent extends Component
         $this->selectedItem = [];
         $this->selectedPatient = [];
         $this->shortFilter();
-        // $this->filterPatient  = $this->contactServices->getPatientListViaReport($this->LOCATION_ID, $this->DATE_TRANSACTION_FROM, $this->DATE_TRANSACTION_TO);
-        // $this->filterItem =  $this->patientReportServices->getItemListViaReport($this->LOCATION_ID, $this->DATE_TRANSACTION_FROM, $this->DATE_TRANSACTION_TO);
-
         $this->refreshComponent = $this->refreshComponent ? false : true;
     }
 

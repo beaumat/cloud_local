@@ -51,22 +51,23 @@ class XeroDataServices
     }
     public function callReference(string $REFERENCE, string $date, string $SOURCE_TYPE, int $locationid)
     {
-        $result = XeroData::query()
-            ->when($REFERENCE != '', function ($query) use (&$REFERENCE, &$date, &$SOURCE_TYPE, &$locationid) {
-                $query->where('REFERENCE', '=', $REFERENCE)
-                    ->where('DATE', '=', $date)
-                    ->where('SOURCE_TYPE', '=', $SOURCE_TYPE)
-                    ->where('LOCATION_ID', '=', $locationid)
-                    ->where('POSTED', '=', 0);
-            })
-            ->when($REFERENCE == '', function ($query) use (&$locationid) {
-                $query->whereNull('REFERENCE')
-                    ->where('LOCATION_ID', '=', $locationid)
-                    ->where('POSTED', '=', 0);
-            })
-            ->get();
 
-        return $result;
+        if ($REFERENCE != "") {
+           return XeroData::query()->where('REFERENCE', '=', $REFERENCE)
+                ->where('DATE', '=', $date)
+                ->where('SOURCE_TYPE', '=', $SOURCE_TYPE)
+                ->where('LOCATION_ID', '=', $locationid)
+                ->where('POSTED', '=', 0)
+                ->get();
+        } else {
+            return XeroData::where('LOCATION_ID', '=', $locationid)
+                ->where('POSTED', '=', 0)
+                ->whereNull('REFERENCE')
+                ->get();
+
+        }
+
+     
     }
     public function callReferenceFirst(string $REFERENCE, string $date, string $SOURCE_TYPE)
     {
@@ -93,7 +94,6 @@ class XeroDataServices
                 break;
             case 'Receivable Invoice':
                 $docType = ['ID' => 10, 'NAME' => 'INVOICE']; // invoice
-
                 break;
             case 'Receivable Payment':
                 $docType = ['ID' => 11, 'NAME' => 'PAYMENT']; //payment;
@@ -115,6 +115,8 @@ class XeroDataServices
                 break;
         }
 
+
+        dd($docType);
         return $docType;
     }
 

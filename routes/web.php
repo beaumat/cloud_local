@@ -71,6 +71,7 @@ use App\Livewire\Option\OptionSettings;
 use App\Livewire\PatientPayment\PatientPaymentForm;
 use App\Livewire\PatientPayment\PatientPaymentList;
 use App\Livewire\PatientReport\GuaranteeLetterReport;
+use App\Livewire\PatientReport\PatientInventoryReport;
 use App\Livewire\PatientReport\PhilHealthAvailmentListPrint;
 use App\Livewire\PayableReport\VendorBalance;
 use App\Livewire\Payment\PaymentForm;
@@ -662,6 +663,9 @@ Route::middleware(['auth'])->group(function () {
             Route::prefix('/sales')->group(function () {
                 Route::get('/', PatientSalesReport::class)->name('patient_sales_report')->middleware(['permission:report.patient.sales']);
                 Route::get('/{date_from}/{date_to}/{location_id}/print', PatientSalesReportPrint::class)->name('patient_sales_report_print')->middleware(['permission:report.patient.sales']);
+            });
+            Route::prefix('/inventory')->group(function () {
+                Route::get('/', PatientInventoryReport::class)->name('patient_inventory_report')->middleware(['permission:report.patient.sales']);
             });
             Route::prefix('/treatment')->group(function () {
                 Route::get('/', PatientTreatmentReport::class)->name('patient_treatment_report')

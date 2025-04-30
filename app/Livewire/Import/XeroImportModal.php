@@ -126,16 +126,13 @@ class XeroImportModal extends Component
         }
 
 
-
-
-
-
         foreach ($this->dataList as $data) {
             $this->DOC_TYPE = $this->xeroDataServices->DocumentType($this->isForwarded ? 0 : $data->SOURCE_TYPE);
             break;
         }
         $this->DOC_NAME = $this->DOC_TYPE['NAME'];
         $this->DOC_ID = (int) $this->DOC_TYPE['ID'];
+
         switch ($this->DOC_ID) {
             case 1:
                 $this->contactList = $this->contactServices->getListAllType();

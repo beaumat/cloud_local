@@ -225,4 +225,11 @@ class PatientReportServices
 
         return $results;
     }
+    public function getInventoryList(string $DATE_FROM, string  $DATE_TO, int $LOCATION_ID) {
+
+        
+        
+
+        return [];
+    }
 }
