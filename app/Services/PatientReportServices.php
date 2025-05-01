@@ -225,11 +225,74 @@ class PatientReportServices
 
         return $results;
     }
-    public function getInventoryList(string $DATE_FROM, string  $DATE_TO, int $LOCATION_ID) {
+    public function getInventoryList(string $DATE_FROM, string $DATE_TO, int $LOCATION_ID, int $ITEM_ID = 0)
+    {
 
-        
-        
+        $result = DB::table('hemodialysis_items as hemo_item')
+            ->select([
+                'hemo.DATE',
+                'i.DESCRIPTION as ITEM_NAME',
+                'i.CODE as ITEM_CODE',
+                'hemo_item.QUANTITY',
+                'uom.NAME as UNIT',
+                'hemo_item.IS_POST as POST',
+                DB::raw('0 as WALKIN'),
+                'l.NAME as LOCATION_NAME',
+                'hemo.ID as HEMO_ID',
+                'hemo.CODE as REFERENCE',
+                DB::raw("CONCAT(contact.LAST_NAME, ', ', contact.FIRST_NAME, ' .', LEFT(contact.MIDDLE_NAME, 1), IF(contact.SALUTATION IS NOT NULL AND contact.SALUTATION != '', CONCAT(' .', contact.SALUTATION), '')) as PATIENT_NAME")
+            ])
+            ->join('hemodialysis as hemo', 'hemo_item.HEMO_ID', '=', 'hemo.ID')
+            ->join('contact', 'hemo.CUSTOMER_ID', '=', 'contact.ID')
+            ->join('item as i', 'hemo_item.ITEM_ID', '=', 'i.ID')
+            ->leftJoin('unit_of_measure as uom', 'uom.ID', '=', 'hemo_item.UNIT_ID')
+            ->join('location as l', 'l.ID', '=', 'hemo.LOCATION_ID')
+            ->whereIn('i.TYPE', [0, 1])
+            ->when($LOCATION_ID > 0, function ($query) use (&$LOCATION_ID) {
+                $query->where('hemo.LOCATION_ID', $LOCATION_ID);
+            })
+            ->when($ITEM_ID > 0, function ($query) use (&$ITEM_ID) {
+                $query->where('hemo_item.ITEM_ID', $ITEM_ID);
+            })
+            ->whereBetween('hemo.DATE', [$DATE_FROM, $DATE_TO])
+            ->where('hemo.STATUS_ID', 2)
+            ->get();
 
-        return [];
+        return $result;
+    }
+    public function getInventoryListFiter(string $DATE_FROM, string $DATE_TO, int $LOCATION_ID, int $ITEM_ID = 0)
+    {
+
+        $result = DB::table('hemodialysis_items as hemo_item')
+            ->select([
+                'hemo.DATE',
+                'i.DESCRIPTION as ITEM_NAME',
+                'i.CODE as ITEM_CODE',
+                'hemo_item.QUANTITY',
+                'uom.NAME as UNIT',
+                'hemo_item.IS_POST as POST',
+                DB::raw('0 as WALKIN'),
+                'l.NAME as LOCATION_NAME',
+                'hemo.ID as HEMO_ID',
+                'hemo.CODE as REFERENCE',
+                DB::raw("CONCAT(contact.LAST_NAME, ', ', contact.FIRST_NAME, ' .', LEFT(contact.MIDDLE_NAME, 1), IF(contact.SALUTATION IS NOT NULL AND contact.SALUTATION != '', CONCAT(' .', contact.SALUTATION), '')) as PATIENT_NAME")
+            ])
+            ->join('hemodialysis as hemo', 'hemo_item.HEMO_ID', '=', 'hemo.ID')
+            ->join('contact', 'hemo.CUSTOMER_ID', '=', 'contact.ID')
+            ->join('item as i', 'hemo_item.ITEM_ID', '=', 'i.ID')
+            ->leftJoin('unit_of_measure as uom', 'uom.ID', '=', 'hemo_item.UNIT_ID')
+            ->join('location as l', 'l.ID', '=', 'hemo.LOCATION_ID')
+            ->whereIn('i.TYPE', [0, 1])
+            ->when($LOCATION_ID > 0, function ($query) use (&$LOCATION_ID) {
+                $query->where('hemo.LOCATION_ID', $LOCATION_ID);
+            })
+            ->when($ITEM_ID > 0, function ($query) use (&$ITEM_ID) {
+                $query->where('hemo_item.ITEM_ID', $ITEM_ID);
+            })
+            ->whereBetween('hemo.DATE', [$DATE_FROM, $DATE_TO])
+            ->where('hemo.STATUS_ID', 2)
+            ->get();
+
+        return $result;
     }
 }

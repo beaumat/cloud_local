@@ -161,15 +161,8 @@ class XeroImportModal extends Component
                 $this->accountList = $this->accountServices->getBankAccount();
                 break;
             default:
-
         }
-
-
-
-
         $this->showModal = true;
-
-
     }
     private function AccountJournalBilling(): bool
     {
@@ -659,7 +652,6 @@ class XeroImportModal extends Component
         return false;
 
     }
-
     private function postedGeneralJournal(): bool
     {
 
@@ -728,7 +720,6 @@ class XeroImportModal extends Component
             session()->flash('error', 'Error: ' . $th->getMessage());
         }
     }
-
     private function AccountJournalSpendMoney(): bool
     {
 
@@ -768,8 +759,6 @@ class XeroImportModal extends Component
         return false;
 
     }
-
-
     public function postedSpendMoney()
     {
         $detailsList = $this->spendMoneyServices->getDetailsList($this->ID);
@@ -829,7 +818,6 @@ class XeroImportModal extends Component
         }
 
     }
-
     private function AccountJournalReceiveMoney(): bool
     {
 
@@ -869,8 +857,6 @@ class XeroImportModal extends Component
         return false;
 
     }
-
-
     public function postedReceiveMoney()
     {
 

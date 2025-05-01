@@ -35,7 +35,9 @@
                                 </div>
                             </div>
                             <div class="col-md-4">
-
+                                <livewire:select-option name="ITEM_ID" titleName="Item Select" :options="$itemList"
+                                    :zero="true" wire:model='ITEM_ID' :vertical="false"
+                                    isDisabled="{{ false }}" :withLabel="true" />
                             </div>
                             <div class="col-md-4">
                                 <div class="row">
@@ -131,23 +133,65 @@
                         <thead class="text-xs bg-sky sticky-header">
                             <tr>
                                 <th>Patient Name</th>
+                                <th>Item Code</th>
                                 <th>Item Name</th>
-                                <th class="bg-info">(SC) Date</th>
-                                <th class="bg-info">(SC) Code</th>
-                                <th class="bg-info">(SC) Amount</th>
-                                <th class="bg-success">(P) Date</th>
-                                <th class="bg-success">(P) Code</th>
-                                <th class="bg-success">(P) Method</th>
-                                <th class="bg-success">(P) Deposit</th>
-                                <th class="bg-success">(P) Paid </th>
-                                <th class="bg-danger">Running Bal.</th>
-                                <th>Doctor</th>
+                                <th class="text-right">Quantity</th>
+                                <th>Unit</th>
+                                <th>Post</th>
+                                <th>Walk-in</th>
+                                <th>Date</th>
+                                <th>Reference</th>
                                 <th>Location </th>
                             </tr>
                         </thead>
                         <tbody class="text-xs">
+                            @php
+                                $totalQuantity = 0;
+
+                            @endphp
                             @foreach ($dataList as $list)
+                                @php
+                                    $totalQuantity += $list->QUANTITY ?? 0;
+                                @endphp
+                                <tr>
+                                    <td>{{ $list->PATIENT_NAME }}</td>
+                                    <th>{{ $list->ITEM_CODE }}</th>
+                                    <td>{{ $list->ITEM_NAME }}</td>
+                                    <td class="text-right">{{ number_format($list->QUANTITY, 1) }}</td>
+                                    <td>{{ $list->UNIT }}</td>
+                                    <td class="text-center">
+                                        @if ($list->POST)
+                                            <i class="fa fa-check text-success" aria-hidden="true"></i>
+                                        @endif
+                                    </td>
+                                    <td class="text-center">
+                                        @if ($list->WALKIN)
+                                            <i class="fa fa-check text-success" aria-hidden="true"></i>
+                                        @endif
+                                    </td>
+                                    <td>{{ date('m/d/Y', strtotime($list->DATE)) }}</td>
+                                    <th><a target="_blank"
+                                            href="{{ route('patientshemo_edit', ['id' => $list->HEMO_ID]) }}">{{ $list->REFERENCE }}</a>
+                                    </th>
+                                    <td>{{ $list->LOCATION_NAME }}</td>
+                                </tr>
                             @endforeach
+                            <tr>
+                            <tr>
+                                <td></td>
+                                <th></th>
+                                <td class="text-right text-danger">TOTAL QTY:</td>
+                                <td class="text-right font-weight-bold text-danger">
+                                    {{ number_format($totalQuantity, 1) }}</td>
+                                <td></td>
+                                <td class="text-center"> </td>
+                                <td class="text-center"> </td>
+                                <td></td>
+                                <th></a>
+                                </th>
+                                <td></td>
+                            </tr>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
