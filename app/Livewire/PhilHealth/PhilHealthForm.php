@@ -32,7 +32,6 @@ class PhilHealthForm extends Component
     public $DATE;
     public $DATE_ADMITTED;
     public $TIME_ADMITTED;
-
     public $DATE_DISCHARGED;
     public $TIME_DISCHARGED;
     public $TIME_HIDE;

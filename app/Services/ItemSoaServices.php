@@ -154,6 +154,30 @@ class ItemSoaServices
               
         return $result;
     }
+
+    public function GetListViaType(int $LOCATION_ID,int $TYPE)
+    {
+        $result = ItemSoa::query()
+            ->select([
+                'soa_item.ID',
+                'soa_item.TYPE',
+                'soa_item_type.DESCRIPTION as TYPE_NAME',
+                'soa_item.ITEM_NAME',
+                'soa_item.UNIT_NAME',
+                'soa_item.RATE',
+                'soa_item.ACTUAL_BASE',
+                'soa_item.GROUP_ID'
+            ])
+            ->join('soa_item_type', 'soa_item_type.ID', '=', 'TYPE')
+            ->where('LOCATION_ID', '=', $LOCATION_ID)
+            ->where('TYPE', '=', $TYPE)
+            ->where('INACTIVE', '=', false)
+            ->orderBy('TYPE', 'asc')
+            ->orderBy('LINE', 'asc')
+            ->get();
+              
+        return $result;
+    }
     public function GetListTypeFixedQty(int $LOCATION_ID, int $TYPE, int $QTY = 1)
     {
 
