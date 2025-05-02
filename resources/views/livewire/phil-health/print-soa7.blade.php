@@ -156,13 +156,13 @@
                             PHILHEALTH PACKAGE
                         </div>
                         <div class="col-2 text-center  left-line2">
-                           <div class="row text-left text-xs">
+                            <div class="row text-left text-xs">
                                 <div class="col-12">___PCSO</div>
                                 <div class="col-12">___DSWD</div>
                                 <div class="col-12">___HMO</div>
                                 <div class="col-12">___OTHER FUNDING SOURCE/ FACILITY SUBSIDY</div>
                             </div>
-                        
+
                         </div>
                         <div class="col-1 text-center left-line2">
                             OUT OF POCKET OF PATIENT
@@ -251,7 +251,7 @@
                                     {{ number_format($GOV_DRUG_N_MEDICINE, 2) }}
                                 @endif
                             </div>
-                            <div id="p-pocket" class="col-1 text-center left-line2">  </div>
+                            <div id="p-pocket" class="col-1 text-center left-line2"> </div>
                         </div>
                     @endif
                     @if ($CHARGES_SUPPLIES > 0 || $PRE_SIGN_DATA == true)
@@ -287,43 +287,43 @@
                             </div>
                         </div>
                     @endif
-          
-                        <div class="row bottom-line2 right-line2 left-line2 text-sm">
-                            <div id="p-particular" class="col-3 text-left ">
-                                LABORATORY & DIAGNOSTIC
-                            </div>
-                            <div id="p-charge" class="col-1 text-right  left-line2 font-italic">
-                                @if ($CHARGES_LAB_N_DIAGNOSTICS > 0)
-                                    {{ number_format($CHARGES_LAB_N_DIAGNOSTICS, 2) }}
-                                @else
-                                    -
-                                @endif
-                            </div>
-                            <div id="p-vat" class="col-1 text-right  left-line2">
-                                @if ($VAT_LAB_N_DIAGNOSTICS > 0)
-                                    {{ number_format($VAT_LAB_N_DIAGNOSTICS, 2) }}
-                                @endif
-                            </div>
-                            <div id="p-sp" class="col-1 text-right   left-line2">
-                                @if ($SP_LAB_N_DIAGNOSTICS > 0)
-                                    {{ number_format($SP_LAB_N_DIAGNOSTICS, 2) }}
-                                @endif
-                            </div>
 
-                            <div id="p-after-disc" class="col-1 text-center  left-line2"> </div>
-                            <div id="p-first" class="col-2  left-line2 text-center ">
-
-                            </div>
-                            <div id="p-gov" class="col-2 text-right  left-line2 text-xs">
-                                @if ($GOV_LAB_N_DIAGNOSTICS > 0)
-                                    {{ number_format($GOV_LAB_N_DIAGNOSTICS, 2) }}
-                                @endif
-                            </div>
-                            <div id="p-pocket" class="col-1 text-center left-line2">
-
-                            </div>
+                    <div class="row bottom-line2 right-line2 left-line2 text-sm">
+                        <div id="p-particular" class="col-3 text-left ">
+                            LABORATORY & DIAGNOSTIC
                         </div>
-               
+                        <div id="p-charge" class="col-1 text-right  left-line2 font-italic">
+                            @if ($CHARGES_LAB_N_DIAGNOSTICS > 0)
+                                {{ number_format($CHARGES_LAB_N_DIAGNOSTICS, 2) }}
+                            @else
+                                -
+                            @endif
+                        </div>
+                        <div id="p-vat" class="col-1 text-right  left-line2">
+                            @if ($VAT_LAB_N_DIAGNOSTICS > 0)
+                                {{ number_format($VAT_LAB_N_DIAGNOSTICS, 2) }}
+                            @endif
+                        </div>
+                        <div id="p-sp" class="col-1 text-right   left-line2">
+                            @if ($SP_LAB_N_DIAGNOSTICS > 0)
+                                {{ number_format($SP_LAB_N_DIAGNOSTICS, 2) }}
+                            @endif
+                        </div>
+
+                        <div id="p-after-disc" class="col-1 text-center  left-line2"> </div>
+                        <div id="p-first" class="col-2  left-line2 text-center ">
+
+                        </div>
+                        <div id="p-gov" class="col-2 text-right  left-line2 text-xs">
+                            @if ($GOV_LAB_N_DIAGNOSTICS > 0)
+                                {{ number_format($GOV_LAB_N_DIAGNOSTICS, 2) }}
+                            @endif
+                        </div>
+                        <div id="p-pocket" class="col-1 text-center left-line2">
+
+                        </div>
+                    </div>
+
                     @if ($CHARGES_OPERATING_ROOM_FEE > 0 || $PRE_SIGN_DATA == true)
                         <div class="row bottom-line2 right-line2 left-line2 text-sm">
                             <div id="p-particular" class="col-3 text-left ">
@@ -584,7 +584,7 @@
                     </div>
                     @livewire('PhilHealth.PrintItemized3', ['num' => $NO_OF_TREATMENT, 'locationid' => $LOCATION_ID, 'date' => $DATE_ADMITTED ?? null, 'breakDownDate' => $breakDownDate, 'patientId' => $CONTACT_ID, 'OUTPUT_SIGN' => $OUTPUT_SIGN])
                 </div>
-                <div class="col-12 ">
+                <div class="col-12 pt-4">
                     <div class="row pt-4">
                         <div class="col-5">
                             <div @if (!$OUTPUT_SIGN) style="opacity: 0.0" @endif>Prepared by:</div>
