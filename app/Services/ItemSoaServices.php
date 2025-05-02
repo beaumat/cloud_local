@@ -151,7 +151,7 @@ class ItemSoaServices
             ->orderBy('TYPE', 'asc')
             ->orderBy('LINE', 'asc')
             ->get();
-
+              
         return $result;
     }
     public function GetListTypeFixedQty(int $LOCATION_ID, int $TYPE, int $QTY = 1)
@@ -324,7 +324,7 @@ class ItemSoaServices
             ->where('ACTUAL_BASE', '=', false)
             ->where('INACTIVE', '=', false)
             ->sum('RATE');
-
+      
         if ($result > 0) {
             return (float) $result;
         }

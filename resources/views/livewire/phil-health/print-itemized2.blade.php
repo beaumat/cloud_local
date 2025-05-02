@@ -91,7 +91,7 @@ use App\Services\ItemSoaServices;
                             @if ($oneTimeQty == 0)
                                 @php
                                     $oneTimeQty = $defult_Qty;
-                                    $oneTimeTotal = ItemSoaServices::getTotal($list->GROUP_ID, $LOCATION_ID);
+                                    $oneTimeTotal = ItemSoaServices::getTotal($list->GROUP_ID, $LOCATION_ID) * $defult_Qty;
                                 @endphp
                                 <td class="text-center pb-0 pt-0 " style="border-bottom-color: white;"> {{ $oneTimeQty }}</td>
                                 <td class="text-right pb-0 pt-0" style="border-bottom-color: white;"> {{ number_format($oneTimeTotal, 2) }}</td>

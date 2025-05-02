@@ -338,7 +338,7 @@ class PhilHealthServices
 
             if ($this->ITEMIZED_BASE) {
                 $this->DRUG_N_MEDINE_AMOUNT = $this->ItemizedBaseTotalNonActual($data->LOCATION_ID, 1);
-               
+          
                 $this->SUPPLIES = $this->ItemizedBaseTotalNonActual($data->LOCATION_ID, 2);
                 $this->LAB_N_DIAGNOSTICS_AMOUNT = $this->ItemizedBaseTotalNonActual($data->LOCATION_ID, 3);
                 $this->OTHER_CHARGES_AMOUNT = $this->ItemizedBaseTotalNonActual($data->LOCATION_ID, 4);
@@ -346,19 +346,20 @@ class PhilHealthServices
 
                 $A_DRUG_N_MEDINE_AMOUNT = $this->ItemizedBaseTotalActual($data->LOCATION_ID, $data->CONTACT_ID, 1, $data->DATE_ADMITTED, $data->DATE_DISCHARGED);
 
-
+           
                 $A_SUPPLIES = $this->ItemizedBaseTotalActual($data->LOCATION_ID, $data->CONTACT_ID, 2, $data->DATE_ADMITTED, $data->DATE_DISCHARGED);
                 $A_LAB_N_DIAGNOSTICS_AMOUNT = $this->ItemizedBaseTotalActual($data->LOCATION_ID, $data->CONTACT_ID, 3, $data->DATE_ADMITTED, $data->DATE_DISCHARGED);
                 $A_OTHER_CHARGES_AMOUNT = $this->ItemizedBaseTotalActual($data->LOCATION_ID, $data->CONTACT_ID, 4, $data->DATE_ADMITTED, $data->DATE_DISCHARGED);
                 $A_OPERATING_ROOM_FEE_AMOUNT = $this->ItemizedBaseTotalActual($data->LOCATION_ID, $data->CONTACT_ID, 6, $data->DATE_ADMITTED, $data->DATE_DISCHARGED);
 
-
+               
             }
 
 
 
             $LAB_N_DIAGNOS = (float) ($this->LAB_N_DIAGNOSTICS_AMOUNT * $NO_OF_TREATMENT) + $A_LAB_N_DIAGNOSTICS_AMOUNT;
             $DRUG_MED = (float) ($this->DRUG_N_MEDINE_AMOUNT * $NO_OF_TREATMENT) + $A_DRUG_N_MEDINE_AMOUNT;
+      
 
             $OPERATE_FEE = (float) ($this->OPERATING_ROOM_FEE_AMOUNT * $NO_OF_TREATMENT) + $A_OPERATING_ROOM_FEE_AMOUNT; //
             $CHARGES_SUPPLIES = (float) ($this->SUPPLIES * $NO_OF_TREATMENT) + $A_SUPPLIES;
