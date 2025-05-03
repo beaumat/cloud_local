@@ -101,12 +101,13 @@ class XeroImportModal extends Component
         $this->contactList = [];
         $this->accountList = [];
         $this->isForwarded = $dataSend['is_forwarded'];
-
+        $this->locationid = $dataSend['locationid'];
+        
         if ($this->isForwarded == false) {
             $this->DATE = $dataSend['DATE'];
             $this->SOURCE_TYPE = $dataSend['SOURCE_TYPE'];
             $this->REFERENCE = $dataSend['REFERENCE'];
-            $this->locationid = $dataSend['locationid'];
+
 
             $this->dataList = $this->xeroDataServices->callReference(
                 $this->REFERENCE,
@@ -876,7 +877,6 @@ class XeroImportModal extends Component
         return false;
 
     }
-
     private function ReceiveMoney()
     {
         $this->validate([

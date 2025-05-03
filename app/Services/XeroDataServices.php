@@ -53,21 +53,22 @@ class XeroDataServices
     {
 
         if ($REFERENCE != "") {
-           return XeroData::query()->where('REFERENCE', '=', $REFERENCE)
+            return XeroData::query()->where('REFERENCE', '=', $REFERENCE)
                 ->where('DATE', '=', $date)
                 ->where('SOURCE_TYPE', '=', $SOURCE_TYPE)
                 ->where('LOCATION_ID', '=', $locationid)
                 ->where('POSTED', '=', 0)
                 ->get();
         } else {
-            return XeroData::where('LOCATION_ID', '=', $locationid)
+            $result = XeroData::where('LOCATION_ID', '=', $locationid)
                 ->where('POSTED', '=', 0)
                 ->whereNull('REFERENCE')
                 ->get();
 
+            return $result;
         }
 
-     
+
     }
     public function callReferenceFirst(string $REFERENCE, string $date, string $SOURCE_TYPE)
     {
@@ -116,7 +117,7 @@ class XeroDataServices
         }
 
 
-        dd($docType);
+   
         return $docType;
     }
 

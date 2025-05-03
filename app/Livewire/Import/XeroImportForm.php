@@ -42,6 +42,7 @@ class XeroImportForm extends Component
             'is_forwarded' => $this->isForwarded,
         ];
 
+    
 
         $this->dispatch('dataSend', $dataSend);
     }
