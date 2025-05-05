@@ -20,7 +20,6 @@ class TreatmentRecord extends Component
     protected $paginationTheme = 'bootstrap';
     #[Reactive]
     public int $CONTACT_ID;
-
     #[Reactive]
     public int $LOCK_LOCATION_ID;
     public $search = '';
@@ -29,22 +28,35 @@ class TreatmentRecord extends Component
     private $accountServices;
     private $priceLevelLineServices;
     private $locationServices;
-    public function boot(HemoServices $hemoServices, ServiceChargeServices $serviceChargeServices, PriceLevelLineServices $priceLevelLineServices, LocationServices $locationServices)
-    {
+    public function boot(
+        HemoServices $hemoServices,
+        ServiceChargeServices $serviceChargeServices,
+        PriceLevelLineServices $priceLevelLineServices,
+        LocationServices $locationServices
+    ) {
         $this->hemoServices = $hemoServices;
         $this->serviceChargeServices = $serviceChargeServices;
         $this->priceLevelLineServices = $priceLevelLineServices;
         $this->locationServices = $locationServices;
     }
-    public function CreateServiceCharge($DATE)
+    public function CreateServiceCharge(string $DATE)
     {
 
         try {
-            $isExist =  $this->serviceChargeServices->ServicesChargesExists($DATE, $this->CONTACT_ID, $this->LOCK_LOCATION_ID);
+            $isExist = $this->serviceChargeServices->ServicesChargesExists($DATE, $this->CONTACT_ID, $this->LOCK_LOCATION_ID);
             if ($isExist) {
                 session()->flash('error', "Invalid service charge on $DATE. already exists");
                 return;
             }
+
+            $this->validate([
+                'CONTACT_ID' => 'required|exists:contact,ID',
+                'LOCK_LOCATION_ID' => 'required|exists:location,ID',
+            ], [], [
+                'CONTACT_ID' => 'Patient',
+                'LOCK_LOCATION_ID' => 'Location'
+            ]);
+
             DB::beginTransaction();
             $SERVICE_CHARGE_ID = (int) $this->serviceChargeServices->Store(
                 '',
@@ -53,17 +65,21 @@ class TreatmentRecord extends Component
                 $this->LOCK_LOCATION_ID,
                 "Create on Patient Profile",
                 4,
-                2,
+                0,
                 12,
                 0,
                 0,
                 28,
+                false,
                 false
             );
 
-
+        
             $PRICE_LEVEL_ID = 0;
-            $dataItem =  $this->hemoServices->ItemListWithIsCashier($this->CONTACT_ID, $this->LOCK_LOCATION_ID, $DATE);
+            $dataItem = $this->hemoServices->ItemListWithIsCashier($this->CONTACT_ID, $this->LOCK_LOCATION_ID, $DATE);
+
+
+
             $dataLoc = $this->locationServices->get($this->LOCK_LOCATION_ID);
             if ($dataLoc) {
                 if ($dataLoc->PRICE_LEVEL_ID > 0) {
@@ -74,12 +90,12 @@ class TreatmentRecord extends Component
             foreach ($dataItem as $list) {
                 $RATE = 0;
                 if ($PRICE_LEVEL_ID > 0) {
-                    $RATE = (float) $this->priceLevelLineServices->GetPriceByLocation($this->LOCK_LOCATION_ID,  $list->ITEM_ID);
+                    $RATE = (float) $this->priceLevelLineServices->GetPriceByLocation($this->LOCK_LOCATION_ID, $list->ITEM_ID);
                 } else {
                     $RATE = (float) $list->RATE ?? 0;
                 }
 
-                $AMOUNT = $list->QUANTITY  * $RATE;
+                $AMOUNT = $list->QUANTITY * $RATE;
 
                 $SC_ITEM_ID = $this->serviceChargeServices->ItemStore(
                     $SERVICE_CHARGE_ID,
@@ -114,8 +130,8 @@ class TreatmentRecord extends Component
     {
         $this->dispatch('open-transfer-contact', result: [
             'TRANSACTION_ID' => $HEMO_ID,
-            'LOCATION_ID'   => $this->LOCK_LOCATION_ID,
-            'IS_TREATMENT'  => true
+            'LOCATION_ID' => $this->LOCK_LOCATION_ID,
+            'IS_TREATMENT' => true
         ]);
     }
     #[On('refresh-treatment-record')]

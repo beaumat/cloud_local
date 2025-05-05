@@ -756,8 +756,7 @@
                                                     aria-labelledby="custom-content-below-treatment-info-tab">
                                                     <div class="container-fluid"
                                                         @if ($ID === 0) style="opacity: 0.5;pointer-events: none;" @endif>
-
-                                                        @livewire('Patient.TreatmentRecord', ['CONTACT_ID' => $ID, 'LOCK_LOCATION_ID' => $LOCK_LOCATION_ID])
+                                                        @livewire('Patient.TreatmentRecord', ['CONTACT_ID' => $ID, 'LOCK_LOCATION_ID' => $LOCATION_ID])
                                                     </div>
                                                 </div>
                                                 <div class="tab-pane fade @if ($selectTab == 'philhealth') show active @endif"

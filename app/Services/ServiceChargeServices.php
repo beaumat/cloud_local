@@ -13,8 +13,8 @@ use function Laravel\Prompts\search;
 
 class ServiceChargeServices
 {
-    private int $PRIMING_FEE_ID = 176;
     use WithPagination;
+    private int $PRIMING_FEE_ID = 176;
     private $object;
     private $compute;
     private $locationReference;
@@ -215,9 +215,12 @@ class ServiceChargeServices
 
     ): int {
 
+       
         $ID = (int) $this->object->ObjectNextID('SERVICE_CHARGES');
         $OBJECT_TYPE = (int) $this->object->ObjectTypeID('SERVICE_CHARGES');
         $isLocRef = boolval($this->systemSettingServices->GetValue('IncRefNoByLocation'));
+        
+        
 
         ServiceCharges::create([
             'ID' => $ID,
@@ -240,6 +243,7 @@ class ServiceChargeServices
             'USE_PHIC' => $USE_PHIC
         ]);
 
+       
         return $ID;
     }
 
