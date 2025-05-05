@@ -226,7 +226,7 @@ class BillPaymentServices
                 'bill.ACCOUNTS_PAYABLE_ID',
                 DB::raw("(SELECT SUM(withholding_tax_bills.AMOUNT_WITHHELD) from withholding_tax_bills where withholding_tax_bills.BILL_ID = check_bills.BILL_ID) as TAX_AMOUNT")
             ])
-            ->join('bill', 'bill.ID', '=', 'check_bills.BILL_ID')
+            ->leftJoin('bill', 'bill.ID', '=', 'check_bills.BILL_ID')
             ->where('check_bills.CHECK_ID', '=', $CHECK_ID)
             ->get();
 
@@ -275,7 +275,7 @@ class BillPaymentServices
         CheckBills::create([
             'ID' => $ID,
             'CHECK_ID' => $CHECK_ID,
-            'BILL_ID' => $BILL_ID,
+            'BILL_ID' => $BILL_ID > 0 ? $BILL_ID : null,    
             'DISCOUNT' => $DISCOUNT,
             'AMOUNT_PAID' => $AMOUNT_PAID,
             'DISCOUNT_ACCOUNT_ID' => $DISCOUNT_ACCOUNT_ID > 0 ? $DISCOUNT_ACCOUNT_ID : null,
