@@ -102,7 +102,7 @@ class XeroImportModal extends Component
         $this->accountList = [];
         $this->isForwarded = $dataSend['is_forwarded'];
         $this->locationid = $dataSend['locationid'];
-        
+
         if ($this->isForwarded == false) {
             $this->DATE = $dataSend['DATE'];
             $this->SOURCE_TYPE = $dataSend['SOURCE_TYPE'];
@@ -115,8 +115,8 @@ class XeroImportModal extends Component
                 $this->SOURCE_TYPE,
                 $this->locationid
             );
-           
-        }else{
+
+        } else {
 
             $this->dataList = $this->xeroDataServices->callReference(
                 '',
@@ -124,6 +124,10 @@ class XeroImportModal extends Component
                 0,
                 $this->locationid
             );
+            $this->REFERENCE = 'F' . $this->locationid . '20231231';
+            $this->DATE = '2023-12-31';
+            $this->SOURCE_TYPE = 23;
+
         }
 
 
@@ -131,38 +135,43 @@ class XeroImportModal extends Component
             $this->DOC_TYPE = $this->xeroDataServices->DocumentType($this->isForwarded ? 0 : $data->SOURCE_TYPE);
             break;
         }
-        
+
         $this->DOC_NAME = $this->DOC_TYPE['NAME'];
         $this->DOC_ID = (int) $this->DOC_TYPE['ID'];
 
-        switch ($this->DOC_ID) {
-            case 1:
-                $this->contactList = $this->contactServices->getListAllType();
-                break;
-            case 2:
-                $this->accountList = $this->accountServices->getBankAccount();
-                $this->contactList = $this->contactServices->getListAllType();
-                break;
-            case 10;
-                $this->contactList = $this->contactServices->getListAllType();
-                break;
-            case 11;
-                $this->accountList = $this->accountServices->getBankAccount();
-                $this->contactList = $this->contactServices->getListAllType();
-                break;
+        if ($this->isForwarded == false) {
 
-            case 23;
-                $this->contactList = $this->contactServices->getListAllType();
-                break;
 
-            case 35:
-                $this->accountList = $this->accountServices->getBankAccount();
-                break;
+            switch ($this->DOC_ID) {
+                case 1:
+                    $this->contactList = $this->contactServices->getListAllType();
+                    break;
+                case 2:
+                    $this->accountList = $this->accountServices->getBankAccount();
+                    $this->contactList = $this->contactServices->getListAllType();
+                    break;
+                case 10;
+                    $this->contactList = $this->contactServices->getListAllType();
+                    break;
+                case 11;
+                    $this->accountList = $this->accountServices->getBankAccount();
+                    $this->contactList = $this->contactServices->getListAllType();
+                    break;
 
-            case 36:
-                $this->accountList = $this->accountServices->getBankAccount();
-                break;
-            default:
+                case 23;
+
+                    $this->contactList = $this->contactServices->getListAllType();
+                    break;
+
+                case 35:
+                    $this->accountList = $this->accountServices->getBankAccount();
+                    break;
+
+                case 36:
+                    $this->accountList = $this->accountServices->getBankAccount();
+                    break;
+                default:
+            }
         }
         $this->showModal = true;
     }
@@ -650,6 +659,9 @@ class XeroImportModal extends Component
         if ($debit_sum == $credit_sum && $debit_sum > 0 && $credit_sum > 0) {
             return true;
         }
+        if ($this->isForwarded) {
+            return true;
+        }
 
         return false;
 
@@ -669,7 +681,7 @@ class XeroImportModal extends Component
             return false;
         }
 
-        if ($total_debit == $total_credit) {
+        if ($total_debit == $total_credit || $this->isForwarded == true) {
             if (!$this->AccountJournalGeneralJournal()) {
                 return false;
             }
@@ -683,25 +695,31 @@ class XeroImportModal extends Component
     }
     private function GeneralJournal()
     {
-        $this->validate([
-            'CONTACT_ID' => 'required|exists:contact,id',
-            'locationid' => 'required|exists:location,id'
-        ], [], [
-            'CONTACT_ID' => 'Contact',
-            'locationid' => 'Location'
-        ]);
+
+        if (!$this->isForwarded) {
+            $this->validate([
+                'CONTACT_ID' => 'required|exists:contact,id',
+                'locationid' => 'required|exists:location,id'
+            ], [], [
+                'CONTACT_ID' => 'Contact',
+                'locationid' => 'Location'
+            ]);
+        }
+
 
 
         DB::beginTransaction();
         try {
             //code...
 
-            $GJ_ID = $this->generalJournalServices->Store($this->DATE, $this->REFERENCE, $this->locationid, false, '', $this->CONTACT_ID, );
+            $GJ_ID = $this->generalJournalServices->Store($this->DATE, $this->REFERENCE, $this->locationid, false, $this->isForwarded ? 'Balance Forwarded' : '', $this->CONTACT_ID, );
             $this->ID = $GJ_ID;
             foreach ($this->dataList as $data) {
                 $ACCOUNT_ID = $this->accountServices->getAccountNameIntoId($data->ACCOUNT);
                 if ($ACCOUNT_ID > 0) {
-                    $ID = $this->generalJournalServices->StoreDetails($GJ_ID, $ACCOUNT_ID, (float) $data->DEBIT, (float) $data->CREDIT, $data->DESCRIPTION, 0);
+
+                    $NOTES = $this->isForwarded ? 'Balance Forwarded' : $data->DESCRIPTION;
+                    $ID = $this->generalJournalServices->StoreDetails($GJ_ID, $ACCOUNT_ID, (float) $data->DEBIT, (float) $data->CREDIT, $NOTES, 0);
                     $this->xeroDataServices->updatePosted($data->ID, $ID, $this->generalJournalServices->object_type_general_journal_details_id);
 
                 }
