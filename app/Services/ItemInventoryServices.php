@@ -797,15 +797,23 @@ class ItemInventoryServices
     public function ChangeDate($data, int $LOCATION_ID, int $SOURCE_REF_TYPE, string $NEW_DATE): bool
     {
         try {
+
+
+
             foreach ($data as $list) {
-                ItemInventory::where('ITEM_ID', '=', $list->ITEM_ID)
+
+                $data = ItemInventory::where('ITEM_ID', '=', $list->ITEM_ID)
                     ->where('LOCATION_ID', '=', $LOCATION_ID)
                     ->where("SOURCE_REF_TYPE", '=', $SOURCE_REF_TYPE)
-                    ->where('SOURCE_REF_ID', '=', $list->ID)
-                    ->update([
-                        'DATE' => $NEW_DATE,
-                    ]);
+                    ->where('SOURCE_REF_ID', '=', $list->ID);
             }
+
+            if ($data->exists()) {
+                $data->update([
+                    'SOURCE_REF_DATE' => $NEW_DATE
+                ]);
+            }
+
 
             return true;
         } catch (\Throwable $th) {

@@ -448,6 +448,7 @@ class BillingForm extends Component
             $data = $this->billingServices->ItemInventory($this->ID);
             if ($data) {
 
+        
                 $noProblem = (bool) $this->itemInventoryServices->ChangeDate($data, $this->LOCATION_ID, $SOURCE_REF_TYPE, $this->DATE);
 
                 if ($noProblem == false) {
