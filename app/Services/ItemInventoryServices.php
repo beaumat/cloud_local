@@ -806,14 +806,14 @@ class ItemInventoryServices
                     ->where('LOCATION_ID', '=', $LOCATION_ID)
                     ->where("SOURCE_REF_TYPE", '=', $SOURCE_REF_TYPE)
                     ->where('SOURCE_REF_ID', '=', $list->ID);
-            }
-
+            
             if ($data->exists()) {
                 $data->update([
                     'SOURCE_REF_DATE' => $NEW_DATE
                 ]);
             }
 
+        }
 
             return true;
         } catch (\Throwable $th) {
