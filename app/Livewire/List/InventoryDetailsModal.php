@@ -45,7 +45,9 @@ class InventoryDetailsModal extends Component
     public function exportData()
     {
         $dataName = str_replace(' ', '', $this->ITEM_NAME);
+        $dataName = str_replace('/', '', $dataName);
         $newData = $this->itemInventoryServices->getDetails($this->ITEM_ID, $this->LOCATION_ID, $this->DATE);
+        
         return Excel::download(new InventoryReportExport(
             $newData
         ), "Inventory-Ending-$dataName.xlsx");

@@ -39,7 +39,7 @@ class InventoryReportExport implements FromCollection, ShouldAutoSize
                 'REFERENCE'     => $list->TX_CODE,
                 'NAME'          => $list->CONTACT_NAME,
                 'NOTES'         => $list->TX_NOTES,
-                'QTY'           => $list->QUANTITY,
+                'QTY'           => $list->QUANTITY ?? 0,
                 'ENDING_QTY'    => number_format($list->ENDING_QUANTITY, 1)
             ];
 
