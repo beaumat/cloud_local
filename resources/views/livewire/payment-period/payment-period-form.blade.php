@@ -85,7 +85,6 @@
                                                         <livewire:date-input name="DATE" titleName="O.R Date"
                                                             wire:model='DATE' :isDisabled="true" />
                                                     @endif
-
                                                 </div>
                                                 <div class="col-md-4">
                                                     @if ($Modify)

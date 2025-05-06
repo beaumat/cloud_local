@@ -50,9 +50,13 @@
                         <div class="container-fluid">
                             <div class="row">
                                 <div class="col-md-6 text-left">
-                                    <button type="button" wire:click='exportData()' class="btn btn-success btn-sm">
+                                    <button type="button" wire:click='exportData()' wire:loading.attr='disabled' class="btn btn-success btn-sm">
                                         <i class="fa fa-file-excel-o" aria-hidden="true"></i> Export
                                     </button>
+
+                                    <div wire:loading.delay>
+                                        <span class='spinner'></span>
+                                    </div>
                                 </div>
                                 <div class='col-md-6 text-right'>
                                     <button type="button" wire:click='scrollDown()' class="btn btn-info btn-sm"><i

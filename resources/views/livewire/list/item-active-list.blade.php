@@ -207,8 +207,8 @@
                                                             title="Not Include in your list"
                                                             wire:click='itemNotInclude({{ $list->ID }})'
                                                             title="Not Include">
-                                                            <i class="fas fa-times" aria-hidden="true"></i> Not
-                                                            Include
+                                                            <i class="fas fa-times" aria-hidden="true"></i> 
+                                                            Not Include
                                                         </button>
                                                     @endif
                                                 </td>
