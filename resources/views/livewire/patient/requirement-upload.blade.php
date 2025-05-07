@@ -5,7 +5,7 @@
 
                 <div class="col-11">
                     @if ($FILE_PATH)
-                        <a href='{{ $FILE_PATH }}' target="_blank" class="btn btn-primary btn-xs w-25"> Show Docs</a>
+                        <a href='{{ asset('storage/' . $FILE_PATH) }}' target="_blank" class="btn btn-primary btn-xs w-25"> Show Docs</a>
                         @if (!$FILE_CONFIRM_DATE)
                             <label class="text-danger text-sm"> File not confirm by main office</label>
                         @endif
