@@ -78,11 +78,40 @@ class ContactRequirementServices
                 'r.DESCRIPTION',
                 'contact_requirement.REQUIREMENT_ID',
                 'contact_requirement.IS_COMPLETE',
-                'contact_requirement.NOT_APPLICABLE'
+                'contact_requirement.NOT_APPLICABLE',
+                'contact_requirement.FILE_NAME',
+                'contact_requirement.FILE_PATH',
+                'contact_requirement.FILE_CONFIRM_DATE'
 
             ])
             ->leftJoin('requirement as r', 'r.ID', '=', 'contact_requirement.REQUIREMENT_ID')
             ->where('contact_requirement.CONTACT_ID', $CONTACT_ID)
             ->get();
+    }
+
+    public function UpdateFile(int $ID, string $FILE_NAME, string $FILE_PATH)
+    {
+        ContactRequirements::where('ID', $ID)
+            ->update([
+                'FILE_NAME' => $FILE_NAME,
+                'FILE_PATH' => $FILE_PATH,
+            
+            ]);
+    }
+    public function UpdateRemoveFile(int $ID)
+    {
+        ContactRequirements::where('ID', $ID)
+            ->update([
+                'FILE_NAME' => null,
+                'FILE_PATH' => null,
+                'FILE_CONFIRM_DATE' => null
+            ]);
+    }
+    public function FileConfirmDate(int $ID)
+    {
+        ContactRequirements::where('ID', $ID)
+            ->update([
+                'FILE_CONFIRM_DATE' => Carbon::now()
+            ]);
     }
 }

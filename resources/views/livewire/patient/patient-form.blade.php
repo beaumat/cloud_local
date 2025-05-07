@@ -727,7 +727,7 @@
                                                         @if ($refreshToggle)
                                                             @livewire('Patient.RequirementPanel', ['CONTACT_ID' => $ID], 'p1')
                                                         @else
-                                                            @livewire('Patient.RequirementPanel', ['CONTACT_ID' => $ID], 'p2');
+                                                            @livewire('Patient.RequirementPanel', ['CONTACT_ID' => $ID], 'p2')
                                                         @endif
                                                     </div>
                                                 </div>

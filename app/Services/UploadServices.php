@@ -39,6 +39,18 @@ class UploadServices
         ];
         return $dataReturn;
     }
+
+    public function RequirementFile($PDF): array
+    {
+        $path = $PDF->store('requirement', 'custom_local');
+        $extension = $PDF->extension();
+        $dataReturn = [
+            'new_path' => $path,
+            'extension' => $extension,
+            'filename' => basename($path)
+        ];
+        return $dataReturn;
+    }
     public function Availment($PDF): array
     {
         $path = $PDF->store('Availement', 'custom_local');

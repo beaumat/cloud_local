@@ -17,6 +17,9 @@ class ContactRequirements extends Model
         'REQUIREMENT_ID',
         'IS_COMPLETE',
         'DATE_COMPLETED',
-        'NOT_APPLICABLE'
+        'NOT_APPLICABLE',
+        'FILE_NAME',
+        'FILE_PATH',
+        'FILE_CONFIRM_DATE'
     ];
 }
