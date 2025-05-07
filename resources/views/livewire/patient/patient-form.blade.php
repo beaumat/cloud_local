@@ -377,7 +377,7 @@
                                                         </div>
                                                         <div class="col-md-2">
                                                             <livewire:text-input name="SECOND_CASE_RATE"
-                                                                titleName="PDD Registtration No."
+                                                                titleName="PDD Registration No."
                                                                 isDisabled="{{ $modify }}"
                                                                 wire:model='SECOND_CASE_RATE' maxlength='50' />
                                                         </div>

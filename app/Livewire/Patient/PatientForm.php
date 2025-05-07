@@ -532,7 +532,7 @@ class PatientForm extends Component
                 'DATE_ADMISSION' => 'Date Admission',
                 'PATIENT_TYPE_ID' => 'Type',
                 'CLASS_ID' => 'Classification',
-                'SECOND_CASE_RATE' => 'PDD Registtration No.'
+                'SECOND_CASE_RATE' => 'PDD Registration No.'
             ]
         );
 
