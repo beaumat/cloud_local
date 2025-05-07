@@ -283,12 +283,13 @@ class PaymentServices
             ->select([
                 'payment_invoices.ID',
                 'payment_invoices.INVOICE_ID',
+                'payment_invoices.AMOUNT_APPLIED',
+                'payment_invoices.ACCOUNTS_RECEIVABLE_ID',
                 'i.DATE',
                 'i.CODE',
                 'i.AMOUNT',
-                'i.BALANCE_DUE',
-                'payment_invoices.AMOUNT_APPLIED',
-                'payment_invoices.ACCOUNTS_RECEIVABLE_ID'
+                'i.BALANCE_DUE'
+
             ])
             ->leftJoin('invoice as i', 'i.ID', '=', 'payment_invoices.INVOICE_ID')
             ->where('payment_invoices.PAYMENT_ID', $PAYMENT_ID)
@@ -316,11 +317,12 @@ class PaymentServices
                 'payment.CODE',
                 'payment.DATE',
                 'payment.AMOUNT',
+                'payment.NOTES',
                 'payment.RECEIPT_REF_NO',
                 'payment_method.DESCRIPTION as PAYMENT_METHOD',
                 'payment_invoices.AMOUNT_APPLIED',
-                'a.NAME as BANK_ACCOUNT',
-                'payment.NOTES'
+                'a.NAME as BANK_ACCOUNT'
+            
             ])
             ->join('payment_method', 'payment_method.ID', '=', 'payment.PAYMENT_METHOD_ID')
             ->join('payment_invoices', 'payment_invoices.PAYMENT_ID', '=', 'payment.ID')

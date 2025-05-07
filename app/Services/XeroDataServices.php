@@ -60,15 +60,13 @@ class XeroDataServices
                 ->where('POSTED', '=', 0)
                 ->get();
         } else {
-            $result = XeroData::where('LOCATION_ID', '=', $locationid)
+           return XeroData::where('LOCATION_ID', '=', $locationid)
                 ->where('POSTED', '=', 0)
                 ->whereNull('REFERENCE')
                 ->get();
 
-            return $result;
+  
         }
-
-
     }
     public function callReferenceFirst(string $REFERENCE, string $date, string $SOURCE_TYPE)
     {

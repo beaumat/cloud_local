@@ -17,7 +17,8 @@
             @foreach ($dataList as $list)
                 <tr>
                     <td>{{ \Carbon\Carbon::parse($list->DATE)->format('m/d/Y') }}</td>
-                    <td> <a target="_blank"
+                    <td>
+                        <a target="_blank"
                             href="{{ route('customersinvoice_edit', ['id' => $list->INVOICE_ID]) }}">{{ $list->CODE }}</a>
                     </td>
                     <td class="text-right">{{ number_format($list->AMOUNT, 2) }} </td>
