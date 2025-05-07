@@ -65,16 +65,20 @@ class RequirementUpload extends Component
         $this->dispatch('refresh-requirements');
 
     }
-    public function removeFile() {
-        $thisFile = $this->FILE_PATH;
-        $this->uploadServices->RemoveIfExists($thisFile);   
-        $this->FILE_PATH = null;
-        $this->FILE_NAME = null;
-        $this->FILE_CONFIRM_DATE = null;
-        $this->contactRequirementServices->UpdateRemoveFile(
-            $this->ID,      
-        );
-        $this->dispatch('refresh-requirements');
+    public function removeFile()
+    {
+        try {
+            $this->uploadServices->RemoveIfExists($this->FILE_PATH);   
+            $this->contactRequirementServices->UpdateRemoveFile(
+                $this->ID,
+            );
+            $this->dispatch('refresh-requirements');
+        } catch (\Exception $e) {
+            session()->flash('error', 'Error removing file: ' . $e->getMessage());
+            return;
+        }
+  
+
     }
     #[On('clear-alert')]
     public function clearAlert()
