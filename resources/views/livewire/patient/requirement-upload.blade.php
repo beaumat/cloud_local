@@ -14,11 +14,12 @@
                             <label class="text-success text-sm"> : This file has been confirmed. </label>
                         @endif
                     @else
-                        <div class="input-group input-group-sm">
-                            <div class="custom-file text-xs">
-                                <input type="file" class="custom-file-input text-xs" id="fileUpload"
-                                    wire:model='PDF'>
-                                <label class="custom-file-label text-xs" for="fileUpload">
+                        <div class="input-group" style="font-size: 12px; max-width: 100%;">
+                            <div class="custom-file" style="font-size: 12px;">
+                                <input type="file" class="custom-file-input" id="fileUpload" wire:model='PDF'
+                                    style="padding: 1px; height: 30px;">
+                                <label class="custom-file-label" for="fileUpload"
+                                    style="padding: 1px; height: 25px; font-size: 10px;">
                                     @if ($PDF)
                                         {{ $PDF->getClientOriginalName() }}
                                     @else

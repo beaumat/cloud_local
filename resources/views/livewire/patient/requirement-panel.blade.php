@@ -15,10 +15,12 @@
                     @foreach ($dataList as $list)
                         <tr>
                             <td>{{ $list->DESCRIPTION }}</td>
-                            <td class="text-center">
+                            <td class="text-center"
+                                @if ($list->FILE_CONFIRM_DATE) style="opacity: 0.5;pointer-events: none;" @endif>
                                 @livewire('Patient.RequirementPanelComplete', ['ID' => $list->ID, 'VALUE' => $list->IS_COMPLETE, 'CONTACT_ID' => $CONTACT_ID], key('complete-' . $list->ID))
                             </td>
-                            <td class="text-center">
+                            <td class="text-center"
+                                @if ($list->FILE_CONFIRM_DATE) style="opacity: 0.5;pointer-events: none;" @endif>
                                 @livewire('Patient.RequirementPanelNa', ['ID' => $list->ID, 'VALUE' => $list->NOT_APPLICABLE, 'CONTACT_ID' => $CONTACT_ID], key('na-' . $list->ID))
                             </td>
                             <td>
