@@ -181,6 +181,14 @@
 
                                     </div>
                                     <div class="text-right col-6 col-md-6">
+
+                                        @if ($DEPOST_ID > 0)
+                                            <a id="bankdeposit" target="_blank" title="Deposit"
+                                                href="{{ route('bankingdeposit_edit', ['id' => $DEPOST_ID]) }}"
+                                                class="btn btn-info btn-sm"> <i class="fas fa-university"></i> Deposit
+                                            </a>
+                                        @endif
+
                                         @if ($STATUS != 16)
                                             @if ($ID > 0 && $STATUS > 0)
                                                 <button type="button" wire:click='OpenJournal()'

@@ -29,7 +29,7 @@ class DepositServices
     public function Get(int $ID)
     {
         $result = Deposit::where('ID', '=', $ID)->first();
-        
+
         if ($result) {
             return $result;
         }
@@ -53,33 +53,33 @@ class DepositServices
         $isLocRef = boolval($this->systemSettingServices->GetValue('IncRefNoByLocation'));
 
         Deposit::create([
-            'ID'                    => $ID,
-            'RECORDED_ON'           => $this->dateServices->Now(),
-            'CODE'                  => $CODE !== '' ? $CODE : $this->object->GetSequence($OBJECT_TYPE, $isLocRef ? $LOCATION_ID : null),
-            'DATE'                  => $DATE,
-            'BANK_ACCOUNT_ID'       => $BANK_ACCOUNT_ID > 0 ? $BANK_ACCOUNT_ID : null,
-            'AMOUNT'                => 0,
-            'NOTES'                 => $NOTES,
-            'CASH_BACK_ACCOUNT_ID'  => $CASH_BACK_ACCOUNT_ID > 0 ? $CASH_BACK_ACCOUNT_ID : null,
-            'CASH_BACK_AMOUNT'      => $CASH_BACK_AMOUNT,
-            'CASH_BACK_NOTES'       => $CASH_BACK_NOTES,
-            'LOCATION_ID'           => $LOCATION_ID,
-            'STATUS'                => 0,
-            'STATUS_DATE'           => $this->dateServices->NowDate()
+            'ID' => $ID,
+            'RECORDED_ON' => $this->dateServices->Now(),
+            'CODE' => $CODE !== '' ? $CODE : $this->object->GetSequence($OBJECT_TYPE, $isLocRef ? $LOCATION_ID : null),
+            'DATE' => $DATE,
+            'BANK_ACCOUNT_ID' => $BANK_ACCOUNT_ID > 0 ? $BANK_ACCOUNT_ID : null,
+            'AMOUNT' => 0,
+            'NOTES' => $NOTES,
+            'CASH_BACK_ACCOUNT_ID' => $CASH_BACK_ACCOUNT_ID > 0 ? $CASH_BACK_ACCOUNT_ID : null,
+            'CASH_BACK_AMOUNT' => $CASH_BACK_AMOUNT,
+            'CASH_BACK_NOTES' => $CASH_BACK_NOTES,
+            'LOCATION_ID' => $LOCATION_ID,
+            'STATUS' => 0,
+            'STATUS_DATE' => $this->dateServices->NowDate()
         ]);
 
         return $ID;
     }
-    public function Update(int $ID, string $CODE, int $BANK_ACCOUNT_ID, string $NOTES, int $CASH_BACK_ACCOUNT_ID, float $CASH_BACK_AMOUNT, string $CASH_BACK_NOTES,)
+    public function Update(int $ID, string $CODE, int $BANK_ACCOUNT_ID, string $NOTES, int $CASH_BACK_ACCOUNT_ID, float $CASH_BACK_AMOUNT, string $CASH_BACK_NOTES, )
     {
         Deposit::where('ID', '=', $ID)
             ->update([
-                'CODE'                  => $CODE,
-                'BANK_ACCOUNT_ID'       => $BANK_ACCOUNT_ID > 0 ? $BANK_ACCOUNT_ID : null,
-                'NOTES'                 => $NOTES,
-                'CASH_BACK_ACCOUNT_ID'  => $CASH_BACK_ACCOUNT_ID > 0 ? $CASH_BACK_ACCOUNT_ID : null,
-                'CASH_BACK_AMOUNT'      => $CASH_BACK_AMOUNT,
-                'CASH_BACK_NOTES'       => $CASH_BACK_NOTES,
+                'CODE' => $CODE,
+                'BANK_ACCOUNT_ID' => $BANK_ACCOUNT_ID > 0 ? $BANK_ACCOUNT_ID : null,
+                'NOTES' => $NOTES,
+                'CASH_BACK_ACCOUNT_ID' => $CASH_BACK_ACCOUNT_ID > 0 ? $CASH_BACK_ACCOUNT_ID : null,
+                'CASH_BACK_AMOUNT' => $CASH_BACK_AMOUNT,
+                'CASH_BACK_NOTES' => $CASH_BACK_NOTES,
             ]);
     }
     public function Delete(int $ID)
@@ -91,8 +91,8 @@ class DepositServices
     {
         Deposit::where('ID', '=', $ID)
             ->update([
-                'STATUS'        => $STATUS,
-                'STATUS_DATE'   => $this->dateServices->NowDate()
+                'STATUS' => $STATUS,
+                'STATUS_DATE' => $this->dateServices->NowDate()
             ]);
     }
 
@@ -144,15 +144,15 @@ class DepositServices
         $ID = $this->object->ObjectNextID('DEPOSIT_FUNDS');
 
         DepositFunds::create([
-            'ID'                    => $ID,
-            'DEPOSIT_ID'            => $DEPOSIT_ID,
-            'RECEIVED_FROM_ID'      => $RECEIVED_FROM_ID > 0  ? $RECEIVED_FROM_ID : null,
-            'ACCOUNT_ID'            => $ACCOUNT_ID,
-            'PAYMENT_METHOD_ID'     => $PAYMENT_METHOD_ID > 0 ? $PAYMENT_METHOD_ID : null,
-            'CHECK_NO'              => $CHECK_NO,
-            'AMOUNT'                => $AMOUNT,
-            'SOURCE_OBJECT_TYPE'    => $SOURCE_OBJECT_TYPE > 0 ? $SOURCE_OBJECT_TYPE : null,
-            'SOURCE_OBJECT_ID'      => $SOURCE_OBJECT_ID > 0 ? $SOURCE_OBJECT_ID : null
+            'ID' => $ID,
+            'DEPOSIT_ID' => $DEPOSIT_ID,
+            'RECEIVED_FROM_ID' => $RECEIVED_FROM_ID > 0 ? $RECEIVED_FROM_ID : null,
+            'ACCOUNT_ID' => $ACCOUNT_ID,
+            'PAYMENT_METHOD_ID' => $PAYMENT_METHOD_ID > 0 ? $PAYMENT_METHOD_ID : null,
+            'CHECK_NO' => $CHECK_NO,
+            'AMOUNT' => $AMOUNT,
+            'SOURCE_OBJECT_TYPE' => $SOURCE_OBJECT_TYPE > 0 ? $SOURCE_OBJECT_TYPE : null,
+            'SOURCE_OBJECT_ID' => $SOURCE_OBJECT_ID > 0 ? $SOURCE_OBJECT_ID : null
         ]);
 
         return $ID;
@@ -169,11 +169,11 @@ class DepositServices
         DepositFunds::where('ID', '=', $ID)
             ->where('DEPOSIT_ID', '=', $DEPOSIT_ID)
             ->update([
-                'RECEIVED_FROM_ID'      => $RECEIVED_FROM_ID > 0  ? $RECEIVED_FROM_ID : null,
-                'ACCOUNT_ID'            => $ACCOUNT_ID,
-                'PAYMENT_METHOD_ID'     => $PAYMENT_METHOD_ID > 0 ? $PAYMENT_METHOD_ID : null,
-                'CHECK_NO'              => $CHECK_NO,
-                'AMOUNT'                => $AMOUNT,
+                'RECEIVED_FROM_ID' => $RECEIVED_FROM_ID > 0 ? $RECEIVED_FROM_ID : null,
+                'ACCOUNT_ID' => $ACCOUNT_ID,
+                'PAYMENT_METHOD_ID' => $PAYMENT_METHOD_ID > 0 ? $PAYMENT_METHOD_ID : null,
+                'CHECK_NO' => $CHECK_NO,
+                'AMOUNT' => $AMOUNT,
             ]);
     }
     public function GetFund(int $ID)
@@ -189,7 +189,7 @@ class DepositServices
             ->delete();
     }
 
-    public function  UndepositedUpdate(int $OBJECT_ID, int $OBJECT_TYPE, int $DEPOSITED)
+    public function UndepositedUpdate(int $OBJECT_ID, int $OBJECT_TYPE, int $DEPOSITED)
     {
         switch ($OBJECT_TYPE) {
             case 13:
@@ -207,7 +207,7 @@ class DepositServices
     }
     public function getAmount($ID): float
     {
-        return (float)  Deposit::where('ID', '=', $ID)->first()->AMOUNT ?? 0.00;
+        return (float) Deposit::where('ID', '=', $ID)->first()->AMOUNT ?? 0.00;
     }
     public function FundList(int $DEPOSIT_ID)
     {
@@ -318,7 +318,36 @@ class DepositServices
 
         return $collection;
     }
+    public function getSalesReceipt(int $SR_ID): int
+    {
+        $result = DepositFunds::query()
+            ->select(['DEPOSIT_ID'])
+            ->where('SOURCE_OBJECT_ID', $SR_ID)
+            ->where('SOURCE_OBJECT_TYPE', 13)
+            ->first();
 
+        if ($result) {
+
+            return (int) $result->DEPOSIT_ID;
+        }
+        return 0;
+
+    }
+    public function getPayment(int $PAYMENT_ID): int
+    {
+        $result = DepositFunds::query()
+            ->select(['DEPOSIT_ID'])
+            ->where('SOURCE_OBJECT_ID', $PAYMENT_ID)
+            ->where('SOURCE_OBJECT_TYPE', 11)
+            ->first();
+
+        if ($result) {
+
+            return (int) $result->DEPOSIT_ID;
+        }
+        return 0;
+
+    }
     public function DepositJournal(int $DEPOSIT_ID)
     {
         $result = Deposit::query()
@@ -334,6 +363,8 @@ class DepositServices
 
         return $result;
     }
+
+  
     public function DepositFundJournal(int $DEPOSIT_ID)
     {
         $result = DepositFunds::query()

@@ -5,6 +5,7 @@ namespace App\Livewire\SalesReceipt;
 use App\Services\AccountJournalServices;
 use App\Services\AccountServices;
 use App\Services\ContactServices;
+use App\Services\DepositServices;
 use App\Services\DocumentStatusServices;
 use App\Services\ItemInventoryServices;
 use App\Services\LocationServices;
@@ -80,7 +81,8 @@ class SalesReceiptForm extends Component
     public bool $showFileName = false;
     public string $TITLE_REF;
     public string $TITLE_DATE;
-
+    public int $DEPOST_ID  = 0;
+    private $depositServices;
     public function boot(
         SalesReceiptServices $salesReceiptServices,
         LocationServices $locationServices,
@@ -93,7 +95,8 @@ class SalesReceiptForm extends Component
         ItemInventoryServices $itemInventoryServices,
         AccountJournalServices $accountJournalServices,
         PatientPaymentServices $patientPaymentServices,
-        PaymentMethodServices $paymentMethodServices
+        PaymentMethodServices $paymentMethodServices,
+        DepositServices $depositServices    
     ) {
         $this->salesReceiptServices = $salesReceiptServices;
         $this->locationServices = $locationServices;
@@ -107,6 +110,7 @@ class SalesReceiptForm extends Component
         $this->itemInventoryServices = $itemInventoryServices;
         $this->accountJournalServices = $accountJournalServices;
         $this->patientPaymentServices = $patientPaymentServices;
+        $this->depositServices = $depositServices;
     }
     public function LoadDropdown()
     {
@@ -185,6 +189,7 @@ class SalesReceiptForm extends Component
         $this->NONTAXABLE_AMOUNT = $Data->NONTAXABLE_AMOUNT ? $Data->NONTAXABLE_AMOUNT : 0;
         $this->STATUS_DESCRIPTION = $this->documentStatusServices->getDesc($this->STATUS);
         $this->updatedpaymentmethodid();
+        $this->DEPOST_ID = $this->depositServices->getSalesReceipt($this->ID);
     }
     public function mount($id = null, $IS_MODAL = false, $PATIENT_PAYMENT_ID = 0)
     {
@@ -638,8 +643,6 @@ class SalesReceiptForm extends Component
                         $this->deleteItem($list->ID, $this->ID, $JOURNAL_NO);
                     }
                     $PP_ID = $this->patientPaymentServices->GetCustomerRef(false, $this->ID);
-
-
                     if ($PP_ID > 0) {
                         $this->patientPaymentServices->CustomerRef($PP_ID, false, 0);
                     }

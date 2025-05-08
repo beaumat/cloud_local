@@ -12,8 +12,7 @@ class ContactServices
 {
 	use WithPagination;
 	private $objectService;
-	private $contactRequirementServices;
-	public function __construct(ObjectServices $objectService,ContactRequirementServices $contactRequirementServices	)
+	public function __construct(ObjectServices $objectService)
 	{
 		$this->objectService = $objectService;
 	}
@@ -245,7 +244,8 @@ class ContactServices
 
 		return $result;
 	}
-	public function getEmployeeList() {
+	public function getEmployeeList()
+	{
 		$result = Contacts::query()
 			->select([
 				'contact.ID',
@@ -701,11 +701,12 @@ class ContactServices
 	}
 	public function UpdatePin(int $ID, string $PIN)
 	{
-		Contacts::where('ID', '=', $ID)->update(
-			[
-				'PIN' => $PIN
-			]
-		);
+		Contacts::where('ID', '=', $ID)
+			->update(
+				[
+					'PIN' => $PIN
+				]
+			);
 	}
 	public function UpdateIsCompleted(int $CONTACT_ID, bool $VALUE)
 	{
@@ -719,12 +720,19 @@ class ContactServices
 
 	public function PatientIsRestricted(int $CONTACT_ID): bool
 	{
-		$result = Contacts::where('ID', '=', $CONTACT_ID)
-			->where('TYPE', '=', 3)
+
+		$result = Contacts::query()
+			->select([
+				'contact.ADMITTED',
+			])
+			->where('contact.ID', '=', $CONTACT_ID)
+			->where('contact.TYPE', '=', 3)
+			->join('contact_requirement as cr', 'cr.CONTACT_ID', '=', 'contact.ID')
+		
 			->first();
 
 		if ($result) {
-			
+
 
 			return true;
 		}
