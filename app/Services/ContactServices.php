@@ -723,7 +723,7 @@ class ContactServices
 			->first();
 
 		if ($result) {
-
+			
 
 			return true;
 		}
