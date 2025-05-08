@@ -548,7 +548,6 @@ class PatientForm extends Component
                         'SECOND_CASE_RATE' => 'PDD Registration No.'
                     ]
                 );
-
                 if($this->contactRequirementServices->pdpIsUploaded($this->ID) == false) {
                     session()->flash('error', 'Please upload PDP file.');
                     return;

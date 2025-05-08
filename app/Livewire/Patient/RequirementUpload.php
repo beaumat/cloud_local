@@ -20,13 +20,9 @@ class RequirementUpload extends Component
     public $FILE_NAME;
     #[Reactive]
     public $FILE_CONFIRM_DATE;
-
-
     use WithFileUploads;
     public $PDF = null;
     public bool $showFileName = true;
-
-
     private $contactRequirementServices;
     private $uploadServices;
     public function boot(ContactRequirementServices $contactRequirementServices, UploadServices $uploadServices)
@@ -64,6 +60,10 @@ class RequirementUpload extends Component
         $this->getDocumentProccess();
         $this->dispatch('refresh-requirements');
 
+    }
+    public function confirm() {
+        $this->contactRequirementServices->FileConfirmDate($this->ID);
+        $this->dispatch('refresh-requirements');
     }
     public function removeFile()
     {

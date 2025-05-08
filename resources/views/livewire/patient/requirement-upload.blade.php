@@ -9,7 +9,15 @@
                             Show Docs</a>
                         @if (!$FILE_CONFIRM_DATE)
                             <label class="text-danger text-sm"> : This file has not been confirmed by the main office or
-                                admin.</label>
+                                admin.
+
+
+                            </label>
+                            @can('patient.audit')
+                                <button type="button" class="btn btn-info btn-xs "
+                                    wire:confirm='Are you sure to confirm this document?' wire:click='confirm()'> <i
+                                        class="fa fa-check" aria-hidden="true"></i> Confirm</button>
+                            @endcan
                         @else
                             <label class="text-success text-sm"> : This file has been confirmed. </label>
                         @endif

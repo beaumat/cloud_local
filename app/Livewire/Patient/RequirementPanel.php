@@ -15,6 +15,7 @@ class RequirementPanel extends Component
     public $dataList = [];
     private $contactRequirementServices;
     private $contactServices;
+    public bool $ALLOWED_TO_CONFIRM = false;
     public function boot(ContactRequirementServices $contactRequirementServices, ContactServices $contactServices)
     {
         $this->contactRequirementServices = $contactRequirementServices;
