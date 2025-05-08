@@ -1607,12 +1607,7 @@ class HemoServices
     {
         $result = HemodialysisItems::query()
             ->select([
-                'hemodialysis_items.ID',
                 'hemodialysis_items.HEMO_ID',
-                'hemodialysis_items.ITEM_ID',
-                'hemodialysis_items.QUANTITY',
-                'hemodialysis_items.UNIT_BASE_QUANTITY',
-                'item.COST',
                 'hemodialysis.DATE',
                 'hemodialysis.LOCATION_ID',
                 'hemodialysis.CUSTOMER_ID'
@@ -1626,6 +1621,12 @@ class HemoServices
             ->where('hemodialysis_items.IS_POST', false)
             ->where('hemodialysis.DATE', '<=', $DATE)
             ->orderBy('hemodialysis.DATE', 'asc')
+            ->groupBy([
+                'hemodialysis_items.HEMO_ID',
+                'hemodialysis.DATE',
+                'hemodialysis.LOCATION_ID',
+                'hemodialysis.CUSTOMER_ID'
+            ])
             ->get();
 
         return $result;

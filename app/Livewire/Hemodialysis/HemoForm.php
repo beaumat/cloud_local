@@ -610,9 +610,6 @@ class HemoForm extends Component
             session()->flash("error", $message);
         }
     }
-    public function InventoryUnposted()
-    {
-    }
     public function showNotes()
     {
         $contact = $this->contactServices->get($this->CUSTOMER_ID, 3);

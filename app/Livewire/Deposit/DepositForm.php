@@ -195,6 +195,7 @@ class DepositForm extends Component
             }
 
             $depositData = $this->depositServices->DepositJournal($this->ID);
+            
             $this->accountJournalServices->JournalExecute(
                 $JOURNAL_NO,
                 $depositData,
