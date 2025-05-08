@@ -5,9 +5,13 @@
 
                 <div class="col-11">
                     @if ($FILE_PATH)
-                        <a href='{{ asset('storage/' . $FILE_PATH) }}' target="_blank" class="btn btn-primary btn-xs w-25"> Show Docs</a>
+                        <a href='{{ asset('storage/' . $FILE_PATH) }}' target="_blank" class="btn btn-primary btn-xs w-25">
+                            Show Docs</a>
                         @if (!$FILE_CONFIRM_DATE)
-                       <label class="text-danger text-sm"> : This file has not been confirmed by the main office or admin.</label>
+                            <label class="text-danger text-sm"> : This file has not been confirmed by the main office or
+                                admin.</label>
+                        @else
+                            <label class="text-success text-sm"> : This file has been confirmed. </label>
                         @endif
                     @else
                         <div class="input-group input-group-sm">
@@ -42,7 +46,6 @@
                     <button type="button" class="btn btn-xs btn-danger w-100"
                         wire:confirm='Are you sure to remove this document?' wire:click='removeFile()'>Remove</button>
                 @endif
-
             @endif
         </div>
     </div>

@@ -636,7 +636,8 @@ class ContactServices
 					DB::raw('TIMESTAMPDIFF(YEAR, contact.DATE_OF_BIRTH ,if( isnull(contact.DATE_EXPIRED) = false, contact.DATE_EXPIRED, CURDATE() )) AS AGE'),
 					'l.NAME as LOCATION_NAME',
 					'd.PRINT_NAME_AS as DOCTOR_NAME',
-					'pc.DESCRIPTION as CLASS'
+					'pc.DESCRIPTION as CLASS',
+					'contact.SECOND_CASE_RATE as PDP'
 
 				]
 			)

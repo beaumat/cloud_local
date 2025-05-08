@@ -519,7 +519,7 @@ class PatientForm extends Component
                 'DATE_ADMISSION' => 'required|date',
                 'PATIENT_TYPE_ID' => 'required|not_in:0',
                 'CLASS_ID' => 'required|exists:patient_class,id',
-                'SECOND_CASE_RATE' => 'required|text|min:20|unique:contact,SECOND_CASE_RATE,' . $this->ID,
+
             ],
             [],
             [
@@ -532,9 +532,32 @@ class PatientForm extends Component
                 'DATE_ADMISSION' => 'Date Admission',
                 'PATIENT_TYPE_ID' => 'Type',
                 'CLASS_ID' => 'Classification',
-                'SECOND_CASE_RATE' => 'PDD Registration No.'
+
             ]
         );
+
+        if ($this->ID > 0) {
+            if ($this->contactRequirementServices->pdpIsComplete($this->ID)) {
+                $this->validate(
+                    [
+                        'SECOND_CASE_RATE' => 'required|string|min:20|unique:contact,SECOND_CASE_RATE,' . $this->ID,
+
+                    ],
+                    [],
+                    [
+                        'SECOND_CASE_RATE' => 'PDD Registration No.'
+                    ]
+                );
+
+                if($this->contactRequirementServices->pdpIsUploaded($this->ID) == false) {
+                    session()->flash('error', 'Please upload PDP file.');
+                    return;
+                }                
+            }
+        }
+
+
+
 
         if ($this->contactServices->is12CharRequired($this->PIN)) {
             session()->flash('error', 'Invalid (PIN). must 12 character only.');

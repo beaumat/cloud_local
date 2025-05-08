@@ -103,7 +103,7 @@
                                                 @endif
                                             @endif
                                         </th>
-                                        <th class="col-1">
+                                        <th>
                                             <span name="middleName" type="button"
                                                 wire:click="sorting('contact.MIDDLE_NAME')">Middlename</span>
                                             @if ($sortby == 'contact.MIDDLE_NAME')
@@ -163,7 +163,7 @@
                                             @endif
                                         </th>
 
-                                        <th class="col-1">
+                                        <th >
                                             <span name="philhealthSort" type="button"
                                                 wire:click="sorting('contact.PIN')">Philhealth
                                                 No.</span>
@@ -175,7 +175,7 @@
                                                 @endif
                                             @endif
                                         </th>
-                                        <th class="col-2">
+                                        <th>
                                             <span name="doctorNameSort" type="button"
                                                 wire:click="sorting('DOCTOR_NAME')">Nephro/Doctors</span>
                                             @if ($sortby == 'DOCTOR_NAME')
@@ -233,6 +233,18 @@
                                                 @endif
                                             @endif
                                         </th>
+                                        <th>
+                                            <span name="class" type="button"
+                                                wire:click="sorting('contact.SECOND_CASE_RATE')">PDP
+                                                Reg. No. </span>
+                                            @if ($sortby == 'contact.SECOND_CASE_RATE')
+                                                @if ($isDesc)
+                                                    <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                                @else
+                                                    <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                                @endif
+                                            @endif
+                                        </th>
                                         <th class="text-center">
                                             <span name="isInactive" type="button"
                                                 wire:click="sorting('contact.INACTIVE')">Inactive</span>
@@ -244,7 +256,7 @@
                                                 @endif
                                             @endif
                                         </th>
-                                        <th class="text-center col-1 bg-success active">
+                                        <th class="text-center bg-success active">
                                             @can('contact.patient.create')
                                                 <a href="{{ route('maintenancecontactpatients_create') }}"
                                                     class="text-white">
@@ -287,6 +299,7 @@
                                                 @endif
                                             </td>
                                             <td>{{ $list->CLASS }}</td>
+                                            <td class="@if($list->PDP == '') bg-danger @endif" >{{ $list->PDP }}</td>
                                             <td class="text-center font-weight-bold">
                                                 @if ($list->INACTIVE)
                                                     Yes
