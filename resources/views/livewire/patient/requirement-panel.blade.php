@@ -28,7 +28,8 @@
                             </td>
                         </tr>
                     @endforeach
-                    @can('contact.patient.update')
+
+                    {{-- @can('contact.patient.update')
                         <tr>
                             <td></td>
                             <td>
@@ -41,7 +42,7 @@
                             </td>
                             <td></td>
                         </tr>
-                    @endcan
+                    @endcan --}}
 
                 </tbody>
             </table>
