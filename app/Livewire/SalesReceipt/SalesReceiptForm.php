@@ -115,11 +115,11 @@ class SalesReceiptForm extends Component
         $this->paymentMethodList = $this->paymentMethodServices->getListNonPatient();
         $this->taxList = $this->taxServices->getList();
         if ($this->BANK_MODE) {
-            $this->accountList =   $this->accountServices->getBankAccountDeposit();
+            $this->accountList = $this->accountServices->getBankAccountDeposit();
             return;
         }
 
-        $this->accountList =  $this->accountServices->getUndepositedList();
+        $this->accountList = $this->accountServices->getUndepositedList();
     }
 
     public string $tab = "item";
@@ -234,7 +234,7 @@ class SalesReceiptForm extends Component
         $this->CLASS_ID = 0;
         $this->PAYMENT_METHOD_ID = 1;
         $this->AMOUNT = 0;
-        $this->UNDEPOSITED_FUNDS_ACCOUNT_ID =  $this->BANK_MODE ? 0 : $this->accountServices->UNDEPOSITED_ACCOUNT_ID;
+        $this->UNDEPOSITED_FUNDS_ACCOUNT_ID = $this->BANK_MODE ? 0 : $this->accountServices->UNDEPOSITED_ACCOUNT_ID;
         $this->STATUS = 0;
         $this->OUTPUT_TAX_ID = (int) $this->systemSettingServices->GetValue('OutputTaxId');
         $this->OUTPUT_TAX_RATE = 0;
@@ -287,23 +287,23 @@ class SalesReceiptForm extends Component
 
                 $this->validate(
                     [
-                        'CUSTOMER_ID'                           => 'required|not_in:0|exists:contact,id',
-                        'OUTPUT_TAX_ID'                         => 'required|not_in:0',
-                        'DATE'                                  => 'required|date|date_format:Y-m-d',
-                        'LOCATION_ID'                           => 'required|not_in:0|exists:location,id',
-                        'PAYMENT_METHOD_ID'                     => 'required|exists:payment_method,id',
-                        'UNDEPOSITED_FUNDS_ACCOUNT_ID'          => 'required|exists:account,id',
-                        'OUTPUT_TAX_ACCOUNT_ID'                 => 'required|exists:account,id'
+                        'CUSTOMER_ID' => 'required|not_in:0|exists:contact,id',
+                        'OUTPUT_TAX_ID' => 'required|not_in:0',
+                        'DATE' => 'required|date|date_format:Y-m-d',
+                        'LOCATION_ID' => 'required|not_in:0|exists:location,id',
+                        'PAYMENT_METHOD_ID' => 'required|exists:payment_method,id',
+                        'UNDEPOSITED_FUNDS_ACCOUNT_ID' => 'required|exists:account,id',
+                        'OUTPUT_TAX_ACCOUNT_ID' => 'required|exists:account,id'
                     ],
                     [],
                     [
-                        'CUSTOMER_ID'                           => 'Customer',
-                        'OUTPUT_TAX_ID'                         => 'Tax',
-                        'DATE'                                  => 'Date',
-                        'LOCATION_ID'                           => 'Location',
-                        'PAYMENT_METHOD_ID'                     => 'Payment Method',
-                        'UNDEPOSITED_FUNDS_ACCOUNT_ID'          => 'Bank Accounts',
-                        'OUTPUT_TAX_ACCOUNT_ID'                 => 'Output Tax Accounts'
+                        'CUSTOMER_ID' => 'Customer',
+                        'OUTPUT_TAX_ID' => 'Tax',
+                        'DATE' => 'Date',
+                        'LOCATION_ID' => 'Location',
+                        'PAYMENT_METHOD_ID' => 'Payment Method',
+                        'UNDEPOSITED_FUNDS_ACCOUNT_ID' => 'Bank Accounts',
+                        'OUTPUT_TAX_ACCOUNT_ID' => 'Output Tax Accounts'
                     ]
                 );
                 DB::beginTransaction();
@@ -353,38 +353,38 @@ class SalesReceiptForm extends Component
 
                 $this->validate(
                     [
-                        'CUSTOMER_ID'                       => 'required|not_in:0',
-                        'CODE'                              => 'required|max:20|unique:sales_receipt,code,' . $this->ID,
-                        'OUTPUT_TAX_ID'                     => 'required|not_in:0',
-                        'DATE'                              => 'required',
-                        'LOCATION_ID'                       => 'required',
-                        'PAYMENT_METHOD_ID'                 => 'required|exists:payment_method,id',
-                        'UNDEPOSITED_FUNDS_ACCOUNT_ID'      => 'required|exists:account,id',
-                        'OUTPUT_TAX_ACCOUNT_ID'             => 'required|exists:account,id'
+                        'CUSTOMER_ID' => 'required|not_in:0',
+                        'CODE' => 'required|max:20|unique:sales_receipt,code,' . $this->ID,
+                        'OUTPUT_TAX_ID' => 'required|not_in:0',
+                        'DATE' => 'required',
+                        'LOCATION_ID' => 'required',
+                        'PAYMENT_METHOD_ID' => 'required|exists:payment_method,id',
+                        'UNDEPOSITED_FUNDS_ACCOUNT_ID' => 'required|exists:account,id',
+                        'OUTPUT_TAX_ACCOUNT_ID' => 'required|exists:account,id'
                     ],
                     [],
                     [
-                        'CUSTOMER_ID'                       => 'Customer',
-                        'CODE'                              => 'Reference No.',
-                        'OUTPUT_TAX_ID'                     => 'Tax',
-                        'DATE'                              => 'Date',
-                        'LOCATION_ID'                       => 'Location',
-                        'PAYMENT_TERMS_ID'                  => 'Payment Terms',
-                        'UNDEPOSITED_FUNDS_ACCOUNT_ID'      => 'Bank Accounts',
-                        'OUTPUT_TAX_ACCOUNT_ID'             => 'Output Tax Accounts'
+                        'CUSTOMER_ID' => 'Customer',
+                        'CODE' => 'Reference No.',
+                        'OUTPUT_TAX_ID' => 'Tax',
+                        'DATE' => 'Date',
+                        'LOCATION_ID' => 'Location',
+                        'PAYMENT_TERMS_ID' => 'Payment Terms',
+                        'UNDEPOSITED_FUNDS_ACCOUNT_ID' => 'Bank Accounts',
+                        'OUTPUT_TAX_ACCOUNT_ID' => 'Output Tax Accounts'
                     ]
                 );
 
                 DB::beginTransaction();
-                $data =  $this->salesReceiptServices->Get($this->ID);
+                $data = $this->salesReceiptServices->Get($this->ID);
                 if ($data) {
                     if ($this->STATUS == 16) {
                         $JNO = $this->accountJournalServices->getRecord($this->salesReceiptServices->object_type_sales_receipt, $this->ID);
                         if ($JNO > 0) {
                             // ACCOUNTS_RECEIVABLE_ID
-                            $this->accountJournalServices->AccountSwitch( $this->UNDEPOSITED_FUNDS_ACCOUNT_ID, $data->UNDEPOSITED_FUNDS_ACCOUNT_ID, $this->LOCATION_ID, $JNO, $data->CUSTOMER_ID, $this->ID, $this->salesReceiptServices->object_type_sales_receipt, $this->DATE, 0 );
+                            $this->accountJournalServices->AccountSwitch($this->UNDEPOSITED_FUNDS_ACCOUNT_ID, $data->UNDEPOSITED_FUNDS_ACCOUNT_ID, $this->LOCATION_ID, $JNO, $data->CUSTOMER_ID, $this->ID, $this->salesReceiptServices->object_type_sales_receipt, $this->DATE, 0);
                             // OUTPUT_TAX_ACCOUNT_ID
-                            $this->accountJournalServices->AccountSwitch( $this->OUTPUT_TAX_ACCOUNT_ID, $data->OUTPUT_TAX_ACCOUNT_ID, $this->LOCATION_ID, $JNO, $data->CUSTOMER_ID, $this->ID, $this->salesReceiptServices->object_type_sales_receipt, $this->DATE, 1 );
+                            $this->accountJournalServices->AccountSwitch($this->OUTPUT_TAX_ACCOUNT_ID, $data->OUTPUT_TAX_ACCOUNT_ID, $this->LOCATION_ID, $JNO, $data->CUSTOMER_ID, $this->ID, $this->salesReceiptServices->object_type_sales_receipt, $this->DATE, 1);
                         }
                     }
                 }
@@ -509,7 +509,7 @@ class SalesReceiptForm extends Component
             $salesReceiptItemsId = (int) $this->salesReceiptServices->object_type_sales_receipt_items;
 
             $JOURNAL_NO = $this->accountJournalServices->getRecord($salesReceiptId, $this->ID);
-            if ($JOURNAL_NO  ==  0) {
+            if ($JOURNAL_NO == 0) {
                 $JOURNAL_NO = $this->accountJournalServices->getJournalNo($salesReceiptId, $this->ID) + 1;
             }
 
@@ -594,6 +594,132 @@ class SalesReceiptForm extends Component
             DB::rollBack();
             $errorMessage = 'Error occurred: ' . $th->getMessage();
             session()->flash('error', $errorMessage);
+        }
+    }
+    public function delete()
+    {
+        try {
+            DB::beginTransaction();
+            $data = $this->salesReceiptServices->get($this->ID);
+            if ($data) {
+                if ($data->STATUS == 16) {
+                    $JOURNAL_NO = $this->accountJournalServices->getRecord(
+                        $this->salesReceiptServices->object_type_sales_receipt,
+                        $this->ID
+                    );
+                    //Main
+                    $this->accountJournalServices->DeleteJournal(
+                        $data->UNDEPOSITED_FUNDS_ACCOUNT_ID ?? 0,
+                        $data->LOCATION_ID,
+                        $JOURNAL_NO,
+                        $data->CUSTOMER_ID,
+                        $this->ID,
+                        $this->salesReceiptServices->object_type_sales_receipt,
+                        $data->DATE,
+                        0,
+
+                    );
+
+                    //Tax
+                    $this->accountJournalServices->DeleteJournal(
+                        $data->OUTPUT_TAX_ACCOUNT_ID ?? 0,
+                        $data->LOCATION_ID,
+                        $JOURNAL_NO,
+                        $data->CUSTOMER_ID,
+                        $this->ID,
+                        $this->salesReceiptServices->object_type_sales_receipt,
+                        $data->DATE,
+                        1,
+
+                    );
+
+                    $dataItem = $this->salesReceiptServices->ItemView($this->ID);
+                    foreach ($dataItem as $list) {
+                        $this->deleteItem($list->ID, $this->ID, $JOURNAL_NO);
+                    }
+                    $PP_ID = $this->patientPaymentServices->GetCustomerRef(false, $this->ID);
+
+
+                    if ($PP_ID > 0) {
+                        $this->patientPaymentServices->CustomerRef($PP_ID, false, 0);
+                    }
+                    $this->salesReceiptServices->Delete($this->ID);
+                    DB::commit();
+                }
+            }
+
+
+            return Redirect::route('customerssales_receipt')->with('message', 'Successfully deleted.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            $errorMessage = 'Error occurred: ' . $e->getMessage();
+            session()->flash('error', $errorMessage);
+        }
+    }
+    public function deleteItem(int $Id, int $SALES_RECEIPT_ID, int $JOURNAL_NO)
+    {
+
+        $sr = $this->salesReceiptServices->get($SALES_RECEIPT_ID);
+        if ($sr) {
+            $srItem = $this->salesReceiptServices->ItemGet($Id, $SALES_RECEIPT_ID, );
+            if ($srItem) {
+                // Inventory
+                $this->itemInventoryServices->InventoryModify(
+                    $srItem->ITEM_ID,
+                    $sr->LOCATION_ID,
+                    $Id,
+                    $this->salesReceiptServices->document_type_id,
+                    $sr->DATE,
+                    0,
+                    0,
+                    0
+                );
+
+                // INCOME_ACCOUNT_ID
+
+                if ($srItem->INCOME_ACCOUNT_ID) {
+                    $this->accountJournalServices->DeleteJournal(
+                        $srItem->INCOME_ACCOUNT_ID,
+                        $sr->LOCATION_ID,
+                        $JOURNAL_NO,
+                        $srItem->ITEM_ID,
+                        $Id,
+                        $this->salesReceiptServices->object_type_sales_receipt_items,
+                        $sr->DATE,
+                        1,
+
+                    );
+                }
+
+                // COGS_ACCOUNT_ID
+                if ($srItem->COGS_ACCOUNT_ID) {
+                    $this->accountJournalServices->DeleteJournal(
+                        $srItem->COGS_ACCOUNT_ID,
+                        $sr->LOCATION_ID,
+                        $JOURNAL_NO,
+                        $srItem->ITEM_ID,
+                        $Id,
+                        $this->salesReceiptServices->object_type_sales_receipt_items,
+                        $sr->DATE,
+                        0,
+                    );
+                }
+
+                // ASSET_ACCOUNT_ID
+                if ($srItem->ASSET_ACCOUNT_ID) {
+                    $this->accountJournalServices->DeleteJournal(
+                        $srItem->ASSET_ACCOUNT_ID,
+                        $sr->LOCATION_ID,
+                        $JOURNAL_NO,
+                        $srItem->ITEM_ID,
+                        $Id,
+                        $this->salesReceiptServices->object_type_sales_receipt_items,
+                        $sr->DATE,
+                        1,
+
+                    );
+                }
+            }
         }
     }
     public function render()

@@ -168,7 +168,15 @@
                                                 </button>
                                             @endcan
                                         @endif
-
+                                        @if ($STATUS == 16)
+                                            @can('customer.invoice.delete')
+                                                <button type="button" wire:click='delete()'
+                                                    class="btn btn-sm btn-danger"
+                                                    wire:confirm="Are you sure you want to delete?">
+                                                    <i class="fa fa-trash" aria-hidden="true"></i> Delete
+                                                </button>
+                                            @endcan
+                                        @endif
 
 
                                     </div>
@@ -179,7 +187,6 @@
                                                     class="btn btn-sm btn-warning">
                                                     <i class="fa fa-file-text-o" aria-hidden="true"></i> Journal
                                                 </button>
-
                                                 </button>
                                                 @can('customer.invoice.create')
                                                     <a id="new" title="Create"
@@ -188,7 +195,6 @@
                                                     </a>
                                                 @endcan
                                             @endif
-
                                         @endif
                                     </div>
                                 </div>

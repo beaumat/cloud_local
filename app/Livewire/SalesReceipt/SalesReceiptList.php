@@ -127,7 +127,7 @@ class SalesReceiptList extends Component
             DB::beginTransaction();
             $data = $this->salesReceiptServices->get($SR_ID);
             if ($data) {
-                if ($data->STATUS == 15) {
+                if ($data->STATUS == 15  || $data->STATUS == 16) {
                     $JOURNAL_NO = $this->accountJournalServices->getRecord(
                         $this->salesReceiptServices->object_type_sales_receipt,
                         $SR_ID
