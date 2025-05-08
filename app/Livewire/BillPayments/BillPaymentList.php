@@ -48,7 +48,7 @@ class BillPaymentList extends Component
     public function deleteJournal(object $data, int $id)
     {
 
-        $JOURNAL_NO  = (int) $this->accountJournalServices->getRecord($this->billPaymentServices->object_type_check, $id);
+        $JOURNAL_NO = (int) $this->accountJournalServices->getRecord($this->billPaymentServices->object_type_check, $id);
         $billData = $this->billPaymentServices->billPaymentBills($id);
 
         foreach ($billData as $list) {
@@ -96,7 +96,7 @@ class BillPaymentList extends Component
             if ($data->STATUS == 0 || $data->STATUS == 16) {
                 DB::beginTransaction();
                 try {
-                    if ($data->STATUS  == 16) {
+                    if ($data->STATUS == 16) {
                         $this->deleteJournal($data, $id);
                     }
                     $billList = $this->billPaymentServices->billPaymentBills($id);

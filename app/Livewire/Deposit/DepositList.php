@@ -24,7 +24,7 @@ class DepositList extends Component
     private $userServices;
     private $locationServices;
     private $accountJournalServices;
-    public function boot(DepositServices $depositServices, LocationServices $locationServices, UserServices $userServices,AccountJournalServices $accountJournalServices)
+    public function boot(DepositServices $depositServices, LocationServices $locationServices, UserServices $userServices, AccountJournalServices $accountJournalServices)
     {
         $this->depositServices = $depositServices;
         $this->locationServices = $locationServices;
@@ -36,19 +36,53 @@ class DepositList extends Component
         $this->locationList = $this->locationServices->getList();
         $this->locationid = $this->userServices->getLocationDefault();
     }
-    public function deleteJournal($data) {
-        
+    public function deleteJournal($data)
+    {
+        $JOURNAL_NO = (int) $this->accountJournalServices->getRecord($this->depositServices->object_type_deposit, $data->ID);
+        $fundData = $this->depositServices->FundList($data->ID);
+
+        foreach ($fundData as $list) {
+
+            $this->accountJournalServices->DeleteJournal(
+                $list->ACCOUNT_ID,
+                $data->LOCATION_ID,
+                $JOURNAL_NO,
+                $list->RECEIVED_FROM_ID,
+                $list->ID,
+                $this->depositServices->object_type_deposit_fund,
+                $data->DATE,
+                1
+            );
+        }
+
+        $this->accountJournalServices->DeleteJournal(
+            $data->BANK_ACCOUNT_ID,
+            $data->LOCATION_ID,
+            $JOURNAL_NO,
+            0,
+            $data->ID,
+            $this->depositServices->object_type_deposit,
+            $data->DATE,
+            0
+        );
+
     }
     public function delete($id)
     {
-        $dataMain = $this->depositServices->Get($id);
+        $data = $this->depositServices->Get($id);
 
-        if (!$dataMain) {
+        if (!$data) {
             return;
         }
 
         DB::beginTransaction();
         try {
+
+            if ($data->STATUS == 15 || $data->STATUS == 16) {
+                $this->deleteJournal($data);
+            }
+
+
 
 
             $fundlist = $this->depositServices->FundList($id);
@@ -59,7 +93,6 @@ class DepositList extends Component
 
             $this->depositServices->Delete($id);
             DB::commit();
-
             session()->flash('message', 'Successfully deleted.');
         } catch (\Exception $e) {
             DB::rollBack();
