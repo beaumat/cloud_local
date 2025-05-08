@@ -122,11 +122,6 @@
                                     <div class="text-right col-6 col-md-6">
                                         @if ($STATUS == 15)
                                             @can('banking.deposit.print')
-                                                {{-- <a target='_BLANK'
-                                                    href="{{ route('companypull_out_print', ['id' => $ID]) }}"
-                                                    type="button" class="btn btn-sm btn-dark">
-                                                    <i class="fa fa-print" aria-hidden="true"></i> Print
-                                                </a> --}}
                                                 <button type="button" wire:click='OpenJournal()'
                                                     class="btn btn-sm btn-warning">
                                                     <i class="fa fa-file-text-o" aria-hidden="true"></i> Journal

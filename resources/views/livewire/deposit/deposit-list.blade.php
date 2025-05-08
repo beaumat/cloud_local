@@ -56,9 +56,9 @@
                                         <th class="col-1">Date</th>
                                         <th class="col-2">Bank Account</th>
                                         <th class="col-1">Amount</th>
-                                        <th class="col-1">Location</th>
                                         <th class="col-4">Notes</th>
                                         <th class="col-1">Status</th>
+                                        <th class="col-1">Location</th>
                                         <th class="text-center col-1">
                                             <a href="{{ route('bankingdeposit_create') }}"
                                                 class="btn btn-xs btn-success w-100 text-xs">
@@ -78,19 +78,27 @@
                                             <td> {{ date('m/d/Y', strtotime($list->DATE)) }}</td>
                                             <td> {{ $list->ACCOUNT_NAME }}</td>
                                             <td class="text-right"> {{ number_format($list->AMOUNT, 2) }}</td>
-                                            <td> {{ $list->LOCATION_NAME }}</td>
+
                                             <td>{{ $list->NOTES }}</td>
                                             <td> {{ $list->STATUS }}</td>
+                                            <td> {{ $list->LOCATION_NAME }}</td>
                                             <td class="text-center">
                                                 <a href="{{ route('bankingdeposit_edit', ['id' => $list->ID]) }}"
                                                     class="btn btn-primary btn-xs">
                                                     <i class="fas fa-eye" aria-hidden="true"></i>
                                                 </a>
-                                                <button wire:click='delete({{ $list->ID }})'
-                                                    wire:confirm="Are you sure you want to delete this?"
-                                                    class="btn btn-xs btn-danger">
-                                                    <i class="fas fa-trash" aria-hidden="true"></i>
-                                                </button>
+                                                @can('banking.deposit.delete')
+                                                    <button type="button" wire:click='delete({{ $list->ID }})'
+                                                        wire:confirm="Are you sure you want to delete this?"
+                                                        class="btn btn-xs btn-danger">
+                                                        <i class="fas fa-trash" aria-hidden="true"></i>
+                                                    </button>
+                                                @else
+                                                    <button type="button" disabled class="btn btn-xs btn-secondary">
+                                                        <i class="fas fa-trash" aria-hidden="true"></i>
+                                                    </button>
+                                                @endcan
+
                                             </td>
                                         </tr>
                                     @endforeach

@@ -42,7 +42,6 @@ class DepositList extends Component
         $fundData = $this->depositServices->FundList($data->ID);
 
         foreach ($fundData as $list) {
-
             $this->accountJournalServices->DeleteJournal(
                 $list->ACCOUNT_ID,
                 $data->LOCATION_ID,
@@ -81,10 +80,6 @@ class DepositList extends Component
             if ($data->STATUS == 15 || $data->STATUS == 16) {
                 $this->deleteJournal($data);
             }
-
-
-
-
             $fundlist = $this->depositServices->FundList($id);
             foreach ($fundlist as $list) {
                 $this->depositServices->UndepositedUpdate($list->SOURCE_OBJECT_ID, $list->SOURCE_OBJECT_TYPE, 0);
