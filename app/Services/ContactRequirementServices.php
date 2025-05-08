@@ -31,25 +31,25 @@ class ContactRequirementServices
     {
         $ID = $this->objectService->ObjectNextID('CONTACT_REQUIREMENT');
         ContactRequirements::create([
-            'ID'                => $ID,
-            'CONTACT_ID'        => $CONTACT_ID,
-            'REQUIREMENT_ID'    => $REQUIREMENT_ID
+            'ID' => $ID,
+            'CONTACT_ID' => $CONTACT_ID,
+            'REQUIREMENT_ID' => $REQUIREMENT_ID
         ]);
     }
     public function UpdateIsComplete(int $ID, bool $VALUE)
     {
         ContactRequirements::where('ID', $ID)
             ->update([
-                'IS_COMPLETE'       => $VALUE,
-                'DATE_COMPLETED'    => $VALUE ? $this->dateServices->NowDate() : null,
-                'NOT_APPLICABLE'    => false
+                'IS_COMPLETE' => $VALUE,
+                'DATE_COMPLETED' => $VALUE ? $this->dateServices->NowDate() : null,
+                'NOT_APPLICABLE' => false
             ]);
     }
     public function UpdateNotApplicable(int $ID, bool $VALUE)
     {
         ContactRequirements::where('ID', $ID)
             ->update([
-                'IS_COMPLETE' =>  false,
+                'IS_COMPLETE' => false,
                 'DATE_COMPLETED' => null,
                 'NOT_APPLICABLE' => $VALUE
             ]);
@@ -58,7 +58,7 @@ class ContactRequirementServices
     {
         ContactRequirements::where('ID', $ID)
             ->update([
-                'IS_COMPLETE' =>  $IS_COMPLETE,
+                'IS_COMPLETE' => $IS_COMPLETE,
                 'DATE_COMPLETED' => $IS_COMPLETE ? $this->dateServices->NowDate() : null,
                 'NOT_APPLICABLE' => $NOT_APPLICABLE
             ]);
@@ -95,7 +95,7 @@ class ContactRequirementServices
             ->update([
                 'FILE_NAME' => $FILE_NAME,
                 'FILE_PATH' => $FILE_PATH,
-            
+
             ]);
     }
     public function UpdateRemoveFile(int $ID)
@@ -114,4 +114,21 @@ class ContactRequirementServices
                 'FILE_CONFIRM_DATE' => Carbon::now()
             ]);
     }
-}
+    public function pdpIsComplete(int $CONTACT_ID)
+    {
+        return ContactRequirements::where('IS_COMPLETE', 1)
+            ->where('CONTACT_ID', $CONTACT_ID)
+            ->where('REQUIREMENT_ID', 10)
+            ->exists();
+
+    }
+    public function pdpIsUploaded($CONTACT_ID)
+    {
+        return ContactRequirements::where('IS_COMPLETE', 1)
+            ->where('CONTACT_ID', $CONTACT_ID)
+            ->where('REQUIREMENT_ID', 10)
+            ->whereNotNull('FILE_NAME')
+            ->whereNotNull('FILE_PATH')
+            ->exists();
+    }
+} 

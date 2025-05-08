@@ -218,9 +218,6 @@
                                                 </button>
                                             @endcan
                                         @endif
-
-
-
                                     </div>
                                     <div class="text-right col-6 col-md-6">
                                         @if ($STATUS != 16)

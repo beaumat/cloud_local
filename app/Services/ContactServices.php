@@ -12,7 +12,8 @@ class ContactServices
 {
 	use WithPagination;
 	private $objectService;
-	public function __construct(ObjectServices $objectService)
+	private $contactRequirementServices;
+	public function __construct(ObjectServices $objectService,ContactRequirementServices $contactRequirementServices	)
 	{
 		$this->objectService = $objectService;
 	}
@@ -714,4 +715,21 @@ class ContactServices
 				]
 			);
 	}
+
+	public function PatientIsRestricted(int $CONTACT_ID): bool
+	{
+		$result = Contacts::where('ID', '=', $CONTACT_ID)
+			->where('TYPE', '=', 3)
+			->first();
+
+		if ($result) {
+
+
+			return true;
+		}
+
+		return false;
+
+	}
+
 }
