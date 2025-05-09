@@ -477,9 +477,8 @@ class ItemInventoryServices
 
             if ($COST == 0) {
                 $COST = (float) $this->priceLevelLineServices->GetCostByLocation($LOCATION_ID, $ITEM_ID);
-                if (100000000 < $COST) {
+                if (100000000 < $COST || 0 > $COST) {
                     $COST = 0;
-
                 }
             }
 
@@ -771,6 +770,7 @@ class ItemInventoryServices
             ->orderBy('item_inventory.SOURCE_REF_DATE', 'asc')
             ->orderBy('item_inventory.ID', 'asc')
             ->get();
+
         $IS_FIRST = true;
         $RUNNING_BALANCE = 0.0;
         foreach ($dataList as $list) {
