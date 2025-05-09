@@ -111,6 +111,10 @@ class ItemInventoryServices
 
             $ENDING_QUANTITY = $PREV_END_QTY + $QUANTITY;
             $ENDING_COST = $PREV_END_COST * $ENDING_QUANTITY;
+            if ($ENDING_COST > 100000000) {
+                $ENDING_COST = 0;
+
+            }
             $data->update(['QUANTITY' => $QUANTITY, 'ENDING_QUANTITY' => $ENDING_QUANTITY, 'ENDING_COST' => $this->numberServices->doubleNumber($ENDING_COST)]);
             $this->fixList($ITEM_ID, $LOCATION_ID, $SOURCE_REF_DATE, $ID, $ENDING_QUANTITY);
         }
@@ -473,6 +477,10 @@ class ItemInventoryServices
 
             if ($COST == 0) {
                 $COST = (float) $this->priceLevelLineServices->GetCostByLocation($LOCATION_ID, $ITEM_ID);
+                if (100000000 < $COST) {
+                    $COST = 0;
+
+                }
             }
 
 
@@ -806,14 +814,14 @@ class ItemInventoryServices
                     ->where('LOCATION_ID', '=', $LOCATION_ID)
                     ->where("SOURCE_REF_TYPE", '=', $SOURCE_REF_TYPE)
                     ->where('SOURCE_REF_ID', '=', $list->ID);
-            
-            if ($data->exists()) {
-                $data->update([
-                    'SOURCE_REF_DATE' => $NEW_DATE
-                ]);
-            }
 
-        }
+                if ($data->exists()) {
+                    $data->update([
+                        'SOURCE_REF_DATE' => $NEW_DATE
+                    ]);
+                }
+
+            }
 
             return true;
         } catch (\Throwable $th) {

@@ -160,8 +160,6 @@ class DepositFormDetail extends Component
 
         DB::beginTransaction();
         try {
-
-
             if ($this->STATUS == 16) {
                 $JOURNAL_NO = $this->accountJournalServices->getRecord(
                     $this->depositServices->object_type_deposit_fund,

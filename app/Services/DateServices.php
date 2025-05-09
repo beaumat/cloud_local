@@ -7,7 +7,8 @@ use DateTime;
 
 class DateServices
 {
-   public function isValidDateFormat($date, $format = 'Y-m-d') {
+    public function isValidDateFormat($date, $format = 'Y-m-d')
+    {
         $d = DateTime::createFromFormat($format, $date);
         return $d && $d->format($format) === $date;
     }
@@ -47,6 +48,10 @@ class DateServices
     public function NextDate()
     {
         return Carbon::now()->addDay()->format('Y-m-d'); // Tomorrow's date
+    }
+    public function BackDate()
+    {
+        return Carbon::now()->subDay()->format('Y-m-d');
     }
     public function Now()
     {

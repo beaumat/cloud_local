@@ -98,6 +98,7 @@ use App\Livewire\StockTransfer\StockTransferForm;
 use App\Livewire\StockTransfer\StockTransferList;
 use App\Livewire\TaxCredit\TaxCreditForm;
 use App\Livewire\TaxCredit\TaxCreditList;
+use App\Livewire\TestPage;
 use App\Livewire\WithHoldingTax\WithHoldingTaxList;
 use Illuminate\Support\Facades\Route;
 use App\Livewire\InventoryAdjustmentTypePage\InventoryAdjustmentTypeForm;
@@ -213,11 +214,13 @@ Route::get('/', function () {
     }
     return redirect()->route('login');
 });
+Route::get('/test', TestPage::class)->name('testpage');
+Route::get('/test/{id}', TestPage::class)->name('testpage_id');
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', Dashboard::class)->name('dashboard');
-    Route::prefix('/patients')->name('patients')->group(function () {
 
+    Route::prefix('/patients')->name('patients')->group(function () {
         Route::prefix('/schedules')->group(function () {
             Route::get('/', SchedulerList::class)->name('schedules')->middleware(['permission:patient.schedule.view']);
             Route::get('/setup', SchedulerForm::class)->name('schedules_setup')->middleware(['permission:patient.schedule.modify']);

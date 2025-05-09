@@ -1611,6 +1611,7 @@ class HemoServices
                 'hemodialysis.DATE',
                 'hemodialysis.LOCATION_ID',
                 'hemodialysis.CUSTOMER_ID'
+
             ])
             ->join('item', 'item.ID', '=', 'hemodialysis_items.ITEM_ID')
             ->join('hemodialysis', 'hemodialysis.ID', '=', 'hemodialysis_items.HEMO_ID')
