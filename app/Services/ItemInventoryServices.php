@@ -111,7 +111,7 @@ class ItemInventoryServices
 
             $ENDING_QUANTITY = $PREV_END_QTY + $QUANTITY;
             $ENDING_COST = $PREV_END_COST * $ENDING_QUANTITY;
-            if ($ENDING_COST > 100000000) {
+            if ($ENDING_COST > 100000000 || $ENDING_COST < 0) {
                 $ENDING_COST = 0;
 
             }
