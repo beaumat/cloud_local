@@ -568,6 +568,10 @@ class ItemInventoryServices
                         $ENDING_COST = (float) $ENDING_UNIT_COST * $ENDING_QUANTITY;
                     }
 
+                    if ($ENDING_COST < 0) {
+                        $ENDING_COST = 0;
+                    }
+
                     $data = ItemInventory::where('ITEM_ID', '=', $ITEM_ID)
                         ->where('LOCATION_ID', '=', $LOCATION_ID)
                         ->where('SOURCE_REF_TYPE', '=', $SOURCE_REF_TYPE)
