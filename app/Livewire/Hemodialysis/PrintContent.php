@@ -353,8 +353,8 @@ class PrintContent extends Component
             $this->DIALSATE_K = $data->DIALSATE_K ?? '';
             $this->DIALSATE_C = $data->DIALSATE_C ?? '';
             $this->DRY_WEIGHT_VALUE = $data->DRY_WEIGHT ?? '';
-            $this->RML = $this->dateServices->isValidDateFormat($data->RML) ? date('m/d/Y', strtotime($data->RML)) : $data->RML;
-            $this->HEPA_PROFILE = $this->dateServices->isValidDateFormat($data->HEPA_PROFILE) ? date('m/d/Y', strtotime($data->HEPA_PROFILE)) : $data->HEPA_PROFILE;
+            $this->RML = $this->dateServices->isValidDateFormat($data->RML) ? date('m/d/Y', strtotime($data->RML)) : $data->RML ?? '';
+            $this->HEPA_PROFILE = $this->dateServices->isValidDateFormat($data->HEPA_PROFILE) ? date('m/d/Y', strtotime($data->HEPA_PROFILE)) : $data->HEPA_PROFILE ?? '';
 
             $this->SE_COUNT = 0;
             $this->SE_PARTS = str_split($this->SE_DETAILS, 40);
