@@ -339,7 +339,6 @@ class BillingForm extends Component
                 $data = $this->billingServices->Get($this->ID);
                 if ($data) {
                     if ($this->STATUS == 16) {
-
                         // possible having change date
                         $JNO = (int) $this->accountJournalServices->getRecord($this->billingServices->object_type_map_bill, $this->ID);
 
@@ -374,6 +373,7 @@ class BillingForm extends Component
                         }
                     }
                 }
+                
                 $this->getTax();
                 $this->billingServices->Update(
                     $this->ID,
