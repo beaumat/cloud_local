@@ -151,7 +151,7 @@ class InventoryAdjustmentServices
         $data = $this->Get($INVENTORY_ADJUSTMENT_ID);
         if ($data) {
             $dataList =  $this->itemInventoryServices->getEndingLastOutPutAdjustment($ITEM_ID, $data->LOCATION_ID, $data->DATE, $REF_ID);
-
+                dd($dataList);
             $ENDING_QUANTITY = (float) $dataList['ENDING_QUANTITY'];
             $ENDING_COST = (float) $dataList['ENDING_COST'];
             $QTY = (float) $MUST_QTY - $ENDING_QUANTITY;
@@ -196,7 +196,7 @@ class InventoryAdjustmentServices
         $TOTAL_COST = $QUANTITY * $UNIT_COST;
         $QTY =  $QUANTITY * $UNIT_BASE_QUANTITY;
         $data = $this->GET_DIFF($INVENTORY_ADJUSTMENT_ID,  $ITEM_ID, $QTY, $TOTAL_COST, $ID);
-
+      
         InventoryAdjustmentItems::where('ID','=', $ID)
             ->where('ITEM_ID', '=', $ITEM_ID)
             ->where('INVENTORY_ADJUSTMENT_ID', '=', $INVENTORY_ADJUSTMENT_ID)

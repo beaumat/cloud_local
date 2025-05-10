@@ -328,7 +328,9 @@ class ItemInventoryServices
                 'SEQUENCE_NO',
                 'ENDING_QUANTITY',
                 'ENDING_UNIT_COST',
-                'ENDING_COST'
+                'ENDING_COST',
+                'SOURCE_REF_TYPE',
+                'SOURCE_REF_ID'
             ])
             ->where('ITEM_ID', '=', $ITEM_ID)
             ->where('LOCATION_ID', '=', $LOCATION_ID)
@@ -341,7 +343,7 @@ class ItemInventoryServices
             ->orderBy('ID', 'desc')
             ->limit(1)
             ->first();
-
+// here
         if ($data) {
             return [
                 'ID' => $data->ID,
