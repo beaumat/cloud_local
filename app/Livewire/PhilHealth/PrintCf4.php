@@ -169,7 +169,7 @@ class PrintCf4 extends Component
                 }
                 $contact = $this->contactServices->get($data->CONTACT_ID, 3);
                 if ($contact) {
-                    $this->LOCATION_ID = $contact->LOCATION_ID;
+                    // $this->LOCATION_ID = $contact->LOCATION_ID;
                     $locData = $this->locationServices->get($this->LOCATION_ID);
 
                     if ($locData) {
