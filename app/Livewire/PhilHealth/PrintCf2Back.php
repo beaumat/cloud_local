@@ -269,7 +269,7 @@ class PrintCf2Back extends Component
 
                 if ($contact) {
 
-                    $this->LOCATION_ID = $contact->LOCATION_ID;
+    
                     $locData = $this->locationServices->get($this->LOCATION_ID);
 
                     if ($locData) {
