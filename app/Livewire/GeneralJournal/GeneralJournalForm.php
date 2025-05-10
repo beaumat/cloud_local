@@ -157,7 +157,8 @@ class GeneralJournalForm extends Component
                     $this->LOCATION_ID,
                     $this->ADJUSTING_ENTRY,
                     $this->NOTES,
-                    $this->CONTACT_ID
+                    $this->CONTACT_ID,
+                    $this->DATE
                 );
                 session()->flash('message', 'Successfully updated');
             }

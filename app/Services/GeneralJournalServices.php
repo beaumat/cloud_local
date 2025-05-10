@@ -30,16 +30,16 @@ class GeneralJournalServices
         $isLocRef = boolval($this->systemSettingServices->GetValue('IncRefNoByLocation'));
 
         GeneralJournal::create([
-            'ID'                => $ID,
-            'DATE'              => $DATE,
-            'RECORDED_ON'       => $this->dateServices->Now(),
-            'CODE'              => $CODE !== '' ? $CODE : $this->object->GetSequence($OBJECT_TYPE, $isLocRef ? $LOCATION_ID : null),
-            'LOCATION_ID'       => $LOCATION_ID,
-            'ADJUSTING_ENTRY'   => $ADJUSTING_ENTRY,
-            'NOTES'             => $NOTES,
-            'STATUS'            => 0,
-            'STRATUS_DATE'      => $this->dateServices->NowDate(),
-            'CONTACT_ID'        => $CONTACT_ID > 0 ? $CONTACT_ID : null
+            'ID' => $ID,
+            'DATE' => $DATE,
+            'RECORDED_ON' => $this->dateServices->Now(),
+            'CODE' => $CODE !== '' ? $CODE : $this->object->GetSequence($OBJECT_TYPE, $isLocRef ? $LOCATION_ID : null),
+            'LOCATION_ID' => $LOCATION_ID,
+            'ADJUSTING_ENTRY' => $ADJUSTING_ENTRY,
+            'NOTES' => $NOTES,
+            'STATUS' => 0,
+            'STRATUS_DATE' => $this->dateServices->NowDate(),
+            'CONTACT_ID' => $CONTACT_ID > 0 ? $CONTACT_ID : null
         ]);
 
         return $ID;
@@ -48,19 +48,20 @@ class GeneralJournalServices
     {
         GeneralJournal::where('ID', $ID)
             ->update([
-                'STATUS'        => $STATUS,
-                'STATUS_DATE'   => $this->dateServices->NowDate()
+                'STATUS' => $STATUS,
+                'STATUS_DATE' => $this->dateServices->NowDate()
             ]);
     }
-    public function Update(int $ID, string $CODE, int $LOCATION_ID, bool $ADJUSTING_ENTRY, string $NOTES, int $CONTACT_ID = 0)
+    public function Update(int $ID, string $CODE, int $LOCATION_ID, bool $ADJUSTING_ENTRY, string $NOTES, int $CONTACT_ID = 0, string $DATE)
     {
         GeneralJournal::where('ID', '=', $ID)
             ->where('LOCATION_ID', '=', $LOCATION_ID)
             ->update([
-                'CODE'              => $CODE,
-                'ADJUSTING_ENTRY'   => $ADJUSTING_ENTRY,
-                'NOTES'             => $NOTES,
-                'CONTACT_ID'        => $CONTACT_ID > 0 ? $CONTACT_ID : null
+                'CODE' => $CODE,
+                'ADJUSTING_ENTRY' => $ADJUSTING_ENTRY,
+                'NOTES' => $NOTES,
+                'CONTACT_ID' => $CONTACT_ID > 0 ? $CONTACT_ID : null,
+                'DATE' => $DATE
             ]);
     }
     public function Delete(int $ID)
@@ -123,16 +124,16 @@ class GeneralJournalServices
         $LINE_NO = (int) $this->getLine($GENERAL_JOURNAL_ID) + 1;
 
         GeneralJournalDetails::create([
-            'ID'                        => $ID,
-            'GENERAL_JOURNAL_ID'        => $GENERAL_JOURNAL_ID,
-            'LINE_NO'                   => $LINE_NO,
-            'ACCOUNT_ID'                => $ACCOUNT_ID,
-            'ENTRY_TYPE'                => $ENTRY_TYPE,
-            'DEBIT'                     => $DEBIT,
-            'CREDIT'                    => $CREDIT,
-            'AMOUNT'                    => $ENTRY_TYPE == 0 ? $DEBIT : $CREDIT,
-            'NOTES'                     => $NOTES,
-            'CLASS_ID'                  => $CLASS_ID > 0 ? $CLASS_ID : null
+            'ID' => $ID,
+            'GENERAL_JOURNAL_ID' => $GENERAL_JOURNAL_ID,
+            'LINE_NO' => $LINE_NO,
+            'ACCOUNT_ID' => $ACCOUNT_ID,
+            'ENTRY_TYPE' => $ENTRY_TYPE,
+            'DEBIT' => $DEBIT,
+            'CREDIT' => $CREDIT,
+            'AMOUNT' => $ENTRY_TYPE == 0 ? $DEBIT : $CREDIT,
+            'NOTES' => $NOTES,
+            'CLASS_ID' => $CLASS_ID > 0 ? $CLASS_ID : null
         ]);
 
         return $ID;
@@ -149,12 +150,12 @@ class GeneralJournalServices
             ->where('GENERAL_JOURNAL_ID', $GENERAL_JOURNAL_ID)
             ->where('ACCOUNT_ID', $ACCOUNT_ID)
             ->update([
-                'ENTRY_TYPE'        => $ENTRY_TYPE,
-                'DEBIT'             => $DEBIT,
-                'CREDIT'            => $CREDIT,
-                'AMOUNT'            => $ENTRY_TYPE == 0 ? $DEBIT : $CREDIT,
-                'NOTES'             => $NOTES,
-                'CLASS_ID'          => $CLASS_ID > 0 ? $CLASS_ID : null
+                'ENTRY_TYPE' => $ENTRY_TYPE,
+                'DEBIT' => $DEBIT,
+                'CREDIT' => $CREDIT,
+                'AMOUNT' => $ENTRY_TYPE == 0 ? $DEBIT : $CREDIT,
+                'NOTES' => $NOTES,
+                'CLASS_ID' => $CLASS_ID > 0 ? $CLASS_ID : null
             ]);
     }
     public function DeleteDetails(int $ID)
@@ -205,8 +206,8 @@ class GeneralJournalServices
 
         if ($result) {
             return [
-                'TOTAL_DEBIT'   => $result->TOTAL_DEBIT,
-                'TOTAL_CREDIT'  => $result->TOTAL_CREDIT,
+                'TOTAL_DEBIT' => $result->TOTAL_DEBIT,
+                'TOTAL_CREDIT' => $result->TOTAL_CREDIT,
             ];
         }
 
@@ -247,7 +248,7 @@ class GeneralJournalServices
     }
     public function getListTemplete()
     {
-        $result =  GeneralJournalDetailsTemp::query()
+        $result = GeneralJournalDetailsTemp::query()
             ->select([
                 'general_journal_details_temp.ID',
                 'general_journal_details_temp.ACCOUNT_ID',
@@ -267,7 +268,7 @@ class GeneralJournalServices
                 $GENERAL_JOURNAL_ID,
                 $list['ACCOUNT_ID'],
                 (float) $list['DEBIT'],
-                (float)$list['CREDIT'],
+                (float) $list['CREDIT'],
                 $list['NOTES'],
                 0
             );
