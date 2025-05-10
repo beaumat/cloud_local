@@ -159,7 +159,6 @@ class InventoryAdjustmentForm extends Component
     }
     public function mount($id = null)
     {
-
         if (is_numeric($id)) {
             $data = $this->inventoryAdjustmentServices->Get($id);
             if ($data) {
@@ -171,7 +170,6 @@ class InventoryAdjustmentForm extends Component
             $errorMessage = 'Error occurred: Record not found. ';
             return Redirect::route('companyinventory_adjustment')->with('error', $errorMessage);
         }
-
         $this->LoadDropdown();
         $this->Modify = true;
         $this->ID = 0;
@@ -298,7 +296,6 @@ class InventoryAdjustmentForm extends Component
         session()->forget('message');
         session()->forget('error');
     }
-
     public function render()
     {
         return view('livewire.inventory-adjustment.inventory-adjustment-form');

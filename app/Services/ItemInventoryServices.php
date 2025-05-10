@@ -549,13 +549,15 @@ class ItemInventoryServices
                     $endingData = $this->getEndingLastOutPutAdjustment($ITEM_ID, $LOCATION_ID, $SOURCE_REF_DATE, $SOURCE_REF_ID);
                     $SEQUENCE_NO = (int) $endingData['SEQUENCE_NO'];
                     $ENDING_UNIT_COST = (float) $COST;
-
                     if ($gotCOST) {
                         $ENDING_COST = (float) $COST * $ENDING_QUANTITY;
                     } else {
                         $ENDING_COST = (float) $ENDING_UNIT_COST * $ENDING_QUANTITY;
                     }
 
+                    if ($ENDING_COST < 0 || $ENDING_COST > 100000000) {
+                        $ENDING_COST = 0;
+                    }
 
                     $this->Store(
                         $PREVIOUS_ID,
@@ -584,7 +586,7 @@ class ItemInventoryServices
                         $ENDING_COST = (float) $ENDING_UNIT_COST * $ENDING_QUANTITY;
                     }
 
-                    if ($ENDING_COST < 0) {
+                    if ($ENDING_COST < 0 || $ENDING_COST > 100000000) {
                         $ENDING_COST = 0;
                     }
 
