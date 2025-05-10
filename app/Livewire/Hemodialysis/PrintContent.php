@@ -3,6 +3,7 @@
 namespace App\Livewire\Hemodialysis;
 
 use App\Services\ContactServices;
+use App\Services\DateServices;
 use App\Services\HemoServices;
 use App\Services\LocationServices;
 use App\Services\PatientDoctorServices;
@@ -61,7 +62,7 @@ class PrintContent extends Component
 
     public string $SE_DETAILS;
     public string $SO_DETAILS;
-   
+
     public int $BFR;
     public int $DFR;
     public int $DURATION;
@@ -165,21 +166,24 @@ class PrintContent extends Component
     public $SO_PARTS = [];
     public int $SE_COUNT = 0;
     public int $SO_COUNT = 0;
-    public bool $OTHER_SIGN = false;    
+    public bool $OTHER_SIGN = false;
     public string $REPORT_HEADER_1;
     public string $LOGO_FILE = '';
     private $patientDoctorServices;
     private $locationServices;
+    private $dateServices;
     public function boot(
         HemoServices $hemoServices,
         ContactServices $contactServices,
         PatientDoctorServices $patientDoctorServices,
-        LocationServices $locationServices
+        LocationServices $locationServices,
+        DateServices $dateServices
     ) {
         $this->hemoServices = $hemoServices;
         $this->contactServices = $contactServices;
         $this->patientDoctorServices = $patientDoctorServices;
         $this->locationServices = $locationServices;
+        $this->dateServices = $dateServices;
     }
     public function getPreviousTreatment()
     {
@@ -248,7 +252,7 @@ class PrintContent extends Component
             $this->DB_STANDARD_HCOA = $data->DB_STANDARD_HCOA ?? false;
             $this->DB_ACID = $data->DB_ACID ?? false;
 
-            $this->SC_MACHINE_TEST  = $data->SC_MACHINE_TEST ?? false;
+            $this->SC_MACHINE_TEST = $data->SC_MACHINE_TEST ?? false;
             $this->SC_SECURED_CONNECTIONS = $data->SC_SECURED_CONNECTIONS ?? false;
             $this->SC_SALINE_LINE_DOUBLE_CLAMP = $data->SC_SALINE_LINE_DOUBLE_CLAMP ?? false;
             $this->SC_CONDUCTIVITY = $data->SC_CONDUCTIVITY ?? '';
@@ -337,7 +341,7 @@ class PrintContent extends Component
             $this->CUSTOMER_ID = $data->CUSTOMER_ID;
             $this->LOCATION_ID = $data->LOCATION_ID;
             $this->SE_DETAILS = $data->SE_DETAILS ?? '';
-            $this->SO_DETAILS =  $data->SO_DETAILS ?? '';
+            $this->SO_DETAILS = $data->SO_DETAILS ?? '';
             $this->BFR = $data->BFR ?? '';
             $this->DFR = $data->DFR ?? '';
             $this->DURATION = $data->DURATION ?? 0;
@@ -345,20 +349,20 @@ class PrintContent extends Component
             $this->HEPARIN = $data->HEPARIN ?? '';
             $this->REUSE_NO = $data->REUSE_NO ?? '';
             $this->FLUSHING = $data->FLUSHING ?? '';
-            $this->DIALSATE_N =  $data->DIALSATE_N ?? '';
+            $this->DIALSATE_N = $data->DIALSATE_N ?? '';
             $this->DIALSATE_K = $data->DIALSATE_K ?? '';
             $this->DIALSATE_C = $data->DIALSATE_C ?? '';
             $this->DRY_WEIGHT_VALUE = $data->DRY_WEIGHT ?? '';
-            $this->RML = $data->RML ?? '';
-            $this->HEPA_PROFILE = $data->HEPA_PROFILE ?? '';
-            
+            $this->RML = $this->dateServices->isValidDateFormat($data->RML) ? date('m/d/Y', strtotime($data->RML)) : $data->RML;
+            $this->HEPA_PROFILE = $this->dateServices->isValidDateFormat($data->HEPA_PROFILE) ? date('m/d/Y', strtotime($data->HEPA_PROFILE)) : $data->HEPA_PROFILE;
+
             $this->SE_COUNT = 0;
             $this->SE_PARTS = str_split($this->SE_DETAILS, 40);
 
             $this->SO_COUNT = 0;
             $this->SO_PARTS = str_split($this->SO_DETAILS, 40);
 
-      
+
 
             $this->getPreviousTreatment();
 
@@ -371,12 +375,12 @@ class PrintContent extends Component
             $dataPatient = $this->contactServices->get($this->CUSTOMER_ID, 3);
             if ($dataPatient) {
                 $this->DIAGNOSIS = $dataPatient->FINAL_DIAGNOSIS ?? '';
-                $this->ADD_NO_TREATMENT  = is_numeric($dataPatient->CUSTOM_FIELD2) ? $dataPatient->CUSTOM_FIELD2 : 0;
+                $this->ADD_NO_TREATMENT = is_numeric($dataPatient->CUSTOM_FIELD2) ? $dataPatient->CUSTOM_FIELD2 : 0;
             }
 
-            $this->NO_OF_TREATMENT = $this->hemoServices->GetNoTreatment($this->CUSTOMER_ID, $this->LOCATION_ID, $this->DATE) +  $this->ADD_NO_TREATMENT;
+            $this->NO_OF_TREATMENT = $this->hemoServices->GetNoTreatment($this->CUSTOMER_ID, $this->LOCATION_ID, $this->DATE) + $this->ADD_NO_TREATMENT;
 
-            $locData =  $this->locationServices->get($this->LOCATION_ID);
+            $locData = $this->locationServices->get($this->LOCATION_ID);
             if ($locData) {
                 $this->REPORT_HEADER_1 = $locData->REPORT_HEADER_1 ?? '';
                 $this->LOGO_FILE = $locData->LOGO_FILE ?? '';

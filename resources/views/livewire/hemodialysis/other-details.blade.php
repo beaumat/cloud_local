@@ -8,7 +8,6 @@
                 <div class="card-body p-2">
                     @livewire('alert-layout', ['errors' => $errors->any() ? $errors->all() : '', 'message' => session('message'), 'error' => session('error')])
                     <div class="form-group row">
-
                         <div class="col-md-12">
                             <div class="card">
                                 <div class="card-body p-2">
@@ -148,6 +147,66 @@
                             </div>
 
                             <div class="col-md-8 ">
+                                <div class='form-group p-2'>
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <div class="form-group ">
+                                                <div class="row">
+                                                    <div class="col-6 text-right">
+                                                        <strong class="text-xs">RML :</strong>
+                                                    </div>
+                                                    <div class="col-6">
+                                                        <input type='date' class='text-xs w-100' wire:model='RML'
+                                                            @if ($Modify == false) disabled @endif />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="form-group ">
+                                                <div class="row">
+                                                    <div class="col-6 text-right">
+                                                        <strong class="text-xs">HEPA PROFILE :</strong>
+                                                    </div>
+                                                    <div class="col-6">
+                                                        <input type='date' class='text-xs w-100'
+                                                            wire:model='HEPA_PROFILE'
+                                                            @if ($Modify == false) disabled @endif />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <div class="form-group ">
+                                                <div class="row">
+                                                    <div class="col-6 text-right">
+                                                        <strong class="text-xs text-danger">NEXT RML :</strong>
+                                                    </div>
+                                                    <div class="col-6">
+                                                        <input type='date' class='text-xs w-100' wire:model='NEXT_RML'
+                                                            @if ($Modify == false) disabled @endif />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="form-group ">
+                                                <div class="row">
+                                                    <div class="col-6 text-right">
+                                                        <strong class="text-xs text-danger">NEXT HEPA P. :</strong>
+                                                    </div>
+                                                    <div class="col-6">
+                                                        <input type='date' class='text-xs w-100'
+                                                            wire:model='NEXT_HEPA_PROFILE'
+                                                            @if ($Modify == false) disabled @endif />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="row">
                                     @can('full-treatment-sheet')
                                         <div class="col-md-8">
@@ -270,6 +329,7 @@
 
                         </div>
                     </div>
+
                 </div>
             </section>
         </div>
@@ -384,7 +444,6 @@
                                                                     @if ($Modify == false) disabled @endif />
                                                             </div>
                                                         </div>
-
                                                     </div>
                                                 </div>
                                             </div>
@@ -872,6 +931,8 @@
                                             </div>
                                         </div>
                                     </div>
+
+
                                 </div>
                             </div>
                         </div>

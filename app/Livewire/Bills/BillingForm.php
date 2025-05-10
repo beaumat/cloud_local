@@ -190,7 +190,7 @@ class BillingForm extends Component
         $this->NOTES = $data->NOTES;
         $this->AMOUNT = $data->AMOUNT ?? 0;
         $this->BALANCE_DUE = $data->BALANCE_DUE ?? 0;
-        $this->PAYMENT = $this->AMOUNT  - $this->BALANCE_DUE;
+        $this->PAYMENT = $this->AMOUNT - $this->BALANCE_DUE;
         $this->STATUS = $data->STATUS;
         $this->INPUT_TAX_ID = $data->INPUT_TAX_ID > 0 ? $data->INPUT_TAX_ID : 0;
         $this->INPUT_TAX_RATE = $data->INPUT_TAX_RATE > 0 ? $data->INPUT_TAX_RATE : 0;
@@ -254,7 +254,7 @@ class BillingForm extends Component
         $this->NOTES = '';
         $this->AMOUNT = 0;
         $this->BALANCE_DUE = 0;
-        $this->PAYMENT = $this->AMOUNT  - $this->BALANCE_DUE;
+        $this->PAYMENT = $this->AMOUNT - $this->BALANCE_DUE;
         $this->STATUS = 0;
         $this->INPUT_TAX_ID = (int) $this->systemSettingServices->GetValue('InputTaxId');
         $this->INPUT_TAX_RATE = 0;
@@ -373,7 +373,7 @@ class BillingForm extends Component
                         }
                     }
                 }
-                
+
                 $this->getTax();
                 $this->billingServices->Update(
                     $this->ID,
@@ -422,7 +422,7 @@ class BillingForm extends Component
             $this->AMOUNT = $list['AMOUNT'];
             $this->BALANCE_DUE = $list['BALANCE_DUE'];
             $this->INPUT_TAX_AMOUNT = $list['TAX_AMOUNT'];
-            $this->PAYMENT = $this->AMOUNT  - $this->BALANCE_DUE;
+            $this->PAYMENT = $this->AMOUNT - $this->BALANCE_DUE;
         }
     }
     public function updateCancel()
@@ -447,10 +447,7 @@ class BillingForm extends Component
             $SOURCE_REF_TYPE = (int) $this->documentTypeServices->getId('Bill');
             $data = $this->billingServices->ItemInventory($this->ID);
             if ($data) {
-
-        
                 $noProblem = (bool) $this->itemInventoryServices->ChangeDate($data, $this->LOCATION_ID, $SOURCE_REF_TYPE, $this->DATE);
-
                 if ($noProblem == false) {
                     session()->flash('error', 'change date have problem');
                     return false;
@@ -577,16 +574,16 @@ class BillingForm extends Component
     public function getUnposted()
     {
         // if ($this->BALANCE_DUE == $this->AMOUNT) {
-            try {
-                DB::beginTransaction();
-                $this->billingServices->StatusUpdate($this->ID, 16);
-                DB::commit();
-                Redirect::route('vendorsbills_edit', $this->ID)->with('message', 'Successfully unposted');
-            } catch (\Throwable $th) {
-                DB::rollBack();
-                $errorMessage = 'Error occurred: ' . $th->getMessage();
-                session()->flash('error', $errorMessage);
-            }
+        try {
+            DB::beginTransaction();
+            $this->billingServices->StatusUpdate($this->ID, 16);
+            DB::commit();
+            Redirect::route('vendorsbills_edit', $this->ID)->with('message', 'Successfully unposted');
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            $errorMessage = 'Error occurred: ' . $th->getMessage();
+            session()->flash('error', $errorMessage);
+        }
         // } else {
         //     session()->flash('error', 'Bill cannot be unpost because a payment has already been inserted.');
         // }

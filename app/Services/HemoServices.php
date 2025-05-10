@@ -578,7 +578,9 @@ class HemoServices
                     'DIALSATE_N' => $data->DIALSATE_N ?? null,
                     'DIALSATE_K' => $data->DIALSATE_K ?? null,
                     'DIALSATE_C' => $data->DIALSATE_C ?? null,
-                    'DRY_WEIGHT' => $data->DRY_WEIGHT ?? null
+                    'DRY_WEIGHT' => $data->DRY_WEIGHT ?? null,
+                    'RML' => $data->NEXT_RML ?? null,
+                    'HEPA_PROFILE' => $data->NEXT_HEPA_PROFILE ?? null,
                 ]);
         }
     }
@@ -716,7 +718,11 @@ class HemoServices
         bool $POST_REGULAR,
         bool $POST_IRREGULAR,
         int $MACHINE_NO,
-        string $DRY_WEIGHT
+        string $DRY_WEIGHT,
+        string $RML,
+        string $HEPA_PROFILE,
+        string $NEXT_RML,
+        string $NEXT_HEPA_PROFILE
     ) {
         Hemodialysis::where('ID', $ID)
             ->update([
@@ -815,8 +821,10 @@ class HemoServices
                 'SC_RESIDUAL_TEST_NEGATIVE' => $SC_RESIDUAL_TEST_NEGATIVE,
                 'MACHINE_NO' => $MACHINE_NO,
                 'DRY_WEIGHT' => $DRY_WEIGHT,
-                'RML' => '',
-                'HEPA_PRIFLE' => ''
+                'RML' => $RML,
+                'HEPA_PROFILE' => $HEPA_PROFILE,
+                'NEXT_RML' => $NEXT_RML,
+                'NEXT_HEPA_PROFILE' => $NEXT_HEPA_PROFILE,
             ]);
     }
     public function UpdatedSpecialOrder(int $ID): bool

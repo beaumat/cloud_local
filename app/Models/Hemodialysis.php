@@ -144,7 +144,8 @@ class Hemodialysis extends Model
         'CVC_CLOTTED_V',
         'DRY_WEIGHT',
         'RML',
-        'HEPA_PROFILE'
-
+        'HEPA_PROFILE',
+        'NEXT_RML',
+        'NEXT_HEPA_PROFILE'
     ];
 }
