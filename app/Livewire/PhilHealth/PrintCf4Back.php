@@ -133,6 +133,7 @@ class PrintCf4Back extends Component
                 $this->DR_NAME = strtoupper($list->NAME);
                 return;
             }
+            
         } else {
             $this->makeTemp();
             $this->getMed(0);

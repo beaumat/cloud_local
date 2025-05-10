@@ -497,7 +497,11 @@ class HemoServices
                 'CVC_CLOTTED_V',
                 'AT_LEFT',
                 'EMPLOYEE_ID',
-                'DRY_WEIGHT'
+                'DRY_WEIGHT',
+                'RML',
+                'HEPA_PROFILE',
+                'NEXT_RML',
+                'NEXT_HEPA_PROFILE',
             ])
             ->leftJoin('contact as c', 'c.ID', '=', 'hemodialysis.CUSTOMER_ID')
             ->where('hemodialysis.ID', '=', $ID)
@@ -810,7 +814,9 @@ class HemoServices
                 'SC_DIALYSATE_TEMP' => $SC_DIALYSATE_TEMP,
                 'SC_RESIDUAL_TEST_NEGATIVE' => $SC_RESIDUAL_TEST_NEGATIVE,
                 'MACHINE_NO' => $MACHINE_NO,
-                'DRY_WEIGHT' => $DRY_WEIGHT
+                'DRY_WEIGHT' => $DRY_WEIGHT,
+                'RML' => '',
+                'HEPA_PRIFLE' => ''
             ]);
     }
     public function UpdatedSpecialOrder(int $ID): bool

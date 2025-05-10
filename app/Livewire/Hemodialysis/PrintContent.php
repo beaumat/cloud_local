@@ -157,6 +157,8 @@ class PrintContent extends Component
     public bool $POST_IRREGULAR;
     public string $DRY_WEIGHT_VALUE;
     public bool $DRY_WEIGHT = true;
+    public string $RML;
+    public string $HEPA_PROFILE;
     public $noteList = [];
 
     public $SE_PARTS = [];
@@ -216,12 +218,8 @@ class PrintContent extends Component
     public function mount()
     {
         $data = $this->hemoServices->GetFirst($this->HEMO_ID);
-
         if ($data) {
-
             $this->MACHINE_NO = $data->MACHINE_NO ?? 0;
-
-
             if (auth()->user()->can('full-treatment-sheet')) {
 
                 $emp = $this->contactServices->get($data->EMPLOYEE_ID ?? 0, 2);
@@ -351,11 +349,17 @@ class PrintContent extends Component
             $this->DIALSATE_K = $data->DIALSATE_K ?? '';
             $this->DIALSATE_C = $data->DIALSATE_C ?? '';
             $this->DRY_WEIGHT_VALUE = $data->DRY_WEIGHT ?? '';
+            $this->RML = $data->RML ?? '';
+            $this->HEPA_PROFILE = $data->HEPA_PROFILE ?? '';
+            
             $this->SE_COUNT = 0;
             $this->SE_PARTS = str_split($this->SE_DETAILS, 40);
 
             $this->SO_COUNT = 0;
             $this->SO_PARTS = str_split($this->SO_DETAILS, 40);
+
+      
+
             $this->getPreviousTreatment();
 
 
@@ -371,7 +375,6 @@ class PrintContent extends Component
             }
 
             $this->NO_OF_TREATMENT = $this->hemoServices->GetNoTreatment($this->CUSTOMER_ID, $this->LOCATION_ID, $this->DATE) +  $this->ADD_NO_TREATMENT;
-
 
             $locData =  $this->locationServices->get($this->LOCATION_ID);
             if ($locData) {

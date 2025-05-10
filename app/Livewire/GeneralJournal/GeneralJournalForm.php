@@ -24,7 +24,7 @@ class GeneralJournalForm extends Component
     public int $LOCATION_ID;
     public bool $ADJUSTING_ENTRY;
     public string $NOTES;
-    public  int $CONTACT_ID;
+    public int $CONTACT_ID;
     public $locationList = [];
     public $contactList = [];
     public bool $Modify;
@@ -57,7 +57,7 @@ class GeneralJournalForm extends Component
         $this->contactList = $this->contactServices->getListAllType();
     }
 
-   
+
     private function getInfo($data)
     {
         $this->ID = $data->ID;
@@ -93,7 +93,7 @@ class GeneralJournalForm extends Component
         $this->LOCATION_ID = $this->userServices->getLocationDefault();
         $this->ADJUSTING_ENTRY = false;
         $this->NOTES = '';
-        $this->CONTACT_ID  = 0;
+        $this->CONTACT_ID = 0;
         $this->STATUS = 0;
         $this->STATUS_DESCRIPTION = '';
     }
@@ -108,18 +108,18 @@ class GeneralJournalForm extends Component
         // 'CODE'          =>  $this->ID > 0 ? 'required|max:20|unique:general_journal,code,' . $this->ID : 'nullable',
         $this->validate(
             [
-                'CODE'          => 'nullable|max:20|unique:general_journal,code,' . ($this->ID > 0 ? $this->ID : 'NULL') . ',id',
-                'DATE'          => 'required',
-                'LOCATION_ID'   => 'required|exists:location,id',
-                'CONTACT_ID'    =>  $this->CONTACT_ID  > 0 ? 'exists:contact,id' : 'nullable',
+                'CODE' => 'nullable|max:20|unique:general_journal,code,' . ($this->ID > 0 ? $this->ID : 'NULL') . ',id',
+                'DATE' => 'required',
+                'LOCATION_ID' => 'required|exists:location,id',
+                'CONTACT_ID' => $this->CONTACT_ID > 0 ? 'exists:contact,id' : 'nullable',
 
             ],
             [],
             [
-                'CODE'          => 'Reference No.',
-                'DATE'          => 'Date',
-                'LOCATION_ID'   => 'Location',
-                'CONTACT_ID'    => 'Contact Name'
+                'CODE' => 'Reference No.',
+                'DATE' => 'Date',
+                'LOCATION_ID' => 'Location',
+                'CONTACT_ID' => 'Contact Name'
             ]
         );
 
@@ -139,6 +139,17 @@ class GeneralJournalForm extends Component
 
                 return Redirect::route('companygeneral_journal_edit', ['id' => $this->ID])->with('message', 'Successfully created');
             } else {
+
+                if ($this->STATUS == 16) {
+                    // possible having change date
+
+                    $generaljournal = $this->generalJournalServices->object_type_general_journal_details_id;
+                    $getFirstId = (int) $this->generalJournalServices->getFirstDetailsID($this->ID);
+                    $JNO = $this->accountJournalServices->getRecord($generaljournal, $getFirstId);
+                    if ($JNO > 0) {
+                        $this->accountJournalServices->updateObjectDate($JNO, $this->DATE);
+                    }
+                }
 
                 $this->generalJournalServices->Update(
                     $this->ID,
@@ -175,7 +186,7 @@ class GeneralJournalForm extends Component
             $generaljournal = $this->generalJournalServices->object_type_general_journal_details_id;
             $getFirstId = (int) $this->generalJournalServices->getFirstDetailsID($this->ID);
             $JOURNAL_NO = $this->accountJournalServices->getRecord($generaljournal, $getFirstId);
-            if ($JOURNAL_NO  == 0) {
+            if ($JOURNAL_NO == 0) {
                 $JOURNAL_NO = $this->accountJournalServices->getJournalNo($generaljournal, $getFirstId) + 1;
             }
 
@@ -248,7 +259,9 @@ class GeneralJournalForm extends Component
             session()->flash('error', $errorMessage);
         }
     }
-    public function print() {}
+    public function print()
+    {
+    }
     public function OpenJournal()
     {
         $FirstID = $this->generalJournalServices->getFirstDetailsID($this->ID);

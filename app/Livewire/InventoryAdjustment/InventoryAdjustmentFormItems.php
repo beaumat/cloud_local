@@ -125,7 +125,6 @@ class InventoryAdjustmentFormItems extends Component
             [
                 'ITEM_ID' => 'Item',
                 'QUANTITY' => 'Quantity',
-
             ]
         );
 
