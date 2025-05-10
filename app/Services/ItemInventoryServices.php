@@ -322,6 +322,15 @@ class ItemInventoryServices
     }
     public function getEndingLastOutPutAdjustment(int $ITEM_ID, int $LOCATION_ID, string $SOURCE_REF_DATE, int $REF_ID): array
     {
+
+        $isExists = (bool) DB::table('item_inventory')
+            ->where('ITEM_ID', '=', $ITEM_ID)
+            ->where('LOCATION_ID', '=', $LOCATION_ID)
+            ->where('SOURCE_REF_TYPE', '=', 6)
+            ->where('SOURCE_REF_DATE', '=', $SOURCE_REF_DATE)
+            ->where('SOURCE_REF_ID', '=', $REF_ID)
+            ->exists();
+
         $data = DB::table('item_inventory')
             ->select([
                 'ID',
@@ -335,23 +344,28 @@ class ItemInventoryServices
             ->where('ITEM_ID', '=', $ITEM_ID)
             ->where('LOCATION_ID', '=', $LOCATION_ID)
             ->where('SOURCE_REF_DATE', '<=', $SOURCE_REF_DATE)
-            ->whereNotExists(function ($query) use (&$REF_ID) {
-                $query->where('SOURCE_REF_TYPE', '=', '6')
-                    ->where('SOURCE_REF_ID', '=', $REF_ID);
-            })
             ->orderBy('SOURCE_REF_DATE', 'desc')
             ->orderBy('ID', 'desc')
-            ->limit(1)
-            ->first();
-// here
-        if ($data) {
-            return [
-                'ID' => $data->ID,
-                'SEQUENCE_NO' => $data->SEQUENCE_NO,
-                'ENDING_QUANTITY' => $data->ENDING_QUANTITY,
-                'ENDING_UNIT_COST' => $data->ENDING_UNIT_COST,
-                'ENDING_COST' => $this->numberServices->doubleNumber($data->ENDING_COST),
-            ];
+            ->get();
+
+        $foundIt = $isExists == true ? false : true;
+
+        foreach ($data as $list) {
+            if ($foundIt == false) {
+                if ($list->SOURCE_REF_TYPE == 6 && $list->SOURCE_REF_ID == $REF_ID) {
+                    $foundIt = true;
+                }
+            } else {
+
+                return [
+                    'ID' => $list->ID,
+                    'SEQUENCE_NO' => $list->SEQUENCE_NO,
+                    'ENDING_QUANTITY' => $list->ENDING_QUANTITY,
+                    'ENDING_UNIT_COST' => $list->ENDING_UNIT_COST,
+                    'ENDING_COST' => $this->numberServices->doubleNumber($list->ENDING_COST),
+                ];
+
+            }
         }
 
         return [
