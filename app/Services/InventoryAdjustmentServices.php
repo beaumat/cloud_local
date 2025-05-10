@@ -35,16 +35,16 @@ class InventoryAdjustmentServices
         $isLocRef = (bool) boolval($this->systemSettingServices->GetValue('IncRefNoByLocation'));
 
         InventoryAdjustment::create([
-            'ID'                    => $ID,
-            'RECORDED_ON'           => $this->dateServices->Now(),
-            'CODE'                  => $CODE !== '' ? $CODE : $this->object->GetSequence($OBJECT_TYPE, $isLocRef ? $LOCATION_ID : null),
-            'DATE'                  => $DATE,
-            'LOCATION_ID'           => $LOCATION_ID,
-            'ADJUSTMENT_TYPE_ID'    => $ADJUSTMENT_TYPE_ID,
-            'ACCOUNT_ID'            => $ACCOUNT_ID,
-            'NOTES'                 => $NOTES,
-            'STATUS'                => 0,
-            'STATUS_DATE'           => $this->dateServices->NowDate(),
+            'ID' => $ID,
+            'RECORDED_ON' => $this->dateServices->Now(),
+            'CODE' => $CODE !== '' ? $CODE : $this->object->GetSequence($OBJECT_TYPE, $isLocRef ? $LOCATION_ID : null),
+            'DATE' => $DATE,
+            'LOCATION_ID' => $LOCATION_ID,
+            'ADJUSTMENT_TYPE_ID' => $ADJUSTMENT_TYPE_ID,
+            'ACCOUNT_ID' => $ACCOUNT_ID,
+            'NOTES' => $NOTES,
+            'STATUS' => 0,
+            'STATUS_DATE' => $this->dateServices->NowDate(),
         ]);
 
         return $ID;
@@ -53,8 +53,8 @@ class InventoryAdjustmentServices
     {
         InventoryAdjustment::where('ID', $ID)
             ->update([
-                'STATUS'        => $STATUS,
-                'STATUS_DATE'   => $this->dateServices->NowDate()
+                'STATUS' => $STATUS,
+                'STATUS_DATE' => $this->dateServices->NowDate()
             ]);
     }
     public function Update(int $ID, string $CODE, int $LOCATION_ID, int $ADJUSTMENT_TYPE_ID, int $ACCOUNT_ID, string $NOTES)
@@ -62,10 +62,10 @@ class InventoryAdjustmentServices
         InventoryAdjustment::where('ID', $ID)
             ->where('LOCATION_ID', $LOCATION_ID)
             ->update([
-                'CODE'                  => $CODE,
-                'ADJUSTMENT_TYPE_ID'    => $ADJUSTMENT_TYPE_ID,
-                'ACCOUNT_ID'            => $ACCOUNT_ID,
-                'NOTES'                 => $NOTES
+                'CODE' => $CODE,
+                'ADJUSTMENT_TYPE_ID' => $ADJUSTMENT_TYPE_ID,
+                'ACCOUNT_ID' => $ACCOUNT_ID,
+                'NOTES' => $NOTES
             ]);
     }
     public function Delete(int $ID)
@@ -139,7 +139,7 @@ class InventoryAdjustmentServices
             if ($data->DATE == $DATE) {
                 return false;
             }
-            return  true;
+            return true;
         }
 
         return false;
@@ -150,7 +150,7 @@ class InventoryAdjustmentServices
     {
         $data = $this->Get($INVENTORY_ADJUSTMENT_ID);
         if ($data) {
-            $dataList =  $this->itemInventoryServices->getEndingLastOutPutAdjustment($ITEM_ID, $data->LOCATION_ID, $data->DATE, $REF_ID);
+            $dataList = $this->itemInventoryServices->getEndingLastOutPutAdjustment($ITEM_ID, $data->LOCATION_ID, $data->DATE, $REF_ID);
 
             $ENDING_QUANTITY = (float) $dataList['ENDING_QUANTITY'];
             $ENDING_COST = (float) $dataList['ENDING_COST'];
@@ -159,7 +159,7 @@ class InventoryAdjustmentServices
             $COST = (float) $totalNewCost - $ENDING_COST;
             return [
                 'QTY_DIFFERENCE' => $QTY,
-                'DIFF_COST'  => $COST,
+                'DIFF_COST' => $COST,
 
             ];
         }
@@ -170,23 +170,23 @@ class InventoryAdjustmentServices
         $ID = (int) $this->object->ObjectNextID('INVENTORY_ADJUSTMENT_ITEMS');
         $LINE_NO = (int) $this->getLine($INVENTORY_ADJUSTMENT_ID) + 1;
         $TOTAL_COST = $QUANTITY * $UNIT_COST;
-        $QTY =  $QUANTITY * $UNIT_BASE_QUANTITY;
-        $data = $this->GET_DIFF($INVENTORY_ADJUSTMENT_ID,  $ITEM_ID, $QTY, $TOTAL_COST, $ID);
+        $QTY = $QUANTITY * $UNIT_BASE_QUANTITY;
+        $data = $this->GET_DIFF($INVENTORY_ADJUSTMENT_ID, $ITEM_ID, $QTY, $TOTAL_COST, $ID);
 
         InventoryAdjustmentItems::create([
-            'ID'                        => $ID,
-            'INVENTORY_ADJUSTMENT_ID'   => $INVENTORY_ADJUSTMENT_ID,
-            'LINE_NO'                   => $LINE_NO,
-            'ITEM_ID'                   => $ITEM_ID,
-            'QUANTITY'                  => $QUANTITY,
-            'UNIT_COST'                 => $UNIT_COST,
-            'QTY_DIFFERENCE'            => $data['QTY_DIFFERENCE'],
-            'VALUE_DIFFERENCE'          => $data['DIFF_COST'],
-            'ASSET_ACCOUNT_ID'          => $ASSET_ACCOUNT_ID,
-            'ASSET_VALUE'               => $TOTAL_COST,
-            'BATCH_ID'                  => $BATCH_ID > 0 ? $BATCH_ID : null,
-            'UNIT_ID'                   => $UNIT_ID > 0 ? $UNIT_ID : null,
-            'UNIT_BASE_QUANTITY'        => $UNIT_BASE_QUANTITY
+            'ID' => $ID,
+            'INVENTORY_ADJUSTMENT_ID' => $INVENTORY_ADJUSTMENT_ID,
+            'LINE_NO' => $LINE_NO,
+            'ITEM_ID' => $ITEM_ID,
+            'QUANTITY' => $QUANTITY,
+            'UNIT_COST' => $UNIT_COST,
+            'QTY_DIFFERENCE' => $data['QTY_DIFFERENCE'],
+            'VALUE_DIFFERENCE' => $data['DIFF_COST'],
+            'ASSET_ACCOUNT_ID' => $ASSET_ACCOUNT_ID,
+            'ASSET_VALUE' => $TOTAL_COST,
+            'BATCH_ID' => $BATCH_ID > 0 ? $BATCH_ID : null,
+            'UNIT_ID' => $UNIT_ID > 0 ? $UNIT_ID : null,
+            'UNIT_BASE_QUANTITY' => $UNIT_BASE_QUANTITY
         ]);
     }
     public function ItemUpdate(int $ID, int $INVENTORY_ADJUSTMENT_ID, int $ITEM_ID, float $QUANTITY, float $UNIT_COST, int $BATCH_ID, int $UNIT_ID, float $UNIT_BASE_QUANTITY)
@@ -194,25 +194,31 @@ class InventoryAdjustmentServices
 
 
         $TOTAL_COST = $QUANTITY * $UNIT_COST;
-        $QTY =  $QUANTITY * $UNIT_BASE_QUANTITY;
-        $data = $this->GET_DIFF($INVENTORY_ADJUSTMENT_ID,  $ITEM_ID, $QTY, $TOTAL_COST, $ID);
-       
-        InventoryAdjustmentItems::where('ID','=', $ID)
+        $QTY = $QUANTITY * $UNIT_BASE_QUANTITY;
+        $data = $this->GET_DIFF(
+            $INVENTORY_ADJUSTMENT_ID,
+            $ITEM_ID,
+            $QTY,
+            $TOTAL_COST,
+            $ID
+        );
+
+        InventoryAdjustmentItems::where('ID', '=', $ID)
             ->where('ITEM_ID', '=', $ITEM_ID)
             ->where('INVENTORY_ADJUSTMENT_ID', '=', $INVENTORY_ADJUSTMENT_ID)
             ->update([
-                'QUANTITY'              => $QUANTITY,
-                'UNIT_COST'             => $UNIT_COST,
-                'QTY_DIFFERENCE'        => $data['QTY_DIFFERENCE'],
-                'VALUE_DIFFERENCE'      => $data['DIFF_COST'],
-                'ASSET_VALUE'           => $TOTAL_COST,
-                'BATCH_ID'              => $BATCH_ID > 0 ? $BATCH_ID : null,
-                'UNIT_ID'               => $UNIT_ID > 0 ? $UNIT_ID : null,
-                'UNIT_BASE_QUANTITY'    => $UNIT_BASE_QUANTITY
+                'QUANTITY' => $QUANTITY,
+                'UNIT_COST' => $UNIT_COST,
+                'QTY_DIFFERENCE' => $data['QTY_DIFFERENCE'],
+                'VALUE_DIFFERENCE' => $data['DIFF_COST'],
+                'ASSET_VALUE' => $TOTAL_COST,
+                'BATCH_ID' => $BATCH_ID > 0 ? $BATCH_ID : null,
+                'UNIT_ID' => $UNIT_ID > 0 ? $UNIT_ID : null,
+                'UNIT_BASE_QUANTITY' => $UNIT_BASE_QUANTITY
             ]);
     }
     public function ItemDelete(int $ID, int $INVENTORY_ADJUSTMENT_ID)
-    {   
+    {
 
         InventoryAdjustmentItems::where('ID', '=', $ID)
             ->where('INVENTORY_ADJUSTMENT_ID', '=', $INVENTORY_ADJUSTMENT_ID)
