@@ -220,7 +220,6 @@ class InventoryAdjustmentForm extends Component
             );
 
             if ($this->ID == 0) {
-
                 $this->ACCOUNT_ID = $this->inventoryAdjustmentTypeServices->getAccountId($this->ADJUSTMENT_TYPE_ID);
                 if ($this->ACCOUNT_ID == 0) {
                     session()->flash('error', 'Adjustment type account not found.');

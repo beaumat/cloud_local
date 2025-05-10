@@ -246,6 +246,7 @@ class PrintCf4 extends Component
                     $this->POST_BLOOD_PRESSURE2 =  $hemo->POST_BLOOD_PRESSURE2;
                 }
             }
+            return;
         }
 
         if ($PATIENT_ID > 0) {

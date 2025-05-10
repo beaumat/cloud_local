@@ -151,7 +151,7 @@ class PrintCf4Back extends Component
         for ($i = 0; $i < 15; $i++) {
             $this->dateList[$i] = [
                 'DATE' => "",
-                'DOCTOR_ORDER' => " " 
+                'DOCTOR_ORDER' => " "
             ];
         }
     }
