@@ -26,7 +26,6 @@ use Livewire\WithFileUploads;
 class HemoForm extends Component
 {
 
-
     use WithFileUploads;
     public string $FILE_NAME;
     public string $FILE_PATH;
@@ -197,7 +196,9 @@ class HemoForm extends Component
                 if ($data->STATUS_ID <> 4) {
                     $isRestrik = (bool) $this->hemoServices->IsRestrictedFromUnposted($data->DATE, $data->LOCATION_ID);
                     if ($isRestrik) {
-                        if (!Auth::user()->can('allowed-view-treatment')) {
+                        /** @var \App\Models\User $user */
+                        $user = auth()->user();
+                        if (!$user->can('allowed-view-treatment')) {
                             return Redirect::route('patientshemo')->with('error', 'Invalid action. Please complete the unposted(U) treatment before proceeding.');
 
                         }
@@ -508,8 +509,6 @@ class HemoForm extends Component
     {
         $this->hemoServices->StatusUpdate($this->ID, 3);
         $this->scheduleServices->StatusUpdate($this->CUSTOMER_ID, $this->DATE, $this->LOCATION_ID, 3);
-
-
         return Redirect::route('patientshemo_edit', ['id' => $this->ID])->with('message', 'Successfully void');
     }
     public function getUnposted()
@@ -525,10 +524,6 @@ class HemoForm extends Component
     }
     public function getPosted()
     {
-
-
-        //checking if got priming.
-
         $isHavePriming = (bool) $this->serviceChargeServices->isHavePriming($this->DATE, $this->LOCATION_ID, $this->CUSTOMER_ID);
         if ($isHavePriming) {
             $this->PostStatus();

@@ -22,12 +22,13 @@ class HemoMachineForm extends Component
     public $typeList = [];
     public $locationList = [];
     private $hemodialysisMachineServices;
-
     private $userServices;
-
     private $locationServices;
-    public function boot(HemodialysisMachineServices $hemodialysisMachineServices, UserServices $userServices, LocationServices $locationServices)
-    {
+    public function boot(
+        HemodialysisMachineServices $hemodialysisMachineServices,
+        UserServices $userServices,
+        LocationServices $locationServices
+    ) {
         $this->hemodialysisMachineServices = $hemodialysisMachineServices;
         $this->userServices = $userServices;
         $this->locationServices = $locationServices;
@@ -80,10 +81,23 @@ class HemoMachineForm extends Component
         try {
 
             if ($this->ID == 0) {
-                $this->ID = $this->hemodialysisMachineServices->Store($this->CODE, $this->TYPE, $this->DESCRIPTION, $this->LOCATION_ID, $this->CAPACITY);
+                $this->ID = $this->hemodialysisMachineServices->Store(
+                    $this->CODE,
+                    $this->TYPE,
+                    $this->DESCRIPTION,
+                    $this->LOCATION_ID,
+                    $this->CAPACITY
+                );
                 return Redirect::route('maintenanceothershemo_machine_edit', ['id' => $this->ID])->with('message', 'Successfully created');
             } else {
-                $this->hemodialysisMachineServices->Update($this->ID, $this->CODE, $this->TYPE, $this->DESCRIPTION, $this->LOCATION_ID, $this->CAPACITY);
+                $this->hemodialysisMachineServices->Update(
+                    $this->ID,
+                    $this->CODE,
+                    $this->TYPE,
+                    $this->DESCRIPTION,
+                    $this->LOCATION_ID,
+                    $this->CAPACITY
+                );
                 return Redirect::route('maintenanceothershemo_machine')->with('message', 'Successfully updated');
             }
         } catch (\Exception $e) {

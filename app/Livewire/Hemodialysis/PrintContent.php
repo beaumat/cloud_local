@@ -224,7 +224,10 @@ class PrintContent extends Component
         $data = $this->hemoServices->GetFirst($this->HEMO_ID);
         if ($data) {
             $this->MACHINE_NO = $data->MACHINE_NO ?? 0;
-            if (auth()->user()->can('full-treatment-sheet')) {
+            
+            /** @var \App\Models\User $user */
+            $user = auth()->user();
+            if ($user->can('full-treatment-sheet')) {
 
                 $emp = $this->contactServices->get($data->EMPLOYEE_ID ?? 0, 2);
                 if ($emp) {

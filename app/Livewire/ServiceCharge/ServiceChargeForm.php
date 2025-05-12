@@ -184,7 +184,6 @@ class ServiceChargeForm extends Component
                 $this->LoadDropdown(true);
                 $this->getInfo($data);
                 $this->Modify = false;
-
                 $this->HEMO_ID = $this->hemoServices->GetHemoID($data->DATE, $data->PATIENT_ID, $data->LOCATION_ID);
                 return;
             }

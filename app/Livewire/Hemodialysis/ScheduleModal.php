@@ -4,11 +4,8 @@ namespace App\Livewire\Hemodialysis;
 
 use App\Services\DateServices;
 use App\Services\HemoServices;
-use App\Services\ItemTreatmentServices;
 use App\Services\ScheduleServices;
-use App\Services\ServiceChargeServices;
 use App\Services\ShiftServices;
-use App\Services\UnitOfMeasureServices;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Reactive;
@@ -31,25 +28,18 @@ class ScheduleModal extends Component
     public int $SHIFT_ID = 0;
     private $shiftServices;
     private $dateServices;
-    private $itemTreatmentServices;
-    private $serviceChargeServices;
-    private $unitOfMeasureServices;
+
+
     public function boot(
         ScheduleServices $scheduleServices,
         HemoServices $hemoServices,
         ShiftServices $shiftServices,
-        DateServices $dateServices,
-        ItemTreatmentServices $itemTreatmentServices,
-        ServiceChargeServices $serviceChargeServices,
-        UnitOfMeasureServices $unitOfMeasureServices
+        DateServices $dateServices
     ) {
         $this->scheduleServices = $scheduleServices;
         $this->hemoServices = $hemoServices;
         $this->shiftServices = $shiftServices;
         $this->dateServices = $dateServices;
-        $this->itemTreatmentServices = $itemTreatmentServices;
-        $this->serviceChargeServices = $serviceChargeServices;
-        $this->unitOfMeasureServices = $unitOfMeasureServices;
     }
 
     public function create()
@@ -65,11 +55,29 @@ class ScheduleModal extends Component
 
                         if (!$this->hemoServices->CheckingExistsThatDay($this->DATE, $data->CONTACT_ID, $this->LOCATION_ID)) {
                             DB::beginTransaction();
-                            $HEMO_ID = (int) $this->hemoServices->PreSave($this->DATE, "", $data->CONTACT_ID, $this->LOCATION_ID);
-                            $this->hemoServices->GetOtherDetailsDefault($HEMO_ID,  $data->CONTACT_ID, $this->DATE, $this->LOCATION_ID);
+                            $HEMO_ID = (int) $this->hemoServices->PreSave(
+                                $this->DATE,
+                                "",
+                                $data->CONTACT_ID,
+                                $this->LOCATION_ID
+                            );
+                            $this->hemoServices->GetOtherDetailsDefault(
+                                $HEMO_ID,
+                                $data->CONTACT_ID,
+                                $this->DATE,
+                                $this->LOCATION_ID
+                            );
 
-                            $NO = (int) $this->hemoServices->GetNoTreatment($data->CONTACT_ID, $this->LOCATION_ID, $this->DATE);
-                            $this->hemoServices->AutoDefaultItem($NO, $HEMO_ID, $this->LOCATION_ID);
+                            $NO = (int) $this->hemoServices->GetNoTreatment(
+                                $data->CONTACT_ID,
+                                $this->LOCATION_ID,
+                                $this->DATE
+                            );
+                            $this->hemoServices->AutoDefaultItem(
+                                $NO,
+                                $HEMO_ID,
+                                $this->LOCATION_ID
+                            );
 
                             if ($this->ids == "") {
                                 $this->ids = $HEMO_ID;
@@ -92,15 +100,10 @@ class ScheduleModal extends Component
         }
 
         if ($this->withBack) {
-            
             $url = route('patientshemo_print_front_back', ['id' => $this->ids]);
-
         } else {
-
             $url = route('patientshemo_print', ['id' => $this->ids]);
         }
-
-
         $this->dispatch('schedOpenNewTab', data: $url);
         $this->dispatch('refresh-list');
         $this->closeModal();
@@ -138,9 +141,7 @@ class ScheduleModal extends Component
     public function render()
     {
         $this->shiftList = $this->shiftServices->List();
-        
         $this->dataList = $this->scheduleServices->GetScheduleList($this->DATE, $this->LOCATION_ID, $this->SHIFT_ID);
-
         return view('livewire.hemodialysis.schedule-modal');
     }
 }
