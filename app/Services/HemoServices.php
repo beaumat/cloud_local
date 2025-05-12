@@ -2229,7 +2229,6 @@ class HemoServices
     {
 
         $NowYear = $this->dateServices->GetFirstDay_Year($DATE);
-
         $result = (int) Hemodialysis::where('CUSTOMER_ID', '=', $CUSTOMER_ID)
             ->where('LOCATION_ID', '=', $LOCATION_ID)
             ->whereYear('DATE', '=', $NowYear)
