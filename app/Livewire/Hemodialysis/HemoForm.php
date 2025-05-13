@@ -2,6 +2,8 @@
 
 namespace App\Livewire\Hemodialysis;
 
+use App\Models\AccountJournal;
+use App\Services\AccountJournalServices;
 use App\Services\ContactServices;
 use App\Services\DocumentTypeServices;
 use App\Services\HemoServices;
@@ -99,6 +101,7 @@ class HemoForm extends Component
     private $scheduleServices;
     private $patientDoctorServices;
     private $serviceChargeServices;
+    private $accountJournalServices;
     public function boot(
         HemoServices $hemoServices,
         ContactServices $contactServices,
@@ -111,7 +114,8 @@ class HemoForm extends Component
         UnitOfMeasureServices $unitOfMeasureServices,
         ScheduleServices $scheduleServices,
         PatientDoctorServices $patientDoctorServices,
-        ServiceChargeServices $serviceChargeServices
+        ServiceChargeServices $serviceChargeServices,
+        AccountJournalServices $accountJournalServices
     ) {
         $this->hemoServices = $hemoServices;
         $this->locationServices = $locationServices;
@@ -125,6 +129,7 @@ class HemoForm extends Component
         $this->scheduleServices = $scheduleServices;
         $this->patientDoctorServices = $patientDoctorServices;
         $this->serviceChargeServices = $serviceChargeServices;
+        $this->accountJournalServices = $accountJournalServices;    
     }
     public function getEmpName()
     {
@@ -496,8 +501,10 @@ class HemoForm extends Component
     private function executePosted(): bool
     {
         try {
-            $this->hemoServices->makeJournal($this->ID);
+
             $this->hemoServices->makeItemInventory($this->ID);
+            //    $this->hemoServices->makeJournal($this->ID);
+            $this->hemoServices->getMakeJournal($this->ID);
             return true;
         } catch (\Exception $e) {
             $errorMessage = 'Error occurred: ' . $e->getMessage();
@@ -619,6 +626,22 @@ class HemoForm extends Component
         $this->resetErrorBag();
         session()->forget('message');
         session()->forget('error');
+    }
+    public function openJournal()
+    {
+        $JOURNAL_NO = $this->accountJournalServices->getRecord(
+            $this->hemoServices->object_type_hemo,
+            $this->ID
+        );
+
+    
+        if ($JOURNAL_NO > 0) {
+            $data = ['JOURNAL_NO' => $JOURNAL_NO];
+            $this->dispatch('open-journal', result: $data);
+            return;
+        }
+
+        session()->flash('error', 'Journal entry not created');
     }
     public function render()
     {

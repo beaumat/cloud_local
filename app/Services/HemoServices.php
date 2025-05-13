@@ -2150,7 +2150,6 @@ class HemoServices
         if ($hemoData) {
             $itemList = $this->getItemInventory($HEMO_ID);
             if ($itemList) {
-
                 $this->itemInventoryServices->InventoryExecute(
                     $itemList,
                     $hemoData->LOCATION_ID,
@@ -2247,22 +2246,20 @@ class HemoServices
     private function getHemoJournalByItemCredit(int $HEMO_ID)
     {
         $exSQL = "select IFNULL(pll.CUSTOM_COST,0) from price_level_lines as pll inner join location as l on l.PRICE_LEVEL_ID =  pll.PRICE_LEVEL_ID where pll.ITEM_ID = hi.ITEM_ID and l.ID = h.LOCATION_ID";
-
         $result = HemoJournal::query()
             ->select([
-                'hemo_journal.DEBIT_ACCOUNT_ID',
-                'hemo_journal.CREDIT_ACCOUNT_ID',
-                'hi.ITEM_ID',
-                DB::raw("((($exSQL) * hi.UNIT_BASE_QUANTITY ) *  hi.QUANTITY ) as COST"),
-                'hi.ID as HEMO_ITEM_ID',
-                'h.LOCATION_ID'
+                'hi.ID',
+                'hemo_journal.CREDIT_ACCOUNT_ID as ACCOUNT_ID',
+                'hi.ITEM_ID as SUBSIDIARY_ID',
+                DB::raw("((($exSQL) * hi.UNIT_BASE_QUANTITY ) *  hi.QUANTITY ) as AMOUNT"),
+                DB::raw('1 as ENTRY_TYPE'),
             ])
             ->join('item_sub_class as s', 's.CLASS_ID', '=', 'hemo_journal.ITEM_CLASS_ID')
             ->join('item as i', 'i.SUB_CLASS_ID', '=', 's.ID')
             ->join('hemodialysis_items as hi', 'hi.ITEM_ID', '=', 'i.ID')
             ->join('hemodialysis as h', 'h.ID', '=', 'hi.HEMO_ID')
             ->where('hi.HEMO_ID', '=', $HEMO_ID)
-            ->where('hi.IS_POST', '=', true)
+            ->whereIn('i.TYPE', ['0', '1'])
             ->orderBy('hi.ID', 'asc')
             ->get();
 
@@ -2273,9 +2270,9 @@ class HemoServices
     private function getHemoJournalByItemDebit(int $HEMO_ID)
     {
         $exSQL = "select IFNULL(pll.CUSTOM_COST,0) from price_level_lines as pll inner join location as l on l.PRICE_LEVEL_ID =  pll.PRICE_LEVEL_ID where pll.ITEM_ID = hi.ITEM_ID and l.ID = h.LOCATION_ID";
-
         $result = HemoJournal::query()
             ->select([
+                'h.ID',
                 'hemo_journal.DEBIT_ACCOUNT_ID as ACCOUNT_ID',
                 DB::raw("SUM(((($exSQL) * hi.UNIT_BASE_QUANTITY ) *  hi.QUANTITY )) as AMOUNT"),
                 'h.CUSTOMER_ID as SUBSIDIARY_ID',
@@ -2286,10 +2283,12 @@ class HemoServices
             ->join('hemodialysis_items as hi', 'hi.ITEM_ID', '=', 'i.ID')
             ->join('hemodialysis as h', 'h.ID', '=', 'hi.HEMO_ID')
             ->where('hi.HEMO_ID', '=', $HEMO_ID)
-            ->where('hi.IS_POST', '=', true)
+            ->whereIn('i.TYPE', ['0', '1'])
             ->orderBy('hemo_journal.DEBIT_ACCOUNT_ID', 'asc')
             ->groupBy([
-                'hemo_journal.DEBIT_ACCOUNT_ID'
+                'h.ID',
+                'hemo_journal.DEBIT_ACCOUNT_ID',
+                'h.CUSTOMER_ID'
             ])
             ->get();
 
@@ -2298,29 +2297,83 @@ class HemoServices
     }
     public function getMakeJournal(int $HEMO_ID)
     {
+        $gotUpdate = false;
+        try {
+            $dataHemo = $this->get($HEMO_ID);
+            if ($dataHemo) {
+                $JOURNAL_NO = $this->accountJournalServices->getRecord($this->object_type_hemo, $HEMO_ID);
+                if ($JOURNAL_NO == 0) {
+                    $JOURNAL_NO = $this->accountJournalServices->getJournalNo($this->object_type_hemo, $HEMO_ID) + 1;
+                } else {
+                    // make adjustment
+                    $gotUpdate = true;
+                }
 
-        $dataHemo = $this->get($HEMO_ID);
-        if ($dataHemo) {
-            $JOURNAL_NO = $this->accountJournalServices->getRecord($this->object_type_hemo, $HEMO_ID);
-            if ($JOURNAL_NO == 0) {
-                $JOURNAL_NO = $this->accountJournalServices->getJournalNo($this->object_type_hemo, $HEMO_ID) + 1;
-            }
-            $resultDebit = $this->getHemoJournalByItemDebit($HEMO_ID);
-            foreach ($resultDebit as $list) {
 
-            }
 
-            $resultCredit = $this->getHemoJournalByItemCredit($HEMO_ID);
-            foreach ($resultCredit as $list) {
+
+
+                $resultDebit = $this->getHemoJournalByItemDebit($HEMO_ID);
+                if ($gotUpdate) {
+                    foreach ($resultDebit as $list) {
+                        $acctID = $this->accountServices->EXPENSE_ACCOUNT_ID;
+                        $this->accountJournalServices->updateAccount(
+                            $list->ID,
+                            $this->object_type_hemo,
+                            $dataHemo->DATE,
+                            $dataHemo->LOCATION_ID,
+                            $acctID,
+                            $list->ACCOUNT_ID,
+                        );
+                    }
+                }
                 $this->accountJournalServices->JournalExecute(
                     $JOURNAL_NO,
-                    $list,
+                    $resultDebit,
+                    $dataHemo->LOCATION_ID,
+                    $this->object_type_hemo,
+                    $dataHemo->DATE
+                );
+
+                $resultCredit = $this->getHemoJournalByItemCredit($HEMO_ID);
+                if ($gotUpdate) {
+                    foreach ($resultCredit as $list) {
+                        $acctID = 6;
+                        $this->accountJournalServices->updateAccount(
+                            $list->ID,
+                            $this->object_type_hemo_item,
+                            $dataHemo->DATE,
+                            $dataHemo->LOCATION_ID,
+                            $acctID,
+                            $list->ACCOUNT_ID,
+                        );
+                    }
+                }
+                
+                $this->accountJournalServices->JournalExecute(
+                    $JOURNAL_NO,
+                    $resultCredit,
                     $dataHemo->LOCATION_ID,
                     $this->object_type_hemo_item,
                     $dataHemo->DATE
                 );
+
+                $data = $this->accountJournalServices->getSumDebitCredit($JOURNAL_NO);
+                $debit_sum = (float) $data['DEBIT'];
+                $credit_sum = (float) $data['CREDIT'];
+
+                if ($debit_sum == $credit_sum) {
+                    return true;
+                }
+
+                return false;
+
             }
+        } catch (\Throwable $th) {
+            dd($th->getMessage());
+            return false;
         }
+
 
     }
 

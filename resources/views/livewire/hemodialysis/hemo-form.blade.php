@@ -144,6 +144,9 @@
                                             @endif
                                         @endcan
 
+
+                                        <button wire:click='openJournal()' name="btnJournal" type='button'
+                                            class="btn btn-sm btn-warning"> Journal</button>
                                     </div>
 
                                 </div>
