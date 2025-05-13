@@ -60,7 +60,7 @@ class TimerServices
     {
         DB::beginTransaction();
         try {
-            $this->hemoServices->makeJournal($HEMO_ID);
+            $this->hemoServices->getMakeJournal($HEMO_ID);
             $this->hemoServices->makeItemInventory($HEMO_ID);
             DB::commit();
         } catch (\Throwable $th) {
@@ -153,14 +153,14 @@ class TimerServices
                 if ($POST_WEIGHT == 0 || $POST_BLOOD_PRESSURE == 0 || $POST_BLOOD_PRESSURE2 == 0 || $POST_HEART_RATE == 0 || $POST_O2_SATURATION == 0 || empty($TIME_START) == true || empty($TIME_END) == true) {
                     if ($IS_INCOMPLETE == true || $IS_PF == true) {
                         $this->hemoServices->StatusUpdate($ID, 2); // POSTED
-                        $this->hemoServices->makeJournal($ID); // to journal
+                        $this->hemoServices->getMakeJournal($ID); // to journal
                         $this->hemoServices->makeItemInventory($ID); // item inventory
                     } else {
                         $this->hemoServices->StatusUpdate($ID, 4); // UNPOSTED
                     }
                 } else {
                     $this->hemoServices->StatusUpdate($ID, 2); // POSTED
-                    $this->hemoServices->makeJournal($ID); // to journal
+                    $this->hemoServices->getMakeJournal($ID); // to journal
                     $this->hemoServices->makeItemInventory($ID); // item inventory
                 }
                 DB::commit();

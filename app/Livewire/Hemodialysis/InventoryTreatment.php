@@ -332,7 +332,7 @@ class InventoryTreatment extends Component
     public function gotJournal()
     {
 
-        $this->hemoServices->makeJournal($this->HEMO_ID);
+        $this->hemoServices->getMakeJournal($this->HEMO_ID);
         $this->gotInventory();
 
     }

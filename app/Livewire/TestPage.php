@@ -41,7 +41,7 @@ class TestPage extends Component
     {
         DB::beginTransaction();
         try {
-            $this->hemoServices->makeJournal($HEMO_ID);
+            $this->hemoServices->getMakeJournal($HEMO_ID);
             $this->hemoServices->makeItemInventory($HEMO_ID);
             DB::commit();
 

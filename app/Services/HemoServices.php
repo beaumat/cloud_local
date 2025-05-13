@@ -2100,30 +2100,30 @@ class HemoServices
         return [];
     }
 
-    public function makeJournal(int $HEMO_ID)
-    {
+    // public function makeJournal(int $HEMO_ID)
+    // {
 
-        $dataHemo = $this->get($HEMO_ID);
-        if ($dataHemo) {
-            $JOURNAL_NO = $this->accountJournalServices->getRecord($this->object_type_hemo, $HEMO_ID);
-            if ($JOURNAL_NO == 0) {
-                $JOURNAL_NO = $this->accountJournalServices->getJournalNo($this->object_type_hemo, $HEMO_ID) + 1;
-            }
-            // Main Expenses
-            $mainHemo = $this->MainToJournalExpense($HEMO_ID);
-            $this->accountJournalServices->JournalExecute($JOURNAL_NO, $mainHemo, $dataHemo->LOCATION_ID, $this->object_type_hemo, $dataHemo->DATE);
-            // ASSET
-            $itemAsset = $this->ItemToJournalAsset($HEMO_ID);
-            $this->accountJournalServices->JournalExecute($JOURNAL_NO, $itemAsset, $dataHemo->LOCATION_ID, $this->object_type_hemo_item, $dataHemo->DATE);
-            $data = $this->accountJournalServices->getSumDebitCredit($JOURNAL_NO);
-            $debit_sum = (float) $data['DEBIT'];
-            $credit_sum = (float) $data['CREDIT'];
-            if ($debit_sum == $credit_sum) {
+    //     $dataHemo = $this->get($HEMO_ID);
+    //     if ($dataHemo) {
+    //         $JOURNAL_NO = $this->accountJournalServices->getRecord($this->object_type_hemo, $HEMO_ID);
+    //         if ($JOURNAL_NO == 0) {
+    //             $JOURNAL_NO = $this->accountJournalServices->getJournalNo($this->object_type_hemo, $HEMO_ID) + 1;
+    //         }
+    //         // Main Expenses
+    //         $mainHemo = $this->MainToJournalExpense($HEMO_ID);
+    //         $this->accountJournalServices->JournalExecute($JOURNAL_NO, $mainHemo, $dataHemo->LOCATION_ID, $this->object_type_hemo, $dataHemo->DATE);
+    //         // ASSET
+    //         $itemAsset = $this->ItemToJournalAsset($HEMO_ID);
+    //         $this->accountJournalServices->JournalExecute($JOURNAL_NO, $itemAsset, $dataHemo->LOCATION_ID, $this->object_type_hemo_item, $dataHemo->DATE);
+    //         $data = $this->accountJournalServices->getSumDebitCredit($JOURNAL_NO);
+    //         $debit_sum = (float) $data['DEBIT'];
+    //         $credit_sum = (float) $data['CREDIT'];
+    //         if ($debit_sum == $credit_sum) {
 
-                return;
-            }
-        }
-    }
+    //             return;
+    //         }
+    //     }
+    // }
     private function getItemInventory(int $HEMO_ID)
     {
         $exSQL = "select IFNULL(pll.CUSTOM_COST,0) from price_level_lines as pll inner join location as l on l.PRICE_LEVEL_ID =  pll.PRICE_LEVEL_ID where pll.ITEM_ID = hemodialysis_items.ITEM_ID and l.ID = h.LOCATION_ID";
@@ -2349,7 +2349,7 @@ class HemoServices
                         );
                     }
                 }
-                
+
                 $this->accountJournalServices->JournalExecute(
                     $JOURNAL_NO,
                     $resultCredit,
