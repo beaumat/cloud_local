@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Contacts;
 use App\Models\Hemodialysis;
 use App\Models\HemodialysisItems;
+use App\Models\HemoJournal;
 use App\Models\HemoNurseNotes;
 use App\Models\ItemSubClass;
 use App\Models\PhilhealthItemAdjustment;
@@ -381,8 +382,6 @@ class HemoServices
             'LAST_TIME' => ''
         ];
     }
-
-
     public function GetFirst(int $ID)
     {
         $result = Hemodialysis::query()
@@ -2193,7 +2192,6 @@ class HemoServices
 
         try {
             $NowYear = $this->dateServices->NowYear();
-
             $dataList = Hemodialysis::query()
                 ->select([
                     'ID',
@@ -2245,4 +2243,85 @@ class HemoServices
                 'CUSTOMER_ID' => $TRANSFER_CONTACT_ID
             ]);
     }
+
+    private function getHemoJournalByItemCredit(int $HEMO_ID)
+    {
+        $exSQL = "select IFNULL(pll.CUSTOM_COST,0) from price_level_lines as pll inner join location as l on l.PRICE_LEVEL_ID =  pll.PRICE_LEVEL_ID where pll.ITEM_ID = hi.ITEM_ID and l.ID = h.LOCATION_ID";
+
+        $result = HemoJournal::query()
+            ->select([
+                'hemo_journal.DEBIT_ACCOUNT_ID',
+                'hemo_journal.CREDIT_ACCOUNT_ID',
+                'hi.ITEM_ID',
+                DB::raw("((($exSQL) * hi.UNIT_BASE_QUANTITY ) *  hi.QUANTITY ) as COST"),
+                'hi.ID as HEMO_ITEM_ID',
+                'h.LOCATION_ID'
+            ])
+            ->join('item_sub_class as s', 's.CLASS_ID', '=', 'hemo_journal.ITEM_CLASS_ID')
+            ->join('item as i', 'i.SUB_CLASS_ID', '=', 's.ID')
+            ->join('hemodialysis_items as hi', 'hi.ITEM_ID', '=', 'i.ID')
+            ->join('hemodialysis as h', 'h.ID', '=', 'hi.HEMO_ID')
+            ->where('hi.HEMO_ID', '=', $HEMO_ID)
+            ->where('hi.IS_POST', '=', true)
+            ->orderBy('hi.ID', 'asc')
+            ->get();
+
+        return $result;
+
+    }
+
+    private function getHemoJournalByItemDebit(int $HEMO_ID)
+    {
+        $exSQL = "select IFNULL(pll.CUSTOM_COST,0) from price_level_lines as pll inner join location as l on l.PRICE_LEVEL_ID =  pll.PRICE_LEVEL_ID where pll.ITEM_ID = hi.ITEM_ID and l.ID = h.LOCATION_ID";
+
+        $result = HemoJournal::query()
+            ->select([
+                'hemo_journal.DEBIT_ACCOUNT_ID as ACCOUNT_ID',
+                DB::raw("SUM(((($exSQL) * hi.UNIT_BASE_QUANTITY ) *  hi.QUANTITY )) as AMOUNT"),
+                'h.CUSTOMER_ID as SUBSIDIARY_ID',
+                DB::raw('0 as ENTRY_TYPE'),
+            ])
+            ->join('item_sub_class as s', 's.CLASS_ID', '=', 'hemo_journal.ITEM_CLASS_ID')
+            ->join('item as i', 'i.SUB_CLASS_ID', '=', 's.ID')
+            ->join('hemodialysis_items as hi', 'hi.ITEM_ID', '=', 'i.ID')
+            ->join('hemodialysis as h', 'h.ID', '=', 'hi.HEMO_ID')
+            ->where('hi.HEMO_ID', '=', $HEMO_ID)
+            ->where('hi.IS_POST', '=', true)
+            ->orderBy('hemo_journal.DEBIT_ACCOUNT_ID', 'asc')
+            ->groupBy([
+                'hemo_journal.DEBIT_ACCOUNT_ID'
+            ])
+            ->get();
+
+        return $result;
+
+    }
+    public function getMakeJournal(int $HEMO_ID)
+    {
+
+        $dataHemo = $this->get($HEMO_ID);
+        if ($dataHemo) {
+            $JOURNAL_NO = $this->accountJournalServices->getRecord($this->object_type_hemo, $HEMO_ID);
+            if ($JOURNAL_NO == 0) {
+                $JOURNAL_NO = $this->accountJournalServices->getJournalNo($this->object_type_hemo, $HEMO_ID) + 1;
+            }
+            $resultDebit = $this->getHemoJournalByItemDebit($HEMO_ID);
+            foreach ($resultDebit as $list) {
+
+            }
+
+            $resultCredit = $this->getHemoJournalByItemCredit($HEMO_ID);
+            foreach ($resultCredit as $list) {
+                $this->accountJournalServices->JournalExecute(
+                    $JOURNAL_NO,
+                    $list,
+                    $dataHemo->LOCATION_ID,
+                    $this->object_type_hemo_item,
+                    $dataHemo->DATE
+                );
+            }
+        }
+
+    }
+
 }

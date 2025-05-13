@@ -21,17 +21,20 @@ class TestPage extends Component
     }
     public function mount($id = null)
     {
-        $transDate = $this->dateServices->BackDate();
+        $this->hemoServices->getMakeJournal($id);
 
-        if ($id == null) {
-            $itemData = $this->hemoServices->CallOutItemUnPosted($transDate);
+
+        // $transDate = $this->dateServices->BackDate();
+
+        // if ($id == null) {
+        //     $itemData = $this->hemoServices->CallOutItemUnPosted($transDate);
          
-            foreach ($itemData as $list) {
-                $this->updateUnpostedItemOnly($list->HEMO_ID, $itemData->count());
-                return;
-            }
+        //     foreach ($itemData as $list) {
+        //         $this->updateUnpostedItemOnly($list->HEMO_ID, $itemData->count());
+        //         return;
+        //     }
 
-        }
+        // }
     }
 
     private function updateUnpostedItemOnly(int $HEMO_ID,int $COUNT= 0)
