@@ -63,7 +63,6 @@
                                                     <livewire:select-option name="LOCATION_ID" titleName="Location"
                                                         :options="$locationList" :zero="false" :isDisabled=true
                                                         wire:model='LOCATION_ID' />
-
                                                 </div>
                                             </div>
                                         </div>
@@ -152,9 +151,7 @@
                                                     Preview Journal</button>
                                             @endcan
                                         @endif
-
                                     </div>
-
                                 </div>
                             </div>
                         </form>

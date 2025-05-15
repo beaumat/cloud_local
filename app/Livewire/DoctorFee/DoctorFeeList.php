@@ -16,18 +16,12 @@ use Maatwebsite\Excel\Facades\Excel;
 #[Title('Doctor Professional Fee')]
 class DoctorFeeList extends Component
 {
-
     public int $LOCATION_ID;
-
-
-
     public $locationList = [];
     public $doctorList = [];
-
     private $locationServices;
     private $userServices;
     private $paymentPeriodServices;
-
     public $dataList = [];
     public $headerList = [];
     public $totalList = [];
@@ -35,8 +29,12 @@ class DoctorFeeList extends Component
     public $DATE_FROM;
     public $DATE_TO;
     public int $row;
-    public function boot(LocationServices $locationServices, UserServices $userServices, PaymentPeriodServices $paymentPeriodServices, DateServices $dateServices)
-    {
+    public function boot(
+        LocationServices $locationServices,
+        UserServices $userServices,
+        PaymentPeriodServices $paymentPeriodServices,
+        DateServices $dateServices
+    ) {
 
         $this->locationServices = $locationServices;
         $this->userServices = $userServices;
@@ -56,7 +54,6 @@ class DoctorFeeList extends Component
     #[On('doctor-fee-list-reload')]
     public function Generate()
     {
-
         $this->filterPeriod();
     }
     public function Export()
@@ -67,12 +64,11 @@ class DoctorFeeList extends Component
             $this->headerList,
             $this->totalList,
             $this->doctorList
-
         ), 'doctor-pf-list.xlsx');
     }
     public function updatedlocationid()
     {
-        $this->doctorList  = [];
+        $this->doctorList = [];
         try {
             $this->userServices->SwapLocation($this->LOCATION_ID);
         } catch (\Exception $e) {
@@ -82,25 +78,24 @@ class DoctorFeeList extends Component
     }
     private function getBalance(int $DOCTOR_ID, string $DATE_FROM, int $LOCATION_ID): float
     {
-        return  (float)  $this->paymentPeriodServices->getDoctorFeeRemainingBalance($LOCATION_ID, $DATE_FROM, $DOCTOR_ID);
+        return (float) $this->paymentPeriodServices->getDoctorFeeRemainingBalance($LOCATION_ID, $DATE_FROM, $DOCTOR_ID);
     }
     public function filterPeriod()
     {
 
-        $dataHeader  = $this->paymentPeriodServices->GetData($this->LOCATION_ID, $this->DATE_FROM, $this->DATE_TO);
-
+        $dataHeader = $this->paymentPeriodServices->GetData($this->LOCATION_ID, $this->DATE_FROM, $this->DATE_TO);
         $this->headerList = [];
         $this->doctorList = [];
-        $this->totalList =  [];
+        $this->totalList = [];
 
         foreach ($dataHeader as $list) {
 
             $dataRow = [
-                'ID'            => $list->ID,
-                'RECEIPT_NO'    => $list->RECEIPT_NO,
-                'DATE_FROM'     => $list->DATE_FROM,
-                'DATE_TO'       => $list->DATE_TO,
-                'DATE'          => $list->DATE
+                'ID' => $list->ID,
+                'RECEIPT_NO' => $list->RECEIPT_NO,
+                'DATE_FROM' => $list->DATE_FROM,
+                'DATE_TO' => $list->DATE_TO,
+                'DATE' => $list->DATE
             ];
 
             $this->headerList[] = $dataRow;
@@ -115,23 +110,23 @@ class DoctorFeeList extends Component
             $R_BALANCE = (float) $this->getBalance($list->DOCTOR_ID, $this->DATE_FROM, $this->LOCATION_ID);
 
             $dataH = [
-                'DOCTOR_ID'     => $list->DOCTOR_ID,
-                'DOCTOR_NAME'   => $list->DOCTOR_NAME,
+                'DOCTOR_ID' => $list->DOCTOR_ID,
+                'DOCTOR_NAME' => $list->DOCTOR_NAME,
                 'BALANCE_TOTAL' => $R_BALANCE,
             ];
 
             $row = 0;
             foreach ($dataHeader as $listHeader) {
                 $row++;
-                $AMOUNT = (float)  $this->paymentPeriodServices->getDoctorFeeTotal(
+                $AMOUNT = (float) $this->paymentPeriodServices->getDoctorFeeTotal(
                     $this->LOCATION_ID,
                     $listHeader->ID,
                     $list->DOCTOR_ID
                 );
 
-                $dataH[$row]        = $AMOUNT;
-                $PREV_AMOUNT        = $daTotal[$row] ?? 0;
-                $daTotal[$row]      = $PREV_AMOUNT  + $AMOUNT;
+                $dataH[$row] = $AMOUNT;
+                $PREV_AMOUNT = $daTotal[$row] ?? 0;
+                $daTotal[$row] = $PREV_AMOUNT + $AMOUNT;
             }
 
             $this->row = $row;

@@ -62,6 +62,16 @@
                 </a>
             </li>
         @endcan
+
+        @can('patient.doctor.batch.view')
+            <li class="nav-item {{ request()->is('patients/doctor-batch-payment*') ? 'menu-open' : '' }}">
+                <a href="{{ route('patientsdoctor_batch') }}"
+                    class="nav-link {{ request()->is('patients/doctor-batch-payment*') ? 'text-warning font-weight-bold' : '' }}">
+                    <i class="fa fa-user-md nav-icon" aria-hidden="true"></i>
+                    <p>Doctor Batch Payment</p>
+                </a>
+            </li>
+        @endcan
         @can('patient.payment-period.view')
             <li class="nav-item {{ request()->is('patients/payment-period*') ? 'menu-open' : '' }}">
                 <a href="{{ route('patientspayment_period') }}"
