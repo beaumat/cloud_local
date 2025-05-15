@@ -144,9 +144,15 @@
                                             @endif
                                         @endcan
 
+                                        @if ($STATUS == 2)
+                                            @can('patient.treatment.journal')
+                                                <button wire:click='openJournal()' name="btnJournal" type='button'
+                                                    class="btn btn-sm btn-info">
+                                                    <i class="fa fa-print" aria-hidden="true"></i>
+                                                    Preview Journal</button>
+                                            @endcan
+                                        @endif
 
-                                        <button wire:click='openJournal()' name="btnJournal" type='button'
-                                            class="btn btn-sm btn-warning"> Journal</button>
                                     </div>
 
                                 </div>
