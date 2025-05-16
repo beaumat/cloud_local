@@ -2245,7 +2245,7 @@ class HemoServices
 
     private function getHemoJournalByItemCredit(int $HEMO_ID)
     {
-        $exSQL = "select IFNULL(pll.CUSTOM_COST,0) from price_level_lines as pll inner join location as l on l.PRICE_LEVEL_ID =  pll.PRICE_LEVEL_ID where pll.ITEM_ID = hi.ITEM_ID and l.ID = h.LOCATION_ID";
+        $exSQL = "select IFNULL(pll.CUSTOM_COST,0) from price_level_lines as pll inner join location as l on l.PRICE_LEVEL_ID =  pll.PRICE_LEVEL_ID where pll.ITEM_ID = hi.ITEM_ID and l.ID = h.LOCATION_ID limit 1";
         $result = HemoJournal::query()
             ->select([
                 'hi.ID',
@@ -2269,7 +2269,7 @@ class HemoServices
 
     private function getHemoJournalByItemDebit(int $HEMO_ID)
     {
-        $exSQL = "select IFNULL(pll.CUSTOM_COST,0) from price_level_lines as pll inner join location as l on l.PRICE_LEVEL_ID =  pll.PRICE_LEVEL_ID where pll.ITEM_ID = hi.ITEM_ID and l.ID = h.LOCATION_ID";
+        $exSQL = "select IFNULL(pll.CUSTOM_COST,0) from price_level_lines as pll inner join location as l on l.PRICE_LEVEL_ID =  pll.PRICE_LEVEL_ID where pll.ITEM_ID = hi.ITEM_ID and l.ID = h.LOCATION_ID Limit 1";
         $result = HemoJournal::query()
             ->select([
                 'h.ID',
@@ -2308,11 +2308,6 @@ class HemoServices
                     // make adjustment
                     $gotUpdate = true;
                 }
-
-
-
-
-
                 $resultDebit = $this->getHemoJournalByItemDebit($HEMO_ID);
                 if ($gotUpdate) {
                     foreach ($resultDebit as $list) {
