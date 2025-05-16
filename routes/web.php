@@ -36,6 +36,8 @@ use App\Livewire\Depreciation\DepreciationForm;
 use App\Livewire\Depreciation\DepreciationList;
 use App\Livewire\Doctor\DoctorForm;
 use App\Livewire\Doctor\DoctorList;
+use App\Livewire\DoctorBatchPayment\DoctorBatchForm;
+use App\Livewire\DoctorBatchPayment\DoctorBatchList;
 use App\Livewire\DoctorFee\DoctorFeeList;
 use App\Livewire\Employees\EmployeeForm;
 use App\Livewire\Employees\EmployeeList;
@@ -282,11 +284,17 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/', DoctorFeeList::class)->name('doctor_fee')->middleware(['permission:report.patient.doctor-pf']);
             Route::get('/{id}/{locationid}/print-form', DoctorsFeeReportPrint::class)->name('doctor_fee_print');
         });
-
+        Route::prefix('/doctor-batch-payment')->group(function () {
+            Route::get('/', DoctorBatchList::class)->name('doctor_batch')->middleware(['permission:patient.doctor.batch.view']);
+            Route::get('/create', DoctorBatchForm::class)->name('doctor_batch_create')->middleware(['permission:patient.doctor.batch.create']);
+            Route::get('/{id}/edit', DoctorBatchForm::class)->name('doctor_batch_edit')->middleware(['permission:patient.doctor.batch.view']);
+        });
         Route::prefix('/payment-period')->group(function () {
             Route::get('/', PaymentPeriodList::class)->name('payment_period')->middleware(['permission:patient.payment-period.view']);
             Route::get('/{id}/details', PaymentPeriodForm::class)->name('payment_period_details')->middleware(['permission:patient.payment-period.view']);
         });
+
+
     });
 
 
@@ -744,6 +752,9 @@ Route::middleware(['auth'])->group(function () {
         Route::prefix('/inventory')->group(function () {
             Route::get('/validation-summary', ValidationSummaryReport::class)->name('validation_summry')->middleware(['permission:report.inventory.validation-summary']);
         });
+
+
+
         // Route::prefix('/documents')->group(function () { });
     });
 });

@@ -2,7 +2,6 @@
 
 namespace App\Livewire\BillPayments;
 
-use App\Models\WithholdingTax;
 use App\Services\AccountJournalServices;
 use App\Services\AccountServices;
 use App\Services\BillPaymentServices;
