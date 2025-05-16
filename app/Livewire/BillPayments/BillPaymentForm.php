@@ -20,7 +20,7 @@ use Livewire\Component;
 #[Title('Bill Payments')]
 class BillPaymentForm extends Component
 {
-
+    
     public bool $IS_DOCTOR = false;
     public int $ID;
     public string $CODE;

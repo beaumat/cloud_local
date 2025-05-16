@@ -50,7 +50,7 @@ class DoctorBatchList extends Component
     public function delete($id)
     {
 
-
+        $this->doctorBatchServices->Delete($id);
     }
     public function render()
     {

@@ -21,19 +21,25 @@ class DoctorBatchServices
 
         return $result;
     }
-    public function Store(int $DOCTOR_ID, int $LOCATION_ID)
+    public function Store(int $DOCTOR_ID, int $LOCATION_ID): int
     {
         $ID = $this->object->ObjectNextID("DOCTOR_BATCH");
 
         $OBJECT_TYPE = (int) $this->object->ObjectTypeID('DOCTOR_BATCH');
         $isLocRef = boolval($this->systemSettingServices->GetValue('IncRefNoByLocation'));
-
         DoctorBatch::create([
             'ID' => $ID,
             'CODE' => $this->object->GetSequence($OBJECT_TYPE, $isLocRef ? $LOCATION_ID : null),
             'DOCTOR_ID' => $DOCTOR_ID,
             'LOCATION_ID' => $LOCATION_ID,
         ]);
+
+        return (int) $ID;
+    }
+    public function Update(int $ID, int $DOCTOR_ID)
+    {
+        DoctorBatch::where('ID', '=', $ID)
+            ->update(['DOCTOR_ID' => $DOCTOR_ID]);
     }
     public function Delete(int $ID)
     {
@@ -82,7 +88,7 @@ class DoctorBatchServices
         $result = DoctorBatchPaid::query()
             ->select([
                 'c.NAME as PATIENT_NAME',
-                'pb.AMOUNT',
+                'pb.AMOUNT_PAID',
 
             ])
             ->join('check_bills as pb', 'pb.CHECK_ID', '=', 'doctor_batch_paid.CHECK_ID')
