@@ -2126,7 +2126,7 @@ class HemoServices
     // }
     private function getItemInventory(int $HEMO_ID)
     {
-        $exSQL = "select IFNULL(pll.CUSTOM_COST,0) from price_level_lines as pll inner join location as l on l.PRICE_LEVEL_ID =  pll.PRICE_LEVEL_ID where pll.ITEM_ID = hemodialysis_items.ITEM_ID and l.ID = h.LOCATION_ID";
+        $exSQL = "select IFNULL(pll.CUSTOM_COST,0) from price_level_lines as pll inner join location as l on l.PRICE_LEVEL_ID =  pll.PRICE_LEVEL_ID where pll.ITEM_ID = hemodialysis_items.ITEM_ID and l.ID = h.LOCATION_ID Limit 1";
         $result = HemodialysisItems::query()
             ->select([
                 'hemodialysis_items.ID',
