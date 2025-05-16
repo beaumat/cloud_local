@@ -63,7 +63,6 @@
                                                     <livewire:select-option name="LOCATION_ID" titleName="Location"
                                                         :options="$locationList" :zero="false" :isDisabled=true
                                                         wire:model='LOCATION_ID' />
-
                                                 </div>
                                             </div>
                                         </div>
@@ -144,9 +143,12 @@
                                             @endif
                                         @endcan
 
-
-                                        <button wire:click='openJournal()' name="btnJournal" type='button'
-                                            class="btn btn-sm btn-warning"> Journal</button>
+                                        @if ($STATUS == 2)
+                                            @can('patient.treatment.journal')
+                                                <button wire:click='openJournal()' name="btnJournal" type='button'
+                                                    class="btn btn-sm btn-warning"> Journal</button>
+                                            @endcan
+                                        @endif
                                     </div>
 
                                 </div>
