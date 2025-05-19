@@ -5,6 +5,7 @@ namespace App\Livewire\DoctorBatchPayment;
 use App\Services\DoctorBatchServices;
 use App\Services\LocationServices;
 use App\Services\UserServices;
+use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -49,8 +50,18 @@ class DoctorBatchList extends Component
     }
     public function delete($id)
     {
+        try {
+            //code...
+            DB::beginTransaction();
+            $this->doctorBatchServices->Delete($id);
+            DB::commit();
+        } catch (\Throwable $th) {
 
-        $this->doctorBatchServices->Delete($id);
+            DB::rollBack();
+            $errorMessage = 'Error occurred: ' . $th->getMessage();
+            session()->flash('error', $errorMessage);
+        }
+
     }
     public function render()
     {
