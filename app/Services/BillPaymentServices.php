@@ -254,6 +254,35 @@ class BillPaymentServices
 
         return $result;
     }
+    public function getDoctorBatch(int $DOCTOR_BATCH_ID) {
+         $result = CheckBills::query()
+            ->select([
+                'check_bills.ID',
+                'check_bills.BILL_ID',
+                'check_bills.DISCOUNT',
+                'check_bills.AMOUNT_PAID',
+                'bill.CODE',
+                'bill.DATE',
+                'bill.AMOUNT',
+                'bill.BALANCE_DUE',
+                'contact.NAME as PATIENT_NAME',
+                'philhealth.DATE_ADMITTED',
+                'philhealth.DATE_DISCHARGED',
+                'philhealth.AR_NO as LHIO_NO',
+                DB::raw('(select count(*) from hemodialysis where hemodialysis.STATUS_ID = 2 and hemodialysis.CUSTOMER_ID = philhealth.CONTACT_ID and hemodialysis.DATE between philhealth.DATE_ADMITTED and philhealth.DATE_DISCHARGED) as NO_TREATMENT '),
+                DB::raw("(SELECT SUM(withholding_tax_bills.AMOUNT_WITHHELD) from withholding_tax_bills where withholding_tax_bills.BILL_ID = check_bills.BILL_ID) as TAX_AMOUNT")
+            ])
+            ->join('doctor_batch_paid as dbp','dbp.CHECK_ID','=','check_bills.CHECK_ID')
+            ->join('bill', 'bill.ID', '=', 'check_bills.BILL_ID')
+            ->join('philhealth_prof_fee', 'philhealth_prof_fee.BILL_ID', '=', 'check_bills.BILL_ID')
+            ->join('philhealth', 'philhealth.ID', '=', 'philhealth_prof_fee.PHIC_ID')
+            ->join('contact', 'contact.ID', '=', 'philhealth.CONTACT_ID')
+            ->where('dbp.DOCTOR_BATCH_ID', '=', $DOCTOR_BATCH_ID)
+            ->get();
+
+        return $result;
+    }
+
     public function billPaymentBills(int $CHECK_ID): object
     {
         $result = CheckBills::query()

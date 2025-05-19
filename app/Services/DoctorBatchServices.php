@@ -110,6 +110,7 @@ class DoctorBatchServices
                 'check.STATUS as STATUS_ID',
                 'check.PF_PERIOD_ID',
                 DB::raw("(select count(*) from check_bills where check_bills.CHECK_ID = check.ID) as TOTAL_COUNT"),
+                DB::raw( "(select sum(t.AMOUNT_WITHHELD) from withholding_tax_bills  as t inner join check_bills as cb on cb.BILL_ID = t.BILL_ID  where   cb.CHECK_ID = check.ID  LIMIT 1) as TAX_AMOUNT"),
                 'pp.RECEIPT_NO as OR_NO',
                 'pp.DATE as OR_DATE',
                 'pp.DATE_FROM',

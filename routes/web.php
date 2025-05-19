@@ -38,6 +38,8 @@ use App\Livewire\Doctor\DoctorForm;
 use App\Livewire\Doctor\DoctorList;
 use App\Livewire\DoctorBatchPayment\DoctorBatchForm;
 use App\Livewire\DoctorBatchPayment\DoctorBatchList;
+use App\Livewire\DoctorBatchPayment\DoctorBatchPrint;
+use App\Livewire\DoctorBatchPayment\DoctorBatchSummaryPrint;
 use App\Livewire\DoctorFee\DoctorFeeList;
 use App\Livewire\Employees\EmployeeForm;
 use App\Livewire\Employees\EmployeeList;
@@ -288,6 +290,8 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/', DoctorBatchList::class)->name('doctor_batch')->middleware(['permission:patient.doctor.batch.view']);
             Route::get('/create', DoctorBatchForm::class)->name('doctor_batch_create')->middleware(['permission:patient.doctor.batch.create']);
             Route::get('/{id}/edit', DoctorBatchForm::class)->name('doctor_batch_edit')->middleware(['permission:patient.doctor.batch.view']);
+            Route::get('/{id}/print', DoctorBatchPrint::class)->name('doctor_batch_print')->middleware(['permission:patient.doctor.batch.print']);
+            Route::get('/{id}/summary', DoctorBatchSummaryPrint::class)->name('doctor_batch_sum_print')->middleware(['permission:patient.doctor.batch.print']);
         });
         Route::prefix('/payment-period')->group(function () {
             Route::get('/', PaymentPeriodList::class)->name('payment_period')->middleware(['permission:patient.payment-period.view']);

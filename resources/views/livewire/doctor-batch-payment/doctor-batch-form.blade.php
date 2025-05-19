@@ -100,16 +100,21 @@
                                     </div>
                                     <div class="text-right col-6 col-md-6">
                                         @if ($ID > 0)
-                                            @can('company.general-journal.print')
-                                                <a type="button" target="_BLANK"
-                                                    href="{{ route('companygeneral_journal_print', ['id' => $ID]) }}"
+                                            @can('patient.doctor.batch.print')
+                                                    <a type="button" target="_BLANK"
+                                                    href="{{ route('patientsdoctor_batch_sum_print', ['id' => $ID]) }}"
                                                     class="btn btn-sm btn-dark">
-                                                    <i class="fa fa-print" aria-hidden="true"></i> Print
+                                                    <i class="fa fa-print" aria-hidden="true"></i> Print Summary
+                                                </a>
+                                                <a type="button" target="_BLANK"
+                                                    href="{{ route('patientsdoctor_batch_print', ['id' => $ID]) }}"
+                                                    class="btn btn-sm btn-dark">
+                                                    <i class="fa fa-print" aria-hidden="true"></i> Print Details
                                                 </a>
                                             @endcan
-                                            @can('company.general-journal.create')
+                                            @can('patient.doctor.batch.create')
                                                 <a id="new" title="Create"
-                                                    href="{{ route('companygeneral_journal_create') }}"
+                                                    href="{{ route('patientsdoctor_batch_create') }}"
                                                     class="btn btn-primary btn-sm"> <i class="fas fa-plus"></i> New </a>
                                             @endcan
                                         @endif
@@ -156,7 +161,9 @@
                             <div class="card-footer">
                                 <div class="row">
                                     <div class="col-6">
-                                        @livewire('DoctorBatchPayment.BillPaymentListModal', ['DOCTOR_BATCH_ID' => $ID])
+                                        @can('patient.doctor.batch.create')
+                                            @livewire('DoctorBatchPayment.BillPaymentListModal', ['DOCTOR_BATCH_ID' => $ID])
+                                        @endcan
 
                                     </div>
                                     <div class="col-6 text-right">

@@ -1,6 +1,7 @@
 <div>
+    
     <button wire:click="openModal" class="btn btn-success btn-xs text-xs ">
-        <i class="fa fa-plus" aria-hidden="true"></i> Add
+        <i class="fa fa-plus" aria-hidden="true"></i> Add Pay Bills
     </button>
 
     @if ($showModal)
@@ -21,6 +22,7 @@
                                     <th class="col-1 text-right">Pay Bill Amt.</th>
                                     <th class="col-1">Pay Bill No.</th>
                                     <th class="col-1 text-center">No. of Patient</th>
+                                    <th class="col-1 text-center bg-warning">Status</th>
                                     <th class="col-1 bg-secondary">OR No.</th>
                                     <th class="col-1 bg-secondary">OR Date</th>
                                     <th class="col-1 bg-secondary">From Date</th>
@@ -37,6 +39,7 @@
                                         <td class="text-right">{{ number_format($list->AMOUNT, 2) }}</td>
                                         <td>{{ \Carbon\Carbon::parse($list->DATE)->format('m/d/Y') }} </td>
                                         <td class="text-center"> {{ $list->TOTAL_COUNT }} </td>
+                                        <td class="text-center"> {{ $list->STATUS }} </td>
                                         <td> {{ $list->OR_NO }}</td>
                                         <td>{{ \Carbon\Carbon::parse($list->OR_DATE)->format('m/d/Y') }} </td>
                                         <td>{{ \Carbon\Carbon::parse($list->FROM_DATE)->format('m/d/Y') }} </td>
