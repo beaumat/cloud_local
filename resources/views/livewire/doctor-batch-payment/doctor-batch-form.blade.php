@@ -89,10 +89,11 @@
                                                         aria-hidden="true"></i> Cancel</button>
                                             @endif
                                         @else
-                                            <button type="button" wire:click='getModify()' class="btn btn-sm btn-info">
-                                                <i class="fa fa-wrench" aria-hidden="true"></i> Modify
-                                            </button>
-
+                                            @can('patient.doctor.batch.edit')
+                                                <button type="button" wire:click='getModify()' class="btn btn-sm btn-info">
+                                                    <i class="fa fa-wrench" aria-hidden="true"></i> Modify
+                                                </button>
+                                            @endcan
                                         @endif
 
 
@@ -101,7 +102,7 @@
                                     <div class="text-right col-6 col-md-6">
                                         @if ($ID > 0)
                                             @can('patient.doctor.batch.print')
-                                                    <a type="button" target="_BLANK"
+                                                <a type="button" target="_BLANK"
                                                     href="{{ route('patientsdoctor_batch_sum_print', ['id' => $ID]) }}"
                                                     class="btn btn-sm btn-dark">
                                                     <i class="fa fa-print" aria-hidden="true"></i> Print Summary
@@ -147,8 +148,8 @@
                             </div>
                             <div class="card-body">
                                 <div class="tab-content" id="custom-tabs-four-tabContent">
-                                    <div class="tab-pane fade show active " id="custom-tabs-four-item" role="tabpanel"
-                                        aria-labelledby="custom-tabs-four-item-tab">
+                                    <div class="tab-pane fade show active " id="custom-tabs-four-item"
+                                        role="tabpanel" aria-labelledby="custom-tabs-four-item-tab">
                                         <div class="row">
                                             <div class="col-md-12">
                                                 @livewire('DoctorBatchPayment.DoctorBatchPaidList', ['DOCTOR_BATCH_ID' => $ID])
