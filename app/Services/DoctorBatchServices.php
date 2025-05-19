@@ -45,7 +45,8 @@ class DoctorBatchServices
             ->update(['DOCTOR_ID' => $DOCTOR_ID]);
     }
     public function Delete(int $ID)
-    {
+    {   
+        DoctorBatchPaid::where('DOCTOR_BATCH_ID','=', $ID)->delete();
         DoctorBatch::where('ID', '=', $ID)->delete();
     }
     public function Search($search, int $locationId)
@@ -129,7 +130,7 @@ class DoctorBatchServices
             ->whereNotNull('check.PF_PERIOD_ID')
             ->orderBy('check.ID', 'desc')
             ->get();
-            
+
         return $result;
     }
 }
