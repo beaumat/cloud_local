@@ -1,6 +1,7 @@
 <?php
 namespace App\Services;
 
+use App\Models\Check;
 use App\Models\DoctorBatch;
 use App\Models\DoctorBatchPaid;
 use Illuminate\Support\Facades\DB;
@@ -9,10 +10,12 @@ class DoctorBatchServices
 {
     private $object;
     private $systemSettingServices;
-    public function __construct(ObjectServices $objectServices, SystemSettingServices $systemSettingServices)
+    private $billPaymentServices;
+    public function __construct(ObjectServices $objectServices, SystemSettingServices $systemSettingServices, BillPaymentServices $billPaymentServices)
     {
         $this->object = $objectServices;
         $this->systemSettingServices = $systemSettingServices;
+        $this->billPaymentServices = $billPaymentServices;
     }
 
     public function Get(int $ID)
@@ -45,18 +48,25 @@ class DoctorBatchServices
     {
         DoctorBatch::where('ID', '=', $ID)->delete();
     }
-    public function Search($search, int $LOCATION_ID)
+    public function Search($search, int $locationId)
     {
         $result = DoctorBatch::query()
             ->select([
+                'doctor_batch.ID',
                 'doctor_batch.CODE',
                 'c.NAME',
+                'l.NAME as LOCATION_NAME',
                 DB::raw("(select count(*) from doctor_batch_paid where doctor_batch_paid.doctor_batch_id = doctor_batch.ID ) as TOTAL_COUNT"),
                 DB::raw("(select SUM(p.AMOUNT) from doctor_batch_paid inner join `check` as p on p.ID = doctor_batch_paid.CHECK_ID where doctor_batch_paid.doctor_batch_id = doctor_batch.ID) as TOTAL_AMOUNT"),
             ])
             ->join('contact as c', 'c.ID', 'doctor_batch.DOCTOR_ID')
-            ->where('doctor_batch.LOCATION_ID', '=', $LOCATION_ID)
-
+            ->join('location as l', function ($join) use (&$locationId) {
+                $join->on('l.ID', '=', 'doctor_batch.LOCATION_ID');
+                if ($locationId > 0) {
+                    $join->where('l.ID', $locationId);
+                }
+            })
+            ->where('doctor_batch.LOCATION_ID', '=', $locationId)
             ->when($search, function ($query) use (&$search) {
                 $query->where(function ($q) use (&$search) {
                     $q->where('c.NAME', 'like', '%' . $search . '%');
@@ -85,19 +95,40 @@ class DoctorBatchServices
     }
     public function PaidList(int $DOCTOR_BATCH_ID)
     {
-        $result = DoctorBatchPaid::query()
+        $result = Check::query()
             ->select([
-                'c.NAME as PATIENT_NAME',
-                'pb.AMOUNT_PAID',
+                'dbp.ID',
+                'check.ID as CHECK_ID',
+                'check.CODE',
+                'check.DATE',
+                'check.AMOUNT',
+                'check.NOTES',
+                'c.NAME as CONTACT_NAME',
+                'l.NAME as LOCATION_NAME',
+                's.DESCRIPTION as STATUS',
+                'a.NAME as BANK_ACCOUNT_NAME',
+                'check.STATUS as STATUS_ID',
+                'check.PF_PERIOD_ID',
+                DB::raw("(select count(*) from check_bills where check_bills.CHECK_ID = check.ID) as TOTAL_COUNT"),
+                'pp.RECEIPT_NO as OR_NO',
+                'pp.DATE as OR_DATE',
+                'pp.DATE_FROM',
+                'pp.DATE_TO',
 
             ])
-            ->join('check_bills as pb', 'pb.CHECK_ID', '=', 'doctor_batch_paid.CHECK_ID')
-            ->join('philhealth_prof_fee as ppf', 'ppf.BILL_ID', '=', 'pb.BILL_ID')
-            ->join('philhealth as ph', 'ph.ID', '=', 'ppf.PHIC_ID')
-            ->join('contact as c', 'c.ID', '=', 'ph.CONTACT_ID')
-            ->where('doctor_batch_paid.DOCTOR_BATCH_ID', '=', $DOCTOR_BATCH_ID)
+            ->join('contact as c', 'c.ID', '=', 'check.PAY_TO_ID')
+            ->join('account as a', 'a.ID', '=', 'check.BANK_ACCOUNT_ID')
+            ->join('location as l', 'l.ID', '=', 'check.LOCATION_ID')
+            ->join('document_status_map as s', 's.ID', '=', 'check.STATUS')
+            ->join('payment_period as pp', 'pp.ID', '=', 'check.PF_PERIOD_ID')
+            ->join('doctor_batch_paid as dbp', 'dbp.CHECK_ID', '=', 'check.ID')
+            ->join('doctor_batch as db', 'db.ID', '=', 'dbp.DOCTOR_BATCH_ID')
+            ->where('check.TYPE', '=', $this->billPaymentServices->CHECK_TYPE_ID)
+            ->where('dbp.DOCTOR_BATCH_ID', '=', $DOCTOR_BATCH_ID)
+            ->whereNotNull('check.PF_PERIOD_ID')
+            ->orderBy('check.ID', 'desc')
             ->get();
-
+            
         return $result;
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Livewire\DoctorBatchPayment;
 
 use App\Services\DoctorBatchServices;
+use Livewire\Attributes\On;
 use Livewire\Attributes\Reactive;
 use Livewire\Component;
 
@@ -17,10 +18,11 @@ class DoctorBatchPaidList extends Component
     {
         $this->doctorBatchServices = $doctorBatchServices;
     }
-    public function delete(int $id)
+    public function deleteItem(int $id)
     {
         $this->doctorBatchServices->DeletePaid($id);
     }
+    #[On('refresh-list-doctor-batch')]
     public function render()
     {
         $this->dataList = $this->doctorBatchServices->PaidList($this->DOCTOR_BATCH_ID);

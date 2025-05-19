@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\DB;
 
 class BillPaymentServices
 {
-    private int $CHECK_TYPE_ID = 1;
+    public int $CHECK_TYPE_ID = 1;
     public int $object_type_check = 57;
     public int $object_type_check_bills = 58;
 
@@ -137,6 +137,48 @@ class BillPaymentServices
             ->where('TYPE', '=', $this->CHECK_TYPE_ID)
             ->delete();
     }
+    public function getDoctorPaidList(int $DOCTOR_ID, int $LOCATION_ID)
+    {
+        $result = Check::query()
+            ->select([
+                'check.ID',
+                'check.CODE',
+                'check.DATE',
+                'check.AMOUNT',
+                'check.NOTES',
+                'c.NAME as CONTACT_NAME',
+                'l.NAME as LOCATION_NAME',
+                's.DESCRIPTION as STATUS',
+                'a.NAME as BANK_ACCOUNT_NAME',
+                'check.STATUS as STATUS_ID',
+                'check.PF_PERIOD_ID',
+                DB::raw("(select count(*) from check_bills where check_bills.CHECK_ID = check.ID) as TOTAL_COUNT"),
+                'pp.RECEIPT_NO as OR_NO',
+                'pp.DATE as OR_DATE',
+                'pp.DATE_FROM',
+                'pp.DATE_TO',
+
+            ])
+            ->join('contact as c', 'c.ID', '=', 'check.PAY_TO_ID')
+            ->join('account as a', 'a.ID', '=', 'check.BANK_ACCOUNT_ID')
+            ->join('location as l', 'l.ID', '=', 'check.LOCATION_ID')
+            ->join('document_status_map as s', 's.ID', '=', 'check.STATUS')
+            ->join('payment_period as pp', 'pp.ID', '=', 'check.PF_PERIOD_ID')
+            ->where('check.TYPE', '=', $this->CHECK_TYPE_ID)
+             ->whereNotExists(function ($query) {
+                $query->select(DB::raw(1))
+                    ->from('doctor_batch_paid as s')
+                    ->whereRaw('s.CHECK_ID = check.ID');
+            
+            })
+            ->where('check.LOCATION_ID', '=', $LOCATION_ID)
+            ->where('check.PAY_TO_ID', '=', $DOCTOR_ID)
+            ->whereNotNull('check.PF_PERIOD_ID')
+            ->orderBy('check.ID', 'desc')
+            ->get();
+
+        return $result;
+    }
     public function Search($search, $locationId, $perPage)
     {
         $result = Check::query()
@@ -151,6 +193,7 @@ class BillPaymentServices
                 's.DESCRIPTION as STATUS',
                 'a.NAME as BANK_ACCOUNT_NAME',
                 'check.STATUS as STATUS_ID'
+
             ])
             ->join('contact as c', 'c.ID', '=', 'check.PAY_TO_ID')
             ->join('account as a', 'a.ID', '=', 'check.BANK_ACCOUNT_ID')
@@ -275,7 +318,7 @@ class BillPaymentServices
         CheckBills::create([
             'ID' => $ID,
             'CHECK_ID' => $CHECK_ID,
-            'BILL_ID' => $BILL_ID > 0 ? $BILL_ID : null,    
+            'BILL_ID' => $BILL_ID > 0 ? $BILL_ID : null,
             'DISCOUNT' => $DISCOUNT,
             'AMOUNT_PAID' => $AMOUNT_PAID,
             'DISCOUNT_ACCOUNT_ID' => $DISCOUNT_ACCOUNT_ID > 0 ? $DISCOUNT_ACCOUNT_ID : null,
@@ -385,7 +428,7 @@ class BillPaymentServices
         Check::where('ID', $ID)
             ->update([
                 'IS_XERO' => $IS_XERO,
-                'AMOUNT' => $AMOUNT	
+                'AMOUNT' => $AMOUNT
             ]);
     }
 }

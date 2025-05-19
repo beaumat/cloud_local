@@ -119,14 +119,55 @@
                         </form>
                     </div>
                 </div>
-                @if ($ID > 0)
-                    <div class="col-md-12">
-                        @livewire('DoctorBatchPayment.BillPaymentListModal', ['DOCTOR_BATCH_ID' => $ID])
-                        @livewire('DoctorBatchPayment.DoctorBatchPaidList', ['DOCTOR_BATCH_ID' => $ID])
-                    </div>
-                @endif
+
             </div>
         </div>
     </section>
+    @if ($ID > 0)
+        <section class="content" @if ($Modify == true) style="opacity: 0.5;pointer-events: none;" @endif>
+            <div class="container-fluid bg-light">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card card-primary card-outline card-outline-tabs">
+                            <div class="card-header p-0 border-bottom-0">
+                                <ul class="nav text-xs nav-tabs" id="custom-tabs-four-tab" role="tablist">
+                                    <li class="nav-item">
+                                        <a class="nav-link active" id="custom-tabs-four-item-tab" data-toggle="pill"
+                                            href="#custom-tabs-four-item" role="tab"
+                                            aria-controls="custom-tabs-four-item" aria-selected="true">
+                                            Pay Bills
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="card-body">
+                                <div class="tab-content" id="custom-tabs-four-tabContent">
+                                    <div class="tab-pane fade show active " id="custom-tabs-four-item" role="tabpanel"
+                                        aria-labelledby="custom-tabs-four-item-tab">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                @livewire('DoctorBatchPayment.DoctorBatchPaidList', ['DOCTOR_BATCH_ID' => $ID])
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
 
+                            </div>
+                            <div class="card-footer">
+                                <div class="row">
+                                    <div class="col-6">
+                                        @livewire('DoctorBatchPayment.BillPaymentListModal', ['DOCTOR_BATCH_ID' => $ID])
+
+                                    </div>
+                                    <div class="col-6 text-right">
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    @endif
 </div>
