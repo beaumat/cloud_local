@@ -29,9 +29,9 @@
                                 <th class="">&nbsp;DESCRIPTION</th>
                                 <th class="col-1">&nbsp;DATE</th>
                                 <th class="col-1 text-center ">NO. OF TRMT.</th>
-                                <th class="col-1 text-center ">PAID</th>
-                                <th class="col-1 text-center ">WTAX</th>
-                                <th class="col-1 text-center ">TOTAL</th>
+                                {{-- <th class="col-1 text-center ">PAID</th>
+                                <th class="col-1 text-center ">WTAX</th> --}}
+                                <th class="col-1 text-center ">AMOUNT</th>
                             </tr>
                         </thead>
                         <tbody class="">
@@ -51,10 +51,10 @@
                                     </td>
 
                                     <td class="text-center  font-weight-normal">{{ $list->TOTAL_COUNT }}</td>
-                                    <td class="text-right  font-weight-normal">
+                                    {{-- <td class="text-right  font-weight-normal">
                                         {{ number_format($list->AMOUNT, 2) . ' ' }}</td>
                                     <td class="text-right  font-weight-normal">
-                                        {{ number_format($list->TAX_AMOUNT, 2) }}</td>
+                                        {{ number_format($list->TAX_AMOUNT, 2) }}</td> --}}
                                     <td class="text-right  font-weight-normal">
                                         {{ number_format($list->AMOUNT + $list->TAX_AMOUNT ?? 0, 2) . ' ' }}</td>
                                 </tr>
