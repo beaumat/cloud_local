@@ -24,6 +24,8 @@ use App\Livewire\BuildAssembly\BuildAssemblyForm;
 use App\Livewire\BuildAssembly\BuildAssemblyList;
 use App\Livewire\ChartOfAccount\ChartOfAccountForm;
 use App\Livewire\ChartOfAccount\ChartOfAccountList;
+use App\Livewire\CostAdjustment\CostAdjustmentForm;
+use App\Livewire\CostAdjustment\CostAdjustmentList;
 use App\Livewire\CreditMemo\CreditMemoForm;
 use App\Livewire\CreditMemo\CreditMemoList;
 use App\Livewire\Customer\CustomerForm;
@@ -380,6 +382,7 @@ Route::middleware(['auth'])->group(function () {
 
 
     Route::prefix('/company')->name('company')->group(function () {
+
         Route::prefix('/build-assembly')->group(function () {
             Route::get('/', BuildAssemblyList::class)->name('build_assembly')->middleware(['permission:company.build-assembly.view']);
             Route::get('/create', BuildAssemblyForm::class)->name('build_assembly_create')->middleware(['permission:company.build-assembly.create']);
@@ -423,6 +426,12 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/', DepreciationList::class)->name('depreciation');
             Route::get('/create', DepreciationForm::class)->name('depreciation_create');
             Route::get('/{id}/edit', DepreciationForm::class)->name('depreciation_edit');
+        });
+
+        Route::prefix('/cost-adjustment')->group(function () {
+            Route::get('/', CostAdjustmentList::class)->name('cost_adjustment')->middleware(['permission:company.cost-adjustment.view']);
+            Route::get('/create', CostAdjustmentForm::class)->name('cost_adjustment_create')->middleware(['permission:company.cost-adjustment.create']);
+            Route::get('/{id}/edit', CostAdjustmentForm::class)->name('cost_adjustment_edit')->middleware(['permission:company.cost-adjustment.view']);
         });
     });
 

@@ -74,7 +74,15 @@
             </li>
         @endcan
 
-
+        @can('company.cost-adjustment.view')
+            <li class="nav-item">
+                <a href="{{ route('companycost_adjustment') }}"
+                    class="nav-link  {{ request()->is('company/cost-adjustment*') ? 'text-warning font-weight-bold' : '' }}">
+                    <i class="fas fa-archive nav-icon" aria-hidden="true"></i>
+                    <p>Cost Adjustment</p>
+                </a>
+            </li>
+        @endcan
 
 
     </ul>
