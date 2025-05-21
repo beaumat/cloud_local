@@ -204,11 +204,13 @@
                                                         aria-hidden="true"></i> Cancel</button>
                                             @endif
                                         @else
-                                            @if ($AMOUNT_APPLIED == 0)
-                                                <button type="button" wire:click='getModify()'
-                                                    class="btn btn-sm btn-info">
-                                                    <i class="fa fa-wrench" aria-hidden="true"></i> Modify
-                                                </button>
+                                            @if ($REF_ID == 0)
+                                                @if ($AMOUNT_APPLIED == 0 || auth()->user()->can('patient.payment.update'))
+                                                    <button type="button" wire:click='getModify()'
+                                                        class="btn btn-sm btn-info">
+                                                        <i class="fa fa-wrench" aria-hidden="true"></i> Modify
+                                                    </button>
+                                                @endif
                                             @endif
                                             @if ($ID > 0)
                                                 @if (auth()->user()->can('customer.invoice.view') && auth()->user()->can('customer.invoice.create'))
