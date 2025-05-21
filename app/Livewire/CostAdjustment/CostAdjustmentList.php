@@ -39,7 +39,6 @@ class CostAdjustmentList extends Component
     {
         try {
             DB::beginTransaction();
-            //code...
             $this->costAdjustmentServices->Delete($ID);
             DB::commit();
             session()->flash('message', 'Successfully deleted');
@@ -54,6 +53,17 @@ class CostAdjustmentList extends Component
         $this->resetErrorBag();
         session()->forget('message');
         session()->forget('error');
+    }
+
+    public function updatedlocationid()
+    {
+
+        try {
+            $this->userServices->SwapLocation($this->locationid);
+        } catch (\Exception $e) {
+            $errorMessage = 'Error occurred: ' . $e->getMessage();
+            session()->flash('error', $errorMessage);
+        }
     }
     public function render()
     {

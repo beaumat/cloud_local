@@ -95,16 +95,16 @@ class CostAdjustmentServices
     }
     private function getLine($Id): int
     {
-        return (int) CostAdjustmentItem::where('COST_ADUSTMENT_ID', $Id)->max('LINE_NO');
+        return (int) CostAdjustmentItem::where('COST_ADJUSTMENT_ID', $Id)->max('LINE_NO');
     }
-    public function StoreItem(int $COST_ADUSTMENT_ID, int $ITEM_ID, float $COST)
+    public function StoreItem(int $COST_ADJUSTMENT_ID, int $ITEM_ID, float $COST)
     {
         $ID = $this->object->ObjectNextID("COST_ADJUSTMENT_ITEM");
-        $LINE_NO = (int) $this->getLine($COST_ADUSTMENT_ID) + 1;
+        $LINE_NO = (int) $this->getLine($COST_ADJUSTMENT_ID) + 1;
 
         CostAdjustmentItem::create([
             'ID' => $ID,
-            'COST_ADUSTMENT_ID' => $COST_ADUSTMENT_ID,
+            'COST_ADJUSTMENT_ID' => $COST_ADJUSTMENT_ID,
             'LINE_NO' => $LINE_NO,
             'ITEM_ID' => $ITEM_ID,
             'COST' => $COST
@@ -133,7 +133,7 @@ class CostAdjustmentServices
                 'cost_adjustment_item.ID',
                 'cost_adjustment_item.COST',
                 'i.CODE',
-                'i.DESCRIPTION as ITEM_NAME',
+                'i.DESCRIPTION',
             ])
             ->join('item as i', 'i.ID', 'cost_adjustment_item.ITEM_ID')
             ->where('COST_ADJUSTMENT_ID', '=', $COST_ADUSTMENT_ID)

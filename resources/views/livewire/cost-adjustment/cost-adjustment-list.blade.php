@@ -83,17 +83,17 @@
                                             <td> {{ $list->STATUS }}</td>
                                             <td class="text-center">
                                                 <a href="{{ route('companycost_adjustment_edit', ['id' => $list->ID]) }}"
-                                                    class="btn-sm text-info">
+                                                    class="btn btn-xs btn-info">
                                                     <i class="fas fa-edit" aria-hidden="true"></i>
                                                 </a>
                                                 @can('company.cost-adjusment.delete')
                                                     <button wire:click='delete({{ $list->ID }})'
                                                         wire:confirm="Are you sure you want to delete this?"
-                                                        class="btn-sm text-danger">
+                                                        class="btn btn-xs btn-danger">
                                                         <i class="fas fa-trash" aria-hidden="true"></i>
                                                     </button>
                                                 @else
-                                                    <button class="btn-sm text-secondary">
+                                                    <button type="button" class="btn btn-xs btn-secondary">
                                                         <i class="fas fa-trash" aria-hidden="true"></i>
                                                     </button>
                                                 @endcan

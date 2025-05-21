@@ -140,7 +140,7 @@
                                         <a class="nav-link active" id="custom-tabs-four-item-tab" data-toggle="pill"
                                             href="#custom-tabs-four-item" role="tab"
                                             aria-controls="custom-tabs-four-item" aria-selected="true">
-                                            Item
+                                            Item Details
                                         </a>
                                     </li>
                                 </ul>
@@ -152,7 +152,7 @@
                                         <div class="row">
                                             <div class="col-md-12"
                                                 @if ($Modify == true) style="opacity: 0.5;pointer-events: none;" @endif>
-
+                                                @livewire('CostAdjustment.CostAdjustmentDetails', ['COST_ADJUSTMENT_ID' => $ID,'STATUS' => $STATUS])
 
                                             </div>
                                         </div>

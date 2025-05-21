@@ -20,15 +20,18 @@ class CostAdjustmentForm extends Component
     public int $LOCATION_ID;
     public $locationList = [];
     public bool $Modify = false;
-
     public int $STATUS = 0;
     public string $STATUS_DESCRIPTION = '';
     private $costAdjustmentServices;
     private $locationServices;
     private $userServices;
     private $documentStatusServices;
-    public function boot(CostAdjustmentServices $costAdjustmentServices, LocationServices $locationServices, UserServices $userServices, DocumentStatusServices $documentStatusServices)
-    {
+    public function boot(
+        CostAdjustmentServices $costAdjustmentServices,
+        LocationServices $locationServices,
+        UserServices $userServices,
+        DocumentStatusServices $documentStatusServices
+    ) {
         $this->costAdjustmentServices = $costAdjustmentServices;
         $this->locationServices = $locationServices;
         $this->userServices = $userServices;
@@ -72,7 +75,8 @@ class CostAdjustmentForm extends Component
 
         $this->validate([
             'DATE' => 'required|date',
-            'LOCATION_ID' => 'required|not_in:0|exists:location,id'
+            'LOCATION_ID' => 'required|not_in:0|exists:location,id',
+            'CODE' => 'nullable|max:20|unique:cost_adjustment,code,' . ($this->ID > 0 ? $this->ID : 'NULL') . ',id',
         ]);
 
         try {
@@ -97,9 +101,6 @@ class CostAdjustmentForm extends Component
         } catch (\Throwable $th) {
             session()->flash('error', $th);
         }
-
-
-
     }
     public function getInfo($data)
     {
@@ -109,6 +110,22 @@ class CostAdjustmentForm extends Component
         $this->LOCATION_ID = $data->LOCATION_ID;
         $this->STATUS = $data->STATUS;
         $this->STATUS_DESCRIPTION = $this->documentStatusServices->getDesc($this->STATUS);
+    }
+    public function updateCancel()
+    {
+        return redirect::route('companycost_adjustment_edit', ['id' => $this->ID]);
+    }
+    public function getModify()
+    {
+        $this->Modify = true;
+    }
+    public function delete()
+    {
+        $this->costAdjustmentServices->Delete($this->ID);
+    }
+    public function posted( ){
+        $this->costAdjustmentServices->StatusUpdate($this->ID, 15);
+        $this->updateCancel();
     }
     public function render()
     {

@@ -13,7 +13,7 @@ class CostAdjustmentItem extends Model
     public $timestamps = false;
     protected $fillable = [
         'ID',
-        'COST_ADUSTMENT_ID',
+        'COST_ADJUSTMENT_ID',
         'LINE_NO',
         'ITEM_ID',
         'COST',
