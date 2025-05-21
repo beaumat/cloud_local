@@ -123,9 +123,10 @@ class CostAdjustmentForm extends Component
     {
         $this->costAdjustmentServices->Delete($this->ID);
     }
-    public function posted( ){
+    public function posted()
+    {
         $this->costAdjustmentServices->StatusUpdate($this->ID, 15);
-        $this->updateCancel();
+        return redirect::route('companycost_adjustment_edit', ['id' => $this->ID])->with('message', "Successfully posted!");
     }
     public function render()
     {
