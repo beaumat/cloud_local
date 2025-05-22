@@ -235,8 +235,8 @@ class OtherDetails extends Component
             $this->DRY_WEIGHT = $data->DRY_WEIGHT ?? '';
             $this->RML = $data->RML ?? '';
             $this->HEPA_PROFILE = $data->HEPA_PROFILE ?? '';
-            $this->NEXT_RML = $data->NEXT_RML ?? '';
-            $this->NEXT_HEPA_PROFILE = $data->NEXT_HEPA_PROFILE ?? '';
+            // $this->NEXT_RML = $data->NEXT_RML ?? '';
+            // $this->NEXT_HEPA_PROFILE = $data->NEXT_HEPA_PROFILE ?? '';
 
         }
     }
@@ -346,8 +346,8 @@ class OtherDetails extends Component
                 $this->DRY_WEIGHT,
                 $this->RML ?? '',
                 $this->HEPA_PROFILE ?? '',
-                $this->NEXT_RML ?? '',
-                $this->NEXT_HEPA_PROFILE ?? ''
+                 '',
+                 ''
             );
             DB::commit();
         } catch (\Throwable $th) {

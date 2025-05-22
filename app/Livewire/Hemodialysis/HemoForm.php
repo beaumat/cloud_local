@@ -181,7 +181,6 @@ class HemoForm extends Component
 
     public function setNullEmployee()
     {
-
         if ($this->EMPLOYEE_ID > 0) {
             $this->hemoServices->NullEmployee($this->ID);
             return Redirect::route('patientshemo_edit', ['id' => $this->ID])->with('message', 'Successfully nurse remove');
@@ -415,13 +414,9 @@ class HemoForm extends Component
                     // }
 
                     if (empty($this->TIME_START) == false) {
-
                         if (empty($this->POST_WEIGHT) == false || empty($this->POST_BLOOD_PRESSURE) == false || empty($this->POST_BLOOD_PRESSURE2) == false || empty($this->POST_HEART_RATE) == false || empty($this->POST_O2_SATURATION) == false || empty($this->POST_TEMPERATURE) == false || empty($this->TIME_END) == false) {
-
                             if ($this->IS_INCOMPLETE == false) {
-
                                 if (empty($this->POST_WEIGHT) || empty($this->POST_BLOOD_PRESSURE) || empty($this->POST_BLOOD_PRESSURE2) || empty($this->POST_HEART_RATE) || empty($this->POST_O2_SATURATION) || empty($this->POST_TEMPERATURE) || empty($this->TIME_END)) {
-
                                     $this->validate(
                                         [
                                             'POST_WEIGHT' => 'required',

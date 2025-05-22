@@ -123,7 +123,6 @@ class MedcertPrint extends Component
                 $this->REPORT_HEADER_1 = $locData->REPORT_HEADER_1 ?? '';
                 $this->REPORT_HEADER_2 = $locData->REPORT_HEADER_2 ?? '';
                 $this->REPORT_HEADER_3 = $locData->REPORT_HEADER_3 ?? '';
-
                 $this->LOGO_FILE = $locData->LOGO_FILE ?? '';
                 $this->BRANCH_NAME = $locData->NAME_OF_BUSINESS ?? '';
             }

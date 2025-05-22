@@ -578,8 +578,8 @@ class HemoServices
                     'DIALSATE_K' => $data->DIALSATE_K ?? null,
                     'DIALSATE_C' => $data->DIALSATE_C ?? null,
                     'DRY_WEIGHT' => $data->DRY_WEIGHT ?? null,
-                    'RML' => $data->NEXT_RML ?? null,
-                    'HEPA_PROFILE' => $data->NEXT_HEPA_PROFILE ?? null,
+                    'RML' => $data->RML ?? null,
+                    'HEPA_PROFILE' => $data->HEPA_PROFILE ?? null,
                 ]);
         }
     }
