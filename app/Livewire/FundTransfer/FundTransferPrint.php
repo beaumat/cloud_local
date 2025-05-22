@@ -7,8 +7,9 @@ use App\Services\ContactServices;
 use App\Services\FundTransferServices;
 use App\Services\LocationServices;
 use Livewire\Attributes\On;
+use Livewire\Attributes\Title;
 use Livewire\Component;
-
+#[Title('Fund Transfer Print')]
 class FundTransferPrint extends Component
 {
 
@@ -35,7 +36,8 @@ class FundTransferPrint extends Component
     public string $TO_ACCOUNT;
     public string $TO_LOCATION;
     public string $TO_NAME;
-
+    public string $CODE;
+    public string $DATE;
     public string $INTER_ACCOUNT;
     public string $NOTES;
 
@@ -55,6 +57,8 @@ class FundTransferPrint extends Component
             if ($data) {
                 $this->AMOUNT = $data->AMOUNT ?? 0;
                 $this->NOTES = $data->NOTES;
+                $this->CODE = $data->CODE;
+                $this->DATE = $data->DATE;
 
                 $toLocData = $this->locationServices->get($data->TO_LOCATION_ID);
                 if ($toLocData) {

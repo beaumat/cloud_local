@@ -32,8 +32,24 @@
                                 <td></td>
                             </tr>
                             <tr>
-                                <td>Amount</td>
-                                <td>{{ number_format($AMOUNT, 2) }}</td>
+                                <td>Date</td>
+                                <td>{{ date('M/d/Y', strtotime($DATE)) }}</td>
+                            </tr>
+                            <tr>
+                                <td>Reference No.</td>
+                                <td>{{ $CODE }}</td>
+                            </tr>
+                            <tr>
+                                <td>Inter-Location Account</td>
+                                <td>{{ $INTER_ACCOUNT }}</td>
+                            </tr>
+                            <tr>
+                                <td>Notes</td>
+                                <td>{{ $NOTES }}</td>
+                            </tr>
+                            <tr>
+                                <td>Transfer Amount</td>
+                                <td class="font-weight-bold">{{ number_format($AMOUNT, 2) }}</td>
                             </tr>
                             <tr>
                                 <td>&nbsp;</td>
@@ -79,18 +95,8 @@
                                 <td>&nbsp;</td>
                                 <td></td>
                             </tr>
-                            <tr>
-                                <td> <b class="h5 text-primary">TRANSACTION INFO</b> </td>
-                                <td></td>
-                            </tr>
-                              <tr>
-                                <td>Inter-Location Account</td>
-                                <td>{{ $INTER_ACCOUNT }}</td>
-                            </tr>
-                            <tr>
-                                <td>Notes</td>
-                                <td>{{ $NOTES }}</td>
-                            </tr>
+                          
+
                         </tbody>
                     </table>
 
