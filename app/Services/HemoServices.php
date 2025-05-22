@@ -557,7 +557,6 @@ class HemoServices
     {
         //Get Previous  
         $data = $this->GetPreviousTreatment($HEMO_ID, $CUSTOMER_ID, $DATE, $LOCATION_ID);
-
         if ($data) {
             Hemodialysis::where('CUSTOMER_ID', $CUSTOMER_ID)
                 ->where('DATE', $DATE)
