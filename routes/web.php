@@ -53,6 +53,7 @@ use App\Livewire\FixedAssetItem\FixedAssetItemForm;
 use App\Livewire\FixedAssetItem\FixedAssetItemList;
 use App\Livewire\FundTransfer\FundTransferForm;
 use App\Livewire\FundTransfer\FundTransferList;
+use App\Livewire\FundTransfer\FundTransferPrint;
 use App\Livewire\GeneralJournal\GeneralJournalForm;
 use App\Livewire\GeneralJournal\GeneralJournalList;
 use App\Livewire\GeneralJournal\GeneralJournalPrint;
@@ -446,6 +447,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/', FundTransferList::class)->name('fund_transfer')->middleware(['permission:banking.fund-transfer.view']);
             Route::get('/create', FundTransferForm::class)->name('fund_transfer_credit')->middleware(['permission:banking.fund-transfer.create']);
             Route::get('/{id}/edit', FundTransferForm::class)->name('fund_transfer_edit')->middleware(['permission:banking.fund-transfer.view']);
+            Route::get('/{id}/print', FundTransferPrint::class)->name('fund_transfer_print')->middleware(['permission:banking.fund-transfer.print']);
         });
 
         Route::prefix('/bank-transfer')->group(function () {

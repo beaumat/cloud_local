@@ -381,6 +381,7 @@ class FundTransferForm extends Component
     }
     public function print()
     {
+        
     }
     public function OpenJournal()
     {

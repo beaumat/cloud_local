@@ -260,11 +260,11 @@
                                     <div class="text-right col-6 col-md-6">
                                         @if ($STATUS == 15)
                                             @can('banking.fund-transfer.print')
-                                                {{-- <a type="button" target="_BLANK"
-                                                    href="{{ route('companygeneral_journal_print', ['id' => $ID]) }}"
+                                                <a type="button" target="_BLANK"
+                                                    href="{{ route('bankingfund_transfer_print', ['id' => $ID]) }}"
                                                     class="btn btn-sm btn-dark">
                                                     <i class="fa fa-print" aria-hidden="true"></i> Print
-                                                </a> --}}
+                                                </a>
 
                                                 <button type="button" wire:click='OpenJournal()'
                                                     class="btn btn-sm btn-warning">
