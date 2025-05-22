@@ -75,7 +75,7 @@ class ContactServices
 			->select([
 				'contact.MED_CERT_SCHED_ID',
 				'contact.MED_CERT_NURSE_ID',
-				DB::raw("CONCAT(contact.LAST_NAME, ', ', contact.FIRST_NAME, ', ', LEFT(contact.MIDDLE_NAME, 1)) as NAME"),
+				DB::raw("CONCAT( contact.FIRST_NAME, ' ', LEFT(contact.MIDDLE_NAME, 1),'. ', contact.LAST_NAME, '  ', IF(contact.SALUTATION IS NOT NULL AND contact.SALUTATION != '', CONCAT(' .', contact.SALUTATION), '')) as NAME"),
 				'contact.LAST_NAME',
 				'contact.DATE_OF_BIRTH',
 				'contact.ADDRESS_UNIT_ROOM_FLOOR',
@@ -728,7 +728,7 @@ class ContactServices
 			->where('contact.ID', '=', $CONTACT_ID)
 			->where('contact.TYPE', '=', 3)
 			->join('contact_requirement as cr', 'cr.CONTACT_ID', '=', 'contact.ID')
-		
+
 			->first();
 
 		if ($result) {
