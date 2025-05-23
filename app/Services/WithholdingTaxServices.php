@@ -261,9 +261,20 @@ class WithholdingTaxServices
             ->where('BILL_ID', '=', $BILL_ID)
             ->exists();
     }
-    public function BillExists( int $BILL_ID): bool
+    public function BillExists(int $BILL_ID): bool
     {
         return WithholdingTaxBills::where('BILL_ID', '=', $BILL_ID)->exists();
+    }
+
+    public function GetID(int $BILL_ID): int
+    {
+
+        $result = WithholdingTaxBills::query()->select(['WITHHOLDING_TAX_ID'])->where('BILL_ID', '=', $BILL_ID)->first();
+        if ($result) {
+            return $result->WITHHOLDING_TAX_ID ?? 0;
+        }
+
+        return 0;
     }
     public function GetWTaxBillExists(int $ID, int $WITHHOLDING_TAX_ID, int $BILL_ID)
     {
@@ -305,7 +316,7 @@ class WithholdingTaxServices
                 'i.AMOUNT as ORG_AMOUNT',
                 'i.INPUT_TAX_AMOUNT',
                 'i.BALANCE_DUE',
-                
+
             ])
             ->join('bill as i', 'i.ID', '=', 'withholding_tax_bills.BILL_ID')
             ->where('withholding_tax_bills.WITHHOLDING_TAX_ID', '=', $WITHHOLDING_TAX_ID)

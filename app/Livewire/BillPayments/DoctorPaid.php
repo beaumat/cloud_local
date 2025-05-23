@@ -74,6 +74,8 @@ class DoctorPaid extends Component
         $locData = $this->locationServices->get($this->LOCATION_ID);
         if ($locData) {
             $this->EWT_ID = $locData->PF_TAX_ID ?? 10;
+
+         
         }
         $this->showModal = true;
     }

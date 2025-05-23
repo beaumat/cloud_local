@@ -137,9 +137,11 @@ class BillList extends Component
             }
 
             $this->billPaymentServices->billPaymentBills_Delete($ID, $this->CHECK_ID, $BILL_ID);
+
             $this->billingServices->UpdateBalance($BILL_ID);
             DB::commit();
 
+            $this->TaxMustDeleteToo($BILL_ID);
             $this->SetAmount();
             $this->dispatch('reset-payment');
         } catch (\Exception $e) {
@@ -148,7 +150,91 @@ class BillList extends Component
             session()->flash('error', $errorMessage);
         }
     }
+    private function TaxMustDeleteToo(int $BILL_ID)
+    {
+        $WTAX_ID = $this->withholdingTaxServices->GetID($BILL_ID);
+        if ($WTAX_ID > 0) {
+            $this->deleteWTax($WTAX_ID);
+        }
 
+    }
+
+    private function deleteJournalTax($data, int $id)
+    {
+
+        $JOURNAL_NO = (int) $this->accountJournalServices->getRecord($this->withholdingTaxServices->object_type_withholding_tax_id, $id);
+
+        if ($JOURNAL_NO > 0) {
+            $this->accountJournalServices->DeleteJournal(
+                $data->EWT_ACCOUNT_ID,
+                $data->LOCATION_ID,
+                $JOURNAL_NO,
+                $data->WITHHELD_FROM_ID,
+                $data->ID,
+                $this->withholdingTaxServices->object_type_withholding_tax_id,
+                $data->DATE,
+                1
+            );
+            $billListData = $this->withholdingTaxServices->GetBillList($id);
+            foreach ($billListData as $list) {
+                $this->accountJournalServices->DeleteJournal(
+                    $list->ACCOUNTS_PAYABLE_ID,
+                    $data->LOCATION_ID,
+                    $JOURNAL_NO,
+                    $list->BILL_ID,
+                    $list->ID,
+                    $this->withholdingTaxServices->object_type_witholding_tax_bills_id,
+                    $data->DATE,
+                    0
+                );
+            }
+
+            // optional if remaining
+            $this->accountJournalServices->DeleteJournal(
+                $data->ACCOUNTS_PAYABLE_ID,
+                $data->LOCATION_ID,
+                $JOURNAL_NO,
+                $data->WITHHELD_FROM_ID,
+                $data->ID,
+                $this->withholdingTaxServices->object_type_withholding_tax_id,
+                $data->DATE,
+                0
+            );
+        }
+
+    }
+    private function deleteWTax(int $ID)
+    {
+        try {
+            $data = $this->withholdingTaxServices->Get($ID);
+            if ($data) {
+                if ($data->STATUS == 0 || $data->STATUS == 15 || $data->STATUS == 16) {
+                    DB::beginTransaction();
+                    try {
+                        $this->deleteJournalTax($data, $ID);
+                        $billList = $this->withholdingTaxServices->GetBillList($ID);
+                        $this->withholdingTaxServices->Delete($ID);
+                        foreach ($billList as $list) {
+                            $this->billingServices->UpdateBalance($list->BILL_ID);
+                        }
+                        DB::commit();
+
+                    } catch (\Exception $e) {
+                        DB::rollBack();
+                        $errorMessage = 'Error occurred: ' . $e->getMessage();
+                        session()->flash('error', $errorMessage);
+                    }
+                    return;
+                }
+
+                session()->flash('error', 'Invalid. this file cannot be deleted.');
+            }
+        } catch (\Throwable $th) {
+
+            session()->flash('error', 'Error:' . $th->getMessage());
+        }
+
+    }
     private function SetAmount()
     {
         $AMOUNT = (float) $this->billPaymentServices->getTotalApplied($this->CHECK_ID);
@@ -183,13 +269,13 @@ class BillList extends Component
     }
     public function addingTax(int $ID, int $BILL_ID, float $AMOUNT)
     {
-        if($this->withholdingTaxServices->BillExists($BILL_ID)) {
+        if ($this->withholdingTaxServices->BillExists($BILL_ID)) {
             session()->flash('error', 'Bill already has withholding tax.');
             return;
         }
 
         DB::beginTransaction();
-        
+
         try {
             $isGood = (bool) $this->addTax($BILL_ID, $AMOUNT);
             if (!$isGood) {
@@ -211,12 +297,12 @@ class BillList extends Component
     public function addTax(int $BILL_ID, float $AMOUNT)
     {
 
-    
+
         if ($this->EWT_ID == 0) {
             return false;
         }
 
-   
+
 
         $this->getSetTax($AMOUNT);
 
