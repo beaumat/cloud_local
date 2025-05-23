@@ -119,8 +119,8 @@ class OtherDetails extends Component
 
     public string $RML;
     public string $HEPA_PROFILE;
-    public string $NEXT_RML;
-    public string $NEXT_HEPA_PROFILE;
+    public string $CXR;
+    public string $OTHER_INPUT = '';
 
     private $hemoServices;
     public function boot(HemoServices $hemoServices)
@@ -137,12 +137,12 @@ class OtherDetails extends Component
         $data = $this->hemoServices->Get($this->HEMO_ID);
         if ($data) {
             $this->SE_DETAILS = $data->SE_DETAILS ?? '';
-            $this->SO_DETAILS =  $data->SO_DETAILS ?? '';
+            $this->SO_DETAILS = $data->SO_DETAILS ?? '';
             $this->BFR = $data->BFR ?? 0;
             $this->DFR = $data->DFR ?? 0;
             $this->DURATION = $data->DURATION ?? 0;
             $this->DIALYZER = $data->DIALYZER ?? '';
-            $this->DIALSATE_N =  $data->DIALSATE_N ?? '';
+            $this->DIALSATE_N = $data->DIALSATE_N ?? '';
             $this->DIALSATE_K = $data->DIALSATE_K ?? '';
             $this->DIALSATE_C = $data->DIALSATE_C ?? '';
             $this->DETAILS_USE_NEXT = $data->DETAILS_USE_NEXT ?? false;
@@ -155,7 +155,7 @@ class OtherDetails extends Component
             $this->UF_GOAL = $data->UF_GOAL ?? '';
             $this->DB_STANDARD_HCOA = $data->DB_STANDARD_HCOA ?? false;
             $this->DB_ACID = $data->DB_ACID ?? false;
-            $this->SC_MACHINE_TEST  = $data->SC_MACHINE_TEST ?? false;
+            $this->SC_MACHINE_TEST = $data->SC_MACHINE_TEST ?? false;
             $this->SC_SECURED_CONNECTIONS = $data->SC_SECURED_CONNECTIONS ?? false;
             $this->SC_SALINE_LINE_DOUBLE_CLAMP = $data->SC_SALINE_LINE_DOUBLE_CLAMP ?? false;
             $this->SC_CONDUCTIVITY = $data->SC_CONDUCTIVITY ?? '';
@@ -231,11 +231,11 @@ class OtherDetails extends Component
             $this->POST_DEPTH_NOTES = $data->POST_DEPTH_NOTES ?? '';
             $this->POST_REGULAR = $data->POST_REGULAR ?? false;
             $this->POST_IRREGULAR = $data->POST_IRREGULAR ?? false;
-            $this->MACHINE_NO = $data->MACHINE_NO  ?? 0;
+            $this->MACHINE_NO = $data->MACHINE_NO ?? 0;
             $this->DRY_WEIGHT = $data->DRY_WEIGHT ?? '';
             $this->RML = $data->RML ?? '';
             $this->HEPA_PROFILE = $data->HEPA_PROFILE ?? '';
-            // $this->NEXT_RML = $data->NEXT_RML ?? '';
+            $this->CXR = $data->CXR ?? '';
             // $this->NEXT_HEPA_PROFILE = $data->NEXT_HEPA_PROFILE ?? '';
 
         }
@@ -346,8 +346,8 @@ class OtherDetails extends Component
                 $this->DRY_WEIGHT,
                 $this->RML ?? '',
                 $this->HEPA_PROFILE ?? '',
-                 '',
-                 ''
+                $this->CXR ?? '',
+                ''
             );
             DB::commit();
         } catch (\Throwable $th) {

@@ -499,8 +499,8 @@ class HemoServices
                 'DRY_WEIGHT',
                 'RML',
                 'HEPA_PROFILE',
-                'NEXT_RML',
-                'NEXT_HEPA_PROFILE',
+                'CXR',
+                'OTHER_INPUT',
             ])
             ->leftJoin('contact as c', 'c.ID', '=', 'hemodialysis.CUSTOMER_ID')
             ->where('hemodialysis.ID', '=', $ID)
@@ -579,6 +579,7 @@ class HemoServices
                     'DRY_WEIGHT' => $data->DRY_WEIGHT ?? null,
                     'RML' => $data->RML ?? null,
                     'HEPA_PROFILE' => $data->HEPA_PROFILE ?? null,
+                    'CXR' => $data->CXR ?? null
                 ]);
         }
     }
@@ -719,8 +720,8 @@ class HemoServices
         string $DRY_WEIGHT,
         string $RML,
         string $HEPA_PROFILE,
-        string $NEXT_RML,
-        string $NEXT_HEPA_PROFILE
+        string $CXR,
+        string $OTHER_INPUT
     ) {
         Hemodialysis::where('ID', $ID)
             ->update([
@@ -821,8 +822,8 @@ class HemoServices
                 'DRY_WEIGHT' => $DRY_WEIGHT,
                 'RML' => $RML,
                 'HEPA_PROFILE' => $HEPA_PROFILE,
-                'NEXT_RML' => $NEXT_RML,
-                'NEXT_HEPA_PROFILE' => $NEXT_HEPA_PROFILE,
+                'CXR' => $CXR,
+                'OTHER_INPUT' => $OTHER_INPUT,
             ]);
     }
     public function UpdatedSpecialOrder(int $ID): bool

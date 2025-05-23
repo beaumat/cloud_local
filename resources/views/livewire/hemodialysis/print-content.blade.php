@@ -1138,7 +1138,10 @@
                                 <div class="col-4 text-sm text-left"><b>HEPA&nbsp;PROFILE&nbsp;:</b></div>
                                 <div class="col-8 text-sm bottom-line2">{{ $HEPA_PROFILE }}</div>
                             </div>
-
+                            <div class="row">
+                                <div class="col-2 text-sm text-left"><b>CXR&nbsp;:</b></div>
+                                <div class="col-8 text-sm bottom-line2">{{ $CXR }}</div>
+                            </div>
                         </div>
                         <div class="col-12 pb-1">
                             <div class="row">

@@ -145,7 +145,7 @@ class Hemodialysis extends Model
         'DRY_WEIGHT',
         'RML',
         'HEPA_PROFILE',
-        'NEXT_RML',
-        'NEXT_HEPA_PROFILE'
+        'CXR',
+        'OTHER_INPUT'
     ];
 }

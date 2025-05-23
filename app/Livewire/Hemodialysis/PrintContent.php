@@ -160,6 +160,7 @@ class PrintContent extends Component
     public bool $DRY_WEIGHT = true;
     public string $RML;
     public string $HEPA_PROFILE;
+    public string $CXR;
     public $noteList = [];
 
     public $SE_PARTS = [];
@@ -358,7 +359,7 @@ class PrintContent extends Component
             $this->DRY_WEIGHT_VALUE = $data->DRY_WEIGHT ?? '';
             $this->RML = $this->dateServices->isValidDateFormat($data->RML) ? date('m/d/Y', strtotime($data->RML)) : $data->RML ?? '';
             $this->HEPA_PROFILE = $this->dateServices->isValidDateFormat($data->HEPA_PROFILE) ? date('m/d/Y', strtotime($data->HEPA_PROFILE)) : $data->HEPA_PROFILE ?? '';
-
+            $this->CXR = $this->dateServices->isValidDateFormat($data->CXR) ? date('m/d/Y', strtotime($data->CXR)) : $data->CXR ?? '';
             $this->SE_COUNT = 0;
             $this->SE_PARTS = str_split($this->SE_DETAILS, 40);
 
@@ -390,7 +391,6 @@ class PrintContent extends Component
                 $this->DRY_WEIGHT = $locData->USED_DRY_WEIGHT ?? false;
                 $this->OTHER_SIGN = $locData->OTHER_SIGN ?? false;
             }
-
             $this->noteList = $this->hemoServices->ListNotes($this->HEMO_ID);
         }
     }
