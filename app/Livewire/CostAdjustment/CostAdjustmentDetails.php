@@ -99,35 +99,44 @@ class CostAdjustmentDetails extends Component
         try {
             DB::beginTransaction();
             $this->costAdjustmentServices->StoreItem($this->COST_ADJUSTMENT_ID, $this->ITEM_ID, $this->COST);
+            $this->ITEM_ID = 0;
+            $this->COST = 0;
+            $this->ITEM_CODE = "";
+            $this->ITEM_DESCRIPTION = "";
+            
+            $this->saveSuccess = $this->saveSuccess ? false : true;
             DB::commit();
         } catch (\Throwable $th) {
             DB::rollBack();
             session()->flash('error', $th->getMessage());
         }
     }
-
+    public function deleteItem(int $id)
+    {
+        $this->costAdjustmentServices->DeleteItem($id);
+    }
     public function updateItem()
     {
 
-         $this->validate(
+        $this->validate(
             [
-               
+
                 'EDIT_COST' => 'required|numeric|not_in:0'
             ],
             [],
             [
-      
+
                 'EDIT_COST' => 'Cost Amount'
 
             ]
         );
         try {
-       
-            $this->costAdjustmentServices->UpdateItem($this->editItemId, $this->EDIT_COST); 
+
+            $this->costAdjustmentServices->UpdateItem($this->editItemId, $this->EDIT_COST);
             $this->editItemId = null;
         } catch (\Throwable $th) {
             //throw $th;
-      
+
             session()->flash('error', $th->getMessage());
         }
 

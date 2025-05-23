@@ -32,10 +32,10 @@
                                             <div class="row">
                                                 <div class="col-md-4">
                                                     @if (($ID == 0 && auth()->user()->date_enabled) || ($Modify && auth()->user()->date_enabled))
-                                                        <livewire:date-input name="DATE" titleName="Date"
+                                                        <livewire:date-input name="DATE" titleName="Date Start"
                                                             wire:model.live='DATE' :isDisabled="false" />
                                                     @else
-                                                        <livewire:date-input name="DATE" titleName="Date"
+                                                        <livewire:date-input name="DATE" titleName="Date Start"
                                                             wire:model.live='DATE' :isDisabled="true" />
                                                     @endif
                                                 </div>

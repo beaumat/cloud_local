@@ -503,7 +503,6 @@ class HemoForm extends Component
         try {
 
             $this->hemoServices->makeItemInventory($this->ID);
-            //    $this->hemoServices->makeJournal($this->ID);
             $this->hemoServices->getMakeJournal($this->ID);
             return true;
         } catch (\Exception $e) {

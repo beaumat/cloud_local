@@ -132,6 +132,7 @@ class CostAdjustmentServices
             ->select([
                 'cost_adjustment_item.ID',
                 'cost_adjustment_item.COST',
+                'cost_adjustment_item.ITEM_ID',
                 'i.CODE',
                 'i.DESCRIPTION',
             ])

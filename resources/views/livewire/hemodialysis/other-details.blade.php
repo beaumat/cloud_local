@@ -70,12 +70,7 @@
                                             wire:model='MACHINE_NO' @if ($Modify == false) disabled @endif />
                                     </div>
                                     @endif
-
-
                                 </div>
-
-
-
                             </div>
                             <div class="col-md-4">
                                 <div class="card">
