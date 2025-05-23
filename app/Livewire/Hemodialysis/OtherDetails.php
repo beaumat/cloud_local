@@ -127,6 +127,7 @@ class OtherDetails extends Component
     {
         $this->hemoServices = $hemoServices;
     }
+    
     public function mount()
     {
         $this->reload();
@@ -244,7 +245,6 @@ class OtherDetails extends Component
     public function save()
     {
         DB::beginTransaction();
-
         try {
             //code...
             $this->hemoServices->SaveOthers(
@@ -368,7 +368,6 @@ class OtherDetails extends Component
         $result = (bool) $this->hemoServices->UpdatedSpecialOrder($this->HEMO_ID);
         $this->DETAILS_USE_NEXT = $result;
         if ($result) {
-
             session()->flash('message', 'Special order will be used for the next treatment successfully.');
             return;
         }

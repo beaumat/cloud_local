@@ -77,10 +77,10 @@ class HemoForm extends Component
     public string $OLD_POST_HEART_RATE;
     public string $OLD_POST_O2_SATURATION;
     public string $OLD_POST_TEMPERATURE;
-
     public bool $USE_OTHER_DETAILS = true;
-
     public bool $IS_INCOMPLETE;
+
+    public bool $DOCTOR_DES_PROMP = false;
     public int $EMPLOYEE_ID;
     public string $EMPLOYEE_NAME;
 
@@ -176,7 +176,12 @@ class HemoForm extends Component
                 $this->IsDocmentUploaded = true;
             }
         }
+        if($this->TIME_END && $this->TIME_START) {
+            $this->DOCTOR_DES_PROMP = true;
+        }
         $this->getPreviousTreatment();
+
+
     }
 
     public function setNullEmployee()

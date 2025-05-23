@@ -488,7 +488,7 @@
                             </div>
 
                             <div class="col-md-12">
-                                @livewire('Hemodialysis.DoctorsOrder', ['HEMO_ID' => $ID])
+                                @livewire('Hemodialysis.DoctorsOrder', ['HEMO_ID' => $ID, 'DOCTOR_DES_PROMP' => $DOCTOR_DES_PROMP])
                             </div>
                         </div>
                     </div>

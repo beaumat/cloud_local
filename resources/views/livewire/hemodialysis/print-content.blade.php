@@ -81,7 +81,7 @@
 
                                 </div>
                                 <div class="col-12 bottom-line up-space">
-                                    &nbsp;
+                                    <div style="padding-bottom: 14px;"></div>
                                 </div>
                                 <div class="col-12 bottom-line up-space">
                                     WEIGHT

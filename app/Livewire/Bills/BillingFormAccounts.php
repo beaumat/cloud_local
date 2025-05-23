@@ -123,14 +123,6 @@ class BillingFormAccounts extends Component
             ]
         );
 
-        // $recordExists = (bool) DB::table('bill_expenses')
-        //     ->where('BILL_ID', $this->BILL_ID,)->where('ACCOUNT_ID', $this->ACCOUNT_ID)->exists();
-
-        // if ($recordExists) {
-        //     session()->flash('error', 'Account already exists');
-        //     return;
-        // }
-
         try {
             $taxRate = $this->taxServices->getRate($this->TAX_ID);
 
