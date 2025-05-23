@@ -140,7 +140,6 @@ class BillList extends Component
 
             $this->billingServices->UpdateBalance($BILL_ID);
             DB::commit();
-
             $this->TaxMustDeleteToo($BILL_ID);
             $this->SetAmount();
             $this->dispatch('reset-payment');
@@ -152,10 +151,15 @@ class BillList extends Component
     }
     private function TaxMustDeleteToo(int $BILL_ID)
     {
-        $WTAX_ID = $this->withholdingTaxServices->GetID($BILL_ID);
-        if ($WTAX_ID > 0) {
-            $this->deleteWTax($WTAX_ID);
+
+        if ($this->PF_PERIOD_ID > 0) {
+            // dapat meron  numero para mag hook sa auto tax
+            $WTAX_ID = $this->withholdingTaxServices->GetID($BILL_ID);
+            if ($WTAX_ID > 0) {
+                $this->deleteWTax($WTAX_ID);
+            }
         }
+
 
     }
 
