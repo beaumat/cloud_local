@@ -63,24 +63,24 @@
                     @if ($STATUS == $openStatus)
                         <td class="text-center">
                             @if ($editExpensesId === $list->ID)
-                                <button title="Update" id="updatebtn" wire:click="updateExpenses({{ $list->ID }})"
-                                    class="text-success btn btn-sm btn-link">
+                                <button type="button" title="Update" id="updatebtn"
+                                    wire:click="updateExpenses({{ $list->ID }})" class="btn btn-success btn-xs">
                                     <i class="fas fa-check" aria-hidden="true"></i>
                                 </button>
-                                <button title="Cancel" id="cancelbtn" href="#" wire:click="cancelExpenses()"
-                                    class="text-warning btn btn-sm btn-link">
+                                <button type="button" title="Cancel" id="cancelbtn" wire:click="cancelExpenses()"
+                                    class="btn btn-warning btn-xs">
                                     <i class="fas fa-ban" aria-hidden="true"></i>
                                 </button>
                             @else
-                                <button title="Edit" id="editbtn"
+                                <button type="button" title="Edit" id="editbtn"
                                     wire:click="editExpenses( {{ $list->ID }}, {{ $list->AMOUNT }} ,{{ $list->TAXABLE }},'{{ $list->PARTICULARS }}',{{ $list->CLASS_ID > 0 ? $list->CLASS_ID : 0 }})"
-                                    class="text-info btn btn-sm btn-link">
+                                    class="btn-info btn btn-xs">
                                     <i class="fas fa-edit" aria-hidden="true"></i>
                                 </button>
-                                <button title="Delete" id="deletebtn" wire:click='deleteExpenses({{ $list->ID }})'
-                                    wire:confirm="Are you sure you want to delete this?"
-                                    class="text-danger btn btn-sm btn-link">
-                                    <i class="fas fa-times" aria-hidden="true"></i>
+                                <button type="button" title="Delete" id="deletebtn"
+                                    wire:click='deleteExpenses({{ $list->ID }})'
+                                    wire:confirm="Are you sure you want to delete this?" class="btn btn-danger btn-xs">
+                                    <i class="fas fa-trash" aria-hidden="true"></i>
                                 </button>
                             @endif
                         </td>
@@ -97,15 +97,15 @@
                                 @if ($codeBase)
                                     <livewire:select-option name="ACCOUNT_ID1" titleName="Account Code"
                                         :options="$acctCodeList" :zero="true" wire:model.live='ACCOUNT_ID'
-                                        isDisabled=false :vertical="false" :withLabel="false" />
+                                        isDisabled="{{ false }}" :vertical="false" :withLabel="false" />
                                 @else
                                     <label class="mt-2"> {{ $ACCOUNT_CODE }}</label>
                                 @endif
                             @else
                                 @if ($codeBase)
                                     <livewire:select-option name="ACCOUNT_ID2" titleName="Account Code"
-                                        :options="$acctCodeList" :zero="true" wire:model.live='ACCOUNT_ID' 
-                                        isDisabled=false :vertical="false" :withLabel="false" />
+                                        :options="$acctCodeList" :zero="true" wire:model.live='ACCOUNT_ID'
+                                        isDisabled="{{ false }}" :vertical="false" :withLabel="false" />
                                 @else
                                     <label class="mt-2"> {{ $ACCOUNT_CODE }}</label>
                                 @endif
@@ -115,51 +115,51 @@
                             @if ($saveSuccess)
                                 @if (!$codeBase)
                                     <livewire:select-option name="ACCOUNT_ID3" titleName="Account Description"
-                                        :options="$acctDescList" :zero="true" wire:model.live='ACCOUNT_ID' isDisabled=false
-                                        :vertical="false" :withLabel="false" />
+                                        :options="$acctDescList" :zero="true" wire:model.live='ACCOUNT_ID'
+                                        isDisabled="{{ false }}" :vertical="false" :withLabel="false" />
                                 @else
                                     <label class="mt-2"> {{ $ACCOUNT_DESCRIPTION }}</label>
                                 @endif
                             @else
                                 @if (!$codeBase)
                                     <livewire:select-option name="ACCOUNT_ID4" titleName="Account Description"
-                                        :options="$acctDescList" :zero="true" wire:model.live='ACCOUNT_ID' isDisabled=false
-                                        :vertical="false" :withLabel="false" />
+                                        :options="$acctDescList" :zero="true" wire:model.live='ACCOUNT_ID'
+                                        isDisabled="{{ false }}" :vertical="false" :withLabel="false" />
                                 @else
                                     <label class="mt-2"> {{ $ACCOUNT_DESCRIPTION }}</label>
                                 @endif
                             @endif
                         </td>
                         <td>
-                            <input type="number" class="form-control form-control-sm mt-2 text-right" name="AMOUNT"
+                            <input type="number" class="form-control form-control-sm text-right" name="AMOUNT"
                                 wire:model='AMOUNT' />
                         </td>
                         <td class="text-center">
-                            <input type="checkbox" class="text-lg mt-2" wire:model='TAXABLE' name="taxable"
+                            <input type="checkbox" class="text-lg" wire:model='TAXABLE' name="taxable"
                                 @if ($ACCOUNT_ID == 0) disabled @endif />
                         </td>
                         <td class="text-left">
-                            <input type="text" class="form-control form-control-sm mt-2" wire:model='PARTICULARS'
+                            <input type="text" class="form-control form-control-sm" wire:model='PARTICULARS'
                                 name="PARTICULARS" />
                         </td>
                         <td>
                             @if ($saveSuccess)
                                 @if (!$codeBase)
                                     <livewire:select-option name="CLASS_ID1" titleName="" :options="$classList"
-                                        :zero="true" wire:model.live='CLASS_ID' :vertical="false" isDisabled=false
-                                        :withLabel="false" />
+                                        :zero="true" wire:model.live='CLASS_ID' :vertical="false"
+                                        isDisabled="{{ false }}" :withLabel="false" />
                                 @endif
                             @else
                                 @if (!$codeBase)
                                     <livewire:select-option name="CLASS_ID2" titleName="" :options="$classList"
-                                        :zero="true" wire:model.live='CLASS_ID' :vertical="false" isDisabled=false
-                                        :withLabel="false" />
+                                        :zero="true" wire:model.live='CLASS_ID' :vertical="false"
+                                        isDisabled="{{ false }}" :withLabel="false" />
                                 @endif
                             @endif
 
                         </td>
                         <td>
-                            <div class="mt-2">
+                            <div>
                                 <button type="submit" wire:loading.attr='hidden'
                                     @if ($ACCOUNT_ID == 0) disabled @endif
                                     class="text-white btn bg-sky btn-sm w-100">
@@ -180,7 +180,7 @@
 
     </table>
     @if ($STATUS == $openStatus)
-        <livewire:custom-check-box name="codeBaseAcct" titleName="Use choose account code" 
-            wire:model.live='codeBase' isDisabled=false />
+        <livewire:custom-check-box name="codeBaseAcct" titleName="Use choose account code" wire:model.live='codeBase'
+            isDisabled="{{ false }}" />
     @endif
 </div>

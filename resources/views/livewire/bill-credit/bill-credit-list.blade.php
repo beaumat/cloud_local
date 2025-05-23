@@ -34,7 +34,10 @@
                                         <div class="col-md-3">
                                             <div class="mt-0">
                                                 <label class="text-sm">Location:</label>
-                                                <select @if (Auth::user()->locked_location) style="opacity: 0.5;pointer-events: none;" @endif name="location" wire:model.live='locationid' class="form-control form-control-sm">
+                                                <select
+                                                    @if (Auth::user()->locked_location) style="opacity: 0.5;pointer-events: none;" @endif
+                                                    name="location" wire:model.live='locationid'
+                                                    class="form-control form-control-sm">
                                                     <option value="0"> All Location</option>
                                                     @foreach ($locationList as $item)
                                                         <option value="{{ $item->ID }}"> {{ $item->NAME }}
@@ -56,9 +59,10 @@
                                         <th class="col-1">Amount</th>
                                         <th class="col-1">Tax</th>
                                         <th class="col-1">Status</th>
-                                        <th class="text-center col-1">
-                                            <a href="{{ route('vendorsbill_credit_create') }}" class="text-white">
-                                                <i class="fas fa-plus"></i></a>
+                                        <th class="text-center col-1 bg-success">
+                                            <a href="{{ route('vendorsbill_credit_create') }}"
+                                                class="text-white btn btn-xs w-100">
+                                                <i class="fas fa-plus"></i> New </a>
                                         </th>
                                     </tr>
                                 </thead>
@@ -79,14 +83,14 @@
 
                                             <td class="text-center">
                                                 <a href="{{ route('vendorsbill_credit_edit', ['id' => $list->ID]) }}"
-                                                    class="btn-sm text-info">
-                                                    <i class="fas fa-edit" aria-hidden="true"></i>
+                                                    class="btn btn-xs btn-info">
+                                                    <i class="fas fa-eye" aria-hidden="true"></i>
                                                 </a>
-                                                <a href="#" wire:click='delete({{ $list->ID }})'
+                                                <button type="button" wire:click='delete({{ $list->ID }})'
                                                     wire:confirm="Are you sure you want to delete this?"
-                                                    class="btn-sm text-danger">
-                                                    <i class="fas fa-times" aria-hidden="true"></i>
-                                                </a>
+                                                    class="btn btn-xs btn-danger">
+                                                    <i class="fas fa-trash" aria-hidden="true"></i>
+                                                </button>
                                             </td>
                                         </tr>
                                     @endforeach

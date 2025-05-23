@@ -30,7 +30,7 @@
                                             @if ($Modify)
                                                 <livewire:select-option-type name="VENDOR_ID1" titleName="Vendor"
                                                     :options="$vendorList" :zero="true" :isDisabled=false
-                                                    wire:model='VENDOR_ID2' />
+                                                    wire:model='VENDOR_ID' />
                                             @else
                                                 <livewire:select-option-type name="VENDOR_ID" titleName="Vendor"
                                                     :options="$vendorList" :zero="true" :isDisabled=true
@@ -51,9 +51,9 @@
                                                         <livewire:text-input name="Code" titleName="Reference No."
                                                             :isDisabled=true wire:model='CODE' />
                                                     @endif
-
                                                 </div>
-                                                <div class="col-md-4" @if (Auth::user()->locked_location) style="opacity: 0.5;pointer-events: none;" @endif>
+                                                <div class="col-md-4"
+                                                    @if (Auth::user()->locked_location) style="opacity: 0.5;pointer-events: none;" @endif>
                                                     @if ($Modify && $AMOUNT == 0)
                                                         <livewire:select-option name="LOCATION_ID" titleName="Location"
                                                             :options="$locationList" :zero="false" :isDisabled=false
@@ -132,83 +132,76 @@
             </div>
         </div>
     </section>
-    <section class="content">
-        <div class="container-fluid bg-light">
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="card card-primary card-outline card-outline-tabs">
-                        <div class="card-header p-0 border-bottom-0">
-                            <ul class="nav text-xs nav-tabs" id="custom-tabs-four-tab" role="tablist">
-                                <li class="nav-item">
-                                    <a class="nav-link @if ($tab == 'item') active @endif"
-                                        id="custom-tabs-four-item-tab" wire:click="SelectTab('item')"
-                                        data-toggle="pill" href="#custom-tabs-four-item" role="tab"
-                                        aria-controls="custom-tabs-four-item" aria-selected="true">Items</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link @if ($tab == 'account') active @endif"
-                                        id="custom-tabs-four-account-tab" wire:click="SelectTab('account')"
-                                        data-toggle="pill" href="#custom-tabs-four-account" role="tab"
-                                        aria-controls="custom-tabs-four-account" aria-selected="true">Expenses</a>
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="card-body">
-                            <div class="tab-content" id="custom-tabs-four-tabContent">
-                                <div class="tab-pane fade @if ($tab == 'item') show active @endif "
-                                    id="custom-tabs-four-item" role="tabpanel">
-                                    <div class="row"
-                                        @if ($ID === 0) style="opacity: 0.5;pointer-events: none;" @endif>
-                                        <div class="col-md-12"
-                                            @if ($Modify == true) style="opacity: 0.5;pointer-events: none;" @endif>
-                                            @livewire('BillCredit.BillCreditFormItems', ['BILL_CREDIT_ID' => $ID, 'STATUS' => $STATUS, 'TAX_ID' => $INPUT_TAX_ID])
-                                        </div>
+    @if ($ID > 0)
+        <section class="content">
+            <div class="container-fluid bg-light">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card card-primary card-outline card-outline-tabs">
+                            <div class="card-header p-0 border-bottom-0">
+                                <ul class="nav text-xs nav-tabs" id="custom-tabs-four-tab" role="tablist">
+                                    <li class="nav-item">
+                                        <a class="nav-link @if ($tab == 'item') active @endif"
+                                            id="custom-tabs-four-item-tab" wire:click="SelectTab('item')"
+                                            data-toggle="pill" href="#custom-tabs-four-item" role="tab"
+                                            aria-controls="custom-tabs-four-item" aria-selected="true">Items</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link @if ($tab == 'account') active @endif"
+                                            id="custom-tabs-four-account-tab" wire:click="SelectTab('account')"
+                                            data-toggle="pill" href="#custom-tabs-four-account" role="tab"
+                                            aria-controls="custom-tabs-four-account" aria-selected="true">Expenses</a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="card-body">
+                                <div class="tab-content" id="custom-tabs-four-tabContent">
+                                    <div class="tab-pane fade @if ($tab == 'item') show active @endif "
+                                        id="custom-tabs-four-item" role="tabpanel">
+                                        @livewire('BillCredit.BillCreditFormItems', ['BILL_CREDIT_ID' => $ID, 'STATUS' => $STATUS, 'TAX_ID' => $INPUT_TAX_ID])
+
                                     </div>
-                                </div>
-                                <div class="tab-pane fade @if ($tab == 'account') show active @endif "
-                                    id="custom-tabs-four-account" role="tabpanel">
-                                    <div class="row"
-                                        @if ($ID === 0) style="opacity: 0.5;pointer-events: none;" @endif>
-                                        <div class="col-md-12"
-                                            @if ($Modify == true) style="opacity: 0.5;pointer-events: none;" @endif>
-                                            @livewire('BillCredit.BillCreditFormAccounts', ['BILL_CREDIT_ID' => $ID, 'STATUS' => $STATUS, 'TAX_ID' => $INPUT_TAX_ID])
-                                        </div>
+                                    <div class="tab-pane fade @if ($tab == 'account') show active @endif "
+                                        id="custom-tabs-four-account" role="tabpanel">
+                                        @livewire('BillCredit.BillCreditFormAccounts', ['BILL_CREDIT_ID' => $ID, 'STATUS' => $STATUS, 'TAX_ID' => $INPUT_TAX_ID])
+
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="card-footer">
-                            <div class="row">
-                                <div class="col-md-6 text-left">
-                                    @livewire('BillCredit.BillListPromp', ['BILL_CREDIT_ID' => $ID, 'VENDOR_ID' => $VENDOR_ID, 'LOCATION_ID' => $LOCATION_ID, 'AMOUNT' => $AMOUNT, 'AMOUNT_APPLIED' => $AMOUNT_APPLIED])
+                            <div class="card-footer">
+                                <div class="row">
+                                    <div class="col-md-6 text-left">
+                                        @livewire('BillCredit.BillListPromp', ['BILL_CREDIT_ID' => $ID, 'VENDOR_ID' => $VENDOR_ID, 'LOCATION_ID' => $LOCATION_ID, 'AMOUNT' => $AMOUNT, 'AMOUNT_APPLIED' => $AMOUNT_APPLIED])
 
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="row">
-                                        <div class="col-md-4 text-right">
-                                            <label class="text-sm">Input Tax:</label>
-                                            <label
-                                                class="text-info text-lg">{{ number_format($INPUT_TAX_AMOUNT, 2) }}</label>
-                                        </div>
-                                        <div class="col-md-4 text-right">
-                                            <label class="text-sm">Total:</label>
-                                            <label class="text-primary text-lg">{{ number_format($AMOUNT, 2) }}</label>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="row">
+                                            <div class="col-md-4 text-right">
+                                                <label class="text-sm">Input Tax:</label>
+                                                <label
+                                                    class="text-info text-lg">{{ number_format($INPUT_TAX_AMOUNT, 2) }}</label>
+                                            </div>
+                                            <div class="col-md-4 text-right">
+                                                <label class="text-sm">Total:</label>
+                                                <label
+                                                    class="text-primary text-lg">{{ number_format($AMOUNT, 2) }}</label>
 
-                                        </div>
-                                        <div class="col-md-4 text-right">
-                                            <label class="text-sm">Total Applied:</label>
-                                            <label
-                                                class="text-primary text-lg">{{ number_format($AMOUNT_APPLIED, 2) }}</label>
+                                            </div>
+                                            <div class="col-md-4 text-right">
+                                                <label class="text-sm">Total Applied:</label>
+                                                <label
+                                                    class="text-primary text-lg">{{ number_format($AMOUNT_APPLIED, 2) }}</label>
 
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
 
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
+    @endif
 </div>

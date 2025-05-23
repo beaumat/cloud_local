@@ -338,7 +338,6 @@ class CreditMemoFormItems extends Component
     {
         $this->editItemId = null;
     }
-
     public function deleteItem($Id)
     {
         try {

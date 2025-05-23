@@ -34,7 +34,9 @@
                                         <div class="col-md-3">
                                             <div class="mt-0">
                                                 <label class="text-sm">Location:</label>
-                                                <select @if (Auth::user()->locked_location) style="opacity: 0.5;pointer-events: none;" @endif name="location" wire:model.live='locationid'
+                                                <select
+                                                    @if (Auth::user()->locked_location) style="opacity: 0.5;pointer-events: none;" @endif
+                                                    name="location" wire:model.live='locationid'
                                                     class="form-control form-control-sm">
                                                     <option value="0"> All Location</option>
                                                     @foreach ($locationList as $item)
@@ -86,7 +88,7 @@
                                             <td class="text-center">
                                                 <a href="{{ route('customerscredit_memo_edit', ['id' => $list->ID]) }}"
                                                     class="btn btn-xs btn-info">
-                                                    <i class="fas fa-edit" aria-hidden="true"></i>
+                                                    <i class="fas fa-eye" aria-hidden="true"></i>
                                                 </a>
                                                 @if ($list->AMOUNT_APPLIED == 0)
                                                     <button wire:click='delete({{ $list->ID }})'
