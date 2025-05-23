@@ -254,12 +254,18 @@ class HemoServices
 
         return $result;
     }
-
+    public function getPostedFrom(string $DATE, int $LOCATION_ID)
+    {
+        return Hemodialysis::query()
+            ->select(['ID'])
+            ->where('LOCATION_ID', $LOCATION_ID)
+            ->where('DATE', '>=', $DATE)
+            ->where('STATUS_ID', 2)
+            ->orderBy('DATE')
+            ->get();
+    }
     public function getDateTimeByRange(int $CONTACT_ID, int $LOCATION_ID, string $DT_FROM, string $DT_TO)
     {
-
-
-
 
         $dates = Hemodialysis::query()
             ->select(DB::raw('MIN(hemodialysis.DATE) AS first_date, MAX(hemodialysis.DATE) AS last_date'))
