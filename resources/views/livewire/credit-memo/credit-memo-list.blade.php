@@ -85,19 +85,19 @@
                                             <td> {{ $list->STATUS }}</td>
                                             <td class="text-center">
                                                 <a href="{{ route('customerscredit_memo_edit', ['id' => $list->ID]) }}"
-                                                    class="btn-sm text-info">
+                                                    class="btn btn-xs btn-info">
                                                     <i class="fas fa-edit" aria-hidden="true"></i>
                                                 </a>
                                                 @if ($list->AMOUNT_APPLIED == 0)
-                                                    <a href="#" wire:click='delete({{ $list->ID }})'
+                                                    <button wire:click='delete({{ $list->ID }})'
                                                         wire:confirm="Are you sure you want to delete this?"
-                                                        class="btn-sm text-danger">
-                                                        <i class="fas fa-times" aria-hidden="true"></i>
-                                                    </a>
+                                                        class="btn btn-xs btn-danger">
+                                                        <i class="fas fa-trash" aria-hidden="true"></i>
+                                                    </button>
                                                 @else
-                                                    <a href="#" class="btn-sm text-secondary">
-                                                        <i class="fas fa-times" aria-hidden="true"></i>
-                                                    </a>
+                                                    <button class="btn btn-xs btn-secondary">
+                                                        <i class="fas fa-trash" aria-hidden="true"></i>
+                                                    </button>
                                                 @endif
                                             </td>
                                         </tr>
