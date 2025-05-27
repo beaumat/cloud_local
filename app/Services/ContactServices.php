@@ -284,12 +284,13 @@ class ContactServices
 		
 
 		$groupList =  $this->itemServices->GetAllItemByGroup(1);
+
 		$list ='';
 		foreach($groupList as $item) {
 			if($list == '') {
 				$list = "'".$item['ID']. "'";
 			} else {
-				$list += ',' . "'".$item['ID']. "'";
+				$list .= ",'".$item['ID']. "'";
 			}
 	
 		}
@@ -299,7 +300,7 @@ class ContactServices
 				'ID',
 				DB::raw("CONCAT(LAST_NAME, ', ', FIRST_NAME, ', ', LEFT(MIDDLE_NAME, 1)) as NAME"),
 				DB::raw("(select count(*) from service_charges join service_charges_items on service_charges_items.SERVICE_CHARGES_ID = service_charges.ID  where service_charges.PATIENT_ID = contact.ID and service_charges_items.ITEM_ID = '2'  and service_charges.LOCATION_ID = $LOCATION_ID  and YEAR(service_charges.DATE) = $YEAR) as TOTAL_DAYS"),
-				DB::raw("(select count(*) from service_charges join service_charges_items on service_charges_items.SERVICE_CHARGES_ID = service_charges.ID  where service_charges.PATIENT_ID = contact.ID and service_charges_items.ITEM_ID IN ($list)  and service_charges.LOCATION_ID = $LOCATION_ID  and YEAR(service_charges.DATE) = $YEAR) as AS TOTAL_ITEMS")
+				DB::raw("(select count(*) from service_charges join service_charges_items on service_charges_items.SERVICE_CHARGES_ID = service_charges.ID  where service_charges.PATIENT_ID = contact.ID and service_charges_items.ITEM_ID IN ($list)  and service_charges.LOCATION_ID = $LOCATION_ID  and YEAR(service_charges.DATE) = $YEAR) as TOTAL_ITEMS")
 				])->where('TYPE', 3)
 			->where('INACTIVE', '0')
 			->when($LOCATION_ID > 0, function ($query) use (&$LOCATION_ID) {

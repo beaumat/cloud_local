@@ -43,12 +43,7 @@
                                 <div class="form-group">
                                     <div class="row">
                                         <div class="col-6">
-                                            {{-- <div wire:loading.delay>
-                                                <span class="spinner"></span>
-                                            </div>
-                                            <button class="btn btn-sm btn-primary" wire:click='generate()'
-                                                wire:loading.attr='disabled'>Filter</button>
-                                           --}}
+                                       
                                         </div>
                                         <div class="col-6">
                                         </div>
@@ -97,6 +92,7 @@
                                     <input class="text-lg" type="checkbox" wire:model.live="SelectAll" />
                                 </th>
                                 <th>Name</th>
+                                <th class="col-1 text-center">Total Dialyzer</th>
                                 <th class="col-1 text-center">Total Days</th>
                                 <th class="col-1">Action</th>
                             </tr>
@@ -109,6 +105,7 @@
                                             wire:model.live="selectPatient.{{ $list->ID }}" />
                                     </td>
                                     <td>{{ $list->NAME }}</td>
+                                    <td class="text-center">{{ $list->TOTAL_ITEMS }}</td>
                                     <td class="text-center">{{ $list->TOTAL_DAYS }}</td>
                                     <td>
                                         <a target="_BLANK"
