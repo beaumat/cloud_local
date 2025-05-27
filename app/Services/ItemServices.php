@@ -673,4 +673,10 @@ class ItemServices
 
         return $result;
     }
+    public function GetAllItemByGroup(int $GROUP_ID)
+    {
+        $result = Items::query()->select(['ID'])->where('GROUP_ID', $GROUP_ID)->get();
+
+        return $result->toArray();
+    }
 }

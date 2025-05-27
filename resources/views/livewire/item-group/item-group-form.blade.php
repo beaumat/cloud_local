@@ -36,14 +36,14 @@
                                 <div class="form-group">
                                     <div class="row">
                                         <div class="col-md-4">
-                                            <livewire:text-input name="CODE" titleName="Code" wire:model='CODE'>
+                                            <livewire:text-input name="CODE" titleName="Code" wire:model='CODE' isDisabled="{{ false }}" >
                                         </div>
                                         <div class="col-md-4">
-                                            <livewire:text-input name="DESCRIPTION" titleName="Description"
+                                            <livewire:text-input name="DESCRIPTION" titleName="Description" isDisabled="{{ false }}" 
                                                 wire:model='DESCRIPTION'>
                                         </div>
                                         <div class="col-md-4">
-                                            <livewire:select-option name="ITEM_TYPE" :options="$itemType" :zero="false"
+                                            <livewire:select-option name="ITEM_TYPE" :options="$itemType" :zero="false" isDisabled="{{ false }}" 
                                                 titleName="Item Type" wire:model.live='ITEM_TYPE' :key="$itemType->pluck('ID')->join('_')">
                                         </div>
                                     </div>

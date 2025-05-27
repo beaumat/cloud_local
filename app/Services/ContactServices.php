@@ -12,9 +12,11 @@ class ContactServices
 {
 	use WithPagination;
 	private $objectService;
-	public function __construct(ObjectServices $objectService)
+	private $itemServices;
+	public function __construct(ObjectServices $objectService,ItemServices $itemServices	)
 	{
 		$this->objectService = $objectService;
+		$this->itemServices = $itemServices;
 	}
 	public function is12CharRequired(string $value): bool
 	{
@@ -276,15 +278,29 @@ class ContactServices
 
 		return $result;
 	}
+	
 	public function getPatientAvailmentList($search, int $LOCATION_ID, int $YEAR): object
 	{
+		
+
+		$groupList =  $this->itemServices->GetAllItemByGroup(1);
+		$list ='';
+		foreach($groupList as $item) {
+			if($list == '') {
+				$list = "'".$item['ID']. "'";
+			} else {
+				$list += ',' . "'".$item['ID']. "'";
+			}
+	
+		}
 
 		$result = Contacts::query()
 			->select([
 				'ID',
 				DB::raw("CONCAT(LAST_NAME, ', ', FIRST_NAME, ', ', LEFT(MIDDLE_NAME, 1)) as NAME"),
-				DB::raw("(select count(*) from service_charges join service_charges_items on service_charges_items.SERVICE_CHARGES_ID = service_charges.ID  where service_charges.PATIENT_ID = contact.ID and service_charges_items.ITEM_ID = '2'  and service_charges.LOCATION_ID = $LOCATION_ID  and YEAR(service_charges.DATE) = $YEAR) as TOTAL_DAYS")
-			])->where('TYPE', 3)
+				DB::raw("(select count(*) from service_charges join service_charges_items on service_charges_items.SERVICE_CHARGES_ID = service_charges.ID  where service_charges.PATIENT_ID = contact.ID and service_charges_items.ITEM_ID = '2'  and service_charges.LOCATION_ID = $LOCATION_ID  and YEAR(service_charges.DATE) = $YEAR) as TOTAL_DAYS"),
+				DB::raw("(select count(*) from service_charges join service_charges_items on service_charges_items.SERVICE_CHARGES_ID = service_charges.ID  where service_charges.PATIENT_ID = contact.ID and service_charges_items.ITEM_ID IN ($list)  and service_charges.LOCATION_ID = $LOCATION_ID  and YEAR(service_charges.DATE) = $YEAR) as AS TOTAL_ITEMS")
+				])->where('TYPE', 3)
 			->where('INACTIVE', '0')
 			->when($LOCATION_ID > 0, function ($query) use (&$LOCATION_ID) {
 				$query->where('LOCATION_ID', $LOCATION_ID);
