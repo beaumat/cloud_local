@@ -44,7 +44,7 @@
                         <td class="text-center text-danger">{{ $NO_OF_VOID }}</td>
                     </tr>
                     <tr>
-                        <td>Difference (SERVICE CHARGES vs POSTED)</td>
+                        <td>Difference (SERVICE CHARGE vs POSTED)</td>
                         <td class="text-center text-info font-weight-bold ">{{ $NO_OF_CHARGE - $NO_OF_POSTED }}</td>
                     </tr>
 
