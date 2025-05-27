@@ -38,11 +38,27 @@
                     <div class="col-7 top-line2 right-line2"> {{ $list->DESCRIPTION }}
                     </div>
                     <div class="col-5 top-line2 text-center text-md">
-                        @if ($list->IS_CHECK)
-                            <i class="fa fa-check " aria-hidden="true"></i>
-                        @else
-                            <i class="fa fa-times " aria-hidden="true"></i>
-                        @endif
+                        <div class="row">
+                            <div class="col-3">
+
+                            </div>
+                            <div class="col-6">
+                                @if ($list->IS_CHECK)
+                                    <i class="fa fa-check " aria-hidden="true"></i>
+                                @else
+                                    <i class="fa fa-times " aria-hidden="true"></i>
+                                @endif
+                            </div>
+                            <div class="col-3 text-center">
+                                @if ($list->ID == 24 || $list->ID == 25)
+                                    @if ($list->IS_CHECK)
+                                        @if ($QTY > 0)
+                                            <span class="font-weight-bold text-primary h5">#{{ $QTY }}</span>
+                                        @endif
+                                    @endif
+                                @endif
+                            </div>
+                        </div>
                     </div>
                 @endforeach
                 <div class="col-7 top-line2  font-weight-bold right-line2">Administrative & Other Fees, specify: </div>
@@ -102,7 +118,7 @@
                     <div class="col-3 top-line2 right-line2 "> &nbsp; </div>
                     <div class="col-3 top-line2  "> &nbsp; </div>
                 @endfor
-                
+
                 <div class="col-6 top-line2  right-line2"> &nbsp; </div>
                 <div class="col-3 top-line2  right-line2 "> &nbsp; </div>
                 <div class="col-3 top-line2 font-weight-bold ">

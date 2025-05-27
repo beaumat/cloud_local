@@ -13,10 +13,12 @@ class ContactServices
 	use WithPagination;
 	private $objectService;
 	private $itemServices;
-	public function __construct(ObjectServices $objectService,ItemServices $itemServices	)
+	private $dateServices;
+	public function __construct(ObjectServices $objectService, ItemServices $itemServices, DateServices $dateServices)
 	{
 		$this->objectService = $objectService;
 		$this->itemServices = $itemServices;
+		$this->dateServices = $dateServices;
 	}
 	public function is12CharRequired(string $value): bool
 	{
@@ -278,21 +280,19 @@ class ContactServices
 
 		return $result;
 	}
-	
+
 	public function getPatientAvailmentList($search, int $LOCATION_ID, int $YEAR): object
 	{
-		
 
-		$groupList =  $this->itemServices->GetAllItemByGroup(1);
-
-		$list ='';
-		foreach($groupList as $item) {
-			if($list == '') {
-				$list = "'".$item['ID']. "'";
+		$groupList = $this->itemServices->GetAllItemByGroup(1);
+		$list = '';
+		foreach ($groupList as $item) {
+			if ($list == '') {
+				$list = "'" . $item['ID'] . "'";
 			} else {
-				$list .= ",'".$item['ID']. "'";
+				$list .= ",'" . $item['ID'] . "'";
 			}
-	
+
 		}
 
 		$result = Contacts::query()
@@ -301,7 +301,7 @@ class ContactServices
 				DB::raw("CONCAT(LAST_NAME, ', ', FIRST_NAME, ', ', LEFT(MIDDLE_NAME, 1)) as NAME"),
 				DB::raw("(select count(*) from service_charges join service_charges_items on service_charges_items.SERVICE_CHARGES_ID = service_charges.ID  where service_charges.PATIENT_ID = contact.ID and service_charges_items.ITEM_ID = '2'  and service_charges.LOCATION_ID = $LOCATION_ID  and YEAR(service_charges.DATE) = $YEAR) as TOTAL_DAYS"),
 				DB::raw("(select count(*) from service_charges join service_charges_items on service_charges_items.SERVICE_CHARGES_ID = service_charges.ID  where service_charges.PATIENT_ID = contact.ID and service_charges_items.ITEM_ID IN ($list)  and service_charges.LOCATION_ID = $LOCATION_ID  and YEAR(service_charges.DATE) = $YEAR) as TOTAL_ITEMS")
-				])->where('TYPE', 3)
+			])->where('TYPE', 3)
 			->where('INACTIVE', '0')
 			->when($LOCATION_ID > 0, function ($query) use (&$LOCATION_ID) {
 				$query->where('LOCATION_ID', $LOCATION_ID);
@@ -319,7 +319,30 @@ class ContactServices
 
 		return $result;
 	}
+	public function getPatientAvailmentListDialyzerQty(int $PATIENT_ID, int $LOCATION_ID, string $DATE): int
+	{	
 
+		$YEAR = $this->dateServices->dateToYear($DATE);
+		$groupList = $this->itemServices->GetAllItemByGroup(1);
+		$list = '';
+		foreach ($groupList as $item) {
+			if ($list == '') {
+				$list = "'" . $item['ID'] . "'";
+			} else {
+				$list .= ",'" . $item['ID'] . "'";
+			}
+		}
+
+		$result = Contacts::query()
+			->select([
+				DB::raw("(select count(*) from service_charges join service_charges_items on service_charges_items.SERVICE_CHARGES_ID = service_charges.ID  where service_charges.PATIENT_ID = contact.ID and service_charges_items.ITEM_ID IN ($list)  and service_charges.LOCATION_ID = $LOCATION_ID  and YEAR(service_charges.DATE) = $YEAR and service_charges.DATE <= '$DATE') as TOTAL_ITEMS")
+			])->where('TYPE', 3)
+			->where('INACTIVE', '0')
+			->where('ID', '=', $PATIENT_ID)
+			->first();
+
+		return (int) $result->TOTAL_ITEMS ?? 0;
+	}
 	public function getPatientListViaReport(int $LOCATION_ID, string $DATE_FROM, string $DATE_TO)
 	{
 

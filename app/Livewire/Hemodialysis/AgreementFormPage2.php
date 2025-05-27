@@ -23,7 +23,7 @@ class AgreementFormPage2 extends Component
     public bool $LEAVE_BLANK_AG_ADMIN_OFFICE_FEE;
     public $typeFiveList = [];
     public $typeSixList = [];
-
+    public int $QTY = 0;
     public $itemList = [];
     private $hemoServices;
     private $locationServices;
@@ -36,7 +36,20 @@ class AgreementFormPage2 extends Component
         $this->phicAgreementFormServices = $phicAgreementFormServices;
         $this->contactServices = $contactServices;
     }
+    public function checkLocationAllowed(): bool
+    {
 
+        switch ($this->LOCATION_ID) {
+            case 32: // San Franz
+                return true;
+            case 33: // Butuan City
+                return true;
+            default:
+                return false;
+        }
+
+
+    }
     public function mount()
     {
         $data = $this->hemoServices->Get($this->HEMO_ID);
@@ -46,19 +59,21 @@ class AgreementFormPage2 extends Component
             $this->LOCATION_ID = $data->LOCATION_ID;
             $this->getWithNess($data->CUSTOMER_ID);
             $dataLoc = $this->locationServices->get($this->LOCATION_ID);
-        
+            if ($this->checkLocationAllowed() === true) {
+                $this->QTY = $this->contactServices->getPatientAvailmentListDialyzerQty($data->CUSTOMER_ID, $this->LOCATION_ID, $this->DATE);
+            }
             if ($dataLoc) {
                 $this->LEAVE_BLANK_AG_ADMIN_OFFICE_FEE = $dataLoc->LEAVE_BLANK_AG_ADMIN_OFFICE_FEE ?? false;
-                $hdcon = $this->contactServices->get($dataLoc->HD_FACILITY_REP_ID , 2);
+                $hdcon = $this->contactServices->get($dataLoc->HD_FACILITY_REP_ID, 2);
                 if ($hdcon) {
                     $this->HD_FACILITY_REP_NAME = $hdcon->NAME ?? '';
                     $this->HD_FACILITY_REP_POS = $hdcon->NICKNAME ?? '';
                 }
 
-       
+
             }
 
-       
+
             $this->TypeFive();
             $this->TypeSix();
             $this->itemlistLoad();
@@ -71,7 +86,7 @@ class AgreementFormPage2 extends Component
         if ($con) {
             $wit_ID = $con->WITNESS_ID > 0 ? $con->WITNESS_ID : 0;
             $this->WITNESS_NAME = $wit_ID > 0 ? $this->contactServices->getName2($wit_ID) : $con->CONTACT_PERSON;
-    
+
         }
     }
     private function itemlistLoad()

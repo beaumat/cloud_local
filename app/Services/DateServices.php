@@ -19,6 +19,17 @@ class DateServices
         $y = $date->format('Y');
         return $this->getFirstDayViaYear($y);
     }
+    public function dateToYear($date): int
+    {
+        if (empty($date)) {
+            return 0;
+        }
+        try {
+            return (int) date('Y', strtotime($date));
+        } catch (\Exception $e) {
+            return 0;
+        }
+    }
     public static function getFirstDayViaYear(int $YEAR)
     {
         return "$YEAR-01-01";
