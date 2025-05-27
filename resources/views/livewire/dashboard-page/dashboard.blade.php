@@ -43,6 +43,9 @@
                     <div class="col-md-4">
                         @livewire('DashBoardPage.PayableStatus')
                     </div>
+                    <div class="col-md-3">
+                        @livewire('DashBoardPage.PreviousOperation')
+                    </div>
 
                 </div>
             @endif

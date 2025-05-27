@@ -2377,5 +2377,46 @@ class HemoServices
 
 
     }
-
+    public function getCountUnposted(string $DATE, int $LOCATION_ID): int
+    {
+        return (int) Hemodialysis::query()
+            ->where('hemodialysis.DATE', '=', $DATE)
+            ->where('hemodialysis.LOCATION_ID', '=', $LOCATION_ID)
+            ->where('hemodialysis.STATUS_ID', '=', 4)
+            ->count();
+    }
+    public function getCountPosted(string $DATE, int $LOCATION_ID): int
+    {
+        return (int) Hemodialysis::query()
+            ->where('hemodialysis.DATE', '=', $DATE)
+            ->where('hemodialysis.LOCATION_ID', '=', $LOCATION_ID)
+            ->where('hemodialysis.STATUS_ID', '=', 2)
+            ->count();
+    }
+    public function getCountVoid(string $DATE, int $LOCATION_ID): int
+    {
+        return (int) Hemodialysis::query()
+            ->where('hemodialysis.DATE', '=', $DATE)
+            ->where('hemodialysis.LOCATION_ID', '=', $LOCATION_ID)
+            ->where('hemodialysis.STATUS_ID', '=', 3)
+            ->count();
+    }
+    public function getCountItemRelease(string $DATE, int $LOCATION_ID)
+    {
+        return HemodialysisItems::query()
+            ->select([
+                'item.DESCRIPTION',
+                DB::raw('SUM(hemodialysis_items.QUANTITY) as TOTAL_QUANTITY')
+            ])
+            ->join('item', 'item.ID', '=', 'hemodialysis_items.ITEM_ID')
+            ->join('hemodialysis', 'hemodialysis.ID', '=', 'hemodialysis_items.HEMO_ID')
+            ->whereIn('item.TYPE', ['0', '1'])
+            ->where('hemodialysis_items.IS_NEW', '=', true)
+            ->where('hemodialysis_items.IS_POST', '=', true)
+            ->where('hemodialysis.DATE', '=', $DATE)
+            ->where('hemodialysis.LOCATION_ID', '=', $LOCATION_ID)
+            ->where('hemodialysis.STATUS_ID', '=', 2)
+            ->groupBy('item.DESCRIPTION')
+            ->get();
+    }
 }

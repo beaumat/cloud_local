@@ -215,12 +215,12 @@ class ServiceChargeServices
 
     ): int {
 
-       
+
         $ID = (int) $this->object->ObjectNextID('SERVICE_CHARGES');
         $OBJECT_TYPE = (int) $this->object->ObjectTypeID('SERVICE_CHARGES');
         $isLocRef = boolval($this->systemSettingServices->GetValue('IncRefNoByLocation'));
-        
-        
+
+
 
         ServiceCharges::create([
             'ID' => $ID,
@@ -243,7 +243,7 @@ class ServiceChargeServices
             'USE_PHIC' => $USE_PHIC
         ]);
 
-       
+
         return $ID;
     }
 
@@ -377,7 +377,7 @@ class ServiceChargeServices
                     ]);
                 }
             })
-      
+
             ->join('contact as c', 'c.ID', '=', 'service_charges.PATIENT_ID')
             ->join('location as l', 'l.ID', '=', 'service_charges.LOCATION_ID')
             ->join('document_status_map as s', 's.ID', '=', 'service_charges.STATUS')
@@ -1021,5 +1021,30 @@ class ServiceChargeServices
             ->get();
 
         return $result;
+    }
+    public function getDatePreviousTransaction(string $DATE, int $LOCATION_ID)
+    {
+        $result = ServiceCharges::query()
+            ->select([
+                'DATE'
+            ])
+            ->where('service_charges.LOCATION_ID', '=', $LOCATION_ID)
+            ->where('service_charges.DATE', '<', $DATE)
+            ->orderby('DATE', 'desc')
+            ->groupBy('DATE')
+            ->first();
+
+        return $result ? $result->DATE : null;
+    }
+    public function getCountCharges(string $DATE, int $LOCATION_ID)
+    {
+
+        $result = ServiceCharges::query()
+            ->where('service_charges.LOCATION_ID', '=', $LOCATION_ID)
+            ->where('service_charges.DATE', '=', $DATE)
+            ->where('service_charges.WALK_IN', '=', 0)
+            ->count();
+
+        return (int) $result;
     }
 }
