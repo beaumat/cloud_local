@@ -16,7 +16,14 @@
             </div>
         </div>
         <div class="card-body p-1 @if (!$isShow) d-none @endif">
-            <div class="text-xs">Previous Date : <strong>{{ date('M/d/Y', strtotime($DATE)) }}</strong>
+            <div class="text-xs row">
+                <div class="col-6">
+                    Previous Date : <strong>{{ date('M/d/Y', strtotime($DATE)) }}</strong>
+                </div>
+                <div class="col-6">
+                    Branch: <strong>{{ $LOCATION_NAME }}</strong>
+
+                </div>
             </div>
             <table class="table table-sm table-bordered table-striped">
                 <thead class="bg-info">

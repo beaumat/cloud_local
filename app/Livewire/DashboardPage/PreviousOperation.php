@@ -16,6 +16,7 @@ class PreviousOperation extends Component
     public int $NO_OF_UNPOSTED = 0;
     public int $NO_OF_VOID = 0;
     public int $NO_OF_CHARGE = 0;
+    public string $LOCATION_NAME = '';
     public $itemList = [];
     public $DATE;
     public $LOCATION_ID;
@@ -47,7 +48,10 @@ class PreviousOperation extends Component
         $this->LOCATION_ID = $this->userServices->getLocationDefault();
         $this->locationList = $this->locationServices->getList();
         $this->DATE = $this->serviceChargeServices->getDatePreviousTransaction($this->dateServices->NowDate(), $this->LOCATION_ID);
-
+        $dataLoc = $this->locationServices->get($this->LOCATION_ID);
+        if ($dataLoc) {
+            $this->LOCATION_NAME = $dataLoc->NAME;
+        }
     }
 
     public function onClickWid()
