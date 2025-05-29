@@ -307,7 +307,7 @@ class PrintTreatment extends Component
 
                     // $HCI_MANAGER_ID
 
-                    $conMgr = $this->contactServices->get($locData->HCI_MANAGER_ID ?? Auth()->user()->contact_id, 2); // Employee
+                    $conMgr = $this->contactServices->get($locData->HCI_MANAGER_TREATMENT_ID ?? Auth()->user()->contact_id, 2); // Employee
 
                     if ($conMgr) {
 
