@@ -114,6 +114,18 @@
                                                 @endif
                                             @endif
                                         </th>
+                                        {{-- SALUTATION --}}
+                                        <th>
+                                            <span name="salutation" type="button"
+                                                wire:click="sorting('contact.SALUTATION')">Ext.</span>
+                                            @if ($sortby == 'contact.SALUTATION')
+                                                @if ($isDesc)
+                                                    <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                                @else
+                                                    <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                                @endif
+                                            @endif
+                                        </th>
                                         <th>
                                             <span name="genderDesc" type="button"
                                                 wire:click="sorting('gender_map.DESCRIPTION')">Sex</span>
@@ -163,7 +175,7 @@
                                             @endif
                                         </th>
 
-                                        <th >
+                                        <th>
                                             <span name="philhealthSort" type="button"
                                                 wire:click="sorting('contact.PIN')">Philhealth
                                                 No.</span>
@@ -278,6 +290,7 @@
                                             <td> {{ $list->LAST_NAME }}</td>
                                             <td> {{ $list->FIRST_NAME }}</td>
                                             <td> {{ $list->MIDDLE_NAME }}</td>
+                                            <td> {{ $list->SALUTATION }}</td>
                                             <td> {{ $list->GENDER }}</td>
                                             <td class="text-center">
                                                 {{ date('m/d/Y', strtotime($list->DATE_OF_BIRTH)) }}</td>
@@ -299,7 +312,8 @@
                                                 @endif
                                             </td>
                                             <td>{{ $list->CLASS }}</td>
-                                            <td class="@if($list->PDP == '') bg-danger @endif" >{{ $list->PDP }}</td>
+                                            <td class="@if ($list->PDP == '') bg-danger @endif">
+                                                {{ $list->PDP }}</td>
                                             <td class="text-center font-weight-bold">
                                                 @if ($list->INACTIVE)
                                                     Yes
