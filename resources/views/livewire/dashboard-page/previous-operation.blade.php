@@ -38,7 +38,7 @@
                         <td>Service Charge</td>
                         <td class="text-center text-primary">{{ $NO_OF_CHARGE }}</td>
                     </tr>
-                    <tr>d
+                    <tr>
                         <td>Treatment Posted</td>
                         <td class="text-center text-success">{{ $NO_OF_POSTED }}</td>
                     </tr>
