@@ -101,7 +101,8 @@ class LocationServices
         bool $ITEMIZED_BASE,
         int $PHIC_INCHARGE2_ID,
         bool $LEAVE_BLANK_AG_ADMIN_OFFICE_FEE,
-        int $PF_TAX_ID
+        int $PF_TAX_ID,
+        int $HCI_MANAGER_TREATMENT_ID
 
     ): int {
         $ID = $this->object->ObjectNextID('LOCATION');
@@ -135,7 +136,8 @@ class LocationServices
             'ITEMIZED_BASE' => $ITEMIZED_BASE,
             'PHIC_INCHARGE2_ID' => $PHIC_INCHARGE2_ID > 0 ? $PHIC_INCHARGE2_ID : null,
             'LEAVE_BLANK_AG_ADMIN_OFFICE_FEE' => $LEAVE_BLANK_AG_ADMIN_OFFICE_FEE,
-            'PF_TAX_ID' => $PF_TAX_ID
+            'PF_TAX_ID' => $PF_TAX_ID,
+            'HCI_MANAGER_TREATMENT_ID' => $HCI_MANAGER_TREATMENT_ID > 0 ? $HCI_MANAGER_TREATMENT_ID : null
         ]);
 
         return $ID;
@@ -171,7 +173,8 @@ class LocationServices
         bool $ITEMIZED_BASE,
         int $PHIC_INCHARGE2_ID,
         bool $LEAVE_BLANK_AG_ADMIN_OFFICE_FEE,
-        int $PF_TAX_ID
+        int $PF_TAX_ID,
+        int $HCI_MANAGER_TREATMENT_ID
 
     ): void {
 
@@ -205,7 +208,8 @@ class LocationServices
                 'ITEMIZED_BASE' => $ITEMIZED_BASE,
                 'PHIC_INCHARGE2_ID' => $PHIC_INCHARGE2_ID,
                 'LEAVE_BLANK_AG_ADMIN_OFFICE_FEE' => $LEAVE_BLANK_AG_ADMIN_OFFICE_FEE,
-                'PF_TAX_ID' => $PF_TAX_ID
+                'PF_TAX_ID' => $PF_TAX_ID,
+                'HCI_MANAGER_TREATMENT_ID' => $HCI_MANAGER_TREATMENT_ID > 0 ? $HCI_MANAGER_TREATMENT_ID : null
 
             ]);
     }

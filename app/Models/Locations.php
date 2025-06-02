@@ -43,6 +43,7 @@ class Locations extends Model
         'ITEMIZED_BASE',
         'PHIC_INCHARGE2_ID',
         'LEAVE_BLANK_AG_ADMIN_OFFICE_FEE',
-        'PF_TAX_ID'  
+        'PF_TAX_ID',
+        'HCI_MANAGER_TREATMENT_ID',  
     ];
 }

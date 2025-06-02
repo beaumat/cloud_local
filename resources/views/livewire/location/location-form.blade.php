@@ -107,6 +107,13 @@
                                                 isDisabled="{{ false }}" :zero="true"
                                                 titleName="HCI Manager" wire:model.live='HCI_MANAGER_ID' />
                                         </div>
+                                        {{-- HCI_MANAGER_TREATMENT_ID --}}
+                                        <div class="col-md-2">
+                                            <livewire:select-option name="HCI_MANAGER_TREATMENT_ID" :options="$managerList"
+                                                isDisabled="{{ false }}" :zero="true"
+                                                titleName="HCI (Treatment Sum)"
+                                                wire:model.live='HCI_MANAGER_TREATMENT_ID' />
+                                        </div>
                                         <div class="col-md-2">
                                             <livewire:select-option name="PHIC_INCHARGE_ID" :options="$inchargeList"
                                                 isDisabled="{{ false }}" :zero="true"

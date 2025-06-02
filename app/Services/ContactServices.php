@@ -661,6 +661,7 @@ class ContactServices
 					"contact.FIRST_NAME",
 					"contact.LAST_NAME",
 					"contact.MIDDLE_NAME",
+					"contact.SALUTATION",
 					"contact.PRINT_NAME_AS",
 					"contact.MOBILE_NO",
 					"contact.EMAIL",

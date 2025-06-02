@@ -8,6 +8,7 @@ use App\Services\LocationServices;
 use App\Services\PaymentServices;
 use App\Services\UploadServices;
 use App\Services\UserServices;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
@@ -99,12 +100,13 @@ class PaymentList extends Component
     {
         $this->paymentServices->StatusUpdate($id, 16);
     }
+
     public function delete(int $id)
-    {
+    { 
         try {
             $data = $this->paymentServices->get($id);
             if ($data) {
-                if ($data->DEPOSITED == 0) {
+                if ($data->DEPOSITED == 0 || Auth::user()->can('customer.received-payment.delete')) {
                     if ($data->STATUS ==  0 || $data->STATUS == 16) {
                         DB::beginTransaction();
 

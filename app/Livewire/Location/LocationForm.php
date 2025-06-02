@@ -45,7 +45,7 @@ class LocationForm extends Component
     public bool $OTHER_SIGN;
     public int $PREPARED_BY_ID;
     public int $HD_FACILITY_REP_ID;
-
+    public int $HCI_MANAGER_TREATMENT_ID;
     public bool $ITEMIZED_BASE;
     public bool $LEAVE_BLANK_AG_ADMIN_OFFICE_FEE;
     public int $PF_TAX_ID;
@@ -115,6 +115,7 @@ class LocationForm extends Component
                 $this->ITEMIZED_BASE = $data->ITEMIZED_BASE ?? false;
                 $this->LEAVE_BLANK_AG_ADMIN_OFFICE_FEE = $data->LEAVE_BLANK_AG_ADMIN_OFFICE_FEE ?? false;
                 $this->PF_TAX_ID = $data->PF_TAX_ID ?? 0;
+                $this->HCI_MANAGER_TREATMENT_ID = $data->HCI_MANAGER_TREATMENT_ID ?? 0;
                 return;
             }
 
@@ -151,6 +152,7 @@ class LocationForm extends Component
         $this->ITEMIZED_BASE = false;
         $this->LEAVE_BLANK_AG_ADMIN_OFFICE_FEE = false;
         $this->PF_TAX_ID = 0;
+        $this->HCI_MANAGER_TREATMENT_ID = 0;
     }
 
     public function save()
@@ -192,7 +194,8 @@ class LocationForm extends Component
                     $this->ITEMIZED_BASE,
                     $this->PHIC_INCHARGE2_ID,
                     $this->LEAVE_BLANK_AG_ADMIN_OFFICE_FEE,
-                    $this->PF_TAX_ID
+                    $this->PF_TAX_ID,
+                    $this->HCI_MANAGER_TREATMENT_ID
                 );
 
                 Redirect::route('maintenancesettingslocation_edit', ['id' => $this->ID])->with('message', 'Successfully created');
@@ -227,7 +230,8 @@ class LocationForm extends Component
                     $this->ITEMIZED_BASE,
                     $this->PHIC_INCHARGE2_ID,
                     $this->LEAVE_BLANK_AG_ADMIN_OFFICE_FEE,
-                    $this->PF_TAX_ID
+                    $this->PF_TAX_ID,
+                    $this->HCI_MANAGER_TREATMENT_ID
                 );
                 session()->flash('message', 'Successfully updated');
             }
