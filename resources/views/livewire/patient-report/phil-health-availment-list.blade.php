@@ -96,7 +96,7 @@
                                 <th class="col-1 text-center">No. Actual Confinement </th>
                                 <th class="col-1 text-center">No. Other Confinement</th>
                                 <th class="col-1 text-center">Total Confinement</th>
-                                <th class="col-1">Action</th>
+                                <th class="col-1 text-center">Action</th>
                             </tr>
                         </thead>
                         <tbody class="text-xs">
@@ -114,7 +114,7 @@
                                     <td>
                                         <a target="_BLANK"
                                             href="{{ route('maintenancecontactprint_availment', ['id' => $list->ID, 'locationid' => $LOCATION_ID, 'year' => $YEAR]) }}"
-                                            class="btn btn-primary btn-xs">
+                                            class="btn btn-primary btn-xs w-100">
                                             <i class="fa fa-print" aria-hidden="true"></i>
                                         </a>
                                     </td>

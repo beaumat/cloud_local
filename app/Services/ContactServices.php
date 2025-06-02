@@ -310,8 +310,8 @@ class ContactServices
 			->when($search, function ($query) use (&$search) {
 				$query->where(function ($q) use (&$search) {
 					$q->where('LAST_NAME', 'like', "%" . $search . "%")
-						->where('FIRST_NAME', 'like', "%" . $search . "%")
-						->where('MIDDLE_NAME', 'like', "%" . $search . "%");
+						->orWhere('FIRST_NAME', 'like', "%" . $search . "%")
+						->orWhere('MIDDLE_NAME', 'like', "%" . $search . "%");
 				});
 			})
 

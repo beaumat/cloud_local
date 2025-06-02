@@ -55,6 +55,7 @@ class PaymentList extends Component
     {
 
         $JOURNAL_NO  = (int) $this->accountJournalServices->getRecord($this->paymentServices->object_type_payment, $id);
+        
         $payData = $this->paymentServices->PaymentInvoiceList($id);
 
         foreach ($payData as $list) {
