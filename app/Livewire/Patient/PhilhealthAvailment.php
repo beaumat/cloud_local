@@ -71,6 +71,7 @@ class PhilhealthAvailment extends Component
 
             $this->TOTAL_MAIN = $this->TOTAL_DAYS;
             $this->TOTAL_OTHER = $this->philhealthItemAdjustmentServices->ItemTotalOther($contact->ID, $locationid, $year);
+
             $this->DATE = $this->dateServices->NowDate();
             $this->DONE_DATE = $this->otherServices->formatSpecialDate($this->dateServices->NowDate());
 

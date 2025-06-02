@@ -43,7 +43,7 @@
                                 <div class="form-group">
                                     <div class="row">
                                         <div class="col-6">
-                                       
+
                                         </div>
                                         <div class="col-6">
                                         </div>
@@ -93,7 +93,9 @@
                                 </th>
                                 <th>Name</th>
                                 <th class="col-1 text-center">Total Dialyzer</th>
-                                <th class="col-1 text-center">Total Days</th>
+                                <th class="col-1 text-center">No. Actual Confinement </th>
+                                <th class="col-1 text-center">No. Other Confinement</th>
+                                <th class="col-1 text-center">Total Confinement</th>
                                 <th class="col-1">Action</th>
                             </tr>
                         </thead>
@@ -107,6 +109,8 @@
                                     <td>{{ $list->NAME }}</td>
                                     <td class="text-center">{{ $list->TOTAL_ITEMS }}</td>
                                     <td class="text-center">{{ $list->TOTAL_DAYS }}</td>
+                                    <td class="text-center">{{ $list->TOTAL_OTHER }}</td>
+                                    <td class="text-center">{{ $list->TOTAL_DAYS + $list->TOTAL_OTHER }}</td>
                                     <td>
                                         <a target="_BLANK"
                                             href="{{ route('maintenancecontactprint_availment', ['id' => $list->ID, 'locationid' => $LOCATION_ID, 'year' => $YEAR]) }}"

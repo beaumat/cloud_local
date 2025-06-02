@@ -83,11 +83,20 @@ class PhilHealthAvailmentList extends Component
     public function updatedLocationId()
     {
         $this->ResetData();
+
+         try {
+            $this->userServices->SwapLocation($this->LOCATION_ID);
+        } catch (\Exception $e) {
+            $errorMessage = 'Error occurred: ' . $e->getMessage();
+            session()->flash('error', $errorMessage);
+        }
+        
     }
     public function updatedYear()
     {
         $this->ResetData();
     }
+    
     public function render()
     {
 
