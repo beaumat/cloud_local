@@ -62,7 +62,7 @@
                 <thead class="bg-dark">
                     <tr>
                         <th class="text-center col-10">Item Release</th>
-                        <th class="text-center">Count</th>
+                        <th class="text-center">Qty</th>
                     </tr>
                 </thead>
                 <tbody>
