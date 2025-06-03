@@ -41,7 +41,7 @@ class AgreementFormPage2 extends Component
 
         switch ($this->LOCATION_ID) {
             case 32: // San Franz
-                return true;
+                return false;
             case 33: // Butuan City
                 return true;
             default:
