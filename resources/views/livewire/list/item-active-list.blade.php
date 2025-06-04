@@ -120,8 +120,9 @@
                                             </th>
                                             <th>
                                                 <span name="sub_category" type='button'
-                                                    wire:click="sorting('s.DESCRIPTION')">Sub
-                                                    Category</span>
+                                                    wire:click="sorting('s.DESCRIPTION')">
+                                                    Sub Category
+                                                </span>
                                                 @if ($sortby == 's.DESCRIPTION')
                                                     @if ($isDesc)
                                                         <i class="fa fa-caret-up" aria-hidden="true"></i>
@@ -197,17 +198,22 @@
                                                     </span>
                                                 </td>
                                                 <td class="text-center">
-                                                    <button name="qtyDetails{{ $list->ID }}" title="Qty Details"
+                                                    {{-- <button name="qtyDetails{{ $list->ID }}" title="Qty Details"
                                                         type="button" class="btn btn-xs btn-info"
                                                         wire:click='OnClick({{ $list->ID }})'>
                                                         <i class="fas fa-eye" aria-hidden="true"></i> history
-                                                    </button>
+                                                    </button> --}}
+
+                                                    <a href="{{ route('maintenanceothersitem-active-list_details', ['id' => $list->ID, 'locationid' => $LOCATION_ID]) }}"
+                                                        class="btn btn-primary btn-xs" target="_blank"> <i
+                                                            class="fas fa-eye" aria-hidden="true"></i> View Details
+                                                        </a>
                                                     @if ($isControl)
                                                         <button type="button" class="btn btn-xs btn-danger"
                                                             title="Not Include in your list"
                                                             wire:click='itemNotInclude({{ $list->ID }})'
                                                             title="Not Include">
-                                                            <i class="fas fa-times" aria-hidden="true"></i> 
+                                                            <i class="fas fa-times" aria-hidden="true"></i>
                                                             Not Include
                                                         </button>
                                                     @endif

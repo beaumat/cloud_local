@@ -122,6 +122,7 @@ use App\Livewire\ItemSubClassPage\ItemSubClassForm;
 use App\Livewire\ItemSubClassPage\ItemSubClassList;
 use App\Livewire\ItemTreatment\ItemTreatmentForm;
 use App\Livewire\ItemTreatment\ItemTreatmentList;
+use App\Livewire\List\ItemInventoryDetails;
 use App\Livewire\Location\LocationForm;
 use App\Livewire\Location\LocationList;
 use App\Livewire\Location\SoaItem;
@@ -639,6 +640,7 @@ Route::middleware(['auth'])->group(function () {
 
             Route::prefix('/item-active-list')->group(function () {
                 Route::get('/', ItemActiveList::class)->name('item-active-list')->middleware(['permission:others.item-active-list.view']);
+                Route::get('/details/{id}/{locationid}', ItemInventoryDetails::class)->name('item-active-list_details')->middleware(['permission:others.item-active-list.view']);
             });
         });
 

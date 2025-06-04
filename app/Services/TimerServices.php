@@ -102,8 +102,7 @@ class TimerServices
     
         $this->generateUnposted();
         $this->generateWaitingList($transDate);
-        $this->GenerateItemServiceCharges($transDate);
-        
+        $this->GenerateItemServiceCharges($transDate);      
         $this->generateItemHemo($transDate);
     }
 

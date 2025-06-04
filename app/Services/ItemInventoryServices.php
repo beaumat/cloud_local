@@ -418,8 +418,7 @@ class ItemInventoryServices
             ->where('SOURCE_REF_TYPE', '=', 6)
             ->where('SOURCE_REF_DATE', '>', $SOURCE_REF_DATE)
             ->exists();
-
-
+            
         if ($itsHave) {
             // stop to procceed.
 
@@ -761,6 +760,7 @@ class ItemInventoryServices
     public function RecomputedOnhand(int $ITEM_ID, int $LOCATION_ID, string $DATE_START = '', string $DATE_BY = '')
     {
         $isInventory = $this->itemServices->isInventoryItem($ITEM_ID);
+     
         if ($isInventory == false) {
             return;
         }
@@ -796,7 +796,6 @@ class ItemInventoryServices
         $IS_FIRST = true;
         $RUNNING_BALANCE = 0.0;
         foreach ($dataList as $list) {
-
             if ($list->SOURCE_REF_TYPE == 6) {
                 $IS_FIRST = false;
                 $RUNNING_BALANCE = (float) $list->ENDING_QUANTITY;
