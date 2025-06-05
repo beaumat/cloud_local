@@ -42,8 +42,6 @@ class ItemInventoryDetails extends Component
 
                 if ($this->locationServices->IsExist($locationid)) {
 
-
-
                     $this->ITEM_ID = $id;
 
                     $data = $this->itemServices->get($this->ITEM_ID);
@@ -65,16 +63,19 @@ class ItemInventoryDetails extends Component
     {
         $this->dispatch('scrollToBottom');
     }
-    public function refreshOnHand(string $DATE_START)
+    public function refreshOnHand(int $SOURCE_ID, int $SOURCE_TYPE, int $LOCATION_ID)
     {
 
-        if ($this->itemInventoryServices->isHaveInventoryAdjustmet($this->ITEM_ID, $this->LOCATION_ID, $DATE_START)) {
-            $this->itemInventoryServices->RecomputedOnhand($this->ITEM_ID, $this->LOCATION_ID, $DATE_START);
-            session()->flash('message', 'Successfully fixed');
-            return;
-        }
+        // if ($this->itemInventoryServices->isHaveInventoryAdjustmet($this->ITEM_ID, $this->LOCATION_ID, $DATE_START)) {
+        //     $this->itemInventoryServices->RecomputedOnhand($this->ITEM_ID, $this->LOCATION_ID, $DATE_START);
+        //     session()->flash('message', 'Successfully fixed');
+        //     return;
+        // }
 
-        session()->flash('error', 'adjustment that date is not found');
+        // session()->flash('error', 'adjustment that date is not found');
+
+        $this->itemInventoryServices->RecomputedEndingOnhand( $SOURCE_ID, $SOURCE_TYPE, $LOCATION_ID);
+        session()->flash('message', 'Successfully fixed');
     }
     #[On('clear-alert')]
     public function clearAlert()

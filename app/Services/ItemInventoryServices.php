@@ -418,7 +418,7 @@ class ItemInventoryServices
             ->where('SOURCE_REF_TYPE', '=', 6)
             ->where('SOURCE_REF_DATE', '>', $SOURCE_REF_DATE)
             ->exists();
-            
+
         if ($itsHave) {
             // stop to procceed.
 
@@ -703,7 +703,9 @@ class ItemInventoryServices
         $result = ItemInventory::query()
             ->select([
                 'item_inventory.ID',
-                'item_inventory..SOURCE_REF_TYPE',
+                'item_inventory.SOURCE_REF_ID',
+                'item_inventory.SOURCE_REF_TYPE',
+                'item_inventory.LOCATION_ID',
                 DB::raw($this->TX_ID),
                 'document_type_map.DESCRIPTION as TYPE',
                 'item_inventory.SOURCE_REF_DATE',
@@ -760,7 +762,7 @@ class ItemInventoryServices
     public function RecomputedOnhand(int $ITEM_ID, int $LOCATION_ID, string $DATE_START = '', string $DATE_BY = '')
     {
         $isInventory = $this->itemServices->isInventoryItem($ITEM_ID);
-     
+
         if ($isInventory == false) {
             return;
         }
@@ -809,6 +811,68 @@ class ItemInventoryServices
                 }
 
 
+            }
+        }
+    }
+    public function RecomputedEndingOnhand(int $SOURCE_ID, int $SOURCE_TYPE, int $LOCATION_ID)
+    {
+
+        $itemInventory = ItemInventory::where('SOURCE_REF_TYPE', '=', $SOURCE_TYPE)
+            ->where('SOURCE_REF_ID', '=', $SOURCE_ID)
+            ->where('LOCATION_ID', '=', $LOCATION_ID)
+            ->first();
+
+        if (!$itemInventory) {
+            return;
+        }
+
+
+        $PK = $itemInventory->ID;
+        $ITEM_ID = $itemInventory->ITEM_ID;
+        $DATE_FROM = $itemInventory->SOURCE_REF_DATE;
+        $DATE_TO = $this->dateServices->NowDate();
+
+        $dataList = ItemInventory::query()
+            ->select([
+                'item_inventory.ID',
+                'item_inventory.SOURCE_REF_TYPE',
+                'item_inventory.SOURCE_REF_DATE',
+                'item_inventory.QUANTITY',
+                'item_inventory.ENDING_QUANTITY',
+            ])
+            ->where('item_inventory.ITEM_ID', '=', $ITEM_ID)
+            ->where('item_inventory.LOCATION_ID', '=', $LOCATION_ID)
+            ->whereBetween('item_inventory.SOURCE_REF_DATE', [$DATE_FROM, $DATE_TO])
+            ->orderBy('item_inventory.SOURCE_REF_DATE', 'asc')
+            ->orderBy('item_inventory.ID', 'asc')
+            ->get();
+
+
+        $IS_ACTIVE = false;
+        $END_QTY = 0.0;
+        $I = 0;
+        foreach ($dataList as $list) {
+            $I++;
+            if ($list->ID == $PK) {
+                $IS_ACTIVE = true;
+            }
+
+            if ($IS_ACTIVE == true) {
+
+                if ($list->SOURCE_REF_TYPE == 6) {
+                    $END_QTY = (float) $list->ENDING_QUANTITY;
+                } else {
+                    if ($I == 1) {
+                        $END_QTY = (float) $list->ENDING_QUANTITY;
+                    } else {
+                        $END_QTY = (float) $END_QTY + $list->QUANTITY;
+                    }
+
+                }
+
+                $this->reFixEndQuantity($list->ID, $ITEM_ID, $LOCATION_ID, $END_QTY);
+            } else {
+                $END_QTY = (float) $list->ENDING_QUANTITY;
             }
         }
     }

@@ -4,7 +4,8 @@
             <div class="row">
                 <div class="col-sm-6">
                     <h5 class="m-0">
-                        <a href="{{ route('maintenanceothersitem-active-list') }}">Item Inventory  </a> | {{ $ITEM_NAME }} 
+                        <a href="{{ route('maintenanceothersitem-active-list') }}">Item Inventory </a> |
+                        {{ $ITEM_NAME }}
                     </h5>
                 </div><!-- /.col -->
                 <div class="col-sm-6">
@@ -28,7 +29,7 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-body">
-                        
+
 
                             <div id="tableContainer" style="max-height:70vh; overflow-y: auto;">
                                 <table class="table table-sm table-bordered table-hover">
@@ -48,7 +49,7 @@
                                             <tr>
                                                 <td>{{ $list->TYPE }}</td>
                                                 <td wire:confirm='Are you sure'
-                                                    wire:click="refreshOnHand('{{ $list->SOURCE_REF_DATE }}')">
+                                                    wire:click="refreshOnHand('{{ $list->SOURCE_REF_ID }}','{{ $list->SOURCE_REF_TYPE }}', '{{ $list->LOCATION_ID }}')">
                                                     {{ date('m/d/Y', strtotime($list->SOURCE_REF_DATE)) }}</td>
                                                 <td>{{ $list->TX_CODE }}</td>
                                                 <td>{{ $list->CONTACT_NAME }}</td>
