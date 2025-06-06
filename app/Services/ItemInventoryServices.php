@@ -497,8 +497,6 @@ class ItemInventoryServices
                 }
             }
 
-
-
             $this->InventoryModify(
                 $ITEM_ID,
                 $LOCATION_ID,
@@ -816,6 +814,7 @@ class ItemInventoryServices
     }
     private function GetIfPreviousDate(int $ITEM_ID, int $LOCATION_ID, string $DATE_FROM): string
     {
+        // Get the previous date of the item inventory
         $result = ItemInventory::query()
             ->select([
                 'item_inventory.SOURCE_REF_DATE',

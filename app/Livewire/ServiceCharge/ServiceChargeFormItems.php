@@ -539,8 +539,21 @@ class ServiceChargeFormItems extends Component
                 $this->serviceChargeServices->ItemDelete($Id, $this->SERVICE_CHARGES_ID); // Delete Transaction
                 $dataSC = $this->serviceChargeServices->get($this->SERVICE_CHARGES_ID);
                 if ($dataSC) {
-                    $this->hemoServices->ItemQuery($dataSC->PATIENT_ID, $dataSC->DATE, $dataSC->LOCATION_ID, $getItemInfo->ITEM_ID, 0, true, $getItemInfo->UNIT_ID ?? 0, $Id);
-                    $this->itemInventoryServices->RecomputedOnhand($getItemInfo->ITEM_ID, $this->LOCATION_ID, $dataSC->DATE);
+                    $this->hemoServices->ItemQuery(
+                        $dataSC->PATIENT_ID,
+                        $dataSC->DATE,
+                        $dataSC->LOCATION_ID,
+                        $getItemInfo->ITEM_ID,
+                        0,
+                        true,
+                        $getItemInfo->UNIT_ID ?? 0,
+                        $Id
+                    );
+                    $this->itemInventoryServices->RecomputedOnhand(
+                        $getItemInfo->ITEM_ID,
+                        $this->LOCATION_ID,
+                        $dataSC->DATE
+                    );
                 }
 
 
