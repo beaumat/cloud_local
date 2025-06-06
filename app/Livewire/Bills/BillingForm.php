@@ -448,12 +448,14 @@ class BillingForm extends Component
             $data = $this->billingServices->ItemInventory($this->ID);
             if ($data) {
                 $noProblem = (bool) $this->itemInventoryServices->ChangeDate($data, $this->LOCATION_ID, $SOURCE_REF_TYPE, $this->DATE);
+                
+
                 if ($noProblem == false) {
                     session()->flash('error', 'change date have problem');
                     return false;
                 }
-
-
+                
+                // execute inventory
                 $this->itemInventoryServices->InventoryExecute(
                     $data,
                     $this->LOCATION_ID,
@@ -461,12 +463,15 @@ class BillingForm extends Component
                     $this->DATE,
                     true
                 );
+
                 if ($this->DATE != $this->dateServices->NowDate()) {
+                    // recompute ending onhand
+                    // if the date is not today, we need to recompute ending onhand
                     foreach ($data as $list) {
-                        $this->itemInventoryServices->RecomputedOnhand(
-                            $list->ITEM_ID,
+                        $this->itemInventoryServices->RecomputedEndingOnhand(
+                            $list->ID,
+                            $this->SOURCE_REF_TYPE,
                             $this->LOCATION_ID,
-                            $this->DATE
                         );
                     }
                 }

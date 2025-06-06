@@ -814,6 +814,25 @@ class ItemInventoryServices
             }
         }
     }
+    private function GetIfPreviousDate(int $ITEM_ID, int $LOCATION_ID, string $DATE_FROM): string
+    {
+        $result = ItemInventory::query()
+            ->select([
+                'item_inventory.SOURCE_REF_DATE',
+            ])
+            ->where('item_inventory.ITEM_ID', '=', $ITEM_ID)
+            ->where('item_inventory.LOCATION_ID', '=', $LOCATION_ID)
+            ->where('item_inventory.SOURCE_REF_DATE', '<', $DATE_FROM)
+            ->orderBy('item_inventory.SOURCE_REF_DATE', 'asc')
+            ->orderBy('item_inventory.ID', 'asc')
+            ->first();
+
+        if ($result) {
+            return $result->SOURCE_REF_DATE;
+        }
+
+        return "";
+    }
     public function RecomputedEndingOnhand(int $SOURCE_ID, int $SOURCE_TYPE, int $LOCATION_ID)
     {
 
@@ -823,15 +842,26 @@ class ItemInventoryServices
             ->first();
 
         if (!$itemInventory) {
+            // If there is no item inventory, we will not do anything
             return;
         }
 
 
         $PK = $itemInventory->ID;
         $ITEM_ID = $itemInventory->ITEM_ID;
-        $DATE_FROM = $itemInventory->SOURCE_REF_DATE;
+        // Get the previous date of the item inventory
+        $PREV_DATE = $this->GetIfPreviousDate($ITEM_ID, $LOCATION_ID, $itemInventory->SOURCE_REF_DATE);
+        if ($PREV_DATE != "") {
+            // If there is a previous date, we will use it as the starting point
+            $DATE_FROM = $PREV_DATE;
+        } else {
+            // If there is no previous date, we will use the date of the current item inventory
+            $DATE_FROM = $itemInventory->SOURCE_REF_DATE;
+        }
+
         $DATE_TO = $this->dateServices->NowDate();
 
+        // Get all item inventory data between the date range
         $dataList = ItemInventory::query()
             ->select([
                 'item_inventory.ID',
@@ -854,24 +884,30 @@ class ItemInventoryServices
         foreach ($dataList as $list) {
             $I++;
             if ($list->ID == $PK) {
+                // If the current item is the one we are updating, we will set it to active
                 $IS_ACTIVE = true;
             }
 
             if ($IS_ACTIVE == true) {
-
+                // If we are in the active state, we will update the ending quantity
                 if ($list->SOURCE_REF_TYPE == 6) {
                     $END_QTY = (float) $list->ENDING_QUANTITY;
                 } else {
                     if ($I == 1) {
+                        // If this is the first item, we will set the ending quantity to the current quantity
                         $END_QTY = (float) $list->ENDING_QUANTITY;
                     } else {
+                        // If this is not the first item, we will add the current quantity to the ending quantity
                         $END_QTY = (float) $END_QTY + $list->QUANTITY;
                     }
 
                 }
-
+                // Update the ending quantity in the database
                 $this->reFixEndQuantity($list->ID, $ITEM_ID, $LOCATION_ID, $END_QTY);
             } else {
+                // If we are not in the active state, we will just set the ending quantity to the current ending quantity
+                // This is to ensure that the ending quantity is correct even if the item is not active
+                // at the moment
                 $END_QTY = (float) $list->ENDING_QUANTITY;
             }
         }

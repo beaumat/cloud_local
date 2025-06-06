@@ -2138,6 +2138,7 @@ class HemoServices
         if ($hemoData) {
             $itemList = $this->getItemInventory($HEMO_ID);
             if ($itemList) {
+                // If item list is not empty, execute inventory
                 $this->itemInventoryServices->InventoryExecute(
                     $itemList,
                     $hemoData->LOCATION_ID,
