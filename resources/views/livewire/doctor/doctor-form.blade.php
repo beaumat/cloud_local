@@ -250,14 +250,14 @@
                                                 id="custom-content-below-wtax-info" role="tabpanel"
                                                 aria-labelledby="custom-content-below-wtax-info-tab">
                                                 <div class="container-fluid">
-
+                                                    @livewire('Doctor.DoctorWithholdingTax', ['id' => $ID])
                                                 </div>
                                             </div>
                                             <div class="tab-pane fade @if ($selectTab == 'general-journal') show active @endif"
                                                 id="custom-content-below-general-journal-info" role="tabpanel"
                                                 aria-labelledby="custom-content-below-general-journal-info-tab">
                                                 <div class="container-fluid">
-
+                                                    @livewire('Doctor.DoctorGeneralJournal', ['id' => $ID])
                                                 </div>
                                             </div>
                                         </div>

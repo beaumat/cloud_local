@@ -440,7 +440,7 @@ class BillPaymentServices
                 'AMOUNT' => $AMOUNT
             ]);
     }
-    public function billPaymentListViaContact( int $CONTACT_ID)
+    public function listViaContact( int $CONTACT_ID)
     {
         $result = Check::query()
             ->select([

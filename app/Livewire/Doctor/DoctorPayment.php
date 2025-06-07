@@ -23,7 +23,7 @@ class DoctorPayment extends Component
 
     public function render()
     {
-        $this->dataList = $this->billPaymentServices->billPaymentListViaContact($this->contact_id);
+        $this->dataList = $this->billPaymentServices->listViaContact($this->contact_id);
 
         return view('livewire.doctor.doctor-payment');
     }

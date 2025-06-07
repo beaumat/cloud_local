@@ -822,7 +822,7 @@ class BillingServices
     }
 
 
-    public function billListViaContact(int $CONTACT_ID)
+    public function listViaContact(int $CONTACT_ID)
     {
         $result = Bill::query()
             ->select([

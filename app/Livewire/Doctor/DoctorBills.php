@@ -25,7 +25,7 @@ class DoctorBills extends Component
     public function render()
     {
         // Fetch the list of bills for the contact_id
-        $this->dataList = $this->billingServices->billListViaContact($this->contact_id);
+        $this->dataList = $this->billingServices->listViaContact($this->contact_id);
 
         return view('livewire.doctor.doctor-bills');
     }

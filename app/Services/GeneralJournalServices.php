@@ -281,4 +281,27 @@ class GeneralJournalServices
                 'IS_XERO' => $IS_XERO
             ]);
     }
+    public function listViaContact(int $CONTACT_ID)
+    {
+        $result = GeneralJournal::query()
+            ->select([
+                'general_journal.ID',
+                'general_journal.CODE',
+                'general_journal.DATE',
+                DB::raw('(select sum(w.AMOUNT) from general_journal_details as w where w.GENERAL_JOURNAL_ID = general_journal.ID and w.ENTRY_TYPE = 0 ) as AMOUNT'),
+                'general_journal.NOTES',
+                'l.NAME as LOCATION_NAME',
+                's.DESCRIPTION as STATUS',
+
+            ])
+            ->join('location as l', 'l.ID', '=', 'general_journal.LOCATION_ID')
+            ->join('document_status_map as s', 's.ID', '=', 'general_journal.STATUS')
+            ->where('general_journal.CONTACT_ID', '=', $CONTACT_ID)
+            ->orderBy('general_journal.DATE', 'desc')
+            ->get();
+
+
+
+        return $result;
+    }
 }

@@ -413,4 +413,26 @@ class WithholdingTaxServices
 
         return $result->TOTAL_TAX ?? 0;
     }
+     public function listViaContact( int $CONTACT_ID)
+    {
+        $result = WithholdingTax::query()
+            ->select([
+                'withholding_tax.ID',
+                'withholding_tax.CODE',
+                'withholding_tax.DATE',
+                'withholding_tax.AMOUNT',
+                'withholding_tax.NOTES',
+                'withholding_tax.EWT_RATE',	
+                'l.NAME as LOCATION_NAME',
+                's.DESCRIPTION as STATUS',
+
+            ])  
+            ->join('location as l', 'l.ID', '=', 'withholding_tax.LOCATION_ID')
+            ->join('document_status_map as s', 's.ID', '=', 'withholding_tax.STATUS')
+            ->where('withholding_tax.WITHHELD_FROM_ID', '=', $CONTACT_ID)
+            ->orderBy('withholding_tax.DATE', 'desc')
+            ->get();
+
+        return $result;
+    }
 }
