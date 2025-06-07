@@ -66,14 +66,7 @@ class ItemInventoryDetails extends Component
     public function refreshOnHand(int $SOURCE_ID, int $SOURCE_TYPE, int $LOCATION_ID)
     {
 
-        // if ($this->itemInventoryServices->isHaveInventoryAdjustmet($this->ITEM_ID, $this->LOCATION_ID, $DATE_START)) {
-        //     $this->itemInventoryServices->RecomputedOnhand($this->ITEM_ID, $this->LOCATION_ID, $DATE_START);
-        //     session()->flash('message', 'Successfully fixed');
-        //     return;
-        // }
-
-        // session()->flash('error', 'adjustment that date is not found');
-
+    
         $this->itemInventoryServices->RecomputedEndingOnhand( $SOURCE_ID, $SOURCE_TYPE, $LOCATION_ID);
         session()->flash('message', 'Successfully fixed');
     }
@@ -96,11 +89,7 @@ class ItemInventoryDetails extends Component
     }
     public function render()
     {
-
-
         $this->dataList = $this->itemInventoryServices->getDetails($this->ITEM_ID, $this->LOCATION_ID, $this->DATE);
-
-
 
         return view('livewire.list.item-inventory-details');
     }

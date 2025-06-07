@@ -1,7 +1,7 @@
 <div class="content-wrapper">
     <div class="content-header">
         <div class="container-fluid">
-            {{-- <div class="mb-2 row">
+            <div class="mb-2 row">
                 <div class="col-sm-6">
                     <h4 class="m-0"><a href="{{ route('dashboard') }}"> Dashboard </a></h4>
                 </div>
@@ -12,7 +12,7 @@
                         </li>
                     </ol>
                 </div>
-            </div> --}}
+            </div>
         </div>
     </div>
     <!-- Main content -->
@@ -43,14 +43,11 @@
                     <div class="col-md-4">
                         @livewire('DashBoardPage.PayableStatus')
                     </div>
-
                     @can('previous-operation-tracking')
                         <div class="col-md-3">
                             @livewire('DashBoardPage.PreviousOperation')
                         </div>
                     @endcan
-
-
                 </div>
             @endif
 

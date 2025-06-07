@@ -20,8 +20,6 @@ class BillingServices
     public int $object_type_map_bill_expenses = 78;
     public int $document_type_id = 1;
     public int $ACCOUNTS_PAYABLE_ID = 21;
-
-
     private $object;
     private $compute;
     private $systemSettingServices;
@@ -64,24 +62,8 @@ class BillingServices
             return [];
         }
     }
-    public function Store(
-        string $CODE,
-        string $DATE,
-        int $VENDOR_ID,
-        int $LOCATION_ID,
-        int $PAYMENT_TERMS_ID,
-        string $DUE_DATE,
-        string $DISCOUNT_DATE,
-        float $DISCOUNT_PCT,
-        string $NOTES,
-        int $ACCOUNTS_PAYABLE_ID,
-        int $INPUT_TAX_ID,
-        float $INPUT_TAX_RATE,
-        float $INPUT_TAX_AMOUNT,
-        int $INPUT_TAX_VAT_METHOD,
-        int $INPUT_TAX_ACCOUNT_ID,
-        int $STATUS
-    ): int {
+    public function Store(string $CODE, string $DATE, int $VENDOR_ID, int $LOCATION_ID, int $PAYMENT_TERMS_ID, string $DUE_DATE, string $DISCOUNT_DATE, float $DISCOUNT_PCT, string $NOTES, int $ACCOUNTS_PAYABLE_ID, int $INPUT_TAX_ID, float $INPUT_TAX_RATE, float $INPUT_TAX_AMOUNT, int $INPUT_TAX_VAT_METHOD, int $INPUT_TAX_ACCOUNT_ID, int $STATUS): int
+    {
         $ID = (int) $this->object->ObjectNextID('BILL');
         $OBJECT_TYPE = (int) $this->object->ObjectTypeID('BILL');
         $isLocRef = (bool) boolval($this->systemSettingServices->GetValue('IncRefNoByLocation'));
@@ -112,21 +94,8 @@ class BillingServices
 
         return $ID;
     }
-    public function Update(
-        int $ID,
-        string $CODE,
-        int $VENDOR_ID,
-        int $PAYMENT_TERMS_ID,
-        string $DUE_DATE,
-        string $NOTES,
-        int $ACCOUNTS_PAYABLE_ID,
-        int $INPUT_TAX_ID,
-        float $INPUT_TAX_RATE,
-        float $INPUT_TAX_AMOUNT,
-        int $INPUT_TAX_VAT_METHOD,
-        int $INPUT_TAX_ACCOUNT_ID,
-        string $DATE,
-    ) {
+    public function Update(int $ID, string $CODE, int $VENDOR_ID, int $PAYMENT_TERMS_ID, string $DUE_DATE, string $NOTES, int $ACCOUNTS_PAYABLE_ID, int $INPUT_TAX_ID, float $INPUT_TAX_RATE, float $INPUT_TAX_AMOUNT, int $INPUT_TAX_VAT_METHOD, int $INPUT_TAX_ACCOUNT_ID, string $DATE, )
+    {
 
 
         Bill::where('ID', $ID)
@@ -219,23 +188,8 @@ class BillingServices
         }
         return (int) BillExpenses::where('BILL_ID', $Id)->max('LINE_NO');
     }
-    public function ItemStore(
-        int $BILL_ID,
-        int $ITEM_ID,
-        float $QUANTITY,
-        int $UNIT_ID,
-        float $UNIT_BASE_QUANTITY,
-        float $RATE,
-        int $RATE_TYPE,
-        float $AMOUNT,
-        int $BATCH_ID,
-        int $ACCOUNT_ID,
-        int $PO_ITEM_ID = 9,
-        bool $TAXABLE,
-        float $TAXABLE_AMOUNT,
-        float $TAX_AMOUNT,
-        int $CLASS_ID = 0
-    ): int {
+    public function ItemStore(int $BILL_ID, int $ITEM_ID, float $QUANTITY, int $UNIT_ID, float $UNIT_BASE_QUANTITY, float $RATE, int $RATE_TYPE, float $AMOUNT, int $BATCH_ID, int $ACCOUNT_ID, int $PO_ITEM_ID = 9, bool $TAXABLE, float $TAXABLE_AMOUNT, float $TAX_AMOUNT, int $CLASS_ID = 0): int
+    {
 
         $LINE_NO = $this->getLine($BILL_ID, true) + 1;
         $ID = $this->object->ObjectNextID('BILL_ITEMS');
@@ -263,19 +217,8 @@ class BillingServices
 
         return $ID;
     }
-    public function ItemUpdate(
-        int $ID,
-        int $BILL_ID,
-        int $ITEM_ID,
-        float $QUANTITY,
-        int $UNIT_ID,
-        float $UNIT_BASE_QUANTITY,
-        float $RATE,
-        float $AMOUNT,
-        bool $TAXABLE,
-        float $TAXABLE_AMOUNT,
-        float $TAX_AMOUNT
-    ) {
+    public function ItemUpdate(int $ID, int $BILL_ID, int $ITEM_ID, float $QUANTITY, int $UNIT_ID, float $UNIT_BASE_QUANTITY, float $RATE, float $AMOUNT, bool $TAXABLE, float $TAXABLE_AMOUNT, float $TAX_AMOUNT)
+    {
 
         BillItems::where('ID', $ID)->where('BILL_ID', $BILL_ID)->where('ITEM_ID', $ITEM_ID)
             ->update([
@@ -673,7 +616,7 @@ class BillingServices
             INNER JOIN withholding_tax ON withholding_tax.`ID` = withholding_tax_bills.`WITHHOLDING_TAX_ID`
 
         ) AS pay'))
-         
+
             ->select('pay.TYPE', 'pay.ID', 'pay.MAIN_ID', 'pay.BILL_ID', 'pay.AMOUNT_APPLIED', 'pay.RECORDED_ON', 'pay.CODE', 'pay.DATE')
             ->where('pay.BILL_ID', '=', $BILL_ID)
             ->orderBy('pay.RECORDED_ON')
@@ -844,8 +787,6 @@ class BillingServices
     {
         Bill::where('ID', '=', $BILL_ID)
             ->update(['AMOUNT' => $AMOUNT, 'BALANCE_DUE' => $AMOUNT, 'IS_XERO' => true]);
-
-
     }
     public function CallBillHeader($CODE, $DATE, $LOCATION_ID): int
     {
@@ -878,5 +819,27 @@ class BillingServices
     {
         Bill::where('ID', '=', $BILL_ID)
             ->update(['IS_XERO' => $IS_XERO]);
+    }
+
+
+    public function billListViaContact(int $CONTACT_ID)
+    {
+        $result = Bill::query()
+            ->select([
+                'bill.ID',
+                'bill.DATE',
+                'bill.CODE',
+                'bill.AMOUNT',
+                'bill.BALANCE_DUE',
+                's.DESCRIPTION as STATUS',
+                'l.NAME as LOCATION_NAME',
+            ])
+            ->join('location as l', 'l.ID', '=', 'bill.LOCATION_ID')
+            ->join('document_status_map as s', 's.ID', '=', 'bill.STATUS')
+            ->where('bill.VENDOR_ID', '=', $CONTACT_ID)
+            ->orderBy('bill.DATE', 'desc')
+            ->get();
+
+        return $result;
     }
 }

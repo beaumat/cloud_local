@@ -35,16 +35,8 @@ class BillPaymentServices
 
         return $result;
     }
-    public function Store(
-        string $CODE,
-        string $DATE,
-        int $BANK_ACCOUNT_ID,
-        int $PAY_TO_ID,
-        int $LOCATION_ID,
-        float $AMOUNT,
-        string $NOTES,
-        int $ACCOUNTS_PAYABLE_ID
-    ): int {
+    public function Store(string $CODE, string $DATE, int $BANK_ACCOUNT_ID, int $PAY_TO_ID, int $LOCATION_ID, float $AMOUNT, string $NOTES, int $ACCOUNTS_PAYABLE_ID): int
+    {
 
         $ID = (int) $this->object->ObjectNextID('CHECK');
         $OBJECT_TYPE = (int) $this->object->ObjectTypeID('CHECK');
@@ -86,15 +78,8 @@ class BillPaymentServices
                 'AMOUNT' => $AMOUNT
             ]);
     }
-    public function Update(
-        int $ID,
-        string $CODE,
-        int $BANK_ACCOUNT_ID,
-        int $PAY_TO_ID,
-        int $LOCATION_ID,
-        float $AMOUNT,
-        string $NOTES
-    ) {
+    public function Update(int $ID, string $CODE, int $BANK_ACCOUNT_ID, int $PAY_TO_ID, int $LOCATION_ID, float $AMOUNT, string $NOTES)
+    {
         Check::where('ID', '=', $ID)
             ->where('TYPE', '=', $this->CHECK_TYPE_ID)
             ->update([
@@ -165,11 +150,11 @@ class BillPaymentServices
             ->join('document_status_map as s', 's.ID', '=', 'check.STATUS')
             ->join('payment_period as pp', 'pp.ID', '=', 'check.PF_PERIOD_ID')
             ->where('check.TYPE', '=', $this->CHECK_TYPE_ID)
-             ->whereNotExists(function ($query) {
+            ->whereNotExists(function ($query) {
                 $query->select(DB::raw(1))
                     ->from('doctor_batch_paid as s')
                     ->whereRaw('s.CHECK_ID = check.ID');
-            
+
             })
             ->where('check.LOCATION_ID', '=', $LOCATION_ID)
             ->where('check.PAY_TO_ID', '=', $DOCTOR_ID)
@@ -254,8 +239,9 @@ class BillPaymentServices
 
         return $result;
     }
-    public function getDoctorBatch(int $DOCTOR_BATCH_ID) {
-         $result = CheckBills::query()
+    public function getDoctorBatch(int $DOCTOR_BATCH_ID)
+    {
+        $result = CheckBills::query()
             ->select([
                 'check_bills.ID',
                 'check_bills.BILL_ID',
@@ -272,7 +258,7 @@ class BillPaymentServices
                 DB::raw('(select count(*) from hemodialysis where hemodialysis.STATUS_ID = 2 and hemodialysis.CUSTOMER_ID = philhealth.CONTACT_ID and hemodialysis.DATE between philhealth.DATE_ADMITTED and philhealth.DATE_DISCHARGED) as NO_TREATMENT '),
                 DB::raw("(SELECT SUM(withholding_tax_bills.AMOUNT_WITHHELD) from withholding_tax_bills where withholding_tax_bills.BILL_ID = check_bills.BILL_ID) as TAX_AMOUNT")
             ])
-            ->join('doctor_batch_paid as dbp','dbp.CHECK_ID','=','check_bills.CHECK_ID')
+            ->join('doctor_batch_paid as dbp', 'dbp.CHECK_ID', '=', 'check_bills.CHECK_ID')
             ->join('bill', 'bill.ID', '=', 'check_bills.BILL_ID')
             ->join('philhealth_prof_fee', 'philhealth_prof_fee.BILL_ID', '=', 'check_bills.BILL_ID')
             ->join('philhealth', 'philhealth.ID', '=', 'philhealth_prof_fee.PHIC_ID')
@@ -334,14 +320,8 @@ class BillPaymentServices
             ->where('BILL_ID', $BILL_ID)
             ->first();
     }
-    public function billPaymentBills_Store(
-        int $CHECK_ID,
-        int $BILL_ID,
-        float $DISCOUNT,
-        float $AMOUNT_PAID,
-        int $DISCOUNT_ACCOUNT_ID,
-        int $ACCOUNTS_PAYABLE_ID
-    ) {
+    public function billPaymentBills_Store(int $CHECK_ID, int $BILL_ID, float $DISCOUNT, float $AMOUNT_PAID, int $DISCOUNT_ACCOUNT_ID, int $ACCOUNTS_PAYABLE_ID)
+    {
 
         $ID = (int) $this->object->ObjectNextID('CHECK_BILLS');
         CheckBills::create([
@@ -459,5 +439,27 @@ class BillPaymentServices
                 'IS_XERO' => $IS_XERO,
                 'AMOUNT' => $AMOUNT
             ]);
+    }
+    public function billPaymentListViaContact( int $CONTACT_ID)
+    {
+        $result = Check::query()
+            ->select([
+                'check.ID',
+                'check.CODE',
+                'check.DATE',
+                'check.AMOUNT',
+                'check.NOTES',
+                'l.NAME as LOCATION_NAME',
+                's.DESCRIPTION as STATUS',
+
+            ])  
+            ->join('location as l', 'l.ID', '=', 'check.LOCATION_ID')
+            ->join('document_status_map as s', 's.ID', '=', 'check.STATUS')
+            ->where('check.TYPE', '=', $this->CHECK_TYPE_ID)
+            ->where('check.PAY_TO_ID', '=', $CONTACT_ID)
+            ->orderBy('check.DATE', 'desc')
+            ->get();
+
+        return $result;
     }
 }

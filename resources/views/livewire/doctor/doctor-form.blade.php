@@ -64,24 +64,42 @@
                                                     aria-selected="true">General Info</a>
                                             </li>
                                             <li class="nav-item">
-                                                <a wire:click="SelectTab('tax')"
-                                                    class="nav-link @if ($selectTab == 'tax') active @endif"
-                                                    id="custom-content-below-tax-info-tab" data-toggle="pill"
-                                                    href="#custom-content-below-tax-info" role="tab"
-                                                    aria-controls="custom-content-below-tax-info"
-                                                    aria-selected="false">Billing Info
+                                                <a wire:click="SelectTab('bill')"
+                                                    class="nav-link @if ($selectTab == 'bill') active @endif"
+                                                    id="custom-content-below-bill-info-tab" data-toggle="pill"
+                                                    href="#custom-content-below-bill-info" role="tab"
+                                                    aria-controls="custom-content-below-bill-info"
+                                                    aria-selected="false">Bills
                                                 </a>
                                             </li>
                                             <li class="nav-item">
-                                                <a wire:click="SelectTab('add')"
-                                                    class="nav-link @if ($selectTab == 'add') active @endif"
-                                                    id="custom-content-below-add-info-tab" data-toggle="pill"
-                                                    href="#custom-content-below-add-info" role="tab"
-                                                    aria-controls="custom-content-below-add-info"
-                                                    aria-selected="false">Bill Paid Info
+                                                <a wire:click="SelectTab('payment')"
+                                                    class="nav-link @if ($selectTab == 'payment') active @endif"
+                                                    id="custom-content-below-payment-info-tab" data-toggle="pill"
+                                                    href="#custom-content-below-payment-info" role="tab"
+                                                    aria-controls="custom-content-below-payment-info"
+                                                    aria-selected="false">Bill Payments
                                                 </a>
                                             </li>
-
+                                            <li class="nav-item">
+                                                <a wire:click="SelectTab('wtax')"
+                                                    class="nav-link @if ($selectTab == 'wtax') active @endif"
+                                                    id="custom-content-below-wtax-info-tab" data-toggle="pill"
+                                                    href="#custom-content-below-wtax-info" role="tab"
+                                                    aria-controls="custom-content-below-wtax-info"
+                                                    aria-selected="false">Withholding Tax
+                                                </a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a wire:click="SelectTab('general-journal')"
+                                                    class="nav-link @if ($selectTab == 'general-journal') active @endif"
+                                                    id="custom-content-below-general-journal-info-tab"
+                                                    data-toggle="pill" href="#custom-content-below-general-journal-info"
+                                                    role="tab"
+                                                    aria-controls="custom-content-below-general-journal-info"
+                                                    aria-selected="false">General Journal
+                                                </a>
+                                            </li>
                                         </ul>
                                     </div>
                                     <div class="card-body bg-light">
@@ -94,7 +112,8 @@
                                                         <div class="col-md-2">
                                                             <label for="title" class="text-sm">Title</label>
                                                             <select wire:model='SALUTATION'
-                                                                class="form-control form-control-sm" name="SALUTATION">
+                                                                class="form-control form-control-sm"
+                                                                name="SALUTATION">
                                                                 <option value=""></option>
                                                                 <option value="Dr">Dr</option>
                                                                 <option value="Miss">Miss</option>
@@ -171,10 +190,10 @@
                                                                                 isDisabled="{{ false }}" />
                                                                         </div>
                                                                         <div class="col-md-12">
-                                                                                   <livewire:text-input name="TAXPAYER_ID"
-                                                                titleName="License No."
-                                                                isDisabled="{{ false }}"
-                                                                wire:model='TAXPAYER_ID' />
+                                                                            <livewire:text-input name="TAXPAYER_ID"
+                                                                                titleName="License No."
+                                                                                isDisabled="{{ false }}"
+                                                                                wire:model='TAXPAYER_ID' />
 
                                                                         </div>
                                                                         <div class="col-md-12">
@@ -184,7 +203,6 @@
                                                                                 wire:model='MOBILE_NO' />
                                                                         </div>
                                                                         <div class="col-md-6">
-
                                                                             <div class="mt-2">
                                                                                 <label for="gender"
                                                                                     class="text-sm">Gender</label>
@@ -214,41 +232,34 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="tab-pane fade @if ($selectTab == 'tax') show active @endif"
-                                                id="custom-content-below-tax-info" role="tabpanel"
-                                                aria-labelledby="custom-content-below-tax-info-tab">
+                                            <div class="tab-pane fade @if ($selectTab == 'bill') show active @endif"
+                                                id="custom-content-below-bill-info" role="tabpanel"
+                                                aria-labelledby="custom-content-below-bill-info-tab">
                                                 <div class="container-fluid">
-                                                    <div class="row">
-                                                        <div class="col-md-3">
-                                                   
-                                                        </div>
-                                                        <div class="col-md-4">
-
-
-                                                        </div>
-                                                    </div>
+                                                    @livewire('Doctor.DoctorBills', ['id' => $ID])
                                                 </div>
                                             </div>
-                                            <div class="tab-pane fade @if ($selectTab == 'add') show active @endif"
-                                                id="custom-content-below-add-info" role="tabpanel"
-                                                aria-labelledby="custom-content-below-add-info-tab">
+                                            <div class="tab-pane fade @if ($selectTab == 'payment') show active @endif"
+                                                id="custom-content-below-payment-info" role="tabpanel"
+                                                aria-labelledby="custom-content-below-payment-info-tab">
                                                 <div class="container-fluid">
-                                                    <div class="row">
-                                                        <div class="col-md-3">
-                                                            <div class="mt-2">
-                                                                {{-- <label for="dob" class="text-sm">Hire Date
-                                                                </label>
-                                                                <input type="date" name="hireDate"
-                                                                    class="form-control form-control-sm"
-                                                                    wire:model='HIRE_DATE' /> --}}
-                                                            </div>
-                                                        </div>
-
-                                                    </div>
+                                                    @livewire('Doctor.DoctorPayment', ['id' => $ID])
+                                                </div>
+                                            </div>
+                                            <div class="tab-pane fade @if ($selectTab == 'wtax') show active @endif"
+                                                id="custom-content-below-wtax-info" role="tabpanel"
+                                                aria-labelledby="custom-content-below-wtax-info-tab">
+                                                <div class="container-fluid">
 
                                                 </div>
                                             </div>
+                                            <div class="tab-pane fade @if ($selectTab == 'general-journal') show active @endif"
+                                                id="custom-content-below-general-journal-info" role="tabpanel"
+                                                aria-labelledby="custom-content-below-general-journal-info-tab">
+                                                <div class="container-fluid">
 
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
