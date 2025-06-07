@@ -97,6 +97,10 @@
                     <div class="row">
                         <div class="col-2"></div>
                         <div class="col-10 text-lg ">
+                            Total Dialyzer - <b>{{ $TOTAL_ITEM }}</b>
+                        </div>
+                        <div class="col-2"></div>
+                        <div class="col-10 text-lg ">
                             Confinement from Other Hopitals/Facility - <b>{{ $TOTAL_OTHER }}</b>
                         </div>
                         <div class="col-2"></div>

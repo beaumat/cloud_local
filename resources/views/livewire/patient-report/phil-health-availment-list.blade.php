@@ -103,8 +103,7 @@
                             @foreach ($patientList as $list)
                                 <tr>
                                     <td class="text-center">
-                                        <input type="checkbox" name="patientID{{ $list->ID }}"
-                                            wire:model.live="selectPatient.{{ $list->ID }}" />
+                                        <input type="checkbox" name="patientID{{ $list->ID }}" wire:model.live="selectPatient.{{ $list->ID }}" />
                                     </td>
                                     <td>{{ $list->NAME }}</td>
                                     <td class="text-center">{{ $list->TOTAL_ITEMS }}</td>
