@@ -53,7 +53,7 @@
                                 </div>
                                 <div class="card  card-tabs mt-2">
                                     <div class="card-header p-0 pt-1 border-bottom-0">
-                                        <ul class="nav nav-tabs text-sm p-1" id="custom-content-below-tab"
+                                        <ul class="nav nav-tabs text-xs p-1" id="custom-content-below-tab"
                                             role="tablist">
                                             <li class="nav-item">
                                                 <a wire:click="SelectTab('gen')"
@@ -62,6 +62,15 @@
                                                     href="#custom-content-below-general-info" role="tab"
                                                     aria-controls="custom-content-below-general-info"
                                                     aria-selected="true">General Info</a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a wire:click="SelectTab('patient')"
+                                                    class="nav-link @if ($selectTab == 'patient') active @endif"
+                                                    id="custom-content-below-patient-info-tab" data-toggle="pill"
+                                                    href="#custom-content-below-patient-info" role="tab"
+                                                    aria-controls="custom-content-below-patient-info"
+                                                    aria-selected="false">Patients
+                                                </a>
                                             </li>
                                             <li class="nav-item">
                                                 <a wire:click="SelectTab('bill')"
@@ -94,8 +103,8 @@
                                                 <a wire:click="SelectTab('general-journal')"
                                                     class="nav-link @if ($selectTab == 'general-journal') active @endif"
                                                     id="custom-content-below-general-journal-info-tab"
-                                                    data-toggle="pill" href="#custom-content-below-general-journal-info"
-                                                    role="tab"
+                                                    data-toggle="pill"
+                                                    href="#custom-content-below-general-journal-info" role="tab"
                                                     aria-controls="custom-content-below-general-journal-info"
                                                     aria-selected="false">General Journal
                                                 </a>
@@ -231,6 +240,11 @@
                                                         </div>
                                                     </div>
                                                 </div>
+                                            </div>
+                                            <div class="tab-pane fade @if ($selectTab == 'patient') show active @endif"
+                                                id="custom-content-below-patient-info" role="tabpanel"
+                                                aria-labelledby="custom-content-below-patient-info-tab">
+                                                @livewire('Doctor.DoctorPatients', ['id' => $ID])
                                             </div>
                                             <div class="tab-pane fade @if ($selectTab == 'bill') show active @endif"
                                                 id="custom-content-below-bill-info" role="tabpanel"

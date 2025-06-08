@@ -1,13 +1,16 @@
-<?php 
+<?php
 
 namespace App\Services;
 
 use App\Models\PhilHealthProfFee;
+use Illuminate\Support\Facades\DB;
 
-class PhilHealthProfFeeServices {
+class PhilHealthProfFeeServices
+{
 
     private $object;
-    public function __construct(ObjectServices $objectServices) {
+    public function __construct(ObjectServices $objectServices)
+    {
         $this->object = $objectServices;
     }
 
@@ -99,5 +102,27 @@ class PhilHealthProfFeeServices {
     {
         PhilHealthProfFee::where('PHIC_ID', $PHIC_ID)->delete();
     }
+    public function listPatientsByDoctor(int $DOCTOR_ID)
+    {
+        $result = DB::table('contact as c')
+            ->select([
+                'c.ID',
+                'c.PRINT_NAME_AS as NAME',
+                'c.PIN',
+                'c.ACCOUNT_NO',
+                'l.NAME as LOCATION_NAME',
+                DB::raw("COUNT(p.ID) as COUNT"),
+            ])
+  
+            ->join('philhealth as ph', 'ph.CONTACT_ID', '=', 'c.ID')
+            ->join('philhealth_prof_fee as p', 'p.PHIC_ID', '=', 'ph.ID')
+            ->join('location as l', 'l.ID', '=', 'ph.LOCATION_ID')
+            ->where('p.CONTACT_ID', $DOCTOR_ID)
+            ->groupBy('c.ID', 'c.PRINT_NAME_AS', 'c.PIN', 'c.ACCOUNT_NO', 'l.NAME')
+            ->orderBy('c.PRINT_NAME_AS', 'asc')
+            ->get();
 
+        return $result;
+
+    }
 }
