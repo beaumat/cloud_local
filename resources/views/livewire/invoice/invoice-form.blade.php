@@ -32,13 +32,13 @@
                                                 @if ($PATIENT_PAYMENT_ID > 0) style="opacity: 0.5;pointer-events: none;" @endif>
                                                 <div class='col-12'>
                                                     @if ($Modify && $STATUS == 0)
-                                                        <livewire:select-option-type name="CUSTOMER_ID1" titleName="Customer"
-                                                            :options="$contactList" :zero="true" :isDisabled="false"
-                                                            wire:model='CUSTOMER_ID' />
+                                                        <livewire:select-option-type name="CUSTOMER_ID1"
+                                                            titleName="Customer" :options="$contactList" :zero="true"
+                                                            :isDisabled="false" wire:model='CUSTOMER_ID' />
                                                     @else
-                                                        <livewire:select-option-type name="CUSTOMER_ID2" titleName="Customer"
-                                                            :options="$contactList" :zero="true" :isDisabled="true"
-                                                            wire:model='CUSTOMER_ID' />
+                                                        <livewire:select-option-type name="CUSTOMER_ID2"
+                                                            titleName="Customer" :options="$contactList" :zero="true"
+                                                            :isDisabled="true" wire:model='CUSTOMER_ID' />
                                                     @endif
                                                 </div>
                                             </div>
@@ -223,15 +223,15 @@
                                         <a class="nav-link @if ($tab == 'tax') active @endif"
                                             id="custom-tabs-four-tax-tab" wire:click="SelectTab('tax')"
                                             data-toggle="pill" href="#custom-tabs-four-tax" role="tab"
-                                            aria-controls="custom-tabs-four-tax" aria-selected="true">Withholding Tax
+                                            aria-controls="custom-tabs-four-tax" aria-selected="true">Tax Credits
                                         </a>
                                     </li>
                                     <li class="nav-item">
                                         <a class="nav-link @if ($tab == 'payment') active @endif"
                                             id="custom-tabs-four-payment-tab" wire:click="SelectTab('payment')"
                                             data-toggle="pill" href="#custom-tabs-four-payment" role="tab"
-                                            aria-controls="custom-tabs-four-payment" aria-selected="true">Receive
-                                            Payment</a>
+                                            aria-controls="custom-tabs-four-payment" aria-selected="true">
+                                            Payments</a>
                                     </li>
 
                                 </ul>

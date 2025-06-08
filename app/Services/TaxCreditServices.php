@@ -438,4 +438,29 @@ class TaxCreditServices
         }
         return 0;
     }
+
+    public function listViaContact(int $CONTACT_ID)
+    {
+
+        $result = TaxCredit::query()
+            ->select([
+                'tax_credit.ID',
+                'tax_credit.CODE',
+                'tax_credit.DATE',
+                'tax_credit.AMOUNT',
+                'tax_credit.NOTES',
+                'tax_credit.EWT_RATE',
+                'l.NAME as LOCATION_NAME',
+                's.DESCRIPTION as STATUS',
+                'tax_credit.STATUS as STATUS_ID'
+            ])
+            ->join('document_status_map as s', 's.ID', '=', 'tax_credit.STATUS')
+            ->join('location as l', 'l.ID', '=', 'tax_credit.LOCATION_ID')
+            ->where('tax_credit.CUSTOMER_ID', '=', $CONTACT_ID)
+            ->orderBy('tax_credit.DATE', 'desc')
+            ->get();
+
+        return $result;
+    }
+
 }

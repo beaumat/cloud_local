@@ -540,4 +540,25 @@ class SalesReceiptServices
 
         return $result;
     }
+    public function listViaContact(int $CONTACT_ID)
+    {
+       $result = SalesReceipt::query()
+            ->select([
+                'sales_receipt.ID',
+                'sales_receipt.CODE',
+                'sales_receipt.DATE',
+                'sales_receipt.AMOUNT',
+                'sales_receipt.NOTES',
+                'l.NAME as LOCATION_NAME',
+                's.DESCRIPTION as STATUS',
+
+            ])  
+            ->join('location as l', 'l.ID', '=', 'sales_receipt.LOCATION_ID')
+            ->join('document_status_map as s', 's.ID', '=', 'sales_receipt.STATUS')
+            ->where('sales_receipt.CUSTOMER_ID', '=', $CONTACT_ID)
+            ->orderBy('sales_receipt.DATE', 'desc')
+            ->get();
+
+        return $result;
+    }
 }

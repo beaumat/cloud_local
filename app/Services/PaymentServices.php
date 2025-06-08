@@ -568,4 +568,27 @@ class PaymentServices
                 'AMOUNT' => $AMOUNT
             ]);
     }
+
+    public function listViaContact(int $CONTACT_ID)
+    {
+       $result = Payment::query()
+            ->select([
+                'payment.ID',
+                'payment.CODE',
+                'payment.DATE',
+                'payment.AMOUNT',
+                'payment.AMOUNT_APPLIED',
+                'payment.NOTES',
+                'l.NAME as LOCATION_NAME',
+                's.DESCRIPTION as STATUS',
+
+            ])  
+            ->join('location as l', 'l.ID', '=', 'payment.LOCATION_ID')
+            ->join('document_status_map as s', 's.ID', '=', 'payment.STATUS')
+            ->where('payment.CUSTOMER_ID', '=', $CONTACT_ID)
+            ->orderBy('payment.DATE', 'desc')
+            ->get();
+
+        return $result;
+    }
 }

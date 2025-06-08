@@ -776,4 +776,26 @@ class InvoiceServices
         return 0;
     }
 
+    public function listViaContact(int $CONTACT_ID)
+    {
+       $result = Invoice::query()
+            ->select([
+                'invoice.ID',
+                'invoice.CODE',
+                'invoice.DATE',
+                'invoice.AMOUNT',
+                'invoice.BALANCE_DUE',
+                'invoice.NOTES',
+                'l.NAME as LOCATION_NAME',
+                's.DESCRIPTION as STATUS',
+
+            ])  
+            ->join('location as l', 'l.ID', '=', 'invoice.LOCATION_ID')
+            ->join('document_status_map as s', 's.ID', '=', 'invoice.STATUS')
+            ->where('invoice.CUSTOMER_ID', '=', $CONTACT_ID)
+            ->orderBy('invoice.DATE', 'desc')
+            ->get();
+
+        return $result;
+    }
 }

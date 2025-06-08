@@ -17,16 +17,13 @@ class CustomerList extends Component
     use WithPagination;
     protected $paginationTheme = 'bootstrap';
     public $search = '';
-    public int $perPage = 15;
+    public int $perPage = 30;
     public $locationList = [];
     public int $locationid = 0;
 
     private $contactServices;
     private $locationServices;
-    public function boot(
-        ContactServices $contactServices,
-        LocationServices $locationServices
-    ) {
+    public function boot( ContactServices $contactServices, LocationServices $locationServices ) {
         $this->contactServices = $contactServices;
         $this->locationServices = $locationServices;
     }
