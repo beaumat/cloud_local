@@ -50,9 +50,7 @@
                                                 isDisabled="{{ $modify }}" :zero="false" titleName="Branch"
                                                 wire:model='LOCATION_ID' />
                                         </div>
-
                                         <div class="col-md-2">
-
                                             <livewire:select-option name="CLASS_ID" :options="$patientClassList"
                                                 isDisabled="{{ $modify }}" :zero="true"
                                                 titleName="Classification" wire:model='CLASS_ID' />
@@ -180,6 +178,47 @@
                                                         aria-controls="custom-content-below-transfer-info"
                                                         aria-selected="false">
                                                         Transfer
+                                                    </a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a wire:click="SelectTab('sales-receipt')"
+                                                        class="nav-link @if ($selectTab == 'sales-receipt') active @endif"
+                                                        id="custom-content-below-sales-receipt-info-tab"
+                                                        data-toggle="pill" href="#custom-content-below-sales-receipt-info"
+                                                        role="tab"
+                                                        aria-controls="custom-content-below-sales-receipt-info"
+                                                        aria-selected="false">
+                                                        Sales receipts
+                                                    </a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a wire:click="SelectTab('invoice')"
+                                                        class="nav-link @if ($selectTab == 'invoice') active @endif"
+                                                        id="custom-content-below-invoice-info-tab" data-toggle="pill"
+                                                        href="#custom-content-below-invoice-info" role="tab"
+                                                        aria-controls="custom-content-below-invoice-info"
+                                                        aria-selected="false">
+                                                        Invoices
+                                                    </a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a wire:click="SelectTab('payment')"
+                                                        class="nav-link @if ($selectTab == 'payment') active @endif"
+                                                        id="custom-content-below-payment-info-tab" data-toggle="pill"
+                                                        href="#custom-content-below-payment-info" role="tab"
+                                                        aria-controls="custom-content-below-payment-info"
+                                                        aria-selected="false">
+                                                        Payments
+                                                    </a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a wire:click="SelectTab('tax-credit')"
+                                                        class="nav-link @if ($selectTab == 'tax-credit') active @endif"
+                                                        id="custom-content-below-tax-credit-info-tab" data-toggle="pill"
+                                                        href="#custom-content-below-tax-credit-info" role="tab"
+                                                        aria-controls="custom-content-below-tax-credit-info"
+                                                        aria-selected="false">
+                                                        Tax Credits
                                                     </a>
                                                 </li>
                                             @endcan
@@ -672,7 +711,6 @@
                                                                         wire:model='COMPANY_NAME' maxlength='100' />
                                                                 </div>
                                                                 <div class="col-md-2">
-
                                                                     <livewire:text-input name="CUSTOM_FIELD3"
                                                                         titleName="Official Capacitiy /Designation"
                                                                         isDisabled="{{ $modify }}"
@@ -779,10 +817,42 @@
 
                                                 <div class="tab-pane fade @if ($selectTab == 'transfer') show active @endif"
                                                     id="custom-content-below-transfer-info" role="tabpanel"
-                                                    aria-labelledby="custom-transfer-below-transfer-info-tab">
+                                                    aria-labelledby="custom-below-transfer-info-tab">
                                                     <div class="container-fluid"
                                                         @if ($ID === 0) style="opacity: 0.5;pointer-events: none;" @endif>
                                                         @livewire('Patient.TransferRecord', ['PATIENT_ID' => $ID])
+                                                    </div>
+                                                </div>
+                                                <div class="tab-pane fade @if ($selectTab == 'sales-receipt') show active @endif"
+                                                    id="custom-content-below-sales-receipt-info" role="tabpanel"
+                                                    aria-labelledby="custom-sales-receipt-below-sales-receipt-info-tab">
+                                                    <div class="container-fluid"
+                                                        @if ($ID === 0) style="opacity: 0.5;pointer-events: none;" @endif>
+                                                        @livewire('Customer.CustomerSalesReceipt', ['id' => $ID])
+                                                    </div>
+                                                </div>
+                                                <div class="tab-pane fade @if ($selectTab == 'invoice') show active @endif"
+                                                    id="custom-content-below-invoice-info" role="tabpanel"
+                                                    aria-labelledby="custom-invoice-info-tab">
+                                                    <div class="container-fluid"
+                                                        @if ($ID === 0) style="opacity: 0.5;pointer-events: none;" @endif>
+                                                        @livewire('Customer.CustomerInvoice', ['id' => $ID])
+                                                    </div>
+                                                </div>
+                                                <div class="tab-pane fade @if ($selectTab == 'payment') show active @endif"
+                                                    id="custom-content-below-payment-info" role="tabpanel"
+                                                    aria-labelledby="custom-payment-info-tab">
+                                                    <div class="container-fluid"
+                                                        @if ($ID === 0) style="opacity: 0.5;pointer-events: none;" @endif>
+                                                        @livewire('Customer.CustomerPayments', ['id' => $ID])
+                                                    </div>
+                                                </div>
+                                                <div class="tab-pane fade @if ($selectTab == 'tax-credit') show active @endif"
+                                                    id="custom-content-below-tax-credit-info" role="tabpanel"
+                                                    aria-labelledby="custom-tax-credit-info-tab">
+                                                    <div class="container-fluid"
+                                                        @if ($ID === 0) style="opacity: 0.5;pointer-events: none;" @endif>
+                                                        @livewire('Customer.CustomerTaxCredit', ['id' => $ID])
                                                     </div>
                                                 </div>
                                             @endcan

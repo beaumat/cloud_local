@@ -48,7 +48,7 @@
                                 </div>
                                 <div class="card  card-tabs mt-2">
                                     <div class="card-header p-0 pt-1 border-bottom-0">
-                                        <ul class="nav nav-tabs text-sm p-1" id="custom-content-below-tab"
+                                        <ul class="nav nav-tabs text-xs p-1" id="custom-content-below-tab"
                                             role="tablist">
                                             <li class="nav-item">
                                                 <a wire:click="SelectTab('gen')"
@@ -63,20 +63,50 @@
                                                     class="nav-link @if ($selectTab == 'tax') active @endif"
                                                     id="custom-content-below-tax-info-tab" data-toggle="pill"
                                                     href="#custom-content-below-tax-info" role="tab"
-                                                    aria-controls="custom-content-below-tax-info"
-                                                    aria-selected="false">Tax
-                                                    Info</a>
+                                                    aria-controls="custom-content-below-tax-info" aria-selected="false">
+                                                    Tax Info
+                                                </a>
                                             </li>
                                             <li class="nav-item">
                                                 <a wire:click="SelectTab('add')"
                                                     class="nav-link @if ($selectTab == 'add') active @endif"
                                                     id="custom-content-below-add-info-tab" data-toggle="pill"
                                                     href="#custom-content-below-add-info" role="tab"
-                                                    aria-controls="custom-content-below-add-info"
-                                                    aria-selected="false">Addional
-                                                    Info</a>
+                                                    aria-controls="custom-content-below-add-info" aria-selected="false">
+                                                    Addtional Info
+                                                </a>
                                             </li>
-
+                                            <li class="nav-item">
+                                                <a wire:click="SelectTab('bill')"
+                                                    class="nav-link @if ($selectTab == 'bill') active @endif"
+                                                    id="custom-content-below-bill-info-tab" data-toggle="pill"
+                                                    href="#custom-content-below-bill-info" role="tab"
+                                                    aria-controls="custom-content-below-bill-info"
+                                                    aria-selected="false">
+                                                    Bills
+                                                </a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a wire:click="SelectTab('bill-payment')"
+                                                    class="nav-link @if ($selectTab == 'bill-payment') active @endif"
+                                                    id="custom-content-below-bill-payment-info-tab" data-toggle="pill"
+                                                    href="#custom-content-below-bill-payment-info" role="tab"
+                                                    aria-controls="custom-content-below-bill-payment-info"
+                                                    aria-selected="false">
+                                                    Bill Payments
+                                                </a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a wire:click="SelectTab('withholding-tax')"
+                                                    class="nav-link @if ($selectTab == 'withholding-tax') active @endif"
+                                                    id="custom-content-below-withholding-tax-info-tab"
+                                                    data-toggle="pill" href="#custom-content-below-withholding-tax-info"
+                                                    role="tab"
+                                                    aria-controls="custom-content-below-withholding-tax-info"
+                                                    aria-selected="false">
+                                                    Withholding Tax
+                                                </a>
+                                            </li>
                                         </ul>
                                     </div>
                                     <div class="card-body bg-light">
@@ -87,12 +117,11 @@
                                                 <div class="container-fluid">
                                                     <div class="row">
                                                         <div class="col-md-12">
-                                                            <livewire:text-input name="NAME" titleName="Company Name"
-                                                                wire:model='COMPANY_NAME'  maxlength='70'
-                                                                isDisabled="{{ false }}" />
+                                                            <livewire:text-input name="NAME"
+                                                                titleName="Company Name" wire:model='COMPANY_NAME'
+                                                                maxlength='70' isDisabled="{{ false }}" />
                                                         </div>
                                                         <div class="col-md-2">
-
                                                             <div class="mt-2">
                                                                 <label for="title" class="text-sm">Title</label>
                                                                 <select wire:model='SALUTATION'
@@ -234,7 +263,21 @@
 
                                                 </div>
                                             </div>
-
+                                            <div class="tab-pane fade @if ($selectTab == 'bill') show active @endif"
+                                                id="custom-content-below-bill-info" role="tabpanel"
+                                                aria-labelledby="custom-content-below-bill-tab">
+                                                @livewire('Vendor.VendorBill', ['id' => $ID])
+                                            </div>
+                                            <div class="tab-pane fade @if ($selectTab == 'bill-payment') show active @endif"
+                                                id="custom-content-below-bill-payment-info" role="tabpanel"
+                                                aria-labelledby="custom-content-below-bill-payment-tab">
+                                                @livewire('Vendor.VendorBillPayment', ['id' => $ID])
+                                            </div>
+                                            <div class="tab-pane fade @if ($selectTab == 'withholding-tax') show active @endif"
+                                                id="custom-content-below-withholding-tax-info" role="tabpanel"
+                                                aria-labelledby="custom-content-below-withholding-tax-tab">
+                                                @livewire('Vendor.VendorWtax', ['id' => $ID])
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

@@ -1,12 +1,11 @@
 <?php
 
-namespace App\Livewire\Doctor;
+namespace App\Livewire\Vendor;
 
 use App\Services\BillingServices;
-use App\Services\BillPaymentServices;
 use Livewire\Component;
 
-class DoctorBills extends Component
+class VendorBill extends Component
 {
     public $dataList = [];
     public int $contact_id = 0;
@@ -26,7 +25,7 @@ class DoctorBills extends Component
     {
         // Fetch the list of bills for the contact_id
         $this->dataList = $this->billingServices->listViaContact($this->contact_id);
-
-        return view('livewire.doctor.doctor-bills');
+        
+        return view('livewire.vendor.vendor-bill');
     }
 }

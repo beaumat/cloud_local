@@ -1,20 +1,19 @@
 <?php
 
-namespace App\Livewire\Doctor;
+namespace App\Livewire\Vendor;
 
 use App\Services\WithholdingTaxServices;
 use Livewire\Component;
 
-class DoctorWithholdingTax extends Component
-{   
+class VendorWtax extends Component
+{
+  
     public $dataList = [];
     private $withholdingTaxServices;
     public int $contact_id = 0;
     public function boot(WithholdingTaxServices $withholdingTaxServices)
     {
-        $this->withholdingTaxServices = $withholdingTaxServices;
-
-        
+        $this->withholdingTaxServices = $withholdingTaxServices;      
     }
     public function mount($id = 0)
     {
@@ -25,7 +24,6 @@ class DoctorWithholdingTax extends Component
     public function render()
     {   
         $this->dataList = $this->withholdingTaxServices->listViaContact($this->contact_id);
-        // Fetch the list of withholding taxes for the contact_id
-        return view('livewire.doctor.doctor-withholding-tax');
+        return view('livewire.vendor.vendor-wtax');
     }
 }

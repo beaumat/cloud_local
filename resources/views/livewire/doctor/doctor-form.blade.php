@@ -235,29 +235,23 @@
                                             <div class="tab-pane fade @if ($selectTab == 'bill') show active @endif"
                                                 id="custom-content-below-bill-info" role="tabpanel"
                                                 aria-labelledby="custom-content-below-bill-info-tab">
-                                                <div class="container-fluid">
-                                                    @livewire('Doctor.DoctorBills', ['id' => $ID])
-                                                </div>
+                                                @livewire('Vendor.VendorBill', ['id' => $ID])
                                             </div>
                                             <div class="tab-pane fade @if ($selectTab == 'payment') show active @endif"
                                                 id="custom-content-below-payment-info" role="tabpanel"
                                                 aria-labelledby="custom-content-below-payment-info-tab">
-                                                <div class="container-fluid">
-                                                    @livewire('Doctor.DoctorPayment', ['id' => $ID])
-                                                </div>
+                                                @livewire('Vendor.VendorBillPayment', ['id' => $ID])
                                             </div>
                                             <div class="tab-pane fade @if ($selectTab == 'wtax') show active @endif"
                                                 id="custom-content-below-wtax-info" role="tabpanel"
                                                 aria-labelledby="custom-content-below-wtax-info-tab">
-                                                <div class="container-fluid">
-                                                    @livewire('Doctor.DoctorWithholdingTax', ['id' => $ID])
-                                                </div>
+                                                @livewire('Vendor.VendorWtax', ['id' => $ID])
                                             </div>
                                             <div class="tab-pane fade @if ($selectTab == 'general-journal') show active @endif"
                                                 id="custom-content-below-general-journal-info" role="tabpanel"
                                                 aria-labelledby="custom-content-below-general-journal-info-tab">
                                                 <div class="container-fluid">
-                                                    @livewire('Doctor.DoctorGeneralJournal', ['id' => $ID])
+                                                    @livewire('GeneralJournal.ListEntry', ['id' => $ID])
                                                 </div>
                                             </div>
                                         </div>

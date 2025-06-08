@@ -1,13 +1,12 @@
 <?php
 
-namespace App\Livewire\Doctor;
+namespace App\Livewire\GeneralJournal;
 
 use App\Services\GeneralJournalServices;
 use Livewire\Component;
 
-class DoctorGeneralJournal extends Component
-{
-    public $dataList = [];
+class ListEntry extends Component
+{  public $dataList = [];
     public int $contact_id = 0;
     private $generalJournalServices;
     public function boot(GeneralJournalServices $generalJournalServices)
@@ -23,7 +22,7 @@ class DoctorGeneralJournal extends Component
     }
     public function render()
     {   $this->dataList = $this->generalJournalServices->listViaContact($this->contact_id);
-        // Fetch the list of general journal entries for the contact_id
-        return view('livewire.doctor.doctor-general-journal');
+        // Fetch the list of general journal entries for the contact_idurn 
+        return view('livewire.general-journal.list-entry');
     }
 }
