@@ -927,6 +927,7 @@ class ServiceChargeServices
 
         return (int) $result;
     }
+
     public function getLastAvailment(int $PATIENT_ID, int $YEAR, int $LOCATION_ID)
     {
         $result = ServiceCharges::query()

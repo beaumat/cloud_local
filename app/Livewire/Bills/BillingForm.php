@@ -470,7 +470,7 @@ class BillingForm extends Component
                     foreach ($data as $list) {
                         $this->itemInventoryServices->RecomputedEndingOnhand(
                             $list->ID,
-                            $this->SOURCE_REF_TYPE,
+                            $SOURCE_REF_TYPE,
                             $this->LOCATION_ID,
                         );
                     }
