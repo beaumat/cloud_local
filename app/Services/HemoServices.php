@@ -1398,12 +1398,21 @@ class HemoServices
     }
     public function updateIsPost(int $ID, int $HEMO_ID)
     {
-        HemodialysisItems::where('ID', '=', $ID)
-            ->where('HEMO_ID', '=', $HEMO_ID)
-            ->update([
-                'IS_POST' => false
-            ]);
+
+        $data = HemodialysisItems::where('ID', '=', $ID)
+            ->where('HEMO_ID', '=', $HEMO_ID);
+
+        $data->update([
+            'IS_POST' => false
+        ]);
+        $firstData = $data->first();
+        $hemo = $this->Get($HEMO_ID);
+        if ($hemo && $firstData) {
+            $this->itemInventoryServices->DeleteInv($firstData->ITEM_ID, $hemo->LOCATION_ID, 27, $firstData->ID, $hemo->DATE);
+        }
+
     }
+
     public function ItemUpdateSC_ITEM_ID(int $ID, int $HEMO_ID, int $ITEM_ID, int $SC_ITEM_ID)
     {
         HemodialysisItems::where('ID', $ID)
