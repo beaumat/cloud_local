@@ -11,12 +11,12 @@
     ],
     'rows' => collect($dataList)->map(function($item) {
         return [
-            'CODE' => '<a target="_blank" href="' . route('sales_receipt_edit', ['id' => $item->ID]) . '">' . e($item->CODE) . '</a>',
+            'CODE' => '<a target="_blank" href="' . route('customerssales_receipt_edit', ['id' => $item->ID]) . '">' . e($item->CODE) . '</a>',
             'DATE' => date('m/d/Y', strtotime($item->DATE)),
             'AMOUNT' => number_format($item->AMOUNT, 2),
             'LOCATION_NAME' => $item->LOCATION_NAME,
             'STATUS' => $item->STATUS,
-            'action_html' => '<a target="_blank" class="btn btn-xs btn-primary w-100" href="' . route('sales_receipt_edit', ['id' => $item->ID]) . '"><i class="fas fa-eye"></i> View</a>'
+            'action_html' => '<a target="_blank" class="btn btn-xs btn-primary w-100" href="' . route('customerssales_receipt_edit', ['id' => $item->ID]) . '"><i class="fas fa-eye"></i> View</a>'
         ];
     })->toArray()
 ])
