@@ -61,36 +61,31 @@ class PatientInventoryReport extends Component
         );
     }
     public function generateExcel()
-    {
+    {   
+
+
         try {
 
-            $headers = ['Name', 'Item Code', 'Item Name', 'Quantity', 'Unit', 'Post', 'Walk-In', 'Date', 'Reference', 'Location']; // Could be dynamic based on UI
-            $itemlist = is_object($this->dataList) && method_exists($this->dataList, 'toArray')
-                ? $this->dataList->toArray()
-                : (array) $this->dataList;
-                
-            $rows = array_map(function ($itemlist) {
-                return [
-                    'Name' => $itemlist['PATIENT_NAME'],
-                    'Item Code' => $itemlist['ITEM_CODE'],
-                    'Item Name' => $itemlist['ITEM_NAME'],
-                    'Quantity' => $itemlist['QUANTITY'],
-                    'Unit' => $itemlist['UNIT'],
-                    'Post' => $itemlist['POST'],
-                    'Walk-In' => $itemlist['WALK_IN'],
-                    'Date' => $itemlist['DATE'],
-                    'Reference' => $itemlist['REFERENCE'],
-                    'Location' => $itemlist['LOCATION']
+            $headers = ['Name', 'Item Code', 'Item Name', 'Quantity', 'Unit', 'Post', 'Date', 'Reference', 'Location']; // Could be dynamic based on UI
+            $rowdata = [];
+            foreach ($this->dataList as $item) {
+                $rowdata[] = [
+                    'Name' => $item->PATIENT_NAME,
+                    'Item Code' => $item->ITEM_CODE,
+                    'Item Name' => $item->ITEM_NAME,
+                    'Quantity' => $item->QUANTITY,
+                    'Unit' => $item->UNIT,
+                    'Post' => $item->POST ? 'Yes' : 'No',
+                    'Date' => $item->DATE,
+                    'Reference' => $item->REFERENCE,
+                    'Location' => $item->LOCATION_NAME
                 ];
-            }, $itemlist);
+            }
 
-            return Excel::download(new DynamicExport($headers, $rows), 'PatientInventoryExport.xlsx');
-
-         
-
-
+            return Excel::download(new DynamicExport($headers, $rowdata), 'PatientInventoryExport.xlsx');
 
         } catch (\Exception $e) {
+            dd($e->getMessage());
             session()->flash('error', 'Error generating Excel: ' . $e->getMessage());
         }
     }

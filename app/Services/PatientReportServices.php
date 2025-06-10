@@ -256,7 +256,10 @@ class PatientReportServices
             })
             ->whereBetween('hemo.DATE', [$DATE_FROM, $DATE_TO])
             ->where('hemo.STATUS_ID', 2)
+            ->orderBy('hemo.DATE')
+            ->orderBy('hemo.CODE')
             ->get();
+
 
         return $result;
     }

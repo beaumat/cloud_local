@@ -20,6 +20,8 @@
         <div class="container-fluid bg-light">
             <div class="row">
                 <div class="col-md-12">
+                    @livewire('alert-layout', ['errors' => $errors->any() ? $errors->all() : '', 'message' => session('message'), 'error' => session('error')])
+
                     <div class="form-group bg-light p-2 border border-secondary">
                         <div class="row">
                             <div class="col-md-4">
