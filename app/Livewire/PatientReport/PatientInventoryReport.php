@@ -61,7 +61,12 @@ class PatientInventoryReport extends Component
         );
     }
     public function generateExcel()
-    {   
+    {
+
+        if (!$this->dataList) {
+            session()->flash('error', 'Please click geenerate first ');
+            return;
+        }
 
 
         try {
