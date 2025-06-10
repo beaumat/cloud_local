@@ -71,62 +71,17 @@
                                 </div>
                                 <button class="btn btn-xs btn-danger w-25" wire:click='generate()'
                                     wire:loading.attr='disabled'>Generate</button>
-                                {{-- <button class="btn btn-xs btn-success w-25" wire:click='export()'
-                                    wire:loading.attr='disabled'>Export</button> --}}
-                                {{-- <a type="button" class="btn btn-xs btn-warning w-25"
-                                    href="{{ route('reportspatient_sales_report_print', ['date_from' => $DATE_TRANSACTION_FROM, 'date_to' => $DATE_TRANSACTION_TO, 'location_id' => $LOCATION_ID]) }}"
-                                    target="_BLANK">
-                                    Print
-                                </a> --}}
+                                <button class="btn btn-xs btn-success w-25" wire:click='generateExcel()'
+                                    wire:loading.attr='disabled'>Export</button>
+
+
                             </div>
                             <div class="col-6">
 
                             </div>
                         </div>
                     </div>
-                    {{-- <div class="form-group">
-                        <div class="row">
-                            <div class="col-4">
-                         
 
-                                @if ($refreshComponent)
-                                    <livewire:select-checkbox name="PATIENT_ID1" titleName="Filter patient"
-                                        :options="$filterPatient" :zero="true" :isDisabled=false
-                                        wire:model='selectedPatient' />
-                                @else
-                                    <livewire:select-checkbox name="PATIENT_ID2" titleName="Filter patient"
-                                        :options="$filterPatient" :zero="true" :isDisabled=false
-                                        wire:model='selectedPatient' />
-                                @endif
-                            </div>
-                            <div class="col-4">
-                         
-
-                                @if ($refreshComponent)
-                                    <livewire:select-checkbox name="ITEM1" titleName="Filter item" :options="$filterItem"
-                                        :zero="true" :isDisabled=false wire:model='selectedItem' />
-                                @else
-                                    <livewire:select-checkbox name="ITEM2" titleName="Filter item" :options="$filterItem"
-                                        :zero="true" :isDisabled=false wire:model='selectedItem' />
-                                @endif
-                            </div>
-                            <div class="col-4">
-                                @if ($refreshComponent)
-                                    <livewire:select-checkbox name="METHOD1" titleName="Filter method"
-                                        :options="$filterMethod" :zero="true" :isDisabled=false
-                                        wire:model='selectedMethod' />
-                                @else
-                                    <livewire:select-checkbox name="METHOD2" titleName="Filter method"
-                                        :options="$filterMethod" :zero="true" :isDisabled=false
-                                        wire:model='selectedMethod' />
-                                @endif
-                            </div>
-                            <div class="col-6 p-1">
-                                <button class="btn btn-xs btn-info w-25" wire:click='shortFilter()'
-                                    wire:loading.attr='disabled'>Filter</button>
-                            </div>
-                        </div>
-                    </div> --}}
                 </div>
                 <div class="col-md-12" style="max-height: 80vh; overflow-y: auto;">
                     <table class="table table-sm table-bordered table-hover">

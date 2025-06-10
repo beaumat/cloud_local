@@ -2,6 +2,7 @@
 
 namespace App\Livewire\PatientReport;
 
+use App\Exports\DynamicExport;
 use App\Services\DateServices;
 use App\Services\ItemServices;
 use App\Services\LocationServices;
@@ -9,6 +10,7 @@ use App\Services\PatientReportServices;
 use App\Services\UserServices;
 use Livewire\Attributes\Title;
 use Livewire\Component;
+use Maatwebsite\Excel\Facades\Excel;
 
 #[Title('Patient Inventory Report')]
 class PatientInventoryReport extends Component
@@ -21,7 +23,7 @@ class PatientInventoryReport extends Component
     public int $ITEM_ID = 0;
     public $locationList = [];
     public $dataList = [];
-    public $itemList = [];   
+    public $itemList = [];
     private $patientReportServices;
     private $dateServices;
     private $locationServices;
@@ -46,7 +48,7 @@ class PatientInventoryReport extends Component
         $this->DATE_TO = $this->dateServices->NowDate();
         $this->LOCATION_ID = $this->userServices->getLocationDefault();
         $this->locationList = $this->locationServices->getList();
-        $this->itemList = $this->itemServices->getInventoryItem( false);
+        $this->itemList = $this->itemServices->getInventoryItem(false);
     }
     public function generate()
     {
@@ -57,6 +59,40 @@ class PatientInventoryReport extends Component
             $this->LOCATION_ID,
             $this->ITEM_ID
         );
+    }
+    public function generateExcel()
+    {
+        try {
+
+            $headers = ['Name', 'Item Code', 'Item Name', 'Quantity', 'Unit', 'Post', 'Walk-In', 'Date', 'Reference', 'Location']; // Could be dynamic based on UI
+            $itemlist = is_object($this->dataList) && method_exists($this->dataList, 'toArray')
+                ? $this->dataList->toArray()
+                : (array) $this->dataList;
+                
+            $rows = array_map(function ($itemlist) {
+                return [
+                    'Name' => $itemlist['PATIENT_NAME'],
+                    'Item Code' => $itemlist['ITEM_CODE'],
+                    'Item Name' => $itemlist['ITEM_NAME'],
+                    'Quantity' => $itemlist['QUANTITY'],
+                    'Unit' => $itemlist['UNIT'],
+                    'Post' => $itemlist['POST'],
+                    'Walk-In' => $itemlist['WALK_IN'],
+                    'Date' => $itemlist['DATE'],
+                    'Reference' => $itemlist['REFERENCE'],
+                    'Location' => $itemlist['LOCATION']
+                ];
+            }, $itemlist);
+
+            return Excel::download(new DynamicExport($headers, $rows), 'PatientInventoryExport.xlsx');
+
+         
+
+
+
+        } catch (\Exception $e) {
+            session()->flash('error', 'Error generating Excel: ' . $e->getMessage());
+        }
     }
     public function updatedlocationid()
     {

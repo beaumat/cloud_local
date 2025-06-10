@@ -32,7 +32,17 @@ class ARAgingExportReport implements FromCollection, ShouldAutoSize
     }
     public function SetDetails(string $DATE, string $REFERENCE, string $CUSTOMER, string $TERMS, string $DUE_DATE, string $AGING, string $OPEN_BALANCE, string $LOCATION)
     {
-        $rowData = ['DATE'             => $DATE, 'REFERENCE'        => $REFERENCE, 'CUSTOMER'         => $CUSTOMER, 'TERMS'            => $TERMS, 'DUE-DATE'        => $DUE_DATE, 'AGING'           => $AGING, 'OPEN-BALANCE'    =>  $OPEN_BALANCE, 'LOCATION'        => $LOCATION];
+        $rowData = [
+            'DATE'=> $DATE, 
+            'REFERENCE'        => $REFERENCE, 
+            'CUSTOMER'         => $CUSTOMER, 
+            'TERMS'            => $TERMS, 
+            'DUE-DATE'        => $DUE_DATE, 
+            'AGING'           => $AGING, 
+            'OPEN-BALANCE'    =>  $OPEN_BALANCE, 
+            'LOCATION'        => $LOCATION
+            ];
+
         return array_values($rowData);
     }
     /**
@@ -85,7 +95,14 @@ class ARAgingExportReport implements FromCollection, ShouldAutoSize
 
         } else {
 
-            $finalData[] = $this->SetDetails('DATE', 'REFERENCE', 'CUSTOMER', 'TERMS', 'DUE-DATE', 'AGING', 'OPEN-BALANCE', 'LOCATION');
+            $finalData[] = $this->SetDetails('DATE',
+                 'REFERENCE',
+                 'CUSTOMER',
+                 'TERMS',
+                 'DUE-DATE',
+                 'AGING',
+                 'OPEN-BALANCE',
+                 'LOCATION');
 
             $D_CURRENT = false;
             $D_1_30 = false;

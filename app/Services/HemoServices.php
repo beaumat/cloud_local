@@ -1727,14 +1727,8 @@ class HemoServices
     }
     public function GetNoTreatment(int $CUSTOMER_ID, int $LOCATION_ID, string $DATE): int
     {
-        // return (int) Hemodialysis::where('CUSTOMER_ID', '=', $CUSTOMER_ID)
-        //     ->where('LOCATION_ID', '=', $LOCATION_ID)
-        //     ->where('DATE', '<=', $DATE)
-        //     ->whereBetween('STATUS_ID', [1, 2])
-        //     ->count();
-
+       
         $year = date('Y', strtotime($DATE)); // Extract the year from the provided date
-
         $trtNo = (int) Hemodialysis::where('CUSTOMER_ID', '=', $CUSTOMER_ID)
             ->join('service_charges as s', function ($join) {
                 $join->on('s.PATIENT_ID', '=', 'hemodialysis.CUSTOMER_ID');
