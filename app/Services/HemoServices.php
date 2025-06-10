@@ -1282,15 +1282,7 @@ class HemoServices
 
         return (int) $result_new->total_count ?? 0;
     }
-    public function ItemStoreExists(
-        int $HEMO_ID,
-        int $ITEM_ID,
-        float $QUANTITY,
-        int $UNIT_ID,
-        float $UNIT_BASE_QUANTITY,
-        bool $IS_NEW,
-        bool $IS_DEFAULT
-    ): bool {
+    public function ItemStoreExists( int $HEMO_ID, int $ITEM_ID, float $QUANTITY, int $UNIT_ID, float $UNIT_BASE_QUANTITY, bool $IS_NEW, bool $IS_DEFAULT ): bool {
         try {
             $IsExist = HemodialysisItems::where('HEMO_ID', $HEMO_ID)
                 ->where('ITEM_ID', $ITEM_ID)
@@ -1306,20 +1298,8 @@ class HemoServices
 
         return $IsExist;
     }
-    public function ItemStore(
-        int $HEMO_ID,
-        int $ITEM_ID,
-        float $QUANTITY,
-        int $UNIT_ID,
-        float $UNIT_BASE_QUANTITY,
-        bool $IS_NEW,
-        bool $IS_DEFAULT,
-        bool $IS_CASHIER = false,
-        $SC_ITEM_ID = null,
-        $SK_LINE_ID = null,
-        $IS_JUSTIFY = false,
-        $JUSTIFY_NOTES = null
-    ): int {
+    public function ItemStore(int $HEMO_ID, int $ITEM_ID, float $QUANTITY, int $UNIT_ID, float $UNIT_BASE_QUANTITY, bool $IS_NEW, bool $IS_DEFAULT, bool $IS_CASHIER = false, $SC_ITEM_ID = null, $SK_LINE_ID = null, $IS_JUSTIFY = false, $JUSTIFY_NOTES = null): int
+    {
         $ID = (int) $this->object->ObjectNextID('HEMODIALYSIS_ITEMS');
 
         $LINE_NO = (int) $this->getLine($HEMO_ID) + 1;
@@ -1345,26 +1325,9 @@ class HemoServices
 
         return $ID;
     }
-    public function ItemUpdate(
-        int $ID,
-        int $HEMO_ID,
-        int $ITEM_ID,
-        float $QUANTITY,
-        int $UNIT_ID,
-        float $UNIT_BASE_QUANTITY,
-        bool $IS_NEW,
-        bool $IS_DEFAULT,
-        bool $ON_CHANGE_POST = false
-    ) {
-
-        // $itemData =  $this->ItemGet($ID);
-        // if ($itemData) {
-        //     if ($itemData->IS_POST) {
-        //         $data = $this->Get($HEMO_ID);
-        //         $this->itemInventoryServices->InventoryModify($ITEM_ID, $data->LOCATION_ID, $ID, 27, $data->DATE, 0, $QUANTITY, 0);
-        //     }
-        // }
-
+    public function ItemUpdate(int $ID, int $HEMO_ID, int $ITEM_ID, float $QUANTITY, int $UNIT_ID, float $UNIT_BASE_QUANTITY, bool $IS_NEW, bool $IS_DEFAULT, bool $ON_CHANGE_POST = false)
+    {
+        // Check if the item exists
         $dataCheck = HemodialysisItems::where('ID', '=', $ID)
             ->where('HEMO_ID', '=', $HEMO_ID)
             ->where('ITEM_ID', '=', $ITEM_ID)
@@ -1373,6 +1336,7 @@ class HemoServices
         $getData = $dataCheck;
 
         $list = $getData->first();
+
         if ($list->IS_POST == false) {
             $dataCheck->update([
                 'QUANTITY' => $QUANTITY,
@@ -1399,14 +1363,11 @@ class HemoServices
     public function updateIsPost(int $ID, int $HEMO_ID)
     {
 
-        $data = HemodialysisItems::where('ID', '=', $ID)
-            ->where('HEMO_ID', '=', $HEMO_ID);
-
-        $data->update([
-            'IS_POST' => false
-        ]);
+        $data = HemodialysisItems::where('ID', '=', $ID)->where('HEMO_ID', '=', $HEMO_ID);
+        $data->update(['IS_POST' => false]);
         $firstData = $data->first();
         $hemo = $this->Get($HEMO_ID);
+
         if ($hemo && $firstData) {
             $this->itemInventoryServices->DeleteInv($firstData->ITEM_ID, $hemo->LOCATION_ID, 27, $firstData->ID, $hemo->DATE);
         }
