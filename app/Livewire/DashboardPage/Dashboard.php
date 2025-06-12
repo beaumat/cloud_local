@@ -2,6 +2,8 @@
 
 namespace App\Livewire\DashboardPage;
 
+
+use App\Services\UserServices;
 use Illuminate\Support\Facades\Redirect;
 use Livewire\Attributes\Title;
 use Livewire\Component;
@@ -12,8 +14,9 @@ class Dashboard extends Component
 
     public function mount()
     {
-        if (auth()->user()->can('direct-to-treatment')) {
-            if (auth()->user()->can('patient.treatment.view')) {
+
+        if (UserServices::GetUserRightAccess('direct-to-treatment')) {
+            if (UserServices::GetUserRightAccess('patient.treatment.view')) {
                 return Redirect::route('patientshemo');
             }
         }

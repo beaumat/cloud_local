@@ -6,6 +6,7 @@ use App\Models\SalesReceipt;
 use App\Models\SalesReceiptItems;
 use App\Models\Tax;
 use Illuminate\Support\Facades\DB;
+use Psy\Command\WhereamiCommand;
 
 class SalesReceiptServices
 {
@@ -167,7 +168,7 @@ class SalesReceiptServices
         SalesReceipt::where('ID', '=', $ID)->delete();
     }
 
-    public function Search($search, int $locationId, int $perPage, $dateFrom, $dateTo)
+    public function Search($search, int $locationId, int $perPage, $dateEntry)
     {
         $result = SalesReceipt::query()
             ->select([
@@ -203,8 +204,13 @@ class SalesReceiptServices
                         ->orWhere('c.PRINT_NAME_AS', 'like', '%' . $search . '%');
                 });
             })
-            ->whereBetween('sales_receipt.DATE', [$dateFrom, $dateTo])
-            ->orderBy('sales_receipt.ID', 'desc')
+            ->when($dateEntry, function ($query) use (&$dateEntry) {
+                $query->where(function ($q) use (&$dateEntry) {
+                    $q->where('sales_receipt.DATE', '=', $dateEntry);
+                });
+            })
+
+            ->orderBy('sales_receipt.DATE', 'desc')
             ->paginate($perPage);
 
         return $result;
@@ -290,6 +296,7 @@ class SalesReceiptServices
         int $PRICE_LEVEL_ID,
         int $INCOME_ACCOUNT_ID
     ) {
+
         $data = $this->ItemGet($ID, $SALES_RECEIPT_ID);
 
         if ($data) {
@@ -542,7 +549,7 @@ class SalesReceiptServices
     }
     public function listViaContact(int $CONTACT_ID)
     {
-       $result = SalesReceipt::query()
+        $result = SalesReceipt::query()
             ->select([
                 'sales_receipt.ID',
                 'sales_receipt.CODE',
@@ -552,7 +559,7 @@ class SalesReceiptServices
                 'l.NAME as LOCATION_NAME',
                 's.DESCRIPTION as STATUS',
 
-            ])  
+            ])
             ->join('location as l', 'l.ID', '=', 'sales_receipt.LOCATION_ID')
             ->join('document_status_map as s', 's.ID', '=', 'sales_receipt.STATUS')
             ->where('sales_receipt.CUSTOMER_ID', '=', $CONTACT_ID)

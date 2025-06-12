@@ -135,7 +135,7 @@ class TaxCreditList extends Component
     public function unposted(int $id)
     {
 
-        if (Auth::user()->can('customer.tax-credit.edit')) {
+        if (UserServices::GetUserRightAccess('customer.tax-credit.edit')) {
             $this->taxCreditServices->StatusUpdate($id, 16);
         } else {
             session()->flash('error', "You don't have authorization to unpost");

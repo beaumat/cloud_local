@@ -6,6 +6,7 @@ use App\Services\AccountJournalServices;
 use App\Services\InvoiceServices;
 use App\Services\PaymentServices;
 use App\Services\TaxCreditServices;
+use App\Services\UserServices;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Reactive;
@@ -37,7 +38,7 @@ class PaidList extends Component
     public function DeletePaid(int $INVOICE_ID)
     {
 
-        if (!Auth::user()->can('customer.received-payment.delete')) {
+        if (!UserServices::GetUserRightAccess('customer.received-payment.delete')) {
             session()->flash('error', 'You don`t have permission to delete');
             return;
         }

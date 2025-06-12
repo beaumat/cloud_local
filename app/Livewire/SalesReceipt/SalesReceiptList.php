@@ -22,8 +22,7 @@ class SalesReceiptList extends Component
     public $search = '';
     public int $perPage = 25;
     public int $locationid;
-    public $dateFrom;
-    public $dateTo;
+    public $dateEntry;
 
     public $locationList = [];
     private $salesReceiptServices;
@@ -52,8 +51,7 @@ class SalesReceiptList extends Component
     {
         $this->locationList = $this->locationServices->getList();
         $this->locationid = $this->userServices->getLocationDefault();
-        $this->dateFrom = $this->userServices->getTransactionDateDefault();
-        $this->dateTo = $this->userServices->getTransactionDateDefault();
+        $this->dateEntry = null;
     }
     public function deleteItem(int $Id, int $SALES_RECEIPT_ID, int $JOURNAL_NO)
     {
@@ -191,8 +189,8 @@ class SalesReceiptList extends Component
             $this->search,
             $this->locationid,
             $this->perPage,
-            $this->dateFrom,
-            $this->dateTo
+            $this->dateEntry,
+   
         );
 
         return view('livewire.sales-receipt.sales-receipt-list', ['dataList' => $dataList]);

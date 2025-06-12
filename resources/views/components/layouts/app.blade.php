@@ -1,3 +1,6 @@
+<?php
+use App\Services\UserServices;
+?>
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
@@ -37,14 +40,8 @@
 
 <body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed">
 
-    <div class="wrapper   @if (Auth::user()->can('show-on-small-device')) @else
-        hide-on-small @endif">
+    <div class="wrapper  @if (UserServices::GetUserRightAccess('show-on-small-device')) @else hide-on-small @endif">
         <!-- Preloader -->
-        {{-- <div class="preloader flex-column justify-content-center align-items-center">
-            <img class="animation__wobble" src="{{ asset('dist/img/AdminLTELogo.png') }}" alt="AdminLTELogo"
-                height="60" width="60">
-        </div> --}}
-
         @livewire('Layouts.Header')
         @livewire('Layouts.MainSidebar')
 
@@ -87,10 +84,6 @@
             bsCustomFileInput.init();
         });
     </script>
-
-
-
-
 
     @livewireScripts
     @livewire('ChangePasswordModal');

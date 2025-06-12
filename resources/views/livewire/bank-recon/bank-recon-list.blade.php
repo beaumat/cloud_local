@@ -1,3 +1,6 @@
+<?php
+use App\Services\UserServices;
+?>
 <div class="content-wrapper">
     <div class="content-header">
         <div class="container-fluid">
@@ -92,7 +95,7 @@
                                                     class="btn btn-xs btn-info">
                                                     <i class="fas fa-eye" aria-hidden="true"></i>
                                                 </a>
-                                                @if (Auth::user()->can('banking.bank-recon.delete') && $list->STATUS_ID == 0)
+                                                @if (UserServices::GetUserRightAccess('banking.bank-recon.delete') && $list->STATUS_ID == 0)
                                                     <button wire:click='delete({{ $list->ID }})'
                                                         wire:confirm="Are you sure you want to delete this?"
                                                         class="btn btn-xs btn-danger">

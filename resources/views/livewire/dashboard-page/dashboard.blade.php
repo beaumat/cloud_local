@@ -8,7 +8,7 @@
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item active">
-
+                            {{ config('custom.site_name') }}
                         </li>
                     </ol>
                 </div>

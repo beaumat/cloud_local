@@ -107,7 +107,7 @@ class PaymentList extends Component
         try {
             $data = $this->paymentServices->get($id);
             if ($data) {
-                if ($data->DEPOSITED == 0 || Auth::user()->can('customer.received-payment.delete')) {
+                if ($data->DEPOSITED == 0 || UserServices::GetUserRightAccess('customer.received-payment.delete')) {
                     if ($data->STATUS ==  0 || $data->STATUS == 16) {
                         DB::beginTransaction();
 

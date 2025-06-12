@@ -32,14 +32,11 @@
                                             </div>
                                         </div>
                                         <div class ="col-md-2">
-                                            <label class="text-sm">Date From:</label>
+                                            <label class="text-sm">Date Entry:</label>
                                             <input type="date" class="form-control form-control-sm"
-                                                wire:model.live='dateFrom' />
+                                                wire:model.live='dateEntry' />
                                         </div>
                                         <div class="col-md-2">
-                                            <label class="text-sm">Date To:</label>
-                                            <input type="date" class="form-control form-control-sm"
-                                                wire:model.live='dateTo' />
                                         </div>
                                         <div class="col-md-2">
                                             <div class="mt-0">

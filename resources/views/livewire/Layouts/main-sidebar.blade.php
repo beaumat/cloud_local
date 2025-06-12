@@ -1,3 +1,7 @@
+@php
+    use App\Services\UserServices;
+@endphp
+
 <aside class="main-sidebar  sidebar-dark-info elevation-1 text-xs">
     <a href="{{ route('dashboard') }}" class="brand-link">
         <img src="{{ asset('dist/img/cloud_128.png') }}" alt="" class="brand-image elevation-0" style="opacity: .8">
@@ -14,52 +18,52 @@
                         <p> Dashboard </p>
                     </a>
                 </li>
-                @if (Auth::user()->can('patient.schedule.view') ||
-                        Auth::user()->can('patient.service-charges.view') ||
-                        Auth::user()->can('patient.payment.view') ||
-                        Auth::user()->can('patient.treatment.view') ||
-                        Auth::user()->can('patient.philhealth.view'))
+                @if (UserServices::GetUserRightAccess('patient.schedule.view') ||
+                        UserServices::GetUserRightAccess('patient.service-charges.view') ||
+                        UserServices::GetUserRightAccess('patient.payment.view') ||
+                        UserServices::GetUserRightAccess('patient.treatment.view') ||
+                        UserServices::GetUserRightAccess('patient.philhealth.view'))
                     @livewire('Layouts.PatientMenu')
                 @endif
-                @if (Auth::user()->can('customer.invoice.view') ||
-                        Auth::user()->can('customer.sales-order.view') ||
-                        Auth::user()->can('customer.credit-memo.view') ||
-                        Auth::user()->can('customer.received-payment.view') ||
-                        Auth::user()->can('customer.tax-credit.view'))
+                @if (UserServices::GetUserRightAccess('customer.invoice.view') ||
+                        UserServices::GetUserRightAccess('customer.sales-order.view') ||
+                        UserServices::GetUserRightAccess('customer.credit-memo.view') ||
+                        UserServices::GetUserRightAccess('customer.received-payment.view') ||
+                        UserServices::GetUserRightAccess('customer.tax-credit.view'))
                     @livewire('Layouts.CustomerMenu')
                 @endif
-                @if (Auth::user()->can('vendor.purchase-order.view') ||
-                        Auth::user()->can('vendor.bill.view') ||
-                        Auth::user()->can('vendor.bill-credit.view') ||
-                        Auth::user()->can('vendor.bill-payment.view') ||
-                        AUth::user()->can('vendor.withholding-tax.view'))
+                @if (UserServices::GetUserRightAccess('vendor.purchase-order.view') ||
+                        UserServices::GetUserRightAccess('vendor.bill.view') ||
+                        UserServices::GetUserRightAccess('vendor.bill-credit.view') ||
+                        UserServices::GetUserRightAccess('vendor.bill-payment.view') ||
+                        UserServices::GetUserRightAccess('vendor.withholding-tax.view'))
                     @livewire('Layouts.VendorMenu')
                 @endif
-                @if (Auth::user()->can('company.stock-transfer.view') ||
-                        Auth::user()->can('company.build-assembly.view') ||
-                        Auth::user()->can('company.inventory-adjustment.view') ||
-                        Auth::user()->can('company.general-journal.view') ||
-                        Auth::user()->can('company.pull-out.view'))
+                @if (UserServices::GetUserRightAccess('company.stock-transfer.view') ||
+                        UserServices::GetUserRightAccess('company.build-assembly.view') ||
+                        UserServices::GetUserRightAccess('company.inventory-adjustment.view') ||
+                        UserServices::GetUserRightAccess('company.general-journal.view') ||
+                        UserServices::GetUserRightAccess('company.pull-out.view'))
                     @livewire('Layouts.CompanyMenu')
                 @endif
-                @if (Auth::user()->can('banking.deposit.view') ||
-                        Auth::user()->can('banking.fund-transfer.view') ||
-                        Auth::user()->can('banking.make-cheque.view') ||
-                        Auth::user()->can('banking.bank-recon.view'))
+                @if (UserServices::GetUserRightAccess('banking.deposit.view') ||
+                        UserServices::GetUserRightAccess('banking.fund-transfer.view') ||
+                        UserServices::GetUserRightAccess('banking.make-cheque.view') ||
+                        UserServices::GetUserRightAccess('banking.bank-recon.view'))
                     @livewire('Layouts.BankingMenu')
                 @endif
-                @if (Auth::user()->can('report.patient.sales') ||
-                        Auth::user()->can('report.patient.treatment') ||
-                        Auth::user()->can('report.patient.balance') ||
-                        Auth::user()->can('report.patient.doctor-pf') ||
-                        Auth::user()->can('report.financial.income-statement') ||
-                        Auth::user()->can('report.financial.balance-sheet') ||
-                        Auth::user()->can('report.financial.cash-flow') ||
-                        Auth::user()->can('report.accounting.general-ledger') ||
-                        Auth::user()->can('report.accounting.trial-balance') ||
-                        Auth::user()->can('report.accounting.transaction-details') ||
-                        Auth::user()->can('report.accounting.transaction-journal') ||
-                        Auth::user()->can('report.customer.sales'))
+                @if (UserServices::GetUserRightAccess('report.patient.sales') ||
+                        UserServices::GetUserRightAccess('report.patient.treatment') ||
+                        UserServices::GetUserRightAccess('report.patient.balance') ||
+                        UserServices::GetUserRightAccess('report.patient.doctor-pf') ||
+                        UserServices::GetUserRightAccess('report.financial.income-statement') ||
+                        UserServices::GetUserRightAccess('report.financial.balance-sheet') ||
+                        UserServices::GetUserRightAccess('report.financial.cash-flow') ||
+                        UserServices::GetUserRightAccess('report.accounting.general-ledger') ||
+                        UserServices::GetUserRightAccess('report.accounting.trial-balance') ||
+                        UserServices::GetUserRightAccess('report.accounting.transaction-details') ||
+                        UserServices::GetUserRightAccess('report.accounting.transaction-journal') ||
+                        UserServices::GetUserRightAccess('report.customer.sales'))
 
                     <li class="nav-item {{ request()->is('reports*') ? 'menu-open' : '' }}">
                         <a href="#" class="nav-link {{ request()->is('reports*') ? 'active' : '' }}">
@@ -67,40 +71,42 @@
                             <p> Reports <i class="right fas fa-angle-left"></i> </p>
                         </a>
                         <ul class="nav nav-treeview bg-blue-dark">
-                            @if (Auth::user()->can('report.patient.sales') ||
-                                    Auth::user()->can('report.patient.treatment') ||
-                                    Auth::user()->can('report.patient.balance') ||
-                                    Auth::user()->can('report.patient.doctor-pf'))
+                            @if (UserServices::GetUserRightAccess('report.patient.sales') ||
+                                    UserServices::GetUserRightAccess('report.patient.treatment') ||
+                                    UserServices::GetUserRightAccess('report.patient.balance') ||
+                                    UserServices::GetUserRightAccess('report.patient.doctor-pf'))
                                 @livewire('Layouts.ReportsPatients')
                             @endif
 
-                            @if (Auth::user()->can('report.customer.sales'))
+                            @if (UserServices::GetUserRightAccess('report.customer.sales'))
                                 @livewire('Layouts.ReportsSales')
                             @endif
 
-                            @if (Auth::user()->can('report.accounting.general-ledger') ||
-                                    Auth::user()->can('report.accounting.trial-balance') ||
-                                    Auth::user()->can('report.accounting.transaction-journal') ||
-                                    Auth::user()->can('report.accounting.transaction-details'))
+                            @if (UserServices::GetUserRightAccess('report.accounting.general-ledger') ||
+                                    UserServices::GetUserRightAccess('report.accounting.trial-balance') ||
+                                    UserServices::GetUserRightAccess('report.accounting.transaction-journal') ||
+                                    UserServices::GetUserRightAccess('report.accounting.transaction-details'))
                                 @livewire('Layouts.ReportsAccounting')
                             @endif
 
-                            @if (Auth::user()->can('report.financial.income-statement') ||
-                                    Auth::user()->can('report.financial.balance-sheet') ||
-                                    Auth::user()->can('report.financial.cash-flow'))
+                            @if (UserServices::GetUserRightAccess('report.financial.income-statement') ||
+                                    UserServices::GetUserRightAccess('report.financial.balance-sheet') ||
+                                    UserServices::GetUserRightAccess('report.financial.cash-flow'))
                                 @livewire('Layouts.ReportsFinancial')
                             @endif
                             {{-- Receivables --}}
 
-                            @if (Auth::user()->can('report.receivables.ar-aging') || Auth::user()->can('report.receivables.customer-balance'))
+                            @if (UserServices::GetUserRightAccess('report.receivables.ar-aging') ||
+                                    UserServices::GetUserRightAccess('report.receivables.customer-balance'))
                                 @livewire('Layouts.ReportsReceivables')
                             @endif
                             {{-- Payables --}}
-                            @if (Auth::user()->can('report.payables.ap-aging') || Auth::user()->can('report.payables.vendor-balance'))
+                            @if (UserServices::GetUserRightAccess('report.payables.ap-aging') ||
+                                    UserServices::GetUserRightAccess('report.payables.vendor-balance'))
                                 @livewire('Layouts.ReportsPayables')
                             @endif
                             {{-- not now --}}
-                            {{-- @if (Auth::user()->can('report.inventory.validation-summary'))
+                            {{-- @if (UserServices::GetUserRightAccess('report.inventory.validation-summary'))
                                 @livewire('Layouts.ReportsInventory')
                             @endif --}}
 
@@ -108,80 +114,80 @@
                     </li>
                 @endif
 
-                @if (Auth::user()->can('contact.customer.view') ||
-                        Auth::user()->can('contact.vendor.view') ||
-                        Auth::user()->can('contact.employee.view') ||
-                        Auth::user()->can('contact.patient.view') ||
-                        Auth::user()->can('contact.doctor.view') ||
-                        Auth::user()->can('chart-of-account.view') ||
-                        Auth::user()->can('payment-method.view') ||
-                        Auth::user()->can('payment-term.view') ||
-                        Auth::user()->can('tax-list.view') ||
-                        Auth::user()->can('items.view') ||
-                        Auth::user()->can('item-class.view') ||
-                        Auth::user()->can('item-sub-class.view') ||
-                        Auth::user()->can('item-group.view') ||
-                        Auth::user()->can('manufacturer.view') ||
-                        Auth::user()->can('ship-via.view') ||
-                        Auth::user()->can('unit-of-measure.view') ||
-                        Auth::user()->can('inventory-adjustment-type.view') ||
-                        Auth::user()->can('stock-bin.view') ||
-                        Auth::user()->can('price-level.view') ||
-                        Auth::user()->can('price-location') ||
-                        Auth::user()->can('others.shift.view') ||
-                        Auth::user()->can('others.hemodialysis-machine.view') ||
-                        Auth::user()->can('others.requirement.view') ||
-                        Auth::user()->can('others.item-active-list.view') ||
-                        Auth::user()->can('others.item-treatment.view') ||
-                        Auth::user()->can('users') ||
-                        Auth::user()->can('roles-and-permission') ||
-                        Auth::user()->can('location.view') ||
-                        Auth::user()->can('location-group.view') ||
-                        Auth::user()->can('option'))
+                @if (UserServices::GetUserRightAccess('contact.customer.view') ||
+                        UserServices::GetUserRightAccess('contact.vendor.view') ||
+                        UserServices::GetUserRightAccess('contact.employee.view') ||
+                        UserServices::GetUserRightAccess('contact.patient.view') ||
+                        UserServices::GetUserRightAccess('contact.doctor.view') ||
+                        UserServices::GetUserRightAccess('chart-of-account.view') ||
+                        UserServices::GetUserRightAccess('payment-method.view') ||
+                        UserServices::GetUserRightAccess('payment-term.view') ||
+                        UserServices::GetUserRightAccess('tax-list.view') ||
+                        UserServices::GetUserRightAccess('items.view') ||
+                        UserServices::GetUserRightAccess('item-class.view') ||
+                        UserServices::GetUserRightAccess('item-sub-class.view') ||
+                        UserServices::GetUserRightAccess('item-group.view') ||
+                        UserServices::GetUserRightAccess('manufacturer.view') ||
+                        UserServices::GetUserRightAccess('ship-via.view') ||
+                        UserServices::GetUserRightAccess('unit-of-measure.view') ||
+                        UserServices::GetUserRightAccess('inventory-adjustment-type.view') ||
+                        UserServices::GetUserRightAccess('stock-bin.view') ||
+                        UserServices::GetUserRightAccess('price-level.view') ||
+                        UserServices::GetUserRightAccess('price-location') ||
+                        UserServices::GetUserRightAccess('others.shift.view') ||
+                        UserServices::GetUserRightAccess('others.hemodialysis-machine.view') ||
+                        UserServices::GetUserRightAccess('others.requirement.view') ||
+                        UserServices::GetUserRightAccess('others.item-active-list.view') ||
+                        UserServices::GetUserRightAccess('others.item-treatment.view') ||
+                        UserServices::GetUserRightAccess('users') ||
+                        UserServices::GetUserRightAccess('roles-and-permission') ||
+                        UserServices::GetUserRightAccess('location.view') ||
+                        UserServices::GetUserRightAccess('location-group.view') ||
+                        UserServices::GetUserRightAccess('option'))
                     <li class="nav-item {{ request()->is('maintenance*') ? 'menu-open' : '' }}">
                         <a href="#" class="nav-link {{ request()->is('maintenance*') ? 'active ' : '' }}">
                             <i class="nav-icon fa fa-cog"></i>
                             <p> Maintenance <i class="right fas fa-angle-left"></i> </p>
                         </a>
                         <ul class="nav nav-treeview bg-blue-dark">
-                            @if (Auth::user()->can('contact.customer.view') ||
-                                    Auth::user()->can('contact.vendor.view') ||
-                                    Auth::user()->can('contact.employee.view') ||
-                                    Auth::user()->can('contact.patient.view') ||
-                                    Auth::user()->can('contact.doctor.view'))
+                            @if (UserServices::GetUserRightAccess('contact.customer.view') ||
+                                    UserServices::GetUserRightAccess('contact.vendor.view') ||
+                                    UserServices::GetUserRightAccess('contact.employee.view') ||
+                                    UserServices::GetUserRightAccess('contact.patient.view') ||
+                                    UserServices::GetUserRightAccess('contact.doctor.view'))
                                 @livewire('Layouts.MaintenanceContacts')
                             @endif
-                            @if (Auth::user()->can('chart-of-account.view') ||
-                                    Auth::user()->can('payment-method.view') ||
-                                    Auth::user()->can('payment-term.view') ||
-                                    Auth::user()->can('tax-list.view'))
+                            @if (UserServices::GetUserRightAccess('chart-of-account.view') ||
+                                    UserServices::GetUserRightAccess('payment-method.view') ||
+                                    UserServices::GetUserRightAccess('payment-term.view') ||
+                                    UserServices::GetUserRightAccess('tax-list.view'))
                                 @livewire('Layouts.MaintenanceFinancials')
                             @endif
-                            @if (Auth::user()->can('items.view') ||
-                                    Auth::user()->can('item-class.view') ||
-                                    Auth::user()->can('item-sub-class.view') ||
-                                    Auth::user()->can('item-group.view') ||
-                                    Auth::user()->can('manufacturer.view') ||
-                                    Auth::user()->can('ship-via.view') ||
-                                    Auth::user()->can('unit-of-measure.view') ||
-                                    Auth::user()->can('inventory-adjustment-type.view') ||
-                                    Auth::user()->can('stock-bin.view') ||
-                                    Auth::user()->can('price-level.view') ||
-                                    Auth::user()->can('price-location'))
+                            @if (UserServices::GetUserRightAccess('items.view') ||
+                                    UserServices::GetUserRightAccess('item-class.view') ||
+                                    UserServices::GetUserRightAccess('item-sub-class.view') ||
+                                    UserServices::GetUserRightAccess('item-group.view') ||
+                                    UserServices::GetUserRightAccess('manufacturer.view') ||
+                                    UserServices::GetUserRightAccess('ship-via.view') ||
+                                    UserServices::GetUserRightAccess('unit-of-measure.view') ||
+                                    UserServices::GetUserRightAccess('inventory-adjustment-type.view') ||
+                                    UserServices::GetUserRightAccess('stock-bin.view') ||
+                                    UserServices::GetUserRightAccess('price-level.view') ||
+                                    UserServices::GetUserRightAccess('price-location'))
                                 @livewire('Layouts.MaintenanceInventory')
                             @endif
-                            @if (Auth::user()->can('others.shift.view') ||
-                                    Auth::user()->can('others.hemodialysis-machine.view') ||
-                                    Auth::user()->can('others.requirement.view') ||
-                                    Auth::user()->can('others.item-active-list.view') ||
-                                    Auth::user()->can('others.item-treatment.view'))
+                            @if (UserServices::GetUserRightAccess('others.shift.view') ||
+                                    UserServices::GetUserRightAccess('others.hemodialysis-machine.view') ||
+                                    UserServices::GetUserRightAccess('others.requirement.view') ||
+                                    UserServices::GetUserRightAccess('others.item-active-list.view') ||
+                                    UserServices::GetUserRightAccess('others.item-treatment.view'))
                                 @livewire('Layouts.MaintenanceOthers')
                             @endif
-                            @if (Auth::user()->can('users') ||
-                                    Auth::user()->can('roles-and-permission') ||
-                                    Auth::user()->can('location.view') ||
-                                    Auth::user()->can('location-group.view') ||
-                                    Auth::user()->can('option'))
+                            @if (UserServices::GetUserRightAccess('users') ||
+                                    UserServices::GetUserRightAccess('roles-and-permission') ||
+                                    UserServices::GetUserRightAccess('location.view') ||
+                                    UserServices::GetUserRightAccess('location-group.view') ||
+                                    UserServices::GetUserRightAccess('option'))
                                 @livewire('Layouts.MaintenanceSettings')
                             @endif
 
