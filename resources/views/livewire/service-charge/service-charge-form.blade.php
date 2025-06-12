@@ -172,7 +172,7 @@
                                         <div class="row">
                                             <div class="col-md-12"
                                                 @if ($Modify == true) style="opacity: 0.5;pointer-events: none;" @endif>
-                                                @livewire('ServiceCharge.ServiceChargeFormItems', ['SERVICE_CHARGES_ID' => $ID, 'STATUS' => $STATUS, 'TAX_ID' => $OUTPUT_TAX_ID, 'PATIENT_ID' => $PATIENT_ID, 'LOCATION_ID' => $LOCATION_ID])
+                                                @livewire('ServiceCharge.ServiceChargeFormItems', ['SERVICE_CHARGES_ID' => $ID, 'STATUS' => $STATUS, 'TAX_ID' => $OUTPUT_TAX_ID, 'PATIENT_ID' => $PATIENT_ID, 'LOCATION_ID' => $LOCATION_ID, 'WALK_IN' => $WALK_IN, 'HEMO_ID' => $HEMO_ID])
                                             </div>
                                         </div>
                                     </div>

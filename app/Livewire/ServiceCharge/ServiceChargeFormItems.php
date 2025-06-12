@@ -38,6 +38,11 @@ class ServiceChargeFormItems extends Component
     #[Reactive]
     public $PATIENT_ID;
 
+    #[Reactive]
+    public bool $WALK_IN;
+
+    #[Reactive]
+    public bool $HEMO_ID;
     public bool $isAdmin = false;
     public int $openStatus = 0;
     public int $ID;
@@ -549,11 +554,15 @@ class ServiceChargeFormItems extends Component
                         $getItemInfo->UNIT_ID ?? 0,
                         $Id
                     );
+
+
                     $this->itemInventoryServices->RecomputedOnhand(
                         $getItemInfo->ITEM_ID,
                         $this->LOCATION_ID,
                         $dataSC->DATE
                     );
+
+                
                 }
 
 

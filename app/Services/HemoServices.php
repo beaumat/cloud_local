@@ -1282,7 +1282,8 @@ class HemoServices
 
         return (int) $result_new->total_count ?? 0;
     }
-    public function ItemStoreExists( int $HEMO_ID, int $ITEM_ID, float $QUANTITY, int $UNIT_ID, float $UNIT_BASE_QUANTITY, bool $IS_NEW, bool $IS_DEFAULT ): bool {
+    public function ItemStoreExists(int $HEMO_ID, int $ITEM_ID, float $QUANTITY, int $UNIT_ID, float $UNIT_BASE_QUANTITY, bool $IS_NEW, bool $IS_DEFAULT): bool
+    {
         try {
             $IsExist = HemodialysisItems::where('HEMO_ID', $HEMO_ID)
                 ->where('ITEM_ID', $ITEM_ID)
@@ -1727,7 +1728,7 @@ class HemoServices
     }
     public function GetNoTreatment(int $CUSTOMER_ID, int $LOCATION_ID, string $DATE): int
     {
-       
+
         $year = date('Y', strtotime($DATE)); // Extract the year from the provided date
         $trtNo = (int) Hemodialysis::where('CUSTOMER_ID', '=', $CUSTOMER_ID)
             ->join('service_charges as s', function ($join) {
@@ -2322,8 +2323,6 @@ class HemoServices
             dd($th->getMessage());
             return false;
         }
-
-
     }
     public function getCountUnposted(string $DATE, int $LOCATION_ID): int
     {
@@ -2366,5 +2365,17 @@ class HemoServices
             ->where('hemodialysis.STATUS_ID', '=', 2)
             ->groupBy('item.DESCRIPTION')
             ->get();
+    }
+    public function getHemoItemIdViaServiceCharge(int $HEMO_ID, int $ITEM_ID, int $SC_ITEM_ID)
+    {
+        $result = HemodialysisItems::where('HEMO_ID', '=', $HEMO_ID)
+            ->where('ITEM_ID', '=', $ITEM_ID)
+            ->where('SC_ITEM_ID', '=', $SC_ITEM_ID)
+            ->first();
+
+        if ($result) {
+            return $result->ID;
+        }
+        return null;
     }
 }

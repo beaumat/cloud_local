@@ -1,5 +1,6 @@
 <?php
 use App\Services\UserServices;
+use App\Services\ModeServices;
 ?>
 
 <div class="content-wrapper">
@@ -10,7 +11,9 @@ use App\Services\UserServices;
                     <h5 class="m-0"><a href="{{ route('customersinvoice') }}"> Invoice </a></h5>
                 </div>
                 <div class="col-sm-6 text-right">
-                    @livewire('Invoice.QuickPaid', ['LOCATION_ID' => $locationid])
+                    @if (ModeServices::GET() == 'H')
+                        @livewire('Invoice.QuickPaid', ['LOCATION_ID' => $locationid])
+                    @endif
                 </div>
             </div>
         </div>

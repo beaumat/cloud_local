@@ -1,5 +1,7 @@
 <?php
 use App\Services\UserServices;
+use App\Services\ModeServices;
+
 ?>
 
 <div class="content-wrapper">
@@ -22,39 +24,40 @@ use App\Services\UserServices;
     <!-- Main content -->
     <section class="content">
         <div class="container-fluid">
-            @if (UserServices::GetUserRightAccess('tracking-branches'))
-                <div class="row">
-                    <!--begin::Col-->
-                    <div class="col-md-3">
-                        @livewire('DashBoardPage.PatientStatus')
-                    </div>
-                    <div class="col-md-3">
-                        @livewire('DashBoardPage.TreatmentSummaryStatus')
-                    </div>
-                    <div class="col-md-3">
-                        @livewire('DashBoardPage.PhilhealthStatus')
-                    </div>
-                    <div class="col-md-3">
-                        @livewire('DashBoardPage.DoctorStatus')
-                    </div>
-                    <div class="col-md-4">
-                        @livewire('DashBoardPage.SalesCollection')
-                    </div>
-
-                    <div class="col-md-4">
-                        @livewire('DashBoardPage.ReceivableStatus')
-                    </div>
-                    <div class="col-md-4">
-                        @livewire('DashBoardPage.PayableStatus')
-                    </div>
-                    @can('previous-operation-tracking')
+            @if (ModeServices::GET() == 'H')
+                @if (UserServices::GetUserRightAccess('tracking-branches'))
+                    <div class="row">
+                        <!--begin::Col-->
                         <div class="col-md-3">
-                            @livewire('DashBoardPage.PreviousOperation')
+                            @livewire('DashBoardPage.PatientStatus')
                         </div>
-                    @endcan
-                </div>
-            @endif
+                        <div class="col-md-3">
+                            @livewire('DashBoardPage.TreatmentSummaryStatus')
+                        </div>
+                        <div class="col-md-3">
+                            @livewire('DashBoardPage.PhilhealthStatus')
+                        </div>
+                        <div class="col-md-3">
+                            @livewire('DashBoardPage.DoctorStatus')
+                        </div>
+                        <div class="col-md-4">
+                            @livewire('DashBoardPage.SalesCollection')
+                        </div>
 
+                        <div class="col-md-4">
+                            @livewire('DashBoardPage.ReceivableStatus')
+                        </div>
+                        <div class="col-md-4">
+                            @livewire('DashBoardPage.PayableStatus')
+                        </div>
+                        @can('previous-operation-tracking')
+                            <div class="col-md-3">
+                                @livewire('DashBoardPage.PreviousOperation')
+                            </div>
+                        @endcan
+                    </div>
+                @endif
+            @endif
         </div>
     </section>
 </div>

@@ -191,4 +191,8 @@ return [
 
     ])->toArray(),
 
+
+   
+    'mode' => 'My Awesome App',
+
 ];

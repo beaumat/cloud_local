@@ -1,5 +1,6 @@
 @php
     use App\Services\UserServices;
+    use App\Services\ModeServices;
 @endphp
 
 <aside class="main-sidebar  sidebar-dark-info elevation-1 text-xs">
@@ -18,12 +19,14 @@
                         <p> Dashboard </p>
                     </a>
                 </li>
-                @if (UserServices::GetUserRightAccess('patient.schedule.view') ||
-                        UserServices::GetUserRightAccess('patient.service-charges.view') ||
-                        UserServices::GetUserRightAccess('patient.payment.view') ||
-                        UserServices::GetUserRightAccess('patient.treatment.view') ||
-                        UserServices::GetUserRightAccess('patient.philhealth.view'))
-                    @livewire('Layouts.PatientMenu')
+                @if (ModeServices::GET() == 'H')
+                    @if (UserServices::GetUserRightAccess('patient.schedule.view') ||
+                            UserServices::GetUserRightAccess('patient.service-charges.view') ||
+                            UserServices::GetUserRightAccess('patient.payment.view') ||
+                            UserServices::GetUserRightAccess('patient.treatment.view') ||
+                            UserServices::GetUserRightAccess('patient.philhealth.view'))
+                        @livewire('Layouts.PatientMenu')
+                    @endif
                 @endif
                 @if (UserServices::GetUserRightAccess('customer.invoice.view') ||
                         UserServices::GetUserRightAccess('customer.sales-order.view') ||
@@ -71,13 +74,15 @@
                             <p> Reports <i class="right fas fa-angle-left"></i> </p>
                         </a>
                         <ul class="nav nav-treeview bg-blue-dark">
-                            @if (UserServices::GetUserRightAccess('report.patient.sales') ||
-                                    UserServices::GetUserRightAccess('report.patient.treatment') ||
-                                    UserServices::GetUserRightAccess('report.patient.balance') ||
-                                    UserServices::GetUserRightAccess('report.patient.doctor-pf'))
-                                @livewire('Layouts.ReportsPatients')
+                            @if (ModeServices::GET() == 'H')
+                                @if (UserServices::GetUserRightAccess('report.patient.sales') ||
+                                        UserServices::GetUserRightAccess('report.patient.treatment') ||
+                                        UserServices::GetUserRightAccess('report.patient.balance') ||
+                                        UserServices::GetUserRightAccess('report.patient.doctor-pf'))
+                                    @livewire('Layouts.ReportsPatients')
+                                @endif
                             @endif
-
+                            
                             @if (UserServices::GetUserRightAccess('report.customer.sales'))
                                 @livewire('Layouts.ReportsSales')
                             @endif
@@ -94,18 +99,17 @@
                                     UserServices::GetUserRightAccess('report.financial.cash-flow'))
                                 @livewire('Layouts.ReportsFinancial')
                             @endif
-                            {{-- Receivables --}}
-
+            
                             @if (UserServices::GetUserRightAccess('report.receivables.ar-aging') ||
                                     UserServices::GetUserRightAccess('report.receivables.customer-balance'))
                                 @livewire('Layouts.ReportsReceivables')
                             @endif
-                            {{-- Payables --}}
+               
                             @if (UserServices::GetUserRightAccess('report.payables.ap-aging') ||
                                     UserServices::GetUserRightAccess('report.payables.vendor-balance'))
                                 @livewire('Layouts.ReportsPayables')
                             @endif
-                            {{-- not now --}}
+                     
                             {{-- @if (UserServices::GetUserRightAccess('report.inventory.validation-summary'))
                                 @livewire('Layouts.ReportsInventory')
                             @endif --}}

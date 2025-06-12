@@ -1,5 +1,9 @@
 <?php 
 
 return [
-    'site_name' => 'My Awesome App',
+    'system_mode' => 'H',
+
+    // H hospital
+    // R Retail
+    
 ];
