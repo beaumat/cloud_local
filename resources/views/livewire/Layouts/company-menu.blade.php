@@ -1,3 +1,6 @@
+<?php
+use App\Services\UserServices;
+?>
 <li class="nav-item {{ request()->is('company*') ? 'menu-open' : '' }}">
     <a href="#" class="nav-link {{ request()->is('company*') ? 'active ' : '' }}">
         <i class="nav-icon fa fa-building"></i>
@@ -33,7 +36,7 @@
                 </a>
             </li>
         @endcan
-        @if (Auth()->user()->can('company.build-assembly.view'))
+        @if (UserServices::GetUserRightAccess('company.build-assembly.view'))
             <li class="nav-item">
                 <a href="{{ route('companybuild_assembly') }}"
                     class="nav-link {{ request()->is('company/build-assembly*') ? 'text-warning font-weight-bold' : '' }}">

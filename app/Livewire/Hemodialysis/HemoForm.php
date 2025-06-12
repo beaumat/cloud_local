@@ -205,9 +205,8 @@ class HemoForm extends Component
                 if ($data->STATUS_ID <> 4) {
                     $isRestrik = (bool) $this->hemoServices->IsRestrictedFromUnposted($data->DATE, $data->LOCATION_ID);
                     if ($isRestrik) {
-                        /** @var \App\Models\User $user */
-                        $user = auth()->user();
-                        if (!$user->can('allowed-view-treatment')) {
+                        
+                        if (!UserServices::GetUserRightAccess('allowed-view-treatment')) {
                             return Redirect::route('patientshemo')->with('error', 'Invalid action. Please complete the unposted(U) treatment before proceeding.');
 
                         }

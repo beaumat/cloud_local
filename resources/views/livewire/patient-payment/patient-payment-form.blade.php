@@ -1,3 +1,6 @@
+<?php
+use App\Services\UserServices;
+?>
 <div class="content-wrapper">
     <div class="content-header">
         <div class="container-fluid">
@@ -205,7 +208,7 @@
                                             @endif
                                         @else
                                             @if ($REF_ID == 0)
-                                                @if ($AMOUNT_APPLIED == 0 || auth()->user()->can('patient.payment.update'))
+                                                @if ($AMOUNT_APPLIED == 0 || UserServices::GetUserRightAccess('patient.payment.update'))
                                                     <button type="button" wire:click='getModify()'
                                                         class="btn btn-sm btn-info">
                                                         <i class="fa fa-wrench" aria-hidden="true"></i> Modify
@@ -213,7 +216,7 @@
                                                 @endif
                                             @endif
                                             @if ($ID > 0)
-                                                @if (auth()->user()->can('customer.invoice.view') && auth()->user()->can('customer.invoice.create'))
+                                                @if (UserServices::GetUserRightAccess('customer.invoice.view') && UserServices::GetUserRightAccess('customer.invoice.create'))
                                                     @if ($PAYMENT_METHOD_ID == 1)
                                                         @if ($AMOUNT == $AMOUNT_APPLIED)
                                                             @if ($REF_ID > 0)

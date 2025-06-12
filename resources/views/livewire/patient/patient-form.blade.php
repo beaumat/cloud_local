@@ -1,3 +1,6 @@
+<?php
+use App\Services\UserServices;
+?>
 <div class="content-wrapper">
     <div class="content-header">
         <div class="container-fluid">
@@ -863,9 +866,9 @@
                                 <div class="card-footer">
                                     <div class="row">
                                         <div class="col-md-6 col-6">
-                                            @if ($ID == 0 && auth()->user()->can('contact.patient.create'))
+                                            @if ($ID == 0 && UserServices::GetUserRightAccess('contact.patient.create'))
                                                 <button type="submit" class="btn btn-sm btn-success">Save</button>
-                                            @elseif ($ID > 0 && auth()->user()->can('contact.patient.update'))
+                                            @elseif ($ID > 0 && UserServices::GetUserRightAccess('contact.patient.update'))
                                                 <button type="submit" class="btn btn-sm btn-success">Update</button>
                                             @endif
                                         </div>

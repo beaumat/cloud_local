@@ -7,6 +7,7 @@ use App\Services\DateServices;
 use App\Services\HemoServices;
 use App\Services\LocationServices;
 use App\Services\PatientDoctorServices;
+use App\Services\UserServices;
 use Hamcrest\Type\IsNumeric;
 use Livewire\Attributes\Reactive;
 use Livewire\Component;
@@ -226,9 +227,8 @@ class PrintContent extends Component
         if ($data) {
             $this->MACHINE_NO = $data->MACHINE_NO ?? 0;
             
-            /** @var \App\Models\User $user */
-            $user = auth()->user();
-            if ($user->can('full-treatment-sheet')) {
+
+            if (UserServices::GetUserRightAccess('full-treatment-sheet')) {
 
                 $emp = $this->contactServices->get($data->EMPLOYEE_ID ?? 0, 2);
                 if ($emp) {

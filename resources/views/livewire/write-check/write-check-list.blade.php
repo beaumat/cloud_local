@@ -1,3 +1,6 @@
+<?php
+use App\Services\UserServices;
+?>
 <div class="content-wrapper">
     <div class="content-header">
         <div class="container-fluid">
@@ -60,7 +63,7 @@
                                         <th class="col-1">Amount</th>
                                         <th class="col-1">Status</th>
                                         <th class="text-center bg-success col-1">
-                                            @if (auth()->user()->can('banking.make-cheque.create'))
+                                            @if (UserServices::GetUserRightAccess('banking.make-cheque.create'))
                                                 <a href="{{ route('bankingmake_cheque_create') }}" class="text-white">
                                                     <i class="fas fa-plus"></i></a>
                                             @endif
@@ -88,7 +91,7 @@
                                                     <i class="fas fa-eye" aria-hidden="true"></i>
                                                 </a>
 
-                                                @if (auth()->user()->can('banking.make-cheque.delete') && $list->STATUS == 0)
+                                                @if (UserServices::GetUserRightAccess('banking.make-cheque.delete') && $list->STATUS == 0)
                                                     <button wire:click='delete({{ $list->ID }})'
                                                         wire:confirm="Are you sure you want to delete this?"
                                                         class="btn btn-xs btn-danger">

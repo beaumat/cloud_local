@@ -1,3 +1,6 @@
+<?php
+use App\Services\UserServices;
+?>
 <nav class="main-header navbar navbar-expand navbar-dark text-sm">
     <!-- Left navbar links -->
     <ul class="navbar-nav">
@@ -7,11 +10,11 @@
         <li class="nav-item d-none d-sm-inline-block">
             <a href="{{ route('dashboard') }}" class="nav-link">Home</a>
         </li>
-        @if (Auth::user()->can('contact.customer.view') ||
-                Auth::user()->can('contact.vendor.view') ||
-                Auth::user()->can('contact.employee.view') ||
-                Auth::user()->can('contact.patient.view') ||
-                Auth::user()->can('contact.doctor.view'))
+        @if (UserServices::GetUserRightAccess('contact.customer.view') ||
+                UserServices::GetUserRightAccess('contact.vendor.view') ||
+                UserServices::GetUserRightAccess('contact.employee.view') ||
+                UserServices::GetUserRightAccess('contact.patient.view') ||
+                UserServices::GetUserRightAccess('contact.doctor.view'))
             <li class="nav-item dropdown">
                 <a id="dropdownSubMenu2" href="#" data-toggle="dropdown" aria-haspopup="true"
                     aria-expanded="false" class="nav-link dropdown-toggle">Contacts</a>
@@ -34,9 +37,9 @@
                 </ul>
             </li>
         @endif
-        @if (Auth::user()->can('items.view') ||
-                Auth::user()->can('others.item-active-list.view') ||
-                Auth::user()->can('price-location'))
+        @if (UserServices::GetUserRightAccess('items.view') ||
+                UserServices::GetUserRightAccess('others.item-active-list.view') ||
+                UserServices::GetUserRightAccess('price-location'))
             <li class="nav-item dropdown">
                 <a id="dropdownSubMenu3" href="#" data-toggle="dropdown" aria-haspopup="true"
                     aria-expanded="false" class="nav-link dropdown-toggle">Files</a>
@@ -214,6 +217,3 @@
     </ul>
 
 </nav>
-
-
-

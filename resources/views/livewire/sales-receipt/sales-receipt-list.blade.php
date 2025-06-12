@@ -1,3 +1,7 @@
+<?php
+use App\Services\UserServices;
+?>
+
 <div class="content-wrapper">
     <div class="content-header">
         <div class="container-fluid">
@@ -99,7 +103,7 @@
                                                     <i class="fas fa-eye" aria-hidden="true"></i>
                                                 </a>
                                                 @if (
-                                                    (Auth::user()->can('customer.invoice.delete') && $list->STATUS_ID == 0) ||
+                                                    (UserServices::GetUserRightAccess('customer.invoice.delete') && $list->STATUS_ID == 0) ||
                                                         (Auth::user()->name == 'admin' && $list->STATUS_ID == 15))
                                                     <button wire:click='delete({{ $list->ID }})'
                                                         wire:confirm="Are you sure you want to delete this?"

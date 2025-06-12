@@ -1,3 +1,6 @@
+<?php
+use App\Services\UserServices;
+?>
 <div class="content-wrapper">
     <div class="content-header">
         <div class="container-fluid">
@@ -61,7 +64,7 @@
 
                                         <th class="col-1">Status</th>
                                         <th class="text-center bg-success col-1">
-                                            @if (auth()->user()->can('vendor.bill-payment.create'))
+                                            @if (UserServices::GetUserRightAccess('vendor.bill-payment.create'))
                                                 <a href="{{ route('vendorsbill_payment_create') }}" class="text-white">
                                                     <i class="fas fa-plus"></i></a>
                                             @endif
@@ -90,8 +93,8 @@
                                                 </a>
 
                                                 @if (
-                                                    (auth()->user()->can('vendor.bill-payment.delete') && $list->STATUS_ID == 0) ||
-                                                        (auth()->user()->can('vendor.bill-payment.delete') && $list->STATUS_ID == 16))
+                                                    (UserServices::GetUserRightAccess('vendor.bill-payment.delete') && $list->STATUS_ID == 0) ||
+                                                        (UserServices::GetUserRightAccess('vendor.bill-payment.delete') && $list->STATUS_ID == 16))
                                                     <button wire:click='delete({{ $list->ID }})'
                                                         wire:confirm="Are you sure you want to delete this?"
                                                         class="btn btn-xs btn-danger">

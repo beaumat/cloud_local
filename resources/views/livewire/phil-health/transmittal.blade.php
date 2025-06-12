@@ -1,9 +1,12 @@
+<?php
+use App\Services\UserServices;
+?>
 <div class="row">
     @livewire('alert-layout', ['errors' => $errors->any() ? $errors->all() : '', 'message' => session('message'), 'error' => session('error')])
 
     <div class="row">
         <div class="col-md-6">
-            @if (auth()->user()->can('customer.invoice.view') && auth()->user()->can('customer.invoice.create'))
+            @if (UserServices::GetUserRightAccess('customer.invoice.view') && UserServices::GetUserRightAccess('customer.invoice.create'))
                 @if ($INVOICE_ID == 0)
                     <button class="btn btn-sm btn-success" wire:click='makeInvoice()'>Make Invoice</button>
                 @else

@@ -1,3 +1,7 @@
+<?php
+use App\Services\UserServices;
+?>
+
 <div class="content-wrapper">
     <div class="content-header">
         <div class="container-fluid">
@@ -18,7 +22,7 @@
     <!-- Main content -->
     <section class="content">
         <div class="container-fluid">
-            @if (Auth::user()->can('tracking-branches'))
+            @if (UserServices::GetUserRightAccess('tracking-branches'))
                 <div class="row">
                     <!--begin::Col-->
                     <div class="col-md-3">

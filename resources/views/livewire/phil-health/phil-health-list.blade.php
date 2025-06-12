@@ -1,3 +1,7 @@
+<?php
+use App\Services\UserServices;
+?>
+
 <div class="content-wrapper">
     @php
         use Carbon\Carbon;
@@ -132,7 +136,7 @@
                                                     class="btn btn-xs btn-info">
                                                     <i class="fas fa-eye" aria-hidden="true"></i>
                                                 </a>
-                                                @if ($list->PAYMENT_AMOUNT == 0 && $list->IN_PROGRESS == false && Auth::user()->can('patient.philhealth.print'))
+                                                @if ($list->PAYMENT_AMOUNT == 0 && $list->IN_PROGRESS == false && UserServices::GetUserRightAccess('patient.philhealth.print'))
                                                     <span class="btn btn-xs btn-primary" type="button"
                                                         title="Active Print" wire:click='print({{ $list->ID }})'>
                                                         <i class="fa fa-print" aria-hidden="true"></i>

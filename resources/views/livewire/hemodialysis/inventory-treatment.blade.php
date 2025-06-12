@@ -1,3 +1,7 @@
+<?php
+use App\Services\UserServices;
+?>
+
 <section class="content">
     <!-- Default box -->
     @if ($HEMO_ID > 0)
@@ -16,7 +20,7 @@
                                     <th class="col-1 text-center">Unit</th>
                                     <th class="col-1 text-center">Post</th>
                                     {{-- <th class="col-1 text-center">Justify <br/> Notes</th> --}}
-                                    @if ($STATUS == $openStatus || Auth::user()->can('patient.treatment.update'))
+                                    @if ($STATUS == $openStatus || UserServices::GetUserRightAccess('patient.treatment.update'))
                                         <th class="col-2 text-center" wire:click='gotJournal'
                                             wire:confirm="Make Journal ?">Action</th>
                                     @endif
@@ -58,7 +62,7 @@
                                                 <i type="button" onclick="alert('Justification: {{ $list->JUSTIFY_NOTES }}')" class="fa fa-envelope fa-2x text-primary" aria-hidden="true"></i>
                                             @endif
                                         </td> --}}
-                                        @if ($STATUS == $openStatus || $STATUS == 4 || Auth::user()->can('patient.treatment.update'))
+                                        @if ($STATUS == $openStatus || $STATUS == 4 || UserServices::GetUserRightAccess('patient.treatment.update'))
                                             <td class="text-center">
                                                 @if ($lineId == $list->ID)
                                                     <button type="button" title="Update" id="updatebtn"
@@ -92,7 +96,7 @@
                                                             <i class="fas fa-trash " aria-hidden="true"></i>
                                                         </button>
                                                     @else
-                                                        @if (Auth::user()->can('patient.treatment.update'))
+                                                        @if (UserServices::GetUserRightAccess('patient.treatment.update'))
                                                             <button type="button" title="RePost" id="repost"
                                                                 wire:click='rePost({{ $list->ID }})'
                                                                 wire:confirm="Are you sure you want to unpost this particular item?"

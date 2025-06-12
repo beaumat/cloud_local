@@ -1,3 +1,6 @@
+<?php
+use App\Services\UserServices;
+?>
 <div class="content-wrapper">
     <div class="content-header">
         <div class="container-fluid">
@@ -95,7 +98,7 @@
                                                 </button>
 
                                                 @if (($ID > 0 && $STATUS == 1) || ($ID > 0 && $STATUS == 4))
-                                                    @if (auth()->user()->can('patient.treatment.update'))
+                                                    @if (UserServices::GetUserRightAccess('patient.treatment.update'))
                                                         <button name="btnPosted" type='button' wire:click='getPosted()'
                                                             class="btn btn-sm btn-success"
                                                             wire:confirm="Are you sure you want to post?">

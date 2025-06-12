@@ -1,3 +1,6 @@
+<?php
+use App\Services\UserServices;
+?>
 <div class="content-wrapper">
     <div class="content-header">
         <div class="container-fluid">
@@ -92,7 +95,7 @@
                                                             <i class="fas fa-eye" aria-hidden="true"></i>
                                                         </a>
 
-                                                        @if (auth()->user()->can('company.inventory-adjustment.delete') && $list->STATUS_ID == 0)
+                                                        @if (UserServices::GetUserRightAccess('company.inventory-adjustment.delete') && $list->STATUS_ID == 0)
                                                             <button type="button"
                                                                 wire:click='delete({{ $list->ID }})'
                                                                 wire:confirm="Are you sure you want to delete this?"
