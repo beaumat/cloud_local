@@ -1,10 +1,13 @@
+         <?php
+         use App\Services\UserServices;
+         ?>
          <li id="payables" class="nav-item  {{ request()->is('reports/payables*') ? 'menu-open' : '' }}">
              <a href="#" class="nav-link {{ request()->is('reports/payables*') ? 'active' : '' }}">
                  <i class="fa fa-file-text-o nav-icon"></i>
                  <p> Payables <i class="right fas fa-angle-left"></i> </p>
              </a>
              <ul class="nav nav-treeview">
-                 @can('report.payables.ap-aging')
+                 @if (UserServices::GetUserRightAccess('report.payables.ap-aging'))
                      <li class="nav-item">
                          <a href="{{ route('reportsap_aging') }}"
                              class="nav-link {{ request()->is('reports/payables/ap-aging') ? 'text-warning font-weight-bold' : '' }}">
@@ -12,8 +15,8 @@
                              <p>AP Aging</p>
                          </a>
                      </li>
-                 @endcan
-                 @can('report.payables.vendor-balance')
+                 @endif
+                 @if (UserServices::GetUserRightAccess('report.payables.vendor-balance'))
                      <li class="nav-item">
                          <a href="{{ route('reportsvendor_balance') }}"
                              class="nav-link {{ request()->is('reports/payables/vendor-balance') ? 'text-warning font-weight-bold' : '' }}">
@@ -21,6 +24,6 @@
                              <p>Billing Balance</p>
                          </a>
                      </li>
-                 @endcan
+                 @endif
              </ul>
          </li>
