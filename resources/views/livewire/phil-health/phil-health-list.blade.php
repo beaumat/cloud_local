@@ -76,8 +76,9 @@ use App\Services\UserServices;
                                 <thead class="text-xs bg-sky">
                                     <tr>
                                         <th>SOA No.</th>
-                                        <th>Date Created</th>
+                                        <th>Created On</th>
                                         <th>Elapsed </th>
+                                        <th class="text-left">Claim No.</th>
                                         <th clsss="bg-success active">LHIO Date</th>
                                         <th clsss="bg-success active">LHIO No.</th>
                                         <th class="col-2">Patients</th>
@@ -87,6 +88,7 @@ use App\Services\UserServices;
                                         <th class="text-center">#Trmt. </th>
                                         <th class='text-right'>FC Amt.</th>
                                         <th class="text-right">Paid Amt.</th>
+
                                         <th>Status</th>
                                         <th>Location</th>
                                         <th class="text-center col-2">
@@ -105,6 +107,31 @@ use App\Services\UserServices;
                                             </td>
                                             <td> {{ date('m/d/Y', strtotime($list->DATE)) }}</td>
                                             <td> {{ Carbon::parse($list->RECORDED_ON)->diffForHumans() }} </td>
+                                            <td class="text-left">
+                                                @if ($list->CLAIM_NO)
+                                                    {{ $list->CLAIM_NO }}
+                                                @else
+                                                    @if ($editID == $list->ID)
+                                                        <input type="input" wire:model='editClaimNo'
+                                                            class="text-xs w-50" maxlength="10" />
+                                                        <button title="Save Claim No." type="button"
+                                                            wire:click='updateCM' class="btn btn-xs btn-success">
+                                                            <i class="fa fa-save" aria-hidden="true"></i>
+                                                        </button>
+                                                        <button title="Cancel Edit" type="button"
+                                                            wire:click='cancelCM()' class="btn btn-xs btn-secondary">
+                                                            <i class="fa fa-stop" aria-hidden="true"></i>
+                                                        </button>
+                                                    @else
+                                                        <button title="Edit Claim No." type="button"
+                                                            wire:click='editCM({{ $list->ID }})'
+                                                            class="btn btn-xs btn-warning">
+                                                            <i class="fa fa-wrench" aria-hidden="true"></i>
+                                                        </button>
+                                                    @endif
+                                                @endif
+
+                                            </td>
                                             <td class="text-left">
                                                 @if ($list->AR_DATE)
                                                     {{ date('m/d/Y', strtotime($list->AR_DATE)) }}
@@ -136,7 +163,10 @@ use App\Services\UserServices;
                                                     class="btn btn-xs btn-info">
                                                     <i class="fas fa-eye" aria-hidden="true"></i>
                                                 </a>
-                                                @if ($list->PAYMENT_AMOUNT == 0 && $list->IN_PROGRESS == false && UserServices::GetUserRightAccess('patient.philhealth.print'))
+                                                @if (
+                                                    $list->PAYMENT_AMOUNT == 0 &&
+                                                        $list->IN_PROGRESS == false &&
+                                                        UserServices::GetUserRightAccess('patient.philhealth.print'))
                                                     <span class="btn btn-xs btn-primary" type="button"
                                                         title="Active Print" wire:click='print({{ $list->ID }})'>
                                                         <i class="fa fa-print" aria-hidden="true"></i>

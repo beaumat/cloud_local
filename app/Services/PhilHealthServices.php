@@ -326,9 +326,9 @@ class PhilHealthServices
         $data = $this->get($ID);
         if ($data) {
             //Get Default Custom Variable
-            $this->CustomSoa( $data->CONTACT_ID, $data->LOCATION_ID, $data->DATE_DISCHARGED );
+            $this->CustomSoa($data->CONTACT_ID, $data->LOCATION_ID, $data->DATE_DISCHARGED);
 
-            $NO_OF_TREATMENT = $this->getNumberOfTreatment( $data->CONTACT_ID, $data->LOCATION_ID, $data->DATE_ADMITTED, $data->DATE_DISCHARGED );
+            $NO_OF_TREATMENT = $this->getNumberOfTreatment($data->CONTACT_ID, $data->LOCATION_ID, $data->DATE_ADMITTED, $data->DATE_DISCHARGED);
 
             $A_DRUG_N_MEDINE_AMOUNT = 0;
             $A_SUPPLIES = 0;
@@ -338,7 +338,7 @@ class PhilHealthServices
 
             if ($this->ITEMIZED_BASE) {
                 $this->DRUG_N_MEDINE_AMOUNT = $this->ItemizedBaseTotalNonActual($data->LOCATION_ID, 1);
-          
+
                 $this->SUPPLIES = $this->ItemizedBaseTotalNonActual($data->LOCATION_ID, 2);
                 $this->LAB_N_DIAGNOSTICS_AMOUNT = $this->ItemizedBaseTotalNonActual($data->LOCATION_ID, 3);
                 $this->OTHER_CHARGES_AMOUNT = $this->ItemizedBaseTotalNonActual($data->LOCATION_ID, 4);
@@ -346,20 +346,20 @@ class PhilHealthServices
 
                 $A_DRUG_N_MEDINE_AMOUNT = $this->ItemizedBaseTotalActual($data->LOCATION_ID, $data->CONTACT_ID, 1, $data->DATE_ADMITTED, $data->DATE_DISCHARGED);
 
-           
+
                 $A_SUPPLIES = $this->ItemizedBaseTotalActual($data->LOCATION_ID, $data->CONTACT_ID, 2, $data->DATE_ADMITTED, $data->DATE_DISCHARGED);
                 $A_LAB_N_DIAGNOSTICS_AMOUNT = $this->ItemizedBaseTotalActual($data->LOCATION_ID, $data->CONTACT_ID, 3, $data->DATE_ADMITTED, $data->DATE_DISCHARGED);
                 $A_OTHER_CHARGES_AMOUNT = $this->ItemizedBaseTotalActual($data->LOCATION_ID, $data->CONTACT_ID, 4, $data->DATE_ADMITTED, $data->DATE_DISCHARGED);
                 $A_OPERATING_ROOM_FEE_AMOUNT = $this->ItemizedBaseTotalActual($data->LOCATION_ID, $data->CONTACT_ID, 6, $data->DATE_ADMITTED, $data->DATE_DISCHARGED);
 
-               
+
             }
 
 
 
             $LAB_N_DIAGNOS = (float) ($this->LAB_N_DIAGNOSTICS_AMOUNT * $NO_OF_TREATMENT) + $A_LAB_N_DIAGNOSTICS_AMOUNT;
             $DRUG_MED = (float) ($this->DRUG_N_MEDINE_AMOUNT * $NO_OF_TREATMENT) + $A_DRUG_N_MEDINE_AMOUNT;
-      
+
 
             $OPERATE_FEE = (float) ($this->OPERATING_ROOM_FEE_AMOUNT * $NO_OF_TREATMENT) + $A_OPERATING_ROOM_FEE_AMOUNT; //
             $CHARGES_SUPPLIES = (float) ($this->SUPPLIES * $NO_OF_TREATMENT) + $A_SUPPLIES;
@@ -685,6 +685,7 @@ class PhilHealthServices
                 'philhealth.PAYMENT_AMOUNT',
                 'philhealth.AR_NO',
                 'philhealth.AR_DATE',
+                'philhealth.CLAIM_NO',
                 DB::raw('if(ISNULL(philhealth.AR_DATE),false,true)  as IN_PROGRESS')
             ])
             ->join('contact as c', 'c.ID', '=', 'philhealth.CONTACT_ID')
@@ -757,8 +758,8 @@ class PhilHealthServices
                 });
             })
             ->where('IS_TEMP', '0')
-            ->orderBy('philhealth.ID', 'desc')      
-            ->limit(100)   
+            ->orderBy('philhealth.ID', 'desc')
+            ->limit(100)
             ->get();
 
         return $result;
@@ -809,7 +810,7 @@ class PhilHealthServices
 
         return $result;
     }
-    
+
 
     public function UpdatePayment(int $PHILHEALTH_ID, float $TOTAL_PAY): int
     {
@@ -1127,5 +1128,18 @@ class PhilHealthServices
             ->get();
         return $result;
     }
+    public function updateClaimNo(int $PHIC_ID, string $CLAIM_NO)
+    {
+        PhilHealth::where('ID', '=', $PHIC_ID)
+            ->update([
+                'CLAIM_NO' => $CLAIM_NO
+            ]);
+    }
+    public function ifClaimNoExists(int $LOCATION_ID, string $CLAIM_NO): bool
+    {
+        return (bool) PhilHealth::where('CLAIM_NO', '=', $CLAIM_NO)
+            ->where('LOCATION_ID', '=', $LOCATION_ID)
+            ->exists();
 
+    }
 }

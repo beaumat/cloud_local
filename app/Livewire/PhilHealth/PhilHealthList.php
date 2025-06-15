@@ -33,6 +33,8 @@ class PhilHealthList extends Component
     private $invoiceServices;
     private $userServices;
     public bool $show = false;
+    public $editID = null;
+    public $editClaimNo = null;
     private $hemoServices;
     private $serviceChargeServices;
     private $patientPaymentServices;
@@ -154,6 +156,34 @@ class PhilHealthList extends Component
         }
 
 
+    }
+
+    public function updateCM()
+    {
+        $this->validate(
+            [
+                'editClaimNo' => 'required'
+            ],
+            [],
+            ['editClaimNo' => 'Claim No.']
+        );
+
+        if ($this->philHealthServices->ifClaimNoExists($this->locationid, $this->editClaimNo)) {
+            session()->flash('error', 'Claim No. already Exists');
+            return;
+        }
+
+        $this->philHealthServices->updateClaimNo($this->editID, $this->editClaimNo);
+        $this->cancelCM();
+    }
+    public function editCM($ID)
+    {
+        $this->editID = $ID;
+    }
+    public function cancelCM()
+    {
+        $this->editID = null;
+        $this->editClaimNo = null;
     }
     public function getARForm(int $ID)
     {

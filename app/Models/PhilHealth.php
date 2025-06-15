@@ -110,7 +110,8 @@ class PhilHealth extends Model
         'CF4_AD_NOTES',
         'PATIENT_PAYMENT_ID',
         'INVOICE_ID',
-        'TIME_HIDE'
+        'TIME_HIDE',
+        'CLAIM_NO'
     ];
 
 }
