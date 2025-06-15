@@ -1,7 +1,6 @@
 <?php
 use App\Services\UserServices;
 ?>
-
 <li class="nav-item {{ request()->is('banking*') ? 'menu-open' : '' }}">
     <a href="#" class="nav-link {{ request()->is('banking*') ? 'active ' : '' }}">
         <i class="nav-icon fa fa-university"></i>
@@ -27,7 +26,7 @@ use App\Services\UserServices;
             </li>
         @endif
 
-        @if (UserServices::GetUserRightAccess('banking.bank-transfer.view'))
+        {{-- @if (UserServices::GetUserRightAccess('banking.bank-transfer.view'))
             <li class="nav-item">
                 <a href="{{ route('bankingbank_transfer') }}"
                     class="nav-link  {{ request()->is('banking/bank-transfer*') ? 'text-warning font-weight-bold' : '' }}">
@@ -35,7 +34,7 @@ use App\Services\UserServices;
                     <p>Bank Transfer</p>
                 </a>
             </li>
-        @endif
+        @endif --}}
         @if (UserServices::GetUserRightAccess('banking.make-cheque.view'))
             <li class="nav-item">
                 <a href="{{ route('bankingmake_cheque') }}"
