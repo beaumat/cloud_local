@@ -1,11 +1,13 @@
+       <?php
+       use App\Services\UserServices;
+       ?>
        <li id="others" class="nav-item {{ request()->is('maintenance/others*') ? 'menu-open' : '' }}">
            <a href="#" class="nav-link {{ request()->is('maintenance/others*') ? 'active' : '' }}">
                <i class="fa fa-list-alt nav-icon" aria-hidden="true"></i>
                <p> Others <i class="right fas fa-angle-left"></i> </p>
            </a>
            <ul class="nav nav-treeview">
-
-               @can('others.shift.view')
+               @if (UserServices::GetUserRightAccess('others.shift.view'))
                    <li class="nav-item">
                        <a href="{{ route('maintenanceothersshift') }}"
                            class="nav-link {{ request()->is('maintenance/others/shift*') ? 'text-warning font-weight-bold' : '' }}">
@@ -13,9 +15,8 @@
                            <p>Shift</p>
                        </a>
                    </li>
-               @endcan
-
-               @can('others.hemodialysis-machine.view')
+               @endif
+               @if (UserServices::GetUserRightAccess('others.hemodialysis-machine.view'))
                    <li class="nav-item">
                        <a href="{{ route('maintenanceothershemo_machine') }}"
                            class="nav-link {{ request()->is('maintenance/others/hemodialysis-machine*') ? 'text-warning font-weight-bold' : '' }}">
@@ -23,9 +24,8 @@
                            <p>Hemodialysis Machine</p>
                        </a>
                    </li>
-               @endcan
-
-               @can('others.requirement.view')
+               @endif
+               @if (UserServices::GetUserRightAccess('others.requirement.view'))
                    <li class="nav-item">
                        <a href="{{ route('maintenanceothersrequirement') }}"
                            class="nav-link {{ request()->is('maintenance/others/requirement*') ? 'text-warning font-weight-bold' : '' }}">
@@ -33,9 +33,8 @@
                            <p>Rquirements</p>
                        </a>
                    </li>
-               @endcan
-
-               @can('others.item-active-list.view')
+               @endif
+               @if (UserServices::GetUserRightAccess('others.item-active-list.view'))
                    <li class="nav-item">
                        <a href="{{ route('maintenanceothersitem-active-list') }}"
                            class="nav-link {{ request()->is('maintenance/others/item-active-list*') ? 'text-warning font-weight-bold' : '' }}">
@@ -43,9 +42,8 @@
                            <p>Item Inventory</p>
                        </a>
                    </li>
-               @endcan
-
-               @can('others.item-treatment.view')
+               @endif
+               @if (UserServices::GetUserRightAccess('others.item-treatment.view'))
                    <li class="nav-item">
                        <a href="{{ route('maintenanceothersitem_treatment') }}"
                            class="nav-link {{ request()->is('maintenance/others/item-treatment*') ? 'text-warning font-weight-bold' : '' }}">
@@ -53,7 +51,6 @@
                            <p>Item Treatment</p>
                        </a>
                    </li>
-               @endcan
-
+               @endif
            </ul>
        </li>

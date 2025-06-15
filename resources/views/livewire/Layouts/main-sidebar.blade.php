@@ -82,7 +82,7 @@
                                     @livewire('Layouts.ReportsPatients')
                                 @endif
                             @endif
-                            
+
                             @if (UserServices::GetUserRightAccess('report.customer.sales'))
                                 @livewire('Layouts.ReportsSales')
                             @endif
@@ -99,17 +99,17 @@
                                     UserServices::GetUserRightAccess('report.financial.cash-flow'))
                                 @livewire('Layouts.ReportsFinancial')
                             @endif
-            
+
                             @if (UserServices::GetUserRightAccess('report.receivables.ar-aging') ||
                                     UserServices::GetUserRightAccess('report.receivables.customer-balance'))
                                 @livewire('Layouts.ReportsReceivables')
                             @endif
-               
+
                             @if (UserServices::GetUserRightAccess('report.payables.ap-aging') ||
                                     UserServices::GetUserRightAccess('report.payables.vendor-balance'))
                                 @livewire('Layouts.ReportsPayables')
                             @endif
-                     
+
                             {{-- @if (UserServices::GetUserRightAccess('report.inventory.validation-summary'))
                                 @livewire('Layouts.ReportsInventory')
                             @endif --}}
@@ -180,12 +180,14 @@
                                     UserServices::GetUserRightAccess('price-location'))
                                 @livewire('Layouts.MaintenanceInventory')
                             @endif
-                            @if (UserServices::GetUserRightAccess('others.shift.view') ||
-                                    UserServices::GetUserRightAccess('others.hemodialysis-machine.view') ||
-                                    UserServices::GetUserRightAccess('others.requirement.view') ||
-                                    UserServices::GetUserRightAccess('others.item-active-list.view') ||
-                                    UserServices::GetUserRightAccess('others.item-treatment.view'))
-                                @livewire('Layouts.MaintenanceOthers')
+                            @if (ModeServices::GET() == 'H')
+                                @if (UserServices::GetUserRightAccess('others.shift.view') ||
+                                        UserServices::GetUserRightAccess('others.hemodialysis-machine.view') ||
+                                        UserServices::GetUserRightAccess('others.requirement.view') ||
+                                        UserServices::GetUserRightAccess('others.item-active-list.view') ||
+                                        UserServices::GetUserRightAccess('others.item-treatment.view'))
+                                    @livewire('Layouts.MaintenanceOthers')
+                                @endif
                             @endif
                             @if (UserServices::GetUserRightAccess('users') ||
                                     UserServices::GetUserRightAccess('roles-and-permission') ||
@@ -194,12 +196,10 @@
                                     UserServices::GetUserRightAccess('option'))
                                 @livewire('Layouts.MaintenanceSettings')
                             @endif
-
                         </ul>
                     </li>
                 @endif
             </ul>
         </nav>
     </div>
-
 </aside>

@@ -1,5 +1,6 @@
 <?php
 use App\Services\UserServices;
+use App\Services\ModeServices;
 ?>
 <nav class="main-header navbar navbar-expand navbar-dark text-sm">
     <!-- Left navbar links -->
@@ -19,21 +20,26 @@ use App\Services\UserServices;
                 <a id="dropdownSubMenu2" href="#" data-toggle="dropdown" aria-haspopup="true"
                     aria-expanded="false" class="nav-link dropdown-toggle">Contacts</a>
                 <ul aria-labelledby="dropdownSubMenu2" class="border-0 shadow dropdown-menu">
-                    @can('contact.patient.view')
-                        <li><a href="{{ route('maintenancecontactpatients') }}" class="dropdown-item">Patients </a></li>
-                    @endcan
-                    @can('contact.doctor.view')
-                        <li><a href="{{ route('maintenancecontactdoctors') }}" class="dropdown-item"> Doctors</a></li>
-                    @endcan
-                    @can('contact.customer.view')
+                    @if (ModeServices::GET() == 'H')
+                        @if (UserServices::GetUserRightAccess('contact.patient.view'))
+                            <li><a href="{{ route('maintenancecontactpatients') }}" class="dropdown-item">Patients </a>
+                            </li>
+                        @endif
+                        @if (UserServices::GetUserRightAccess('contact.doctor.view'))
+                            <li><a href="{{ route('maintenancecontactdoctors') }}" class="dropdown-item"> Doctors</a>
+                            </li>
+                        @endif
+                    @endif
+                    @if (UserServices::GetUserRightAccess('contact.customer.view'))
                         <li><a href="{{ route('maintenancecontactcustomer') }}" class="dropdown-item">Customers</a></li>
-                    @endcan
-                    @can('contact.vendor.view')
+                    @endif
+                    @if (UserServices::GetUserRightAccess('contact.vendor.view'))
                         <li><a href="{{ route('maintenancecontactvendor') }}" class="dropdown-item">Vendors</a></li>
-                    @endcan
-                    @can('contact.employee.view')
-                        <li><a href="{{ route('maintenancecontactemployees') }}" class="dropdown-item"> Employees</a></li>
-                    @endcan
+                    @endif
+                    @if (UserServices::GetUserRightAccess('contact.employee.view'))
+                        <li><a href="{{ route('maintenancecontactemployees') }}" class="dropdown-item"> Employees</a>
+                        </li>
+                    @endif
                 </ul>
             </li>
         @endif
@@ -44,7 +50,7 @@ use App\Services\UserServices;
                 <a id="dropdownSubMenu3" href="#" data-toggle="dropdown" aria-haspopup="true"
                     aria-expanded="false" class="nav-link dropdown-toggle">Files</a>
                 <ul aria-labelledby="dropdownSubMenu3" class="border-0 shadow dropdown-menu ">
-                    @can('items.view')
+                    @if (UserServices::GetUserRightAccess('items.view'))
                         <li>
                             <a href="{{ route('maintenanceinventoryitem') }}" class="dropdown-item">
                                 Item
@@ -55,21 +61,24 @@ use App\Services\UserServices;
                                 Fixed Asset Item
                             </a>
                         </li>
-                    @endcan
-                    @can('others.item-active-list.view')
+                    @endif
+
+                    @if (UserServices::GetUserRightAccess('others.item-active-list.view'))
                         <li>
                             <a href="{{ route('maintenanceothersitem-active-list') }}" class="dropdown-item">
                                 Item Inventory
                             </a>
                         </li>
-                    @endcan
-                    @can('price-location')
+                    @endif
+
+                    @if (UserServices::GetUserRightAccess('price-location'))
                         <li>
                             <a href="{{ route('maintenanceinventoryprice_location') }}" class="dropdown-item">
                                 Price Adjust by Location
                             </a>
                         </li>
-                    @endcan
+                    @endif
+                    
                 </ul>
             </li>
         @endif

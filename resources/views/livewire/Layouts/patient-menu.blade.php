@@ -1,27 +1,32 @@
+<?php
+use App\Services\UserServices;
+?>
+
 <li id="patients" class="nav-item {{ request()->is('patients*') ? 'menu-open' : '' }}">
     <a href="#" class="nav-link {{ request()->is('patients*') ? 'active ' : '' }}"> <i
             class="nav-icon fas fa-wheelchair "></i>
         <p> Patients <i class="fas fa-angle-left right"></i> </p>
     </a>
-
     <ul class="nav nav-treeview bg-blue-dark">
-        @can('patient.schedule.view')
+        @if (UserServices::GetUserRightAccess('patient.schedule.view'))
             <li class="nav-item">
                 <a href="{{ route('patientsschedules') }}"
-                    class="nav-link {{ request()->is('patients/schedules*') ? 'text-warning font-weight-bold' : '' }}"> <i
-                        class="fas fa-calendar nav-icon"></i>
+                    class="nav-link {{ request()->is('patients/schedules*') ? 'text-warning font-weight-bold' : '' }}">
+                    <i class="fas fa-calendar nav-icon"></i>
                     <p>Schedules</p>
                 </a>
             </li>
-        @endcan
-        @can('patient.service-charges.view')
-            <li class="nav-item"> <a href="{{ route('patientsservice_charges') }}"
+        @endif
+        @if (UserServices::GetUserRightAccess('patient.service-charges.view'))
+            <li class="nav-item">
+                <a href="{{ route('patientsservice_charges') }}"
                     class="nav-link {{ request()->is('patients/service-charges*') ? 'text-warning font-weight-bold' : '' }}">
                     <i class="fas fa-file-invoice nav-icon"></i>
                     <p>Service Charges</p>
-                </a> </li>
-        @endcan
-        @can('patient.payment.view')
+                </a>
+            </li>
+        @endif
+        @if (UserServices::GetUserRightAccess('patient.payment.view'))
             <li class="nav-item">
                 <a href="{{ route('patientspayment') }}"
                     class="nav-link {{ request()->is('patients/payments*') ? 'text-warning font-weight-bold' : '' }}">
@@ -29,8 +34,8 @@
                     <p>Cash/GL Payments</p>
                 </a>
             </li>
-        @endcan
-        @can('patient.treatment.view')
+        @endif
+        @if (UserServices::GetUserRightAccess('patient.treatment.view'))
             <li class="nav-item">
                 <a href="{{ route('patientshemo') }}"
                     class="nav-link {{ request()->is('patients/hemodialysis-treatment*') ? 'text-warning font-weight-bold' : '' }}">
@@ -38,11 +43,8 @@
                     <p>Treatment</p>
                 </a>
             </li>
-        @endcan
-
-
-
-        @can('patient.philhealth.view')
+        @endif
+        @if (UserServices::GetUserRightAccess('patient.philhealth.view'))
             <li class="nav-item {{ request()->is('patients/phil-health*') ? 'menu-open' : '' }}">
                 <a href="{{ route('patientsphic') }}"
                     class="nav-link {{ request()->is('patients/phil-health*') ? 'text-warning font-weight-bold' : '' }}">
@@ -50,20 +52,19 @@
                     <p>PhilHealth</p>
                 </a>
             </li>
-        @endcan
+        @endif
 
-        @can('report.patient.doctor-pf')
+        @if (UserServices::GetUserRightAccess('report.patient.doctor-pf'))
             <li class="nav-item {{ request()->is('patients/doctor-pf*') ? 'menu-open' : '' }}">
                 <a href="{{ route('patientsdoctor_fee') }}"
                     class="nav-link {{ request()->is('patients/doctor-pf*') ? 'text-warning font-weight-bold' : '' }}">
-
                     <i class="fa fa-user-md nav-icon" aria-hidden="true"></i>
                     <p>Doctor PF</p>
                 </a>
             </li>
-        @endcan
+        @endif
 
-        @can('patient.doctor.batch.view')
+        @if (UserServices::GetUserRightAccess('patient.doctor.batch.view'))
             <li class="nav-item {{ request()->is('patients/doctor-batch-payment*') ? 'menu-open' : '' }}">
                 <a href="{{ route('patientsdoctor_batch') }}"
                     class="nav-link {{ request()->is('patients/doctor-batch-payment*') ? 'text-warning font-weight-bold' : '' }}">
@@ -71,17 +72,16 @@
                     <p>Doctor Batch Payment</p>
                 </a>
             </li>
-        @endcan
-        @can('patient.payment-period.view')
+        @endif
+        @if (UserServices::GetUserRightAccess('patient.payment-period.view'))
             <li class="nav-item {{ request()->is('patients/payment-period*') ? 'menu-open' : '' }}">
                 <a href="{{ route('patientspayment_period') }}"
                     class="nav-link {{ request()->is('patients/payment-period*') ? 'text-warning font-weight-bold' : '' }}">
-
                     <i class="fa fa-cc-mastercard nav-icon" aria-hidden="true"></i>
                     <p>Payment Period (ACPN)</p>
                 </a>
             </li>
-        @endcan
+        @endif
 
     </ul>
 </li>

@@ -1,10 +1,14 @@
+<?php
+use App\Services\UserServices;
+?>
+
 <li class="nav-item {{ request()->is('banking*') ? 'menu-open' : '' }}">
     <a href="#" class="nav-link {{ request()->is('banking*') ? 'active ' : '' }}">
         <i class="nav-icon fa fa-university"></i>
         <p> Banking <i class="fas fa-angle-left right"></i> </p>
     </a>
     <ul class="nav nav-treeview bg-blue-dark">
-        @can('banking.deposit.view')
+        @if (UserServices::GetUserRightAccess('banking.deposit.view'))
             <li class="nav-item">
                 <a href="{{ route('bankingdeposit') }}"
                     class="nav-link  {{ request()->is('banking/deposit*') ? 'text-warning font-weight-bold' : '' }}">
@@ -12,8 +16,8 @@
                     <p>Deposit</p>
                 </a>
             </li>
-        @endcan
-        @can('banking.fund-transfer.view')
+        @endif
+        @if (UserServices::GetUserRightAccess('banking.fund-transfer.view'))
             <li class="nav-item">
                 <a href="{{ route('bankingfund_transfer') }}"
                     class="nav-link  {{ request()->is('banking/fund-transfer*') ? 'text-warning font-weight-bold' : '' }}">
@@ -21,9 +25,9 @@
                     <p>Fund Transfer</p>
                 </a>
             </li>
-        @endcan
+        @endif
 
-        @can('banking.bank-transfer.view')
+        @if (UserServices::GetUserRightAccess('banking.bank-transfer.view'))
             <li class="nav-item">
                 <a href="{{ route('bankingbank_transfer') }}"
                     class="nav-link  {{ request()->is('banking/bank-transfer*') ? 'text-warning font-weight-bold' : '' }}">
@@ -31,8 +35,8 @@
                     <p>Bank Transfer</p>
                 </a>
             </li>
-        @endcan
-        @can('banking.make-cheque.view')
+        @endif
+        @if (UserServices::GetUserRightAccess('banking.make-cheque.view'))
             <li class="nav-item">
                 <a href="{{ route('bankingmake_cheque') }}"
                     class="nav-link  {{ request()->is('banking/make-cheque*') ? 'text-warning font-weight-bold' : '' }}">
@@ -40,9 +44,9 @@
                     <p>Pay by Check</p>
                 </a>
             </li>
-        @endcan
+        @endif
 
-        @can('banking.bank-recon.view')
+        @if (UserServices::GetUserRightAccess('banking.bank-recon.view'))
             <li class="nav-item">
                 <a href="{{ route('bankingbank_recon') }}"
                     class="nav-link  {{ request()->is('banking/bank-recon*') ? 'text-warning font-weight-bold' : '' }}">
@@ -50,9 +54,9 @@
                     <p>Reconciliation</p>
                 </a>
             </li>
-        @endcan
-
-        @can('banking.spend-money.view')
+        @endif
+        {{-- 
+        @if (UserServices::GetUserRightAccess('banking.spend-money.view'))
             <li class="nav-item">
                 <a href="{{ route('bankingspend_money') }}"
                     class="nav-link  {{ request()->is('banking/spend-money*') ? 'text-warning font-weight-bold' : '' }}">
@@ -60,10 +64,10 @@
                     <p>Spend Money</p>
                 </a>
             </li>
-        @endcan
+        @endif
 
 
-        @can('banking.receive-money.view')
+        @if (UserServices::GetUserRightAccess('banking.receive-money.view'))
             <li class="nav-item">
                 <a href="{{ route('bankingreceive_money') }}"
                     class="nav-link  {{ request()->is('banking/receive-money*') ? 'text-warning font-weight-bold' : '' }}">
@@ -71,6 +75,6 @@
                     <p>Receive Money</p>
                 </a>
             </li>
-        @endcan
+        @endif --}}
     </ul>
 </li>

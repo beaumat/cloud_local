@@ -181,13 +181,19 @@ class UserServices
     }
     public static function GetUserRightAccess(string $CanAccess): bool
     {
-        /** @var \App\Models\User $user */
-        $user = auth()->user();
-        if ($user->can($CanAccess)) {
-            return true;
-        } else {
+        try {
+            /** @var \App\Models\User $user */
+            $user = auth()->user();
+            if ($user->can($CanAccess)) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (\Throwable $th) {
+            dd($th);
             return false;
         }
+
     }
- 
+
 }
