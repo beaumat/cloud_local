@@ -120,7 +120,7 @@ use App\Services\UserServices;
                                                         </button>
                                                         <button title="Cancel Edit" type="button"
                                                             wire:click='cancelCM()' class="btn btn-xs btn-secondary">
-                                                            <i class="fa fa-stop" aria-hidden="true"></i>
+                                                           <i class="fa fa-ban" aria-hidden="true"></i>
                                                         </button>
                                                     @else
                                                         <button title="Edit Claim No." type="button"
