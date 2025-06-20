@@ -76,12 +76,18 @@ use App\Services\UserServices;
         @if (UserServices::GetUserRightAccess('report.guarantee.letter'))
             <li class="nav-item ">
                 <a href="{{ route('reportsguarantee_letter') }}"
-                    class="nav-link {{ request()->is('reports/reports/guarantee-letter*') ? 'text-warning font-weight-bold' : '' }}">
+                    class="nav-link {{ request()->is('reports/patients/guarantee-letter*') ? 'text-warning font-weight-bold' : '' }}">
                     <i class="fa fa-print nav-icon"></i>
                     <p>Guarantee Letter</p>
                 </a>
             </li>
         @endif
-
+        <li class="nav-item ">
+            <a href="{{ route('reportsphilhealth_annex_report') }}"
+                class="nav-link {{ request()->is('reports/patients/philhealth-annex*') ? 'text-warning font-weight-bold' : '' }}">
+                <i class="fa fa-print nav-icon"></i>
+                <p>(IBNR) Report</p>
+            </a>
+        </li>
     </ul>
 </li>

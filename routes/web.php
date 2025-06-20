@@ -79,6 +79,7 @@ use App\Livewire\PatientPayment\PatientPaymentForm;
 use App\Livewire\PatientPayment\PatientPaymentList;
 use App\Livewire\PatientReport\GuaranteeLetterReport;
 use App\Livewire\PatientReport\PatientInventoryReport;
+use App\Livewire\PatientReport\PhilhealthAnnex;
 use App\Livewire\PatientReport\PhilHealthAvailmentListPrint;
 use App\Livewire\PayableReport\VendorBalance;
 use App\Livewire\Payment\PaymentForm;
@@ -712,6 +713,11 @@ Route::middleware(['auth'])->group(function () {
             Route::prefix('/guarantee-letter')->group(function () {
                 Route::get('/', GuaranteeLetterReport::class)->name('guarantee_letter')->middleware(['permission:report.guarantee.letter']);
             });
+
+            Route::prefix('/philhealth-annex')->group( function() {
+                Route::get('/',PhilhealthAnnex::class)->name('philhealth_annex_report');
+            });
+
 
         });
 
