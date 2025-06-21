@@ -52,6 +52,10 @@ class PhilhealthAnnex extends Component
         $this->columnType = 2;
         $this->dataList = $this->philHealthServices->GenerateAnnex($this->YEAR, $this->MONTH, $this->LOCATION_ID, 1);
     }
+    public function Exporting() 
+    {
+        
+    }
     public function render()
     {
         return view('livewire.patient-report.philhealth-annex');
