@@ -211,6 +211,6 @@ class PhilHealthList extends Component
     public function render()
     {
         $dataList = $this->philHealthServices->Search($this->search, $this->locationid, $this->perPage, $this->ADMITTED, $this->DISCHARGED);
-        return view('livewire.phil-he`zalth.phil-health-list', ['dataList' => $dataList]);
+        return view('livewire.phil-health.phil-health-list', ['dataList' => $dataList]);
     }
 }
