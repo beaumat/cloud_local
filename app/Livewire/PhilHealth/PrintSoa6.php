@@ -15,6 +15,7 @@ use Livewire\Component;
 
 class PrintSoa6 extends Component
 {
+    public $PATIENT_ID;
     public int $PRINT_ID;
     public int $LOCATION_ID;
     public int $CONTACT_ID;
@@ -35,61 +36,7 @@ class PrintSoa6 extends Component
     public string $OTHER_DIAGNOSIS;
     public string $FIRST_CASE_RATE;
     public string $SECOND_CASE_RATE;
-    public float $CHARGES_ROOM_N_BOARD;
-    public float $CHARGES_DRUG_N_MEDICINE;
-    public float $CHARGES_LAB_N_DIAGNOSTICS;
-    public float $CHARGES_OPERATING_ROOM_FEE;
-    public float $CHARGES_SUPPLIES;
-    public float $CHARGES_OTHERS;
-    public float $CHARGES_SUB_TOTAL;
-    public string $OTHER_SPECIFY;
-    public float $VAT_ROOM_N_BOARD;
-    public float $VAT_DRUG_N_MEDICINE;
-    public float $VAT_LAB_N_DIAGNOSTICS;
-    public float $VAT_OPERATING_ROOM_FEE;
-    public float $VAT_SUPPLIES;
-    public float $VAT_OTHERS;
-    public float $VAT_SUB_TOTAL;
-    public float $SP_ROOM_N_BOARD;
-    public float $SP_DRUG_N_MEDICINE;
-    public float $SP_LAB_N_DIAGNOSTICS;
-    public float $SP_OPERATING_ROOM_FEE;
-    public float $SP_SUPPLIES;
-    public float $SP_OTHERS;
-    public float $SP_SUB_TOTAL;
-    public float $GOV_ROOM_N_BOARD;
-    public float $GOV_DRUG_N_MEDICINE;
-    public float $GOV_LAB_N_DIAGNOSTICS;
-    public float $GOV_OPERATING_ROOM_FEE;
-    public float $GOV_SUPPLIES;
-    public float $GOV_OTHERS;
-    public float $GOV_SUB_TOTAL;
-    public bool $GOV_PCSO;
-    public bool $GOV_DSWD;
-    public bool $GOV_DOH;
-    public bool $GOV_HMO;
-    public bool $GOV_LINGAP;
-    public float $P1_SUB_TOTAL;
-    public float $P2_SUB_TOTAL;
-    public float $OP_ROOM_N_BOARD;
-    public float $OP_DRUG_N_MEDICINE;
-    public float $OP_LAB_N_DIAGNOSTICS;
-    public float $OP_OPERATING_ROOM_FEE;
-    public float $OP_SUPPLIES;
-    public float $OP_OTHERS;
-    public float $OP_SUB_TOTAL;
-    public float $PROFESSIONAL_FEE_SUB_TOTAL;
-    public float $PROFESSIONAL_DISCOUNT_SUB_TOTAL;
-    public float $PROFESSIONAL_P1_SUB_TOTAL;
-    public float $CHARGE_TOTAL;
-    public float $VAT_TOTAL;
-    public float $SP_TOTAL;
-    public float $GOV_TOTAL;
-    public float $P1_TOTAL;
-    public float $P2_TOTAL;
-    public float $OP_TOTAL;
-    public float $AD_SUB_TOTAL;
-    public float $AD_TOTAL = 0;
+   
     public bool $PRE_SIGN_DATA = false;
     public bool $OUTPUT_SIGN = false;
     public bool $HEADER = true; // default TRUE;
@@ -103,8 +50,7 @@ class PrintSoa6 extends Component
     private $contactServices;
     private $locationServices;
     private $hemoServices;
-    public $feeList = [];
-    public $i;
+  
     public int $NO_OF_TREATMENT;
     public string $allDate = '';
     public string $REPORT_HEADER_1;
@@ -143,16 +89,7 @@ class PrintSoa6 extends Component
             }
         }
     }
-    public function profFeeList($PHIC_ID)
-    {
-        $this->i = 0;
 
-        if ($this->PRE_SIGN_DATA) {
-            $this->feeList = ['ID' => 0, 'CONTACT_ID' => 'ok'];
-        } else {
-            $this->feeList = $this->philHealthProfFeeServices->getProfFee($PHIC_ID);
-        }
-    }
 
     public function mount(int $PRINT_ID, int $PATIENT_ID = 0, bool $OUTPUT = true)
     {
@@ -161,11 +98,12 @@ class PrintSoa6 extends Component
             $this->PRE_SIGN_DATA = false;
             $this->HEADER = !$OUTPUT;
             $this->PreLoad($PRINT_ID);
-            $this->profFeeList($PRINT_ID);
+      
             return;
         }
         // pre-sign
         if ($PATIENT_ID > 0) {
+            $this->PATIENT_ID = $PATIENT_ID;
             $this->PRE_SIGN_DATA = true;
             $this->HEADER = false;
             $contact = $this->contactServices->get($PATIENT_ID, 3);
@@ -195,8 +133,7 @@ class PrintSoa6 extends Component
                 $this->FIRST_CASE_RATE = 'Hemodialysis-' . $contact->FIRST_CASE_RATE ?? '';
                 $this->SECOND_CASE_RATE = $contact->SECOND_CASE_RATE ?? '';
             }
-            $this->i = 0;
-            $this->feeList = $this->patientDoctorServices->GetbyTemp($PATIENT_ID);
+
 
             $locData = $this->locationServices->get($this->LOCATION_ID);
             if ($locData) {
@@ -229,75 +166,6 @@ class PrintSoa6 extends Component
                 $this->OTHER_DIAGNOSIS = $data->OTHER_DIAGNOSIS ?? '';
                 $this->FIRST_CASE_RATE = $data->FIRST_CASE_RATE ?? '';
                 $this->SECOND_CASE_RATE = $data->SECOND_CASE_RATE ?? '';
-
-                $this->CHARGES_ROOM_N_BOARD = $data->CHARGES_ROOM_N_BOARD;
-                $this->CHARGES_DRUG_N_MEDICINE = $data->CHARGES_DRUG_N_MEDICINE;
-                $this->CHARGES_LAB_N_DIAGNOSTICS = $data->CHARGES_LAB_N_DIAGNOSTICS;
-                $this->CHARGES_OPERATING_ROOM_FEE = $data->CHARGES_OPERATING_ROOM_FEE;
-                $this->CHARGES_SUPPLIES = $data->CHARGES_SUPPLIES;
-                $this->CHARGES_OTHERS = $data->CHARGES_OTHERS;
-                $this->CHARGES_SUB_TOTAL = $data->CHARGES_SUB_TOTAL;
-                $this->OTHER_SPECIFY = $data->OTHER_SPECIFY ?? '';
-                $this->VAT_ROOM_N_BOARD = $data->VAT_ROOM_N_BOARD;
-                $this->VAT_DRUG_N_MEDICINE = $data->VAT_DRUG_N_MEDICINE;
-                $this->VAT_LAB_N_DIAGNOSTICS = $data->VAT_LAB_N_DIAGNOSTICS;
-                $this->VAT_OPERATING_ROOM_FEE = $data->VAT_OPERATING_ROOM_FEE;
-                $this->VAT_SUPPLIES = $data->VAT_SUPPLIES;
-                $this->VAT_OTHERS = $data->VAT_OTHERS;
-                $this->VAT_SUB_TOTAL = $data->VAT_SUB_TOTAL;
-                $this->SP_ROOM_N_BOARD = $data->SP_ROOM_N_BOARD;
-                $this->SP_DRUG_N_MEDICINE = $data->SP_DRUG_N_MEDICINE;
-                $this->SP_LAB_N_DIAGNOSTICS = $data->SP_LAB_N_DIAGNOSTICS;
-                $this->SP_OPERATING_ROOM_FEE = $data->SP_OPERATING_ROOM_FEE;
-                $this->SP_SUPPLIES = $data->SP_SUPPLIES;
-                $this->SP_OTHERS = $data->SP_OTHERS;
-                $this->SP_SUB_TOTAL = $data->SP_SUB_TOTAL;
-                $this->GOV_ROOM_N_BOARD = $data->GOV_ROOM_N_BOARD;
-                $this->GOV_DRUG_N_MEDICINE = $data->GOV_DRUG_N_MEDICINE;
-                $this->GOV_LAB_N_DIAGNOSTICS = $data->GOV_LAB_N_DIAGNOSTICS;
-                $this->GOV_OPERATING_ROOM_FEE = $data->GOV_OPERATING_ROOM_FEE;
-                $this->GOV_SUPPLIES = $data->GOV_SUPPLIES;
-                $this->GOV_OTHERS = $data->GOV_OTHERS;
-                $this->GOV_SUB_TOTAL = $data->GOV_SUB_TOTAL;
-                $this->GOV_PCSO = $data->GOV_PCSO;
-                $this->GOV_DSWD = $data->GOV_DSWD;
-                $this->GOV_DOH = $data->GOV_DOH;
-                $this->GOV_HMO = $data->GOV_HMO;
-                $this->GOV_LINGAP = $data->GOV_LINGAP;
-                // $this->P1_ROOM_N_BOARD = $data->P1_ROOM_N_BOARD;
-                // $this->P1_DRUG_N_MEDICINE = $data->P1_DRUG_N_MEDICINE;
-                // $this->P1_LAB_N_DIAGNOSTICS = $data->P1_LAB_N_DIAGNOSTICS;
-                // $this->P1_OPERATING_ROOM_FEE = $data->P1_OPERATING_ROOM_FEE;
-                // $this->P1_SUPPLIES = $data->P1_SUPPLIES;
-                // $this->P1_OTHERS = $data->P1_OTHERS;
-                $this->P1_SUB_TOTAL = $data->P1_SUB_TOTAL;
-                // $this->P2_ROOM_N_BOARD = $data->P2_ROOM_N_BOARD;
-                // $this->P2_DRUG_N_MEDICINE = $data->P2_DRUG_N_MEDICINE;
-                // $this->P2_LAB_N_DIAGNOSTICS = $data->P2_LAB_N_DIAGNOSTICS;
-                // $this->P2_OPERATING_ROOM_FEE = $data->P2_OPERATING_ROOM_FEE;
-                // $this->P2_SUPPLIES = $data->P2_SUPPLIES;
-                // $this->P2_OTHERS = $data->P2_OTHERS;
-                $this->P2_SUB_TOTAL = $data->P2_SUB_TOTAL;
-                $this->OP_ROOM_N_BOARD = $data->OP_ROOM_N_BOARD;
-                $this->OP_DRUG_N_MEDICINE = $data->OP_DRUG_N_MEDICINE;
-                $this->OP_LAB_N_DIAGNOSTICS = $data->OP_LAB_N_DIAGNOSTICS;
-                $this->OP_OPERATING_ROOM_FEE = $data->OP_OPERATING_ROOM_FEE;
-                $this->OP_SUPPLIES = $data->OP_SUPPLIES;
-                $this->OP_OTHERS = $data->OP_OTHERS;
-                $this->OP_SUB_TOTAL = $data->OP_SUB_TOTAL;
-                $this->PROFESSIONAL_FEE_SUB_TOTAL = $data->PROFESSIONAL_FEE_SUB_TOTAL;
-                $this->PROFESSIONAL_DISCOUNT_SUB_TOTAL = $data->PROFESSIONAL_DISCOUNT_SUB_TOTAL;
-                $this->PROFESSIONAL_P1_SUB_TOTAL = $data->PROFESSIONAL_P1_SUB_TOTAL;
-                $this->CHARGE_TOTAL = $data->CHARGE_TOTAL;
-                $this->VAT_TOTAL = $data->VAT_TOTAL;
-                $this->SP_TOTAL = $data->SP_TOTAL;
-                $this->GOV_TOTAL = $data->GOV_TOTAL;
-                $this->P1_TOTAL = $data->P1_TOTAL;
-                $this->P2_TOTAL = $data->P2_TOTAL;
-                $this->OP_TOTAL = $data->OP_TOTAL;
-
-                $this->AD_SUB_TOTAL = $data->AD_SUB_TOTAL;
-                $this->AD_TOTAL = $data->AD_TOTAL;
 
                 $this->PREPARED_BY_ID = $data->PREPARED_BY_ID ?? 0;
                 $this->DATE_SIGNED = $data->DATE_SIGNED ?? '';

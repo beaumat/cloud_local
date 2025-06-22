@@ -5,8 +5,6 @@ namespace App\Livewire\PhilHealth;
 use App\Services\ContactServices;
 use App\Services\HemoServices;
 use App\Services\LocationServices;
-use App\Services\PatientDoctorServices;
-use App\Services\PhilHealthProfFeeServices;
 use App\Services\PhilHealthServices;
 use App\Services\PhilHealthSoaCustomServices;
 use Illuminate\Support\Carbon;
@@ -50,36 +48,34 @@ class PrintSoa5 extends Component
     private $contactServices;
     private $locationServices;
     private $hemoServices;
-    public $feeList = [];
-    public $i;
+
     public int $NO_OF_TREATMENT;
     public string $allDate = '';
     public string $REPORT_HEADER_1;
     public string $REPORT_HEADER_2;
     public string $REPORT_HEADER_3;
     public string $LOGO_FILE;
-    private $patientDoctorServices;
     public $TIME_HIDE;
     public $breakDownDate = [];
     public bool $IS_HIDE = false;
     private $philHealthSoaCustomServices;
-    private $philHealthProfFeeServices;
+  
     public function boot(
         PhilHealthServices $philHealthServices,
         ContactServices $contactServices,
         LocationServices $locationServices,
         HemoServices $hemoServices,
-        PatientDoctorServices $patientDoctorServices,
+
         PhilHealthSoaCustomServices $philHealthSoaCustomServices,
-        PhilHealthProfFeeServices $philHealthProfFeeServices
+    
     ) {
         $this->philHealthServices = $philHealthServices;
         $this->contactServices = $contactServices;
         $this->locationServices = $locationServices;
         $this->hemoServices = $hemoServices;
-        $this->patientDoctorServices = $patientDoctorServices;
+  
         $this->philHealthSoaCustomServices = $philHealthSoaCustomServices;
-        $this->philHealthProfFeeServices = $philHealthProfFeeServices;
+    
     }
     private function gotHide()
     {
@@ -133,8 +129,7 @@ class PrintSoa5 extends Component
                 $this->FIRST_CASE_RATE = 'Hemodialysis-' . $contact->FIRST_CASE_RATE ?? '';
                 $this->SECOND_CASE_RATE = $contact->SECOND_CASE_RATE ?? '';
             }
-            $this->i = 0;
-            $this->feeList = $this->patientDoctorServices->GetbyTemp($PATIENT_ID);
+
 
             $locData = $this->locationServices->get($this->LOCATION_ID);
             if ($locData) {
