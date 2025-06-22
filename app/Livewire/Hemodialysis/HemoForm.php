@@ -129,7 +129,7 @@ class HemoForm extends Component
         $this->scheduleServices = $scheduleServices;
         $this->patientDoctorServices = $patientDoctorServices;
         $this->serviceChargeServices = $serviceChargeServices;
-        $this->accountJournalServices = $accountJournalServices;    
+        $this->accountJournalServices = $accountJournalServices;
     }
     public function getEmpName()
     {
@@ -176,7 +176,7 @@ class HemoForm extends Component
                 $this->IsDocmentUploaded = true;
             }
         }
-        if($this->TIME_END && $this->TIME_START) {
+        if ($this->TIME_END && $this->TIME_START) {
             $this->DOCTOR_DES_PROMP = true;
         }
         $this->getPreviousTreatment();
@@ -205,7 +205,7 @@ class HemoForm extends Component
                 if ($data->STATUS_ID <> 4) {
                     $isRestrik = (bool) $this->hemoServices->IsRestrictedFromUnposted($data->DATE, $data->LOCATION_ID);
                     if ($isRestrik) {
-                        
+
                         if (!UserServices::GetUserRightAccess('allowed-view-treatment')) {
                             return Redirect::route('patientshemo')->with('error', 'Invalid action. Please complete the unposted(U) treatment before proceeding.');
 
@@ -632,7 +632,7 @@ class HemoForm extends Component
             $this->ID
         );
 
-    
+
         if ($JOURNAL_NO > 0) {
             $data = ['JOURNAL_NO' => $JOURNAL_NO];
             $this->dispatch('open-journal', result: $data);
@@ -640,6 +640,12 @@ class HemoForm extends Component
         }
 
         session()->flash('error', 'Journal entry not created');
+    }
+    public function reJournal()
+    {
+        $this->hemoServices->getMakeJournal($this->ID);
+        return Redirect::route('patientshemo_edit', ['id' => $this->ID])->with('message', 'Re-create Journal');
+
     }
     public function render()
     {

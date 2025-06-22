@@ -194,6 +194,7 @@ use App\Livewire\StockBinPage\StockBinForm;
 use App\Livewire\StockBinPage\StockBinList;
 use App\Livewire\Tax\TaxForm;
 use App\Livewire\Tax\TaxList;
+use App\Livewire\TestHemoPage;
 use App\Livewire\UnitOfMeasurePage\UnitOfMeasureForm;
 use App\Livewire\UnitOfMeasurePage\UnitOfMeasureList;
 use App\Livewire\User\UserForm;
@@ -225,6 +226,7 @@ Route::get('/', function () {
 });
 Route::get('/test', TestPage::class)->name('testpage');
 Route::get('/test/{id}', TestPage::class)->name('testpage_id');
+Route::get('/test-hemo', TestHemoPage::class)->name('test_hemo_page');
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', Dashboard::class)->name('dashboard');

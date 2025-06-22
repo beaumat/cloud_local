@@ -2250,6 +2250,7 @@ class HemoServices
         return $result;
 
     }
+
     public function getMakeJournal(int $HEMO_ID)
     {
         $gotUpdate = false;
@@ -2265,18 +2266,23 @@ class HemoServices
                 }
                 $resultDebit = $this->getHemoJournalByItemDebit($HEMO_ID);
                 if ($gotUpdate) {
+
                     foreach ($resultDebit as $list) {
                         $acctID = $this->accountServices->EXPENSE_ACCOUNT_ID;
-                        $this->accountJournalServices->updateAccount(
-                            $list->ID,
-                            $this->object_type_hemo,
-                            $dataHemo->DATE,
-                            $dataHemo->LOCATION_ID,
-                            $acctID,
-                            $list->ACCOUNT_ID,
-                        );
+                        if ($acctID != $list->ACCOUNT_ID) {
+                            $this->accountJournalServices->updateAccount(
+                                $list->ID,
+                                $this->object_type_hemo,
+                                $dataHemo->DATE,
+                                $dataHemo->LOCATION_ID,
+                                $acctID,
+                                $list->ACCOUNT_ID,
+                            );
+                        }
+
                     }
                 }
+
                 $this->accountJournalServices->JournalExecute(
                     $JOURNAL_NO,
                     $resultDebit,
@@ -2287,16 +2293,20 @@ class HemoServices
 
                 $resultCredit = $this->getHemoJournalByItemCredit($HEMO_ID);
                 if ($gotUpdate) {
+
                     foreach ($resultCredit as $list) {
                         $acctID = 6;
-                        $this->accountJournalServices->updateAccount(
-                            $list->ID,
-                            $this->object_type_hemo_item,
-                            $dataHemo->DATE,
-                            $dataHemo->LOCATION_ID,
-                            $acctID,
-                            $list->ACCOUNT_ID,
-                        );
+
+                        if ($list->ACCOUNT_ID != $acctID) {
+                            $this->accountJournalServices->updateAccount(
+                                $list->ID,
+                                $this->object_type_hemo_item,
+                                $dataHemo->DATE,
+                                $dataHemo->LOCATION_ID,
+                                $acctID,
+                                $list->ACCOUNT_ID,
+                            );
+                        }
                     }
                 }
 
@@ -2377,5 +2387,35 @@ class HemoServices
             return $result->ID;
         }
         return null;
+    }
+    public function getExpensesAccountHemo()
+    {
+        $result = DB::table('account_journal as aj')
+            ->select([
+                'h.HEMO_ID',
+                'aj.*',
+            ])
+            ->join('hemodialysis_items as h', 'h.ID', '=', 'aj.OBJECT_ID')
+            ->whereIn('aj.OBJECT_TYPE', [$this->object_type_hemo_item, $this->object_type_hemo])
+            ->whereIn('aj.ACCOUNT_ID', [$this->accountServices->EXPENSE_ACCOUNT_ID, 6])
+            ->where('aj.AMOUNT', '>', 0)
+            ->orderBy('aj.OBJECT_DATE', 'asc')
+            ->first();
+
+    
+        return $result;
+    }
+    public function getDelJournal(int $LOCATION_ID, int $JN, int $SUB_ID, int $OBJECT_ID, int $OBJECT_TYPE, string $OBJECT_DATE, int $ENTRY_TYPE)
+    {
+        $this->accountJournalServices->DeleteJournal(
+            $this->accountServices->EXPENSE_ACCOUNT_ID,
+            $LOCATION_ID,
+            $JN,
+            $SUB_ID,
+            $OBJECT_ID,
+            $OBJECT_TYPE,
+            $OBJECT_DATE,
+            $ENTRY_TYPE
+        );
     }
 }
