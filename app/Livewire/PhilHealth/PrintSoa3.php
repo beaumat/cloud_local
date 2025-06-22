@@ -5,7 +5,6 @@ namespace App\Livewire\PhilHealth;
 use App\Services\ContactServices;
 use App\Services\HemoServices;
 use App\Services\LocationServices;
-use App\Services\PhilHealthProfFeeServices;
 use App\Services\PhilHealthServices;
 use App\Services\PhilHealthSoaCustomServices;
 use Illuminate\Support\Carbon;
@@ -62,22 +61,20 @@ class PrintSoa3 extends Component
     public $breakDownDate   = [];
     public bool $IS_HIDE = false;
     private $philHealthSoaCustomServices;
-    private $philHealthProfFeeServices;
     public function boot(
         PhilHealthServices $philHealthServices,
         ContactServices $contactServices,
         LocationServices $locationServices,
         HemoServices $hemoServices,
         PhilHealthSoaCustomServices $philHealthSoaCustomServices,
-        PhilHealthProfFeeServices $philHealthProfFeeServices
+   
     ) {
         $this->philHealthServices = $philHealthServices;
         $this->contactServices = $contactServices;
         $this->locationServices = $locationServices;
         $this->hemoServices = $hemoServices;
-
         $this->philHealthSoaCustomServices = $philHealthSoaCustomServices;
-        $this->philHealthProfFeeServices = $philHealthProfFeeServices;
+    
     }
     private function gotHide()
     {

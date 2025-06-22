@@ -350,8 +350,6 @@ class PhilHealthServices
                 $A_LAB_N_DIAGNOSTICS_AMOUNT = $this->ItemizedBaseTotalActual($data->LOCATION_ID, $data->CONTACT_ID, 3, $data->DATE_ADMITTED, $data->DATE_DISCHARGED);
                 $A_OTHER_CHARGES_AMOUNT = $this->ItemizedBaseTotalActual($data->LOCATION_ID, $data->CONTACT_ID, 4, $data->DATE_ADMITTED, $data->DATE_DISCHARGED);
                 $A_OPERATING_ROOM_FEE_AMOUNT = $this->ItemizedBaseTotalActual($data->LOCATION_ID, $data->CONTACT_ID, 6, $data->DATE_ADMITTED, $data->DATE_DISCHARGED);
-
-
             }
 
 
@@ -363,26 +361,51 @@ class PhilHealthServices
             $CHARGES_OTHERS = (float) ($this->OTHER_CHARGES_AMOUNT * $NO_OF_TREATMENT) + $A_OTHER_CHARGES_AMOUNT;
             $GOV_SUB_TOTAL = 0;
 
-            // SENIOR DISCOUNT
-            $SP_DRUG_N_MEDICINE = (float) $DRUG_MED * 0.20;
-            $SP_OPERATING_ROOM_FEE = (float) $OPERATE_FEE * 0.20;
-            $SP_LAB_N_DIAGNOSTICS = (float) $LAB_N_DIAGNOS * 0.20;
-            $SP_SUPPLIES = (float) $CHARGES_SUPPLIES * 0.20;
-            $SP_OTHERS =   (float) $CHARGES_OTHERS * 0.20;
+            $useDisc = false;
+
+            if (in_array((int) $data->LOCATION_ID, [36, 38, 39, 40])) {
+                $useDisc = true;
+            }
 
 
-            // PACKAGE RESULT
-            $P1_DRUG_N_MEDICINE = $DRUG_MED - $SP_DRUG_N_MEDICINE;
-            $P1_OPERATING_ROOM_FEE = $OPERATE_FEE - $SP_OPERATING_ROOM_FEE;
-            $P1_LAB_N_DIAGNOSTICS = $LAB_N_DIAGNOS - $SP_LAB_N_DIAGNOSTICS ;
-            $P1_SUPPLIES =  $CHARGES_SUPPLIES  - $SP_SUPPLIES;
-            $P1_OTHERS = $CHARGES_OTHERS - $SP_OTHERS;
+            if ($useDisc) {
+                $DISC_PERCENT = (float) $this->DISCOUNT_PERCENT / 100;
+                // SENIOR DISCOUNT
+                $SP_DRUG_N_MEDICINE = (float) $DRUG_MED * $DISC_PERCENT;
+                $SP_OPERATING_ROOM_FEE = (float) $OPERATE_FEE * $DISC_PERCENT;
+                $SP_LAB_N_DIAGNOSTICS = (float) $LAB_N_DIAGNOS * $DISC_PERCENT;
+                $SP_SUPPLIES = (float) $CHARGES_SUPPLIES * $DISC_PERCENT;
+                $SP_OTHERS = (float) $CHARGES_OTHERS * $DISC_PERCENT;
 
+
+                // PACKAGE RESULT
+                $P1_DRUG_N_MEDICINE = (float) $DRUG_MED - $SP_DRUG_N_MEDICINE;
+                $P1_OPERATING_ROOM_FEE = (float) $OPERATE_FEE - $SP_OPERATING_ROOM_FEE;
+                $P1_LAB_N_DIAGNOSTICS = (float) $LAB_N_DIAGNOS - $SP_LAB_N_DIAGNOSTICS;
+                $P1_SUPPLIES = (float) $CHARGES_SUPPLIES - $SP_SUPPLIES;
+                $P1_OTHERS = (float) $CHARGES_OTHERS - $SP_OTHERS;
+
+            } else {
+                // SENIOR DISCOUNT
+                $SP_DRUG_N_MEDICINE = 0;
+                $SP_OPERATING_ROOM_FEE = 0;
+                $SP_LAB_N_DIAGNOSTICS = 0;
+                $SP_SUPPLIES = 0;
+                $SP_OTHERS = 0;
+
+
+                // PACKAGE RESULT
+                $P1_DRUG_N_MEDICINE = 0;
+                $P1_OPERATING_ROOM_FEE = 0;
+                $P1_LAB_N_DIAGNOSTICS = 0;
+                $P1_SUPPLIES = 0;
+                $P1_OTHERS = 0;
+            }
 
 
 
             // $TOTAL_ON_ACTUAL = $A_DRUG_N_MEDINE_AMOUNT + $A_SUPPLIES + $A_LAB_N_DIAGNOSTICS_AMOUNT + $A_OTHER_CHARGES_AMOUNT + $A_OPERATING_ROOM_FEE_AMOUNT;
-    
+
             $C_SUB_TOTAL = (float) $DRUG_MED + $OPERATE_FEE + $CHARGES_SUPPLIES + $LAB_N_DIAGNOS + $CHARGES_OTHERS;
             $SP_SUB_TOTAL = (float) $C_SUB_TOTAL * ($this->DISCOUNT_PERCENT / 100);
 
