@@ -78,7 +78,7 @@ class PrintSoa3 extends Component
     }
     private function gotHide()
     {
-        $cusFirst =   $this->philHealthSoaCustomServices->GetFirst($this->LOCATION_ID);
+        $cusFirst = $this->philHealthSoaCustomServices->GetFirst($this->LOCATION_ID);
         if ($cusFirst) {
             if ($cusFirst->HIDE_FEE > 0) {
                 $this->IS_HIDE = true;
