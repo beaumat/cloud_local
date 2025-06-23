@@ -15,11 +15,16 @@
         </div>
     </div>
     <section class="content">
-        <div class="container-fluid">
-            <div class="row">
-                @livewire('alert-layout', ['errors' => $errors->any() ? $errors->all() : '', 'message' => session('message'), 'error' => session('error')])
-            </div>
-        </div>
+        <table>
+            <tr>
+                <td>REFERENCE NO.</td>
+                <td>{{ $CODE }}</td>
+            </tr>
+            <tr>
+                <td>DATE</td>
+                <td>{{ $DATE }}</td>
+            </tr>
+        </table>
     </section>
 
 </div>

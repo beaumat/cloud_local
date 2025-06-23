@@ -93,7 +93,7 @@
 
                                 @if ($columnType == 1)
                                     <tr>
-                                        <td class="col-1 bg-dark"></td>
+                                        <td class=" bg-dark"></td>
                                         <td class="col-1 bg-dark"></td>
                                         <td class=" bg-primary"></td>
                                         <td class=" bg-primary text-center">Patient</td>
@@ -109,7 +109,7 @@
                                         <td class="col-1 bg-dark"></td>
                                     </tr>
                                     <tr>
-                                        <td class="col-1 bg-dark">Item No.</td>
+                                        <td class=" bg-dark">Item No.</td>
                                         <td class="col-1 bg-dark">Claims/Code Reference</td>
                                         <td class=" bg-primary">Surname</td>
                                         <td class=" bg-primary">Firstname</td>
@@ -128,7 +128,7 @@
 
                                 @if ($columnType == 2)
                                     <tr>
-                                        <td class="col-1 bg-dark"></td>
+                                        <td class=" bg-dark"></td>
                                         <td class="col-1 bg-dark"></td>
                                         <td class="col-1 bg-dark"></td>
                                         <td class=" bg-primary"></td>
@@ -147,8 +147,8 @@
                                         <td class="col-1 bg-dark"></td>
                                     </tr>
                                     <tr>
-                                        <td class="col-1 bg-dark">Item No.</td>
-                                        <td class="col-1 bg-dark">Year Start From.</td>
+                                        <td class=" bg-dark">Item No.</td>
+                                        <td class="col-1 bg-dark">Yr. Start From.</td>
                                         <td class="col-1 bg-dark">Claims Series Reference</td>
                                         <td class=" bg-primary">Surname</td>
                                         <td class=" bg-primary">Firstname</td>
@@ -181,7 +181,7 @@
                                         @endphp
                                         <tr>
                                             <td>{{ $r }}</td>
-                                            <td>{{ $list->CODE }}</td>
+                                            <td>{{ $list->CLAIM_NO }}</td>
                                             <td>{{ $list->LAST_NAME }}</td>
                                             <td>{{ $list->FIRST_NAME }}</td>
                                             <td>{{ $list->MIDDLE_NAME }}</td>

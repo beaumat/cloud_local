@@ -346,29 +346,70 @@ class PhilHealthServices
 
                 $A_DRUG_N_MEDINE_AMOUNT = $this->ItemizedBaseTotalActual($data->LOCATION_ID, $data->CONTACT_ID, 1, $data->DATE_ADMITTED, $data->DATE_DISCHARGED);
 
-
                 $A_SUPPLIES = $this->ItemizedBaseTotalActual($data->LOCATION_ID, $data->CONTACT_ID, 2, $data->DATE_ADMITTED, $data->DATE_DISCHARGED);
                 $A_LAB_N_DIAGNOSTICS_AMOUNT = $this->ItemizedBaseTotalActual($data->LOCATION_ID, $data->CONTACT_ID, 3, $data->DATE_ADMITTED, $data->DATE_DISCHARGED);
                 $A_OTHER_CHARGES_AMOUNT = $this->ItemizedBaseTotalActual($data->LOCATION_ID, $data->CONTACT_ID, 4, $data->DATE_ADMITTED, $data->DATE_DISCHARGED);
                 $A_OPERATING_ROOM_FEE_AMOUNT = $this->ItemizedBaseTotalActual($data->LOCATION_ID, $data->CONTACT_ID, 6, $data->DATE_ADMITTED, $data->DATE_DISCHARGED);
+            }
 
 
+            // ACTUAL CHARGE
+            $LAB_N_DIAGNOS = (float) ($this->LAB_N_DIAGNOSTICS_AMOUNT * $NO_OF_TREATMENT) + $A_LAB_N_DIAGNOSTICS_AMOUNT;
+            $DRUG_MED = (float) ($this->DRUG_N_MEDINE_AMOUNT * $NO_OF_TREATMENT) + $A_DRUG_N_MEDINE_AMOUNT;
+            $OPERATE_FEE = (float) ($this->OPERATING_ROOM_FEE_AMOUNT * $NO_OF_TREATMENT) + $A_OPERATING_ROOM_FEE_AMOUNT; //
+            $CHARGES_SUPPLIES = (float) ($this->SUPPLIES * $NO_OF_TREATMENT) + $A_SUPPLIES;
+            $CHARGES_OTHERS = (float) ($this->OTHER_CHARGES_AMOUNT * $NO_OF_TREATMENT) + $A_OTHER_CHARGES_AMOUNT;
+            $GOV_SUB_TOTAL = 0;
+
+            $useDisc = false;
+
+            if (in_array((int) $data->LOCATION_ID, [36, 38, 39, 40])) {
+                // how will allowed
+                $useDisc = true;
+            }
+
+
+            if ($useDisc) {
+                $DISC_PERCENT = (float) $this->DISCOUNT_PERCENT / 100;
+                // SENIOR DISCOUNT
+                $SP_DRUG_N_MEDICINE = (float) $DRUG_MED * $DISC_PERCENT;
+                $SP_OPERATING_ROOM_FEE = (float) $OPERATE_FEE * $DISC_PERCENT;
+                $SP_LAB_N_DIAGNOSTICS = (float) $LAB_N_DIAGNOS * $DISC_PERCENT;
+                $SP_SUPPLIES = (float) $CHARGES_SUPPLIES * $DISC_PERCENT;
+                $SP_OTHERS = (float) $CHARGES_OTHERS * $DISC_PERCENT;
+
+
+                // PACKAGE RESULT
+                $P1_DRUG_N_MEDICINE = (float) $DRUG_MED - $SP_DRUG_N_MEDICINE;
+                $P1_OPERATING_ROOM_FEE = (float) $OPERATE_FEE - $SP_OPERATING_ROOM_FEE;
+                $P1_LAB_N_DIAGNOSTICS = (float) $LAB_N_DIAGNOS - $SP_LAB_N_DIAGNOSTICS;
+                $P1_SUPPLIES = (float) $CHARGES_SUPPLIES - $SP_SUPPLIES;
+                $P1_OTHERS = (float) $CHARGES_OTHERS - $SP_OTHERS;
+
+            } else {
+                // SENIOR DISCOUNT
+                $SP_DRUG_N_MEDICINE = 0;
+                $SP_OPERATING_ROOM_FEE = 0;
+                $SP_LAB_N_DIAGNOSTICS = 0;
+                $SP_SUPPLIES = 0;
+                $SP_OTHERS = 0;
+
+
+                // PACKAGE RESULT
+                $P1_DRUG_N_MEDICINE = 0;
+                $P1_OPERATING_ROOM_FEE = 0;
+                $P1_LAB_N_DIAGNOSTICS = 0;
+                $P1_SUPPLIES = 0;
+                $P1_OTHERS = 0;
             }
 
 
 
-            $LAB_N_DIAGNOS = (float) ($this->LAB_N_DIAGNOSTICS_AMOUNT * $NO_OF_TREATMENT) + $A_LAB_N_DIAGNOSTICS_AMOUNT;
-            $DRUG_MED = (float) ($this->DRUG_N_MEDINE_AMOUNT * $NO_OF_TREATMENT) + $A_DRUG_N_MEDINE_AMOUNT;
+            // $TOTAL_ON_ACTUAL = $A_DRUG_N_MEDINE_AMOUNT + $A_SUPPLIES + $A_LAB_N_DIAGNOSTICS_AMOUNT + $A_OTHER_CHARGES_AMOUNT + $A_OPERATING_ROOM_FEE_AMOUNT;
 
-
-            $OPERATE_FEE = (float) ($this->OPERATING_ROOM_FEE_AMOUNT * $NO_OF_TREATMENT) + $A_OPERATING_ROOM_FEE_AMOUNT; //
-            $CHARGES_SUPPLIES = (float) ($this->SUPPLIES * $NO_OF_TREATMENT) + $A_SUPPLIES;
-            $CHARGES_OTHERS = (float) ($this->OTHER_CHARGES_AMOUNT * $NO_OF_TREATMENT) + $A_OTHER_CHARGES_AMOUNT;
-
-            $TOTAL_ON_ACTUAL = $A_DRUG_N_MEDINE_AMOUNT + $A_SUPPLIES + $A_LAB_N_DIAGNOSTICS_AMOUNT + $A_OTHER_CHARGES_AMOUNT + $A_OPERATING_ROOM_FEE_AMOUNT;
-            $GOV_SUB_TOTAL = 0;
             $C_SUB_TOTAL = (float) $DRUG_MED + $OPERATE_FEE + $CHARGES_SUPPLIES + $LAB_N_DIAGNOS + $CHARGES_OTHERS;
             $SP_SUB_TOTAL = (float) $C_SUB_TOTAL * ($this->DISCOUNT_PERCENT / 100);
+
             if ($this->ITEMIZED_BASE) {
                 $NEW_RATE = $this->FIRST_CASE_RATE_AMOUNT * $NO_OF_TREATMENT;
                 $AD_SUB_TOTAL = $C_SUB_TOTAL - $SP_SUB_TOTAL;
@@ -415,6 +456,16 @@ class PhilHealthServices
 
             PhilHealth::where('ID', $data->ID)
                 ->update([
+                    'P1_DRUG_N_MEDICINE' => $P1_DRUG_N_MEDICINE,
+                    'P1_OPERATING_ROOM_FEE' => $P1_OPERATING_ROOM_FEE,
+                    'P1_LAB_N_DIAGNOSTICS' => $P1_LAB_N_DIAGNOSTICS,
+                    'P1_SUPPLIES' => $P1_SUPPLIES,
+                    'P1_OTHERS' => $P1_OTHERS,
+                    'SP_DRUG_N_MEDICINE' => $SP_DRUG_N_MEDICINE,
+                    'SP_LAB_N_DIAGNOSTICS' => $SP_LAB_N_DIAGNOSTICS,
+                    'SP_OPERATING_ROOM_FEE' => $SP_OPERATING_ROOM_FEE,
+                    'SP_SUPPLIES' => $SP_SUPPLIES,
+                    'SP_OTHERS' => $SP_OTHERS,
                     'CHARGES_DRUG_N_MEDICINE' => $DRUG_MED,
                     'CHARGES_LAB_N_DIAGNOSTICS' => $LAB_N_DIAGNOS,
                     'CHARGES_OPERATING_ROOM_FEE' => $OPERATE_FEE,

@@ -21,23 +21,26 @@ class TestPage extends Component
     }
     public function mount($id = null)
     {
-        $this->hemoServices->getMakeJournal($id);
 
 
-        // $transDate = $this->dateServices->BackDate();
+        if ($id) {
+            $this->hemoServices->getMakeJournal($id);
+        } else {
+            $transDate = $this->dateServices->BackDate();
 
-        // if ($id == null) {
-        //     $itemData = $this->hemoServices->CallOutItemUnPosted($transDate);
-         
-        //     foreach ($itemData as $list) {
-        //         $this->updateUnpostedItemOnly($list->HEMO_ID, $itemData->count());
-        //         return;
-        //     }
+            if ($id == null) {
+                $itemData = $this->hemoServices->CallOutItemUnPosted($transDate);
 
-        // }
+                foreach ($itemData as $list) {
+                    $this->updateUnpostedItemOnly($list->HEMO_ID, $itemData->count());
+                    return;
+                }
+
+            }
+        }
     }
 
-    private function updateUnpostedItemOnly(int $HEMO_ID,int $COUNT= 0)
+    private function updateUnpostedItemOnly(int $HEMO_ID, int $COUNT = 0)
     {
         DB::beginTransaction();
         try {

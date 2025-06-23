@@ -152,6 +152,11 @@ use App\Services\UserServices;
                                                     class="btn btn-sm btn-info">
                                                     <i class="fa fa-print" aria-hidden="true"></i>
                                                     Preview Journal</button>
+
+                                                <button wire:click='reJournal' wire:confirm='Are you sure?'>
+                                                    <i class="fa fa-print" aria-hidden="true"></i>
+                                                    Re-Journal
+                                                </button>
                                             @endcan
                                         @endif
                                     </div>
