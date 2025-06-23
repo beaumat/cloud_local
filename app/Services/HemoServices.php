@@ -2402,8 +2402,8 @@ class HemoServices
             ->orderBy('aj.OBJECT_DATE', 'asc')
             ->first();
 
-                dd("stop");
-                
+        // dd("stop");
+
         return $result;
     }
     public function getDelJournal(int $LOCATION_ID, int $JN, int $SUB_ID, int $OBJECT_ID, int $OBJECT_TYPE, string $OBJECT_DATE, int $ENTRY_TYPE)
