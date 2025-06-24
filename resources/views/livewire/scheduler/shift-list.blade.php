@@ -11,11 +11,11 @@
     <tbody class="text-xs">
         @foreach ($totalPatientsByShift as $list)
             <tr>
-                <td class="text-primary">{{ $list->SHIFT_ID }}</td>
-                <td class="text-primary">{{ $list->W }}</td>
-                <td class="text-primary">{{ $list->P }}</td>
-                <td class="text-primary">{{ $list->A }}</td>
-                <td class="text-primary">{{ $list->C }}</td>
+                <td class="text-primary font-weight-bold">{{ $list->SHIFT_ID }}</td>
+                <td class="text-primary font-weight-bold">{{ $list->W }}</td>
+                <td class="text-primary font-weight-bold">{{ $list->P }}</td>
+                <td class="text-primary font-weight-bold">{{ $list->A }}</td>
+                <td class="text-primary font-weight-bold">{{ $list->C }}</td>
             </tr>
         @endforeach
     </tbody>

@@ -56236,3 +56236,14 @@ a.text-muted:hover {
     opacity: 0.5;
     pointer-events: none;
 }
+
+.mouse {
+  background-color:light;
+  transition: background-color 0.3s;
+}
+
+.mouse:hover {
+  background-color:black;
+  color: red;
+  cursor: pointer;
+}

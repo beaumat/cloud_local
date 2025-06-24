@@ -11,6 +11,7 @@ use Livewire\Component;
 
 class Shift extends Component
 {
+    public $loadingId = null;
     public $ID;
     public int $CONTACT_ID;
     public $shiftList = [];
@@ -23,7 +24,7 @@ class Shift extends Component
     public int $EXIST_HEMO;
     public int $STATUS_ID;
     #[Reactive]
-    public $hemoMachineList  = [];
+    public $hemoMachineList = [];
 
     public function boot(
         ScheduleServices $scheduleServices,
@@ -80,6 +81,7 @@ class Shift extends Component
     }
     public function save(int $shift_id)
     {
+        $this->loadingId = $shift_id;
         if ($this->CONTACT_ID > 0) {
             try {
                 $scheduleData = $this->scheduleServices->get($this->CONTACT_ID, $this->ID, $this->LOCATION_ID);
@@ -98,6 +100,7 @@ class Shift extends Component
                     $this->scheduleServices->Store($shift_id, $this->CONTACT_ID, $this->ID, 0, null, $this->LOCATION_ID, $this->HEMO_MACHINE_ID);
                 }
                 $this->dispatch('load-schedule-by-contact');
+               
             } catch (\Exception $e) {
                 dd($e->getMessage());
             }

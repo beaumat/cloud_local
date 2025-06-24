@@ -50,13 +50,12 @@
                                 @endif
                             </div>
                         </div>
-                  
+
                     </div>
                 </div>
                 <div class="col-sm-12 col-md-10">
                     <div class="card card-primary">
                         <div class="card-body bg-white">
-                            <!-- THE CALENDAR -->
                             <div id="calendar">
                                 <div>
                                     <div class="row mb-2">
@@ -89,8 +88,15 @@
                                             </button>
                                         </div>
                                     </div>
-                                    <livewire:scheduler.calendar-list :year="$year" :month="$month"
-                                        :locationid="$LOCATION_ID" :key="$refreshComponent" :date="$DATE" />
+                                    <div wire:loading.delay class="text-center text-gray-500 my-4">
+                                        <span>Please wait</span>
+                                        <span class="spinner animate-spin ml-1">⏳</span>
+                                    </div>
+                                   <div wire:loading.remove>
+                                        <livewire:scheduler.calendar-list :year="$year" :month="$month"
+                                            :locationid="$LOCATION_ID" :key="$refreshComponent" :date="$DATE" />
+                                    </div>
+
                                 </div>
                             </div>
                         </div>

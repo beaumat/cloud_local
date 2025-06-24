@@ -37,19 +37,13 @@ class SchedulerList extends Component
         $this->dateServices = $dateServices;
         $this->scheduleServices = $scheduleServices;
     }
-    // #[On('load-schedule-by-contact')]
+
 
     #[On('make-reload')]
     public function loadScheduleByContact()
     {
 
-        // $this->reloadContactList(Carbon::now()->format('Y-m-d'));
-        // try {
-        //     $this->scheduleList = $this->scheduleServices->ContactSchedule(0, $this->LOCATION_ID ?? 0, 0, 15);
-        // } catch (\Exception $e) {
-        //     //throw $th;
-        // }
-        
+    
     }
     public function updatedlocationid()
     {
