@@ -47,8 +47,6 @@
                               </td>
                               <td>{{ $list->DEPOSIT_AMOUNT == 0 ? date('m/d/Y', strtotime($list->P_DATE)) : date('m/d/Y', strtotime($list->TRANS_DATE)) }}
                               </td>
-
-
                               <td>{{ $list->ITEM_NAME }}</td>
                               <td class="text-right">
                                   {{ $list->DEPOSIT_AMOUNT > 0 ? number_format($list->DEPOSIT_AMOUNT, 2) : '' }}

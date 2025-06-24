@@ -27,6 +27,7 @@ class ItemSoaServices
     public function Get(int $ID)
     {
         $result = ItemSoa::where('ID', '=', $ID)->first();
+
         return $result;
     }
     private function NextLine(int $TYPE, int $LOCATION_ID)
@@ -60,7 +61,7 @@ class ItemSoaServices
 
         return $ID;
     }
-    public function Update(int $ID, int $TYPE, int $LINE, string $ITEM_NAME, string $UNIT_NAME, float $RATE, bool $ACTUAL_BASE = false, string $DOSAGE, string $ROUTE, string $FREQUENCY, string $BRAND, int $GROUP_ID, bool $SC_BASE, bool $SOA_BASE, string $GENERIC_NAME)
+    public function Update(int $ID, int $TYPE, int $LINE, string $ITEM_NAME, string $UNIT_NAME, float $RATE, bool $ACTUAL_BASE = false, string $DOSAGE, string $ROUTE, string $FREQUENCY, string $BRAND, int $GROUP_ID, bool $SC_BASE, bool $SOA_BASE, string $GENERIC_NAME, int $FIX_QTY = 0)
     {
         ItemSoa::where('ID', '=', $ID)
             ->update(
@@ -79,7 +80,8 @@ class ItemSoaServices
                     'GROUP_ID' => $GROUP_ID > 0 ? $GROUP_ID : null,
                     'SC_BASE' => $SC_BASE,
                     'SOA_BASE' => $SOA_BASE,
-                    'GENERIC_NAME' => $GENERIC_NAME
+                    'GENERIC_NAME' => $GENERIC_NAME,
+                    'FIX_QTY' => $FIX_QTY
                 ]
             );
     }
@@ -114,7 +116,8 @@ class ItemSoaServices
                 'soa_item.GROUP_ID',
                 'soa_item.SC_BASE',
                 'soa_item.SOA_BASE',
-                'soa_item.GENERIC_NAME'
+                'soa_item.GENERIC_NAME',
+                'soa_item.FIX_QTY'
             ])
             ->join('soa_item_type', 'soa_item_type.ID', '=', 'TYPE')
             ->where('LOCATION_ID', '=', $LOCATION_ID)
@@ -143,7 +146,8 @@ class ItemSoaServices
                 'soa_item.UNIT_NAME',
                 'soa_item.RATE',
                 'soa_item.ACTUAL_BASE',
-                'soa_item.GROUP_ID'
+                'soa_item.GROUP_ID',
+                'soa_item.FIX_QTY'
             ])
             ->join('soa_item_type', 'soa_item_type.ID', '=', 'TYPE')
             ->where('LOCATION_ID', '=', $LOCATION_ID)

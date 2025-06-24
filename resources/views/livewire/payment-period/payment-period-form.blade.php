@@ -137,9 +137,7 @@
                                         <div class="col-md-6 col-6 text-right">
                                             <button type="button" class="btn btn-success btn-sm"
                                                 wire:loading.attr='hidden' wire:click='exportGenerate()'>Export</button>
-                                            <div wire:loading.delay>
-                                                <span class='spinner'></span>
-                                            </div>
+                                         
                                         </div>
                                     </div>
                                 </div>

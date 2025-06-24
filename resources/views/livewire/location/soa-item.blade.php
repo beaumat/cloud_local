@@ -59,6 +59,7 @@
                                         <th class=" text-center">SOA Base</th>
                                         <th class="col-1 text-center">Group</th>
                                         <th class=" text-left">Generic Name</th>
+                                        <th class="col-1 text-center">Fix Qty</th>
                                         <th class="col-2 text-center">Action</th>
                                     </tr>
                                 </thead>
@@ -211,7 +212,14 @@
                                                     {{ $list->GENERIC_NAME }}
                                                 @endif
                                             </td>
-
+                                            <td class="col-1 text-center">
+                                                @if ($list->ID == $editid)
+                                                    <input name="editFIX_QTY" type="number" class="w-100"
+                                                        wire:model='editFIX_QTY' />
+                                                @else
+                                                    {{ $list->FIX_QTY }}
+                                                @endif
+                                            </td>
                                             <td class="text-center">
                                                 <div class="row">
 
@@ -331,6 +339,7 @@
                                                 <input name="GENERIC_NAME" type="text" class="w-100"
                                                     wire:model='GENERIC_NAME' />
                                             </td>
+                                            <td></td>
                                             <td>
                                                 <button type="submit" class="btn btn-xs btn-success w-100">
                                                     <i class="fa fa-plus" aria-hidden="true"></i>

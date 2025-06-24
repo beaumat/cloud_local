@@ -29,6 +29,7 @@ class ItemSoa extends Model
         'GROUP_ID',
         'SC_BASE',
         'SOA_BASE',
-        'GENERIC_NAME'
+        'GENERIC_NAME',
+        'FIX_QTY'
     ];
 }

@@ -53,6 +53,9 @@ class SoaItem extends Component
     public bool $editSC_BASE;
     public bool $editSOA_BASE;
     public string $editGENERIC_NAME;
+
+    public int $editFIX_QTY;
+
     public $dataList = [];
     public $search;
     public $typeList = [];
@@ -162,6 +165,7 @@ class SoaItem extends Component
             $this->editSC_BASE = $data->SC_BASE ?? false;
             $this->editSOA_BASE = $data->SOA_BASE ?? false;
             $this->editGENERIC_NAME = $data->GENERIC_NAME ?? '';
+            $this->editFIX_QTY = $data->FIX_QTY;
         }
     }
     public function Update()
@@ -172,14 +176,16 @@ class SoaItem extends Component
                 'editTYPE' => 'required|numeric|exists:soa_item_type,id',
                 'editITEM_NAME' => 'required|string',
                 'editRATE' => 'required|numeric',
-                'editLINE' => 'required|numeric'
+                'editLINE' => 'required|numeric',
+                'editFIX_QTY' => 'required|numeric'
             ],
             [],
             [
                 'editTYPE' => 'Type',
                 'editITEM_NAME' => 'Item Name',
                 'editRATE' => 'Rate',
-                'editLINE' => 'Line #'
+                'editLINE' => 'Line #',
+                'editFIX_QTY' => 'Fix Qty'
             ]
         );
 
@@ -200,7 +206,8 @@ class SoaItem extends Component
                 $this->editGROUP_ID,
                 $this->editSC_BASE,
                 $this->editSOA_BASE,
-                $this->editGENERIC_NAME
+                $this->editGENERIC_NAME,
+                $this->editFIX_QTY
             );
             $this->Canceled();
         } catch (\Exception $e) {
@@ -236,6 +243,7 @@ class SoaItem extends Component
         $this->editUNIT_NAME = '';
         $this->editRATE = 0;
         $this->editLINE = 0;
+
     }
     private function refreshList()
     {
