@@ -15,13 +15,14 @@ class AssistanceRecordCash extends Component
     
     public $dataList = [];
     private $patientPaymentServices;
-    public float $BALANCE = 0;
+
     public function boot(PatientPaymentServices $patientPaymentServices)
     {
         $this->patientPaymentServices = $patientPaymentServices;
     }
     public function reload()
-    {
+    {   
+
         $this->dataList = $this->patientPaymentServices->AssistanceByType($this->CONTACT_ID, 1, $this->LOCK_LOCATION_ID);
     }
     public function render()

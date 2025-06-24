@@ -16,7 +16,7 @@ class AssistanceRecordDswd extends Component
     
     public $dataList = [];
     private $patientPaymentServices;
-    public float $BALANCE = 0;
+
     public function boot(PatientPaymentServices $patientPaymentServices)
     {
         $this->patientPaymentServices = $patientPaymentServices;
