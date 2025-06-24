@@ -4,7 +4,7 @@
      </div>
      <div class="col-md-8">
          <div class="card card-primary card-outline card-outline-tabs">
-             <div class="card-header p-0 border-bottom-0">
+             <div class="card-header p-0 border-bottom-0" wire:loading.class='loading-form'>
                  <ul class="nav text-xs nav-tabs" id="custom-tabs-four-tab" role="tablist">
                      <li class="nav-item">
                          <a class="nav-link @if ($tab == 'dswd') active @endif"
@@ -70,42 +70,61 @@
                              Cash
                          </a>
                      </li>
+                     <li wire:loading.delay>
+                         <span class="spinner"></span>
+                     </li>
                  </ul>
              </div>
              <div class="card-body">
                  <div class="tab-content" id="custom-tabs-four-tabContent">
                      <div class="tab-pane fade @if ($tab == 'dswd') show active @endif"
                          id="custom-tabs-four-dswd" role="tabpanel" aria-labelledby="custom-tabs-four-dswd-tab">
-                         @livewire('Patient.AssistanceRecordDswd', ['CONTACT_ID' => $CONTACT_ID, 'LOCK_LOCATION_ID' => $LOCK_LOCATION_ID])
+                         @if ($tab == 'dswd')
+                             @livewire('Patient.AssistanceRecordDswd', ['CONTACT_ID' => $CONTACT_ID, 'LOCK_LOCATION_ID' => $LOCK_LOCATION_ID])
+                         @endif
                      </div>
                      <div class="tab-pane fade @if ($tab == 'pcso') show active @endif"
                          id="custom-tabs-four-pcso" role="tabpanel" aria-labelledby="custom-tabs-four-pcso-tab">
-                         @livewire('Patient.AssistanceRecordPcso', ['CONTACT_ID' => $CONTACT_ID, 'LOCK_LOCATION_ID' => $LOCK_LOCATION_ID])
+                         @if ($tab == 'pcso')
+                             @livewire('Patient.AssistanceRecordPcso', ['CONTACT_ID' => $CONTACT_ID, 'LOCK_LOCATION_ID' => $LOCK_LOCATION_ID])
+                         @endif
                      </div>
                      <div class="tab-pane fade @if ($tab == 'lingap') show active @endif"
                          id="custom-tabs-four-lingap" role="tabpanel" aria-labelledby="custom-tabs-four-lingap-tab">
-                         @livewire('Patient.AssistanceRecordLingap', ['CONTACT_ID' => $CONTACT_ID, 'LOCK_LOCATION_ID' => $LOCK_LOCATION_ID])
+                         @if ($tab == 'lingap')
+                             @livewire('Patient.AssistanceRecordLingap', ['CONTACT_ID' => $CONTACT_ID, 'LOCK_LOCATION_ID' => $LOCK_LOCATION_ID])
+                         @endif
                      </div>
                      <div class="tab-pane fade @if ($tab == 'op') show active @endif"
                          id="custom-tabs-four-op" role="tabpanel" aria-labelledby="custom-tabs-four-op-tab">
-                         @livewire('Patient.AssistanceRecordOp', ['CONTACT_ID' => $CONTACT_ID, 'LOCK_LOCATION_ID' => $LOCK_LOCATION_ID])
+                         @if ($tab == 'op')
+                             @livewire('Patient.AssistanceRecordOp', ['CONTACT_ID' => $CONTACT_ID, 'LOCK_LOCATION_ID' => $LOCK_LOCATION_ID])
+                         @endif
                      </div>
                      <div class="tab-pane fade @if ($tab == 'ovp') show active @endif"
                          id="custom-tabs-four-ovp" role="tabpanel" aria-labelledby="custom-tabs-four-ovp-tab">
-                         @livewire('Patient.AssistanceRecordOvp', ['CONTACT_ID' => $CONTACT_ID, 'LOCK_LOCATION_ID' => $LOCK_LOCATION_ID])
+                         @if ($tab == 'ovp')
+                             @livewire('Patient.AssistanceRecordOvp', ['CONTACT_ID' => $CONTACT_ID, 'LOCK_LOCATION_ID' => $LOCK_LOCATION_ID])
+                         @endif
                      </div>
                      <div class="tab-pane fade @if ($tab == 'others') show active @endif"
                          id="custom-tabs-four-others" role="tabpanel" aria-labelledby="custom-tabs-four-others-tab">
-                         @livewire('Patient.AssistanceRecordOthers', ['CONTACT_ID' => $CONTACT_ID, 'LOCK_LOCATION_ID' => $LOCK_LOCATION_ID])
+                         @if ($tab == 'others')
+                             @livewire('Patient.AssistanceRecordOthers', ['CONTACT_ID' => $CONTACT_ID, 'LOCK_LOCATION_ID' => $LOCK_LOCATION_ID])
+                         @endif
                      </div>
                      <div class="tab-pane fade @if ($tab == 'balance') show active @endif"
                          id="custom-tabs-four-balance" role="tabpanel"
                          aria-labelledby="custom-tabs-four-balance-tab">
-                         @livewire('Patient.AssistanceRecordBalance', ['CONTACT_ID' => $CONTACT_ID, 'LOCK_LOCATION_ID' => $LOCK_LOCATION_ID])
+                         @if ($tab == 'balance')
+                             @livewire('Patient.AssistanceRecordBalance', ['CONTACT_ID' => $CONTACT_ID, 'LOCK_LOCATION_ID' => $LOCK_LOCATION_ID])
+                         @endif
                      </div>
                      <div class="tab-pane fade @if ($tab == 'cash') show active @endif"
                          id="custom-tabs-four-cash" role="tabpanel" aria-labelledby="custom-tabs-four-cash-tab">
-                         @livewire('Patient.AssistanceRecordCash', ['CONTACT_ID' => $CONTACT_ID, 'LOCK_LOCATION_ID' => $LOCK_LOCATION_ID])
+                         @if ($tab == 'cash')
+                             @livewire('Patient.AssistanceRecordCash', ['CONTACT_ID' => $CONTACT_ID, 'LOCK_LOCATION_ID' => $LOCK_LOCATION_ID])
+                         @endif
                      </div>
 
 

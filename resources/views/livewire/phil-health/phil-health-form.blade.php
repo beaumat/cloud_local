@@ -225,7 +225,7 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="card card-primary card-outline card-outline-tabs">
-                            <div class="card-header p-0 border-bottom-0">
+                            <div class="card-header p-0 border-bottom-0" wire:loading.class='loading-form'>
                                 <ul class="nav text-xs nav-tabs" id="custom-tabs-four-tab" role="tablist">
                                     <li class="nav-item">
                                         <a class="nav-link @if ($tab == 'soa') active @endif"
@@ -256,9 +256,12 @@
                                             aria-controls="custom-tabs-four-payment" aria-selected="true">Transmittal
                                             Records</a>
                                     </li>
-
+                                    <li wire:loading.delay>
+                                        <span class='spinner'></span>
+                                    </li>
                                 </ul>
                             </div>
+
                             <div class="card-body">
                                 <div class="tab-content" id="custom-tabs-four-tabContent">
                                     <div class="tab-pane fade @if ($tab == 'soa') show active @endif"
@@ -300,28 +303,9 @@
                                         <div class="row"
                                             @if ($ID === 0) style="opacity: 0.5;pointer-events: none;" @endif>
                                             <div class="col-md-12">
-                                                {{-- @livewire('PhilHealth.PaymentList', ['PHILHEALTH_ID' => $ID, 'PATIENT_ID' => $CONTACT_ID, 'LOCATION_ID' => $LOCATION_ID]) --}}
                                                 @livewire('PhilHealth.Transmittal', ['PHILHEALTH_ID' => $ID])
                                             </div>
                                         </div>
-                                    </div>
-                                    {{-- <div class="tab-pane fade @if ($tab == 'other') show active @endif"
-                                        id="custom-tabs-four-other" role="tabpanel"
-                                        aria-labelledby="custom-tabs-four-other-tab">
-                                        <div class="row"
-                                            @if ($ID === 0) style="opacity: 0.5;pointer-events: none;" @endif>
-                                            <div class="col-md-12">
-                                            
-                                            </div>
-                                        </div>
-                                    </div> --}}
-                                </div>
-                            </div>
-                            <div class="card-footer">
-                                <div class="row">
-                                    <div class="col-md-4 text-left">
-                                    </div>
-                                    <div class="col-md-8">
                                     </div>
                                 </div>
                             </div>

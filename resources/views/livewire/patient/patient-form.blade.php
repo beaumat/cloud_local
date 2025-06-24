@@ -80,7 +80,7 @@ use App\Services\UserServices;
                                 </div>
                                 {{-- TAB --}}
                                 <div class="card card-primary card-outline card-outline-tabs">
-                                    <div class="card-header p-0 border-bottom-0">
+                                    <div class="card-header p-0 border-bottom-0"  wire:loading.class='loading-form'>
                                         <ul class="nav nav-tabs text-xs p-1" id="custom-content-below-tab"
                                             role="tablist">
                                             <li class="nav-item">
@@ -225,6 +225,9 @@ use App\Services\UserServices;
                                                     </a>
                                                 </li>
                                             @endcan
+                                            <li wire:loading.delay>
+                                                <span class='spinner'></span>
+                                            </li>
                                         </ul>
                                     </div>
                                     <div class="card-body bg-light">

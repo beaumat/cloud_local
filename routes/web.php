@@ -716,9 +716,9 @@ Route::middleware(['auth'])->group(function () {
                 Route::get('/', GuaranteeLetterReport::class)->name('guarantee_letter')->middleware(['permission:report.guarantee.letter']);
             });
 
-          
-            Route::prefix('/philhealth-annex')->group( function() {
-                Route::get('/',PhilhealthAnnex::class)->name('philhealth_annex_report')->middleware(['permission:report.philhealth.annex']);
+
+            Route::prefix('/philhealth-annex')->group(function () {
+                Route::get('/', PhilhealthAnnex::class)->name('philhealth_annex_report')->middleware(['permission:report.philhealth.annex']);
             });
 
 

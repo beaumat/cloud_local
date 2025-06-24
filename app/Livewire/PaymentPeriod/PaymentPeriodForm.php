@@ -175,11 +175,8 @@ class PaymentPeriodForm extends Component
         } catch (\Throwable $th) {
             //throw $th;
             DB::rollBack();
-
             session()->flash('error', 'Invalid:' . $th->getMessage());
         }
-
-
     }
     private function getUpdateBankAccount()
     {
@@ -199,10 +196,8 @@ class PaymentPeriodForm extends Component
                     $this->BANK_ACCOUNT_ID
                 );
             }
-
         }
     }
-
     private function getUpdateOrNumber()
     {
         $dataList = $this->paymentServices->getPaymentbyPaymentPeriod($this->ID);

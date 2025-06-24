@@ -859,7 +859,7 @@ class PatientPaymentServices
         // First query
         $query1 = PatientPayments::select([
             DB::raw('patient_payment.ID AS TRANS_ID'),
-            DB::raw('patient_payment.RECEIPT_DATE AS TRANS_DATE'),
+            DB::raw('patient_payment.DATE AS TRANS_DATE'),
             DB::raw('patient_payment.RECEIPT_REF_NO AS TRANS_CODE'),
             DB::raw("patient_payment.CODE as P_CODE"),
             DB::raw("patient_payment.DATE as P_DATE"),
@@ -910,7 +910,7 @@ class PatientPaymentServices
 
 
         // Combine both queries
-        $result = $query1->unionAll($query2)->orderBy('TRANS_DATE', 'asc')->get();
+        $result = $query2->unionAll($query1)->orderBy('TRANS_DATE', 'asc')->get();
 
 
         return $result;

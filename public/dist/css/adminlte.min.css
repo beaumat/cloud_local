@@ -56231,3 +56231,8 @@ a.text-muted:hover {
 .rr20 {
    font-size: 20px;
 }
+
+.loading-form {
+    opacity: 0.5;
+    pointer-events: none;
+}
