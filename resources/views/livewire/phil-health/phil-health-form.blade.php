@@ -270,7 +270,9 @@
                                         <div class="row"
                                             @if ($ID == 0) style="opacity: 0.5;pointer-events: none;" @endif>
                                             <div class="col-md-12">
-                                                @livewire('PhilHealth.StatementOfAccount', ['ID' => $ID])
+                                                @if ($tab == 'soa')
+                                                    @livewire('PhilHealth.StatementOfAccount', ['ID' => $ID])
+                                                @endif
                                             </div>
                                         </div>
                                     </div>
@@ -282,7 +284,9 @@
                                             @if ($ID === 0) style="opacity: 0.5;pointer-events: none;" @endif>
                                             <div class="col-md-12"
                                                 @if ($Modify == true) style="opacity: 0.5;pointer-events: none;" @endif>
-                                                @livewire('PhilHealth.TreatmentSummary', ['CONTACT_ID' => $CONTACT_ID, 'LOCATION_ID' => $LOCATION_ID, 'DATE_ADMITTED' => $DATE_ADMITTED, 'DATE_DISCHARGED' => $DATE_DISCHARGED])
+                                                @if ($tab == 'treatment')
+                                                    @livewire('PhilHealth.TreatmentSummary', ['CONTACT_ID' => $CONTACT_ID, 'LOCATION_ID' => $LOCATION_ID, 'DATE_ADMITTED' => $DATE_ADMITTED, 'DATE_DISCHARGED' => $DATE_DISCHARGED])
+                                                @endif
                                             </div>
                                         </div>
                                     </div>
@@ -292,7 +296,9 @@
                                         <div class="row"
                                             @if ($ID === 0) style="opacity: 0.5;pointer-events: none;" @endif>
                                             <div class="col-md-12">
-                                                @livewire('PhilHealth.DrugMedicines', ['PHILHEALTH_ID' => $ID])
+                                                @if ($tab == 'drugNmed')
+                                                    @livewire('PhilHealth.DrugMedicines', ['PHILHEALTH_ID' => $ID])
+                                                @endif
                                             </div>
                                         </div>
                                     </div>
@@ -303,7 +309,9 @@
                                         <div class="row"
                                             @if ($ID === 0) style="opacity: 0.5;pointer-events: none;" @endif>
                                             <div class="col-md-12">
-                                                @livewire('PhilHealth.Transmittal', ['PHILHEALTH_ID' => $ID])
+                                                @if ($tab == 'payment')
+                                                    @livewire('PhilHealth.Transmittal', ['PHILHEALTH_ID' => $ID])
+                                                @endif
                                             </div>
                                         </div>
                                     </div>

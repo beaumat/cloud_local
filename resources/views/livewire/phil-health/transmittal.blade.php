@@ -8,7 +8,7 @@ use App\Services\UserServices;
         <div class="col-md-6">
             @if (UserServices::GetUserRightAccess('customer.invoice.view') && UserServices::GetUserRightAccess('customer.invoice.create'))
                 @if ($INVOICE_ID == 0)
-                    <button class="btn btn-sm btn-success" wire:click='makeInvoice()'>Make Invoice</button>
+                    {{-- <button class="btn btn-sm btn-success" wire:click='makeInvoice()'>Make Invoice</button> --}}
                 @else
                     <a target="_BLANK" href="{{ route('customersinvoice_edit', ['id' => $INVOICE_ID]) }}"
                         class="btn btn-sm btn-success">
