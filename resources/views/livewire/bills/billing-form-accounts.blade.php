@@ -38,7 +38,7 @@
                         @endif
                     </td>
                     <td>
-                        @if ($editExpensesId === $list->ID)
+                        @if ($editExpensesId == $list->ID)
                             <input wire:model='lineParticulars' name="partiuclaredit" type="text"
                                 class="form-control form-control-sm" />
                         @else
