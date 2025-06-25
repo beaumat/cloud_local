@@ -36,7 +36,6 @@
                             </div>
                             <div class="card-body">
                                 <div class="row">
-
                                     <div class="col-md-12">
                                         <livewire:select-option name="CONTACT_ID" :options="$contactList" :zero="true"
                                             isDisabled="{{ false }}" titleName="Patient :"
@@ -46,10 +45,12 @@
                             </div>
                         </div>
                         <!-- /.card -->
-                        <div class="card">
-
+                        <div wire:loading.delay>
+                            <span class="text-primary text-sm font-weight-bold">Please wait</span>
+                            <span class="spinner animate-spin ml-1">⏳</span>
+                        </div>
+                        <div class="card" wire:loading.attr='hidden'>
                             <div class="card-body">
-
                                 <div class="form-group">
                                     <livewire:dropdown-option name="scheduleStatusId" isDisabled="{{ false }}"
                                         titleName="Status" :options="$scheduleStatusList" :zero="false"
@@ -130,13 +131,12 @@
                                         </div>
                                     </div>
 
-                               
 
-                                        <livewire:scheduler.calendar :year="$year" :month="$month"
-                                            :contactid="$CONTACT_ID" :locationid="$LOCATION_ID" :hemomachineid="$HEMO_MACHINE_ID"
-                                            :key="$refreshComponent" />
 
-                                   
+                                    <livewire:scheduler.calendar :year="$year" :month="$month" :contactid="$CONTACT_ID"
+                                        :locationid="$LOCATION_ID" :hemomachineid="$HEMO_MACHINE_ID" :key="$refreshComponent" />
+
+
                                 </div>
                             </div>
                         </div>

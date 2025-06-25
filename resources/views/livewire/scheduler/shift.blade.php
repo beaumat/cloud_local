@@ -42,7 +42,7 @@
 
     </div>
     <div wire:loading wire:target="save">
-        <span class="spinner"></span>
+        <span class="spinner text-xs"></span>
     </div>
 
 </div>
