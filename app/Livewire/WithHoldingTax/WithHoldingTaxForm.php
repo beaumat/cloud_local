@@ -153,8 +153,6 @@ class WithHoldingTaxForm extends Component
                 DB::commit();
                 return Redirect::route('vendorswithholding_tax_edit', ['id' => $this->ID])->with('message', 'Successfully created');
             }
-
-
             $data = $this->withholdingTaxServices->Get($this->ID);
             if ($data) {
                 if ($this->STATUS == 16) {
