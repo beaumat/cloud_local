@@ -171,7 +171,7 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="card card-primary card-outline card-outline-tabs">
-                            <div class="card-header p-0 border-bottom-0">
+                            <div class="card-header p-0 border-bottom-0 text-xs" wire:loading.class='loading-form'>
                                 <ul class="nav text-xs nav-tabs" id="custom-tabs-four-tab" role="tablist">
                                     <li class="nav-item">
                                         <a class="nav-link @if ($tab == 'item') active @endif"
@@ -179,14 +179,15 @@
                                             data-toggle="pill" href="#custom-tabs-four-item" role="tab"
                                             aria-controls="custom-tabs-four-item" aria-selected="true">Items</a>
                                     </li>
-
                                     <li class="nav-item">
                                         <a class="nav-link @if ($tab == 'account') active @endif"
                                             id="custom-tabs-four-account-tab" wire:click="SelectTab('account')"
                                             data-toggle="pill" href="#custom-tabs-four-account" role="tab"
                                             aria-controls="custom-tabs-four-account" aria-selected="true">Expenses</a>
                                     </li>
-
+                                    <li wire:loading.delay>
+                                        <span class="spinner"></span>
+                                    </li>
                                 </ul>
                             </div>
                             <div class="card-body">
@@ -196,22 +197,23 @@
                                         <div class="row">
                                             <div class="col-md-12"
                                                 @if ($Modify == true) style="opacity: 0.5;pointer-events: none;" @endif>
-                                                @livewire('WriteCheck.WriteCheckFormItems', ['CHECK_ID' => $ID, 'STATUS' => $STATUS, 'TAX_ID' => $INPUT_TAX_ID, 'LOCATION_ID' => $LOCATION_ID, 'DATE' => $DATE])
+                                                @if ($tab == 'item')
+                                                    @livewire('WriteCheck.WriteCheckFormItems', ['CHECK_ID' => $ID, 'STATUS' => $STATUS, 'TAX_ID' => $INPUT_TAX_ID, 'LOCATION_ID' => $LOCATION_ID, 'DATE' => $DATE])
+                                                @endif
                                             </div>
                                         </div>
                                     </div>
-
                                     <div class="tab-pane fade @if ($tab == 'account') show active @endif "
                                         id="custom-tabs-four-account" role="tabpanel">
                                         <div class="row">
                                             <div class="col-md-12"
                                                 @if ($Modify == true) style="opacity: 0.5;pointer-events: none;" @endif>
-                                                @livewire('WriteCheck.WriteCheckFormAccounts', ['CHECK_ID' => $ID, 'STATUS' => $STATUS, 'TAX_ID' => $INPUT_TAX_ID, 'LOCATION_ID' => $LOCATION_ID, 'DATE' => $DATE])
+                                                @if ($tab == 'account')
+                                                    @livewire('WriteCheck.WriteCheckFormAccounts', ['CHECK_ID' => $ID, 'STATUS' => $STATUS, 'TAX_ID' => $INPUT_TAX_ID, 'LOCATION_ID' => $LOCATION_ID, 'DATE' => $DATE])
+                                                @endif
                                             </div>
                                         </div>
                                     </div>
-
-
                                 </div>
                             </div>
                             <div class="card-footer">
@@ -247,12 +249,10 @@
                                             </div>
                                         </div>
                                     </div>
-
                                 </div>
                             </div>
                         </div>
                     </div>
-
                 </div>
             </div>
         </section>
