@@ -138,7 +138,7 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="card card-primary card-outline card-outline-tabs">
-                            <div class="card-header p-0 border-bottom-0">
+                            <div class="card-header p-0 border-bottom-0 text-xs" wire:loading.class='loading-form'>
                                 <ul class="nav text-xs nav-tabs" id="custom-tabs-four-tab" role="tablist">
                                     <li class="nav-item">
                                         <a class="nav-link @if ($tab == 'item') active @endif"
@@ -152,19 +152,24 @@
                                             data-toggle="pill" href="#custom-tabs-four-account" role="tab"
                                             aria-controls="custom-tabs-four-account" aria-selected="true">Expenses</a>
                                     </li>
+                                    <li wire:loading.delay>
+                                        <span class="spinner"></span>
+                                    </li>
                                 </ul>
                             </div>
                             <div class="card-body">
                                 <div class="tab-content" id="custom-tabs-four-tabContent">
                                     <div class="tab-pane fade @if ($tab == 'item') show active @endif "
                                         id="custom-tabs-four-item" role="tabpanel">
-                                        @livewire('BillCredit.BillCreditFormItems', ['BILL_CREDIT_ID' => $ID, 'STATUS' => $STATUS, 'TAX_ID' => $INPUT_TAX_ID])
-
+                                        @if ($tab == 'item')
+                                            @livewire('BillCredit.BillCreditFormItems', ['BILL_CREDIT_ID' => $ID, 'STATUS' => $STATUS, 'TAX_ID' => $INPUT_TAX_ID])
+                                        @endif
                                     </div>
                                     <div class="tab-pane fade @if ($tab == 'account') show active @endif "
                                         id="custom-tabs-four-account" role="tabpanel">
-                                        @livewire('BillCredit.BillCreditFormAccounts', ['BILL_CREDIT_ID' => $ID, 'STATUS' => $STATUS, 'TAX_ID' => $INPUT_TAX_ID])
-
+                                        @if ($tab == 'account')
+                                            @livewire('BillCredit.BillCreditFormAccounts', ['BILL_CREDIT_ID' => $ID, 'STATUS' => $STATUS, 'TAX_ID' => $INPUT_TAX_ID])
+                                        @endif
                                     </div>
                                 </div>
                             </div>
