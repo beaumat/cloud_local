@@ -62,7 +62,7 @@
                                         <th class="text-center col-1 bg-success">
                                             <a href="{{ route('vendorsbill_credit_create') }}"
                                                 class="text-white btn btn-xs w-100">
-                                                <i class="fas fa-plus"></i> New </a>
+                                                <i class="fas fa-plus"></i></a>
                                         </th>
                                     </tr>
                                 </thead>
