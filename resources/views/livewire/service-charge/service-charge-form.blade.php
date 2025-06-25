@@ -147,7 +147,7 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="card card-primary card-outline card-outline-tabs">
-                            <div class="card-header p-0 border-bottom-0">
+                            <div class="card-header p-0 border-bottom-0 text-xs" wire:loading.class='loading-form'>
                                 <ul class="nav text-xs nav-tabs" id="custom-tabs-four-tab" role="tablist">
 
                                     <li class="nav-item">
@@ -162,6 +162,9 @@
                                             data-toggle="pill" href="#custom-tabs-four-payment" role="tab"
                                             aria-controls="custom-tabs-four-payment" aria-selected="true">Payments</a>
                                     </li>
+                                    <li wire:loading.delay>
+                                        <span class="spinner"></span>
+                                    </li>
                                 </ul>
                             </div>
                             <div class="card-body">
@@ -172,7 +175,9 @@
                                         <div class="row">
                                             <div class="col-md-12"
                                                 @if ($Modify == true) style="opacity: 0.5;pointer-events: none;" @endif>
-                                                @livewire('ServiceCharge.ServiceChargeFormItems', ['SERVICE_CHARGES_ID' => $ID, 'STATUS' => $STATUS, 'TAX_ID' => $OUTPUT_TAX_ID, 'PATIENT_ID' => $PATIENT_ID, 'LOCATION_ID' => $LOCATION_ID, 'WALK_IN' => $WALK_IN, 'HEMO_ID' => $HEMO_ID])
+                                                @if ($tab == 'item')
+                                                    @livewire('ServiceCharge.ServiceChargeFormItems', ['SERVICE_CHARGES_ID' => $ID, 'STATUS' => $STATUS, 'TAX_ID' => $OUTPUT_TAX_ID, 'PATIENT_ID' => $PATIENT_ID, 'LOCATION_ID' => $LOCATION_ID, 'WALK_IN' => $WALK_IN, 'HEMO_ID' => $HEMO_ID])
+                                                @endif
                                             </div>
                                         </div>
                                     </div>
@@ -183,7 +188,9 @@
                                         <div class="row"
                                             @if ($ID === 0) style="opacity: 0.5;pointer-events: none;" @endif>
                                             <div class="col-md-12">
-                                                @livewire('ServiceCharge.Payments', ['SERVICE_CHARGES_ID' => $ID, 'PATIENT_ID' => $PATIENT_ID, 'LOCATION_ID' => $LOCATION_ID])
+                                                @if ($tab == 'payment')
+                                                    @livewire('ServiceCharge.Payments', ['SERVICE_CHARGES_ID' => $ID, 'PATIENT_ID' => $PATIENT_ID, 'LOCATION_ID' => $LOCATION_ID])
+                                                @endif
                                             </div>
                                         </div>
                                     </div>
