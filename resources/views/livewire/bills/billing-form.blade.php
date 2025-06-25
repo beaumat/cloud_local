@@ -292,7 +292,7 @@
                                     <div class="col-md-4 text-left">
                                         <div class="row">
                                             <div class="col-md-6">
-                                                @livewire('Bills.PurchaseOrderListPromp', ['VENDOR_ID' => $VENDOR_ID, 'BILL_ID' => $ID, 'LOCATION_ID' => $LOCATION_ID])
+                                                @livewire('Bills.PurchaseOrderListPromp', ['VENDOR_ID' => $VENDOR_ID, 'BILL_ID' => $ID, 'LOCATION_ID' => $LOCATION_ID, 'STATUS' => $STATUS])
                                             </div>
                                             <div class="col-md-6">
                                                 @livewire('Bills.BillPaymentModal', ['BILL_ID' => $ID])

@@ -1,6 +1,6 @@
 <div>
     <button wire:click="openModal" class="btn btn-danger btn-xs text-xs w-100">
-       PO History
+        PO History
     </button>
     @if ($showModal)
         <div class="modal" tabindex="-1" role="dialog" style="display: block; background-color: rgba(0, 0, 0, 0.5);">
@@ -20,7 +20,9 @@
                                     <th class="col-2">Ref No.</th>
                                     <th class="col-2">Date Needed</th>
                                     <th class="col-2 text-right">Amount</th>
-                                    <th class="col-1 text-center">&nbsp;</th>
+                                    @if ($STATUS == 0)
+                                        <th class="col-1 text-center">&nbsp;</th>
+                                    @endif
                                 </tr>
                             </thead>
                             <tbody class="text-xs">
@@ -33,12 +35,14 @@
                                         </td>
                                         <td>{{ \Carbon\Carbon::parse($list->DATE_EXPECTED)->format('m/d/Y') }} </td>
                                         <td class="text-right">{{ number_format($list->AMOUNT, 2) }}</td>
-                                        <td class="text-center">
-                                            <button class="btn btn-success btn-sm text-xs rounded-circle"
-                                                wire:click='createToBill({{ $list->ID }})'>
-                                                <i class="fa fa-plus" aria-hidden="true"></i>
-                                            </button>
-                                        </td>
+                                        @if ($STATUS == 0)
+                                            <td class="text-center">
+                                                <button class="btn btn-success btn-sm text-xs rounded-circle"
+                                                    wire:click='createToBill({{ $list->ID }})'>
+                                                    <i class="fa fa-plus" aria-hidden="true"></i>
+                                                </button>
+                                            </td>
+                                        @endif
                                     </tr>
                                 @endforeach
                             </tbody>

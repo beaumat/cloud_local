@@ -16,6 +16,9 @@ class PurchaseOrderListPromp extends Component
     public int $LOCATION_ID;
     #[Reactive]
     public int $BILL_ID;
+
+    #[Reactive]
+    public int $STATUS;
     public $showModal = false;
     private $billingServices;
     private $purchaseOrderServices;
