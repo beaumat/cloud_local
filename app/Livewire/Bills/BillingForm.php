@@ -578,7 +578,7 @@ class BillingForm extends Component
     }
     public function getUnposted()
     {
-        // if ($this->BALANCE_DUE == $this->AMOUNT) {
+        
         try {
             DB::beginTransaction();
             $this->billingServices->StatusUpdate($this->ID, 16);
@@ -589,9 +589,7 @@ class BillingForm extends Component
             $errorMessage = 'Error occurred: ' . $th->getMessage();
             session()->flash('error', $errorMessage);
         }
-        // } else {
-        //     session()->flash('error', 'Bill cannot be unpost because a payment has already been inserted.');
-        // }
+      
     }
     public function render()
     {
