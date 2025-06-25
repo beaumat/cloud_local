@@ -230,78 +230,78 @@
             </div>
         </div>
     </section>
-    <section class="content">
-        <div class="container-fluid bg-light ">
-            <div class="row">
-                <div class="col-md-12 ">
-                    <div class="card card-primary card-outline card-outline-tabs">
-                        <div class="card-header p-0 border-bottom-0">
-                            <ul class="nav text-sm nav-tabs" id="custom-tabs-four-tab" role="tablist">
-                                <li class="nav-item">
-                                    <a class="nav-link active" id="custom-tabs-four-item-tab" data-toggle="pill"
-                                        href="#custom-tabs-four-item" role="tab"
-                                        aria-controls="custom-tabs-four-item" aria-selected="true">
-                                        <div class="text-xs"> Billing List </div>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="card-body">
-                            <div class="tab-content" id="custom-tabs-four-tabContent">
-                                <div class="tab-pane fade show active " id="custom-tabs-four-item" role="tabpanel"
-                                    aria-labelledby="custom-tabs-four-item-tab">
-                                    <div class="row"
-                                        @if ($ID === 0) style="opacity: 0.5;pointer-events: none;" @endif>
-                                        <div class="col-md-12"
-                                            @if ($Modify == true) style="opacity: 0.5;pointer-events: none;" @endif>
-                                            @livewire('BillPayments.BillList', ['CHECK_ID' => $ID, 'VENDOR_ID' => $PAY_TO_ID, 'LOCATION_ID' => $LOCATION_ID, 'STATUS' => $STATUS, 'AMOUNT' => $AMOUNT, 'AMOUNT_APPLIED' => $AMOUNT_APPLIED, 'SAME_AMOUNT' => $SAME_AMOUNT, 'PF_PERIOD_ID' => $PF_PERIOD_ID, 'DATE' => $DATE])
-                                        </div>
-                                    </div>
-                                </div>
+    @if ($ID > 0)
+        <section class="content">
+            <div class="container-fluid bg-light ">
+                <div class="row">
+                    <div class="col-md-12 ">
+                        <div class="card card-primary card-outline card-outline-tabs">
+                            <div class="card-header p-0 border-bottom-0">
+                                <ul class="nav text-sm nav-tabs" id="custom-tabs-four-tab" role="tablist">
+                                    <li class="nav-item">
+                                        <a class="nav-link active" id="custom-tabs-four-item-tab" data-toggle="pill"
+                                            href="#custom-tabs-four-item" role="tab"
+                                            aria-controls="custom-tabs-four-item" aria-selected="true">
+                                            <div class="text-xs"> Billing List </div>
+                                        </a>
+                                    </li>
+                                </ul>
                             </div>
-                        </div>
-                        <div class="card-footer">
-                            <div class="row">
-                                <div class="col-md-6 text-left">
 
-                                </div>
-                                <div class="col-md-2">
-                                    <div class="row">
-                                        <div class="col-md-12 text-right">
-                                            <label class="text-sm">TOTAL:</label>
-                                            <label class="text-primary text-lg">
-                                                {{ number_format($AMOUNT_APPLIED + $WTAX_APPLIED, 2) }}
-                                            </label>
-                                        </div>
+                            <div class="card-body"
+                                @if ($Modify == true) style="opacity: 0.5;pointer-events: none;" @endif>
+                                <div class="tab-content" id="custom-tabs-four-tabContent">
+                                    <div class="tab-pane fade show active " id="custom-tabs-four-item"
+                                        role="tabpanel" aria-labelledby="custom-tabs-four-item-tab">
+                                        @livewire('BillPayments.BillList', ['CHECK_ID' => $ID, 'VENDOR_ID' => $PAY_TO_ID, 'LOCATION_ID' => $LOCATION_ID, 'STATUS' => $STATUS, 'AMOUNT' => $AMOUNT, 'AMOUNT_APPLIED' => $AMOUNT_APPLIED, 'SAME_AMOUNT' => $SAME_AMOUNT, 'PF_PERIOD_ID' => $PF_PERIOD_ID, 'DATE' => $DATE])
                                     </div>
                                 </div>
-                                <div class="col-md-2">
-                                    <div class="row">
-                                        <div class="col-md-12 text-right">
-                                            <label class="text-sm">Payment Applied:</label>
-                                            <label class="text-primary text-lg">
-                                                {{ number_format($AMOUNT_APPLIED, 2) }}
-                                            </label>
+                            </div>
+
+                            <div class="card-footer">
+                                <div class="row">
+                                    <div class="col-md-6 text-left">
+
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="row">
+                                            <div class="col-md-12 text-right">
+                                                <label class="text-sm">TOTAL:</label>
+                                                <label class="text-primary text-lg">
+                                                    {{ number_format($AMOUNT_APPLIED + $WTAX_APPLIED, 2) }}
+                                                </label>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="col-md-2">
-                                    <div class="row">
-                                        <div class="col-md-12 text-right">
-                                            <label class="text-sm">WTax Applied:</label>
-                                            <label class="text-primary text-lg">
-                                                {{ number_format($WTAX_APPLIED, 2) }}
-                                            </label>
+                                    <div class="col-md-2">
+                                        <div class="row">
+                                            <div class="col-md-12 text-right">
+                                                <label class="text-sm">Payment Applied:</label>
+                                                <label class="text-primary text-lg">
+                                                    {{ number_format($AMOUNT_APPLIED, 2) }}
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="row">
+                                            <div class="col-md-12 text-right">
+                                                <label class="text-sm">WTax Applied:</label>
+                                                <label class="text-primary text-lg">
+                                                    {{ number_format($WTAX_APPLIED, 2) }}
+                                                </label>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+
                         </div>
                     </div>
-                </div>
 
+                </div>
             </div>
-        </div>
-    </section>
-    @livewire('AccountJournal.AccountJournalModal')
+        </section>
+        @livewire('AccountJournal.AccountJournalModal')
+    @endif
 </div>

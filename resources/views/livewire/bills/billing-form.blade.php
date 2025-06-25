@@ -258,30 +258,21 @@
                                     </li>
                                 </ul>
                             </div>
-                            <div class="card-body">
+                            <div class="card-body"
+                                @if ($Modify == true) style="opacity: 0.5;pointer-events: none;" @endif>
                                 <div class="tab-content" id="custom-tabs-four-tabContent">
                                     <div class="tab-pane fade @if ($tab == 'item') show active @endif "
                                         id="custom-tabs-four-item" role="tabpanel">
-                                        <div class="row">
-                                            <div class="col-md-12"
-                                                @if ($Modify == true) style="opacity: 0.5;pointer-events: none;" @endif>
-                                                @if ($tab == 'item')
-                                                    @livewire('Bills.BillingFormItems', ['BILL_ID' => $ID, 'STATUS' => $STATUS, 'TAX_ID' => $INPUT_TAX_ID, 'LOCATION_ID' => $LOCATION_ID, 'DATE' => $DATE])
-                                                @endif
-                                            </div>
-                                        </div>
+                                        @if ($tab == 'item')
+                                            @livewire('Bills.BillingFormItems', ['BILL_ID' => $ID, 'STATUS' => $STATUS, 'TAX_ID' => $INPUT_TAX_ID, 'LOCATION_ID' => $LOCATION_ID, 'DATE' => $DATE])
+                                        @endif
                                     </div>
                                     @if ($useAccount)
                                         <div class="tab-pane fade @if ($tab == 'account') show active @endif "
                                             id="custom-tabs-four-account" role="tabpanel">
-                                            <div class="row">
-                                                <div class="col-md-12"
-                                                    @if ($Modify == true) style="opacity: 0.5;pointer-events: none;" @endif>
-                                                    @if ($tab == 'account')
-                                                        @livewire('Bills.BillingFormAccounts', ['BILL_ID' => $ID, 'STATUS' => $STATUS, 'TAX_ID' => $INPUT_TAX_ID, 'LOCATION_ID' => $LOCATION_ID, 'DATE' => $DATE])
-                                                    @endif
-                                                </div>
-                                            </div>
+                                            @if ($tab == 'account')
+                                                @livewire('Bills.BillingFormAccounts', ['BILL_ID' => $ID, 'STATUS' => $STATUS, 'TAX_ID' => $INPUT_TAX_ID, 'LOCATION_ID' => $LOCATION_ID, 'DATE' => $DATE])
+                                            @endif
                                         </div>
                                     @endif
 

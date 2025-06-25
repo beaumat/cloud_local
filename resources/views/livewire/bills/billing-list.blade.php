@@ -67,7 +67,7 @@ use App\Services\UserServices;
                                         <th class="col-1">Status</th>
                                         <th class="text-center bg-success col-1">
                                             @can('vendor.bill.create')
-                                                <a href="{{ route('vendorsbills_create') }}" class="text-white">
+                                                <a href="{{ route('vendorsbills_create') }}" class="btn btn-xs btn-success text-white w-100">
                                                     <i class="fas fa-plus"></i>
                                                 </a>
                                             @endcan
