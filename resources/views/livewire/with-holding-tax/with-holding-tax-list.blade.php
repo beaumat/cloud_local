@@ -55,10 +55,10 @@
                                     <tr>
                                         <th class="col-1">Ref No.</th>
                                         <th class="col-1">Date</th>
-                                        <th class="col-1">Vendor</th>
+                                        <th class="">Vendor</th>
                                         <th class="col-1">Tax Rate</th>
                                         <th class="col-1">Amount</th>
-                                        <th class="col-4">Notes</th>
+                                        <th class="col-3">Notes</th>
                                         <th class="col-1">Location</th>
                                         <th class="col-1">Status</th>
                                         <th class="text-center bg-success col-1">
