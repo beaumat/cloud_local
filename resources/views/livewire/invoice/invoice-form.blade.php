@@ -211,7 +211,7 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="card card-primary card-outline card-outline-tabs">
-                            <div class="card-header p-0 border-bottom-0">
+                            <div class="card-header p-0 border-bottom-0 text-xs" wire:loading.class='loading-form'>
                                 <ul class="nav text-xs nav-tabs" id="custom-tabs-four-tab" role="tablist">
                                     <li class="nav-item">
                                         <a class="nav-link @if ($tab == 'item') active @endif"
@@ -233,7 +233,9 @@
                                             aria-controls="custom-tabs-four-payment" aria-selected="true">
                                             Payments</a>
                                     </li>
-
+                                    <li wire:loading.delay>
+                                        <span class="spinner"></span>
+                                    </li>
                                 </ul>
                             </div>
                             <div class="card-body">
@@ -245,7 +247,9 @@
                                             @if ($ID === 0) style="opacity: 0.5;pointer-events: none;" @endif>
                                             <div class="col-md-12"
                                                 @if ($Modify == true) style="opacity: 0.5;pointer-events: none;" @endif>
-                                                @livewire('Invoice.InvoiceFormItems', ['INVOICE_ID' => $ID, 'STATUS' => $STATUS, 'TAX_ID' => $OUTPUT_TAX_ID, 'LOCATION_ID' => $LOCATION_ID])
+                                                @if ($tab == 'item')
+                                                    @livewire('Invoice.InvoiceFormItems', ['INVOICE_ID' => $ID, 'STATUS' => $STATUS, 'TAX_ID' => $OUTPUT_TAX_ID, 'LOCATION_ID' => $LOCATION_ID])
+                                                @endif
                                             </div>
                                         </div>
                                     </div>
@@ -256,7 +260,9 @@
                                             @if ($ID === 0) style="opacity: 0.5;pointer-events: none;" @endif>
                                             <div class="col-md-12"
                                                 @if ($Modify == true) style="opacity: 0.5;pointer-events: none;" @endif>
-                                                @livewire('Invoice.TaxCredit', ['INVOICE_ID' => $ID, 'CUSTOMER_ID' => $CUSTOMER_ID, 'LOCATION_ID' => $LOCATION_ID, 'ACCOUNTS_RECEIVABLE_ID' => $ACCOUNTS_RECEIVABLE_ID, 'INVOICE_STATUS_ID' => $STATUS, 'AMOUNT' => $AMOUNT])
+                                                @if ($tab == 'tax')
+                                                    @livewire('Invoice.TaxCredit', ['INVOICE_ID' => $ID, 'CUSTOMER_ID' => $CUSTOMER_ID, 'LOCATION_ID' => $LOCATION_ID, 'ACCOUNTS_RECEIVABLE_ID' => $ACCOUNTS_RECEIVABLE_ID, 'INVOICE_STATUS_ID' => $STATUS, 'AMOUNT' => $AMOUNT])
+                                                @endif
                                             </div>
                                         </div>
                                     </div>
@@ -267,7 +273,9 @@
                                             @if ($ID === 0) style="opacity: 0.5;pointer-events: none;" @endif>
                                             <div class="col-md-12"
                                                 @if ($Modify == true) style="opacity: 0.5;pointer-events: none;" @endif>
-                                                @livewire('Invoice.ReceivedPayment', ['INVOICE_ID' => $ID, 'CUSTOMER_ID' => $CUSTOMER_ID, 'LOCATION_ID' => $LOCATION_ID, 'ACCOUNTS_RECEIVABLE_ID' => $ACCOUNTS_RECEIVABLE_ID, 'INVOICE_STATUS_ID' => $STATUS])
+                                                @if ($tab == 'payment')
+                                                    @livewire('Invoice.ReceivedPayment', ['INVOICE_ID' => $ID, 'CUSTOMER_ID' => $CUSTOMER_ID, 'LOCATION_ID' => $LOCATION_ID, 'ACCOUNTS_RECEIVABLE_ID' => $ACCOUNTS_RECEIVABLE_ID, 'INVOICE_STATUS_ID' => $STATUS])
+                                                @endif
                                             </div>
                                         </div>
                                     </div>
