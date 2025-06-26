@@ -88,8 +88,8 @@
 
             {{-- INSERT FORM --}}
             @if ($STATUS == $openStatus || $STATUS == 16)
-                <form wire:submit.prevent='saveExpenses' wire:loading.attr='disabled'>
-                    <tr>
+              
+                    <tr wire:loading.attr='disabled'>
                         <td>
                             @if ($saveSuccess)
                                 @if ($codeBase)
@@ -128,9 +128,7 @@
                                 @endif
                             @endif
                         </td>
-                        <td>
-                            {{-- <input step="0.01" type="number" class="form-control form-control-sm text-right" name="AMOUNT"
-                                wire:model='AMOUNT' /> --}}
+                        <td> 
                             <livewire:number-input name="AMOUNT" titleName="" :vertical="false" wire:model="AMOUNT" isDisabled="{{ false }}" :withLabel="false" />
                         </td>
                         <td class="text-center">
@@ -159,7 +157,7 @@
                         </td>
                         <td>
                             <div class="mt-1">
-                                <button type="submit" wire:loading.attr='hidden'
+                                <button type="button" wire:click='saveExpenses()' wire:loading.attr='hidden'
                                     @if ($ACCOUNT_ID == 0) disabled @endif
                                     class="text-white btn bg-sky btn-sm w-100">
                                     <i class="fas fa-plus"></i>
@@ -172,7 +170,7 @@
 
                     </tr>
 
-                </form>
+         
             @endif
 
         </tbody>

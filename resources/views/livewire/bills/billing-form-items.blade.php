@@ -97,8 +97,8 @@
 
             {{-- INSERT FORM --}}
             @if ($STATUS == $openStatus || $STATUS == 16)
-                <form wire:submit.prevent='saveItem' wire:loading.attr='disabled'>
-                    <tr>
+             
+                    <tr wire:loading.attr='disabled'>
                         <td>
                             @if ($saveSuccess)
                                 @if ($codeBase)
@@ -164,7 +164,7 @@
                         </td>
                         <td>
                             <div class="mt-1">
-                                <button type="submit" wire:loading.attr='hidden'
+                                <button type="button" wire:click='saveItem()' wire:loading.attr='hidden'
                                     @if ($ITEM_ID == 0) disabled @endif
                                     class="text-white btn bg-sky btn-sm w-100">
                                     <i class="fas fa-plus"></i>
@@ -175,7 +175,7 @@
                             </div>
                         </td>
                     </tr>
-                </form>
+          
             @endif
 
         </tbody>
