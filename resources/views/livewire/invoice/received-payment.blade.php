@@ -66,7 +66,7 @@
                         <td>
                             <div class="">
                                 <button title="Add" type="button" wire:loading.attr='hidden'
-                                    wire:click='AddPayment()' 
+                                    wire:click='AddPayment()'
                                     class="text-white btn bg-sky btn-sm w-100">
                                     <i class="fas fa-plus"></i>
                                 </button>
