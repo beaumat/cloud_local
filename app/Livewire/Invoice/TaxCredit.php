@@ -124,13 +124,13 @@ class TaxCredit extends Component
                 $this->AMOUNT_WITHHELD,
                 $this->ACCOUNTS_RECEIVABLE_ID
             );
-            
+
             $total  = $this->taxCreditServices->GetTotal($ID);
             $this->taxCreditServices->setTotal($ID, $total);
             $this->invoiceServices->updateInvoiceBalance($this->INVOICE_ID);
 
             $isGood = $this->taxCreditServices->getPosted($ID, $this->userServices->getTransactionDateDefault(), $this->LOCATION_ID);
-         
+
             if ($isGood) {
                 DB::commit();
                 $getResult = $this->invoiceServices->ReComputed($this->INVOICE_ID);

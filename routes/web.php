@@ -308,7 +308,6 @@ Route::middleware(['auth'])->group(function () {
 
     });
 
-
     Route::prefix('/customers')->name('customers')->group(function () {
         Route::prefix('/sales-order')->group(function () {
             Route::get('/', SalesOrderList::class)->name('sales_order')->middleware(['permission:customer.sales-order.view']);
