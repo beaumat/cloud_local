@@ -95,6 +95,15 @@ class PrintSoag extends Component
     public bool $OUTPUT_SIGN = false;
     public bool $HEADER = true; // default TRUE;
 
+    public float $P1_ROOM_N_BOARD = 0;
+    public float $P1_DRUG_N_MEDICINE = 0;
+    public float $P1_LAB_N_DIAGNOSTICS = 0;
+    public float $P1_OPERATING_ROOM_FEE = 0;
+    public float $P1_SUPPLIES = 0;
+    public float $P1_OTHERS = 0;
+
+
+
     public int $PREPARED_BY_ID;
     public string $DATE_SIGNED;
     public string $OTHER_NAME;
@@ -122,6 +131,7 @@ class PrintSoag extends Component
     public $medList = [];
     public $suppliesList = [];
     public $adminFeeList = [];
+    public $laboratoryList = [];
 
     private $philHealthSoaCustomServices;
     private $philHealthProfFeeServices;
@@ -210,14 +220,15 @@ class PrintSoag extends Component
             $this->i = 0;
             $this->feeList = $this->patientDoctorServices->GetbyTemp($PATIENT_ID);
             $this->LoadDataLocation();
-         
+
         }
     }
     public function LoadItemData()
     {
         $this->medList = $this->itemSoaServices->GetListViaType($this->LOCATION_ID, 1);
-    
+
         $this->suppliesList = $this->itemSoaServices->GetListViaType($this->LOCATION_ID, 2);
+        $this->laboratoryList = $this->itemSoaServices->GetListViaType($this->LOCATION_ID, 3);
         $this->adminFeeList = $this->itemSoaServices->GetListViaType($this->LOCATION_ID, 4);
     }
     public function LoadDataLocation()
@@ -287,12 +298,12 @@ class PrintSoag extends Component
                 $this->GOV_DOH = $data->GOV_DOH;
                 $this->GOV_HMO = $data->GOV_HMO;
                 $this->GOV_LINGAP = $data->GOV_LINGAP;
-                // $this->P1_ROOM_N_BOARD = $data->P1_ROOM_N_BOARD;
-                // $this->P1_DRUG_N_MEDICINE = $data->P1_DRUG_N_MEDICINE;
-                // $this->P1_LAB_N_DIAGNOSTICS = $data->P1_LAB_N_DIAGNOSTICS;
-                // $this->P1_OPERATING_ROOM_FEE = $data->P1_OPERATING_ROOM_FEE;
-                // $this->P1_SUPPLIES = $data->P1_SUPPLIES;
-                // $this->P1_OTHERS = $data->P1_OTHERS;
+                $this->P1_ROOM_N_BOARD = $data->P1_ROOM_N_BOARD;
+                $this->P1_DRUG_N_MEDICINE = $data->P1_DRUG_N_MEDICINE;
+                $this->P1_LAB_N_DIAGNOSTICS = $data->P1_LAB_N_DIAGNOSTICS;
+                $this->P1_OPERATING_ROOM_FEE = $data->P1_OPERATING_ROOM_FEE;
+                $this->P1_SUPPLIES = $data->P1_SUPPLIES;
+                $this->P1_OTHERS = $data->P1_OTHERS;
                 $this->P1_SUB_TOTAL = $data->P1_SUB_TOTAL;
                 // $this->P2_ROOM_N_BOARD = $data->P2_ROOM_N_BOARD;
                 // $this->P2_DRUG_N_MEDICINE = $data->P2_DRUG_N_MEDICINE;

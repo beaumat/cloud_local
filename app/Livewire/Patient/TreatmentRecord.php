@@ -74,7 +74,7 @@ class TreatmentRecord extends Component
                 false
             );
 
-        
+
             $PRICE_LEVEL_ID = 0;
             $dataItem = $this->hemoServices->ItemListWithIsCashier($this->CONTACT_ID, $this->LOCK_LOCATION_ID, $DATE);
 

@@ -46,7 +46,7 @@
                                 <thead class="text-xs bg-sky">
                                     <tr>
                                         <th class="">Type</th>
-                                        <th class="">Line #</th>
+                                        <th class="col-1">Line #</th>
                                         <th class="col-1">Item </th>
                                         <th class="col-1">Unit </th>
                                         <th class="col-1">Rate </th>

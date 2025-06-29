@@ -82,7 +82,6 @@ class PhilHealthServices
         $this->itemSoaItemizedServices = $itemSoaItemizedServices;
         $this->itemSoaServices = $itemSoaServices;
         $this->philHealthProfFeeServices = $philHealthProfFeeServices;
-
     }
     public function get($ID)
     {
@@ -363,7 +362,7 @@ class PhilHealthServices
 
             $useDisc = false;
 
-            if (in_array((int) $data->LOCATION_ID, [1, 31, 32, 33, 36, 38, 39, 40, 44])) {
+            if (in_array((int) $data->LOCATION_ID, [1, 31, 32, 33, 35, 36, 38, 39, 40, 44])) {
                 // how will allowed
                 $useDisc = true;
             }
@@ -385,7 +384,6 @@ class PhilHealthServices
                 $P1_LAB_N_DIAGNOSTICS = (float) $LAB_N_DIAGNOS - $SP_LAB_N_DIAGNOSTICS;
                 $P1_SUPPLIES = (float) $CHARGES_SUPPLIES - $SP_SUPPLIES;
                 $P1_OTHERS = (float) $CHARGES_OTHERS - $SP_OTHERS;
-
             } else {
                 // SENIOR DISCOUNT
                 $SP_DRUG_N_MEDICINE = 0;
@@ -440,13 +438,10 @@ class PhilHealthServices
                     $AD_TOTAL = $PROFESSIONAL_P1_SUB_TOTAL + $P1_SUB_TOTAL;
                 } else {
                     $AD_TOTAL = $CHARGE_TOTAL - $SP_TOTAL;
-
-
                 }
 
                 $P1_TOTAL = $PROFESSIONAL_P1_SUB_TOTAL + $P1_SUB_TOTAL;
                 $OP_TOTAL = $this->OP_SUB_TOTAL;
-
             } else {
                 $AD_TOTAL = $PROFESSIONAL_P1_SUB_TOTAL + $P1_SUB_TOTAL;
                 $P1_TOTAL = $PROFESSIONAL_P1_SUB_TOTAL + $P1_SUB_TOTAL;
@@ -547,7 +542,7 @@ class PhilHealthServices
         $this->setCF4Update($ID, 20);
         return $ID;
     }
-    public function PreSaveTemp(int $CONTACT_ID, int $LOCATION_ID, )
+    public function PreSaveTemp(int $CONTACT_ID, int $LOCATION_ID,)
     {
 
         $ID = $this->object->ObjectNextID('PHILHEALTH');
@@ -567,9 +562,7 @@ class PhilHealthServices
 
         return $ID;
     }
-    public function PrintEmpty(int $PATIENT_ID)
-    {
-    }
+    public function PrintEmpty(int $PATIENT_ID) {}
     public function Update(
         int $ID,
         float $CHARGES_ROOM_N_BOARD,
@@ -1017,7 +1010,7 @@ class PhilHealthServices
                 0
             );
             $this->billingServices->ReComputed($BILL_ID);
-            // 
+            //
             // Make Journal Entry;
             $bills = (int) $this->billingServices->object_type_map_bill;
             $billExpenses = (int) $this->billingServices->object_type_map_bill_expenses;
@@ -1103,31 +1096,31 @@ class PhilHealthServices
                 'philhealth.AR_DATE',
                 DB::raw('if(ISNULL(philhealth.AR_DATE),false,true)  as IN_PROGRESS'),
                 DB::raw(" (select  GROUP_CONCAT(hemodialysis.DATE ORDER BY hemodialysis.DATE ASC SEPARATOR ', ') from hemodialysis where hemodialysis.STATUS_ID = 2 and hemodialysis.CUSTOMER_ID = philhealth.CONTACT_ID and hemodialysis.DATE between philhealth.DATE_ADMITTED and philhealth.DATE_DISCHARGED) as CONFINE_PERIOD "),
-                DB::raw(" (select payment.DATE from payment_invoices 
-                inner join payment on payment.ID = payment_invoices.PAYMENT_ID 
-                inner join invoice on invoice.ID = payment_invoices.INVOICE_ID 
+                DB::raw(" (select payment.DATE from payment_invoices
+                inner join payment on payment.ID = payment_invoices.PAYMENT_ID
+                inner join invoice on invoice.ID = payment_invoices.INVOICE_ID
                 inner join invoice_items on invoice_items.INVOICE_ID = invoice.ID
                  where invoice.TRANSACTION_REF_ID = philhealth.ID and invoice_items.ITEM_ID = '" . $this->PHIL_HEALTH_ITEM_ID . "'
-                ) as PAID_DATE 
+                ) as PAID_DATE
                  "),
-                DB::raw("  (select payment.AMOUNT from payment_invoices 
-                inner join payment on payment.ID = payment_invoices.PAYMENT_ID 
-                inner join invoice on invoice.ID = payment_invoices.INVOICE_ID 
+                DB::raw("  (select payment.AMOUNT from payment_invoices
+                inner join payment on payment.ID = payment_invoices.PAYMENT_ID
+                inner join invoice on invoice.ID = payment_invoices.INVOICE_ID
                 inner join invoice_items on invoice_items.INVOICE_ID = invoice.ID
                  where invoice.TRANSACTION_REF_ID = philhealth.ID and invoice_items.ITEM_ID = '" . $this->PHIL_HEALTH_ITEM_ID . "'
-                ) as PAID_AMOUNT 
+                ) as PAID_AMOUNT
                  "),
-                DB::raw("  (select payment.RECEIPT_REF_NO from payment_invoices 
-                inner join payment on payment.ID = payment_invoices.PAYMENT_ID 
-                inner join invoice on invoice.ID = payment_invoices.INVOICE_ID 
+                DB::raw("  (select payment.RECEIPT_REF_NO from payment_invoices
+                inner join payment on payment.ID = payment_invoices.PAYMENT_ID
+                inner join invoice on invoice.ID = payment_invoices.INVOICE_ID
                 inner join invoice_items on invoice_items.INVOICE_ID = invoice.ID
                  where invoice.TRANSACTION_REF_ID = philhealth.ID and invoice_items.ITEM_ID = '" . $this->PHIL_HEALTH_ITEM_ID . "'
-                ) as OR_NUMBER 
+                ) as OR_NUMBER
                  "),
 
-                DB::raw(" (select tax_credit.AMOUNT from tax_credit_invoices 
-                inner join tax_credit on tax_credit.ID = tax_credit_invoices.TAX_CREDIT_ID 
-                inner join invoice on invoice.ID = tax_credit_invoices.INVOICE_ID 
+                DB::raw(" (select tax_credit.AMOUNT from tax_credit_invoices
+                inner join tax_credit on tax_credit.ID = tax_credit_invoices.TAX_CREDIT_ID
+                inner join invoice on invoice.ID = tax_credit_invoices.INVOICE_ID
                 inner join invoice_items on invoice_items.INVOICE_ID = invoice.ID
                  where invoice.TRANSACTION_REF_ID = philhealth.ID and invoice_items.ITEM_ID = '" . $this->PHIL_HEALTH_ITEM_ID . "'
                 )  as TAX_AMOUNT
@@ -1191,7 +1184,6 @@ class PhilHealthServices
         return (bool) PhilHealth::where('CLAIM_NO', '=', $CLAIM_NO)
             ->where('LOCATION_ID', '=', $LOCATION_ID)
             ->exists();
-
     }
     public function GenerateAnnex(int $Year, int $Month, int $locationId, int $type = 0)
     {
@@ -1246,5 +1238,4 @@ class PhilHealthServices
 
         return $result;
     }
-
 }
