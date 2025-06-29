@@ -105,9 +105,9 @@
                                 <div @if ($HEADER) style="opacity: 0.0" @endif
                                     class="col-6 bottom-line2"> {{ $FIRST_CASE_RATE }}</div>
                                 <div @if ($HEADER) style="opacity: 0.0" @endif class="col-6">
-                                    SECOND CASE RATE :</div>
+                                    PDD No. :</div>
                                 <div @if ($HEADER) style="opacity: 0.0" @endif
-                                    class="col-6 bottom-line2"> &nbsp; {{ $SECOND_CASE_RATE }}</div>
+                                    class="col-6 bottom-line2"> &nbsp; </div>
                                 <div @if ($HEADER) style="opacity: 0.0" @endif class="col-6">NO.
                                     OF TREATMENT :</div>
                                 <div

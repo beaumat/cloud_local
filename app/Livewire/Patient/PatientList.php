@@ -64,7 +64,7 @@ class PatientList extends Component
             $this->contactRequirementServices->DeletePatient($id);
             $this->patientDoctorServices->DeletePatient($id);
             $this->contactServices->Delete($id);
-            
+
             session()->flash('message', 'Successfully deleted.');
         } catch (\Exception $e) {
             $errorMessage = 'Error occurred: ' . $e->getMessage();

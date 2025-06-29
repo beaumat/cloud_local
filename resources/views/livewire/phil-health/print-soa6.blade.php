@@ -107,7 +107,7 @@
                                 <div @if ($HEADER) style="opacity: 0.0" @endif class="col-6">
                                     SECOND CASE RATE :</div>
                                 <div @if ($HEADER) style="opacity: 0.0" @endif
-                                    class="col-6 bottom-line2"> &nbsp; {{ $SECOND_CASE_RATE }}</div>
+                                    class="col-6 bottom-line2"> &nbsp; </div>
                                 <div @if ($HEADER) style="opacity: 0.0" @endif class="col-6">NO.
                                     OF TREATMENT :</div>
                                 <div
@@ -119,7 +119,7 @@
                 </div>
 
                 <div class="col-12" id="details" @if ($PRE_SIGN_DATA) style="opacity: 0.0" @endif>
-                    
+
 
                     @livewire('PhilHealth.PrintSummaryTable', ['ID' => $PRINT_ID, 'PRE_SIGN_DATA' => $PRE_SIGN_DATA, 'PATIENT_ID' => $PATIENT_ID])
 

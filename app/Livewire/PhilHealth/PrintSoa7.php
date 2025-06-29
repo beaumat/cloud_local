@@ -14,8 +14,8 @@ use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
 class PrintSoa7 extends Component
-{   
-    
+{
+
     public int $PRINT_ID;
     public int $LOCATION_ID;
     public int $PATIENT_ID;
@@ -103,7 +103,7 @@ class PrintSoa7 extends Component
     public float $P1_OPERATING_ROOM_FEE = 0;
     public float $P1_SUPPLIES = 0;
     public float $P1_OTHERS = 0;
-    
+
 
 
     public int $PREPARED_BY_ID;
@@ -170,7 +170,7 @@ class PrintSoa7 extends Component
         // pre-sign
         if ($PATIENT_ID > 0) {
             $this->PATIENT_ID = $PATIENT_ID;
-            
+
             $this->PRE_SIGN_DATA = true;
             $this->HEADER = false;
             $contact = $this->contactServices->get($PATIENT_ID, 3);
@@ -200,7 +200,7 @@ class PrintSoa7 extends Component
                 $this->FIRST_CASE_RATE = 'Hemodialysis-' . $contact->FIRST_CASE_RATE ?? '';
                 $this->SECOND_CASE_RATE = $contact->SECOND_CASE_RATE ?? '';
             }
-         
+
 
             $locData = $this->locationServices->get($this->LOCATION_ID);
             if ($locData) {

@@ -23,7 +23,7 @@
                                 PHILHEALTH ACCREDITED :
                             </b>
                         </div>
-    
+
                         <div class="col-5">
                             <div class="row">
                                 <div @if ($HEADER) style="opacity: 0.0" @endif
@@ -105,7 +105,7 @@
                                 <div @if ($HEADER) style="opacity: 0.0" @endif class="col-6">
                                     SECOND CASE RATE :</div>
                                 <div @if ($HEADER) style="opacity: 0.0" @endif
-                                    class="col-6 bottom-line2"> &nbsp; {{ $SECOND_CASE_RATE }}</div>
+                                    class="col-6 bottom-line2"> &nbsp; </div>
                                 <div @if ($HEADER) style="opacity: 0.0" @endif class="col-6">NO.
                                     OF TREATMENT :</div>
                                 <div
@@ -115,7 +115,7 @@
                         </div>
                     </div>
                 </div>
-             
+
                 <div class="col-12" id="details" @if ($PRE_SIGN_DATA) style="opacity: 0.0" @endif>
                     <div class="row top-line2 right-line2 left-line2 text-center mt-1 ">
                         <div class="col-12 font-weight-bold text-danger text-sm">SUMMARY OF FEES</div>
