@@ -94,7 +94,8 @@
                                 @if ($columnType == 1)
                                     <tr>
                                         <td class=" bg-dark"></td>
-                                        <td class="col-1 bg-dark"></td>
+                                        <td class="col-1 bg-dark"><button wire:click='autoSet()' wire:confirm='Are you sure?' class="btn btn-xs btn-success w-100">Auto
+                                                Set Code</button></td>
                                         <td class=" bg-primary"></td>
                                         <td class=" bg-primary text-center">Patient</td>
                                         <td class=" bg-primary"></td>

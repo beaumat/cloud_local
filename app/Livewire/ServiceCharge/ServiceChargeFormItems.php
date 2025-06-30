@@ -44,7 +44,7 @@ class ServiceChargeFormItems extends Component
     #[Reactive]
     public bool $HEMO_ID;
     public bool $isAdmin = false;
-    public bool $alowedEdit = true;
+    public bool $alowedEdit = false;
     public int $openStatus = 0;
     public int $ID;
     public int $LINE_NO;
