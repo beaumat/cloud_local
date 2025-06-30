@@ -179,6 +179,17 @@ class HemoServices
             return '';
         }
     }
+    public function GetStatus(int $HEMO_ID) {
+        $data = Hemodialysis::where('ID', $HEMO_ID)
+            ->select(['STATUS_ID'])
+            ->first();
+
+        if ($data) {
+            return (int) $data->STATUS_ID;
+        }
+
+        return 0;
+    }
     public function GetSummary(int $CONTACT_ID = 0, int $LOCATION_ID = 0, string $DATE_START = '', string $DATE_END = '')
     {
         $dataList = Hemodialysis::query()
@@ -561,7 +572,7 @@ class HemoServices
     }
     public function GetOtherDetailsDefault(int $HEMO_ID, int $CUSTOMER_ID, string $DATE, int $LOCATION_ID)
     {
-        //Get Previous  
+        //Get Previous
         $data = $this->GetPreviousTreatment($HEMO_ID, $CUSTOMER_ID, $DATE, $LOCATION_ID);
         if ($data) {
             Hemodialysis::where('CUSTOMER_ID', $CUSTOMER_ID)

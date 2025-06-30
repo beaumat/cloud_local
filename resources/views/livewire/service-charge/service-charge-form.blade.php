@@ -208,6 +208,9 @@
 
                                             <button type="button" class="btn btn-sm btn-info"
                                                 wire:click='openForm()'>Agreement Form</button>
+
+                                            
+
                                         @endif
 
                                     </div>

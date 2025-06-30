@@ -50,7 +50,7 @@ class ServiceChargeForm extends Component
     public bool $WALK_IN = false;
 
     public int $HEMO_ID;
-
+    public int $HEMO_STATUS = 0;
     public $patientList = [];
     public $locationList = [];
     public $shipViaList = [];
@@ -185,6 +185,9 @@ class ServiceChargeForm extends Component
                 $this->getInfo($data);
                 $this->Modify = false;
                 $this->HEMO_ID = $this->hemoServices->GetHemoID($data->DATE, $data->PATIENT_ID, $data->LOCATION_ID);
+                if($this->HEMO_ID > 0 ) {
+
+                }
                 return;
             }
             $errorMessage = 'Error occurred: Record not found. ';
@@ -398,8 +401,16 @@ class ServiceChargeForm extends Component
         ];
 
 
-        
+
         $this->dispatch('open-agreement-form', data: $data);
+    }
+    public function hemoStatusChange(int $ID) {
+        $this->HEMO_STATUS = $ID;
+        if ($this->HEMO_STATUS > 0) {
+            $this->hemoServices->UpdateStatus($this->HEMO_ID, $this->HEMO_STATUS);
+        } else {
+            $this->hemoServices->UpdateStatus($this->HEMO_ID, 0);
+        }
     }
     public function render()
     {
