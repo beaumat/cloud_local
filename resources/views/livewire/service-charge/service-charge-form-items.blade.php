@@ -88,7 +88,7 @@
                                 <i class="fas fa-ban" aria-hidden="true"></i>
                             </button>
                         @else
-                            @if ($list->count_pay == 0 || $isAdmin == true)
+                            @if ($list->count_pay == 0 || $isAdmin == true || $alowedEdit == true)
                                 <button title="Edit Active" id="editbtn"
                                     wire:click='editItem( {{ $list->ID }}, {{ $list->QUANTITY }} ,{{ $list->UNIT_ID ? $list->UNIT_ID : 0 }},{{ $list->RATE }},{{ $list->AMOUNT }},{{ $list->TAXABLE }},{{ $list->ITEM_ID }})'
                                     class="btn btn-xs btn-info">

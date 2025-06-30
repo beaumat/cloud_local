@@ -44,6 +44,7 @@ class ServiceChargeFormItems extends Component
     #[Reactive]
     public bool $HEMO_ID;
     public bool $isAdmin = false;
+    public bool $alowedEdit = true;
     public int $openStatus = 0;
     public int $ID;
     public int $LINE_NO;
@@ -562,7 +563,7 @@ class ServiceChargeFormItems extends Component
                         $dataSC->DATE
                     );
 
-                
+
                 }
 
 
