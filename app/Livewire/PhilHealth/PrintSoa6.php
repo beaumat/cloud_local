@@ -36,7 +36,7 @@ class PrintSoa6 extends Component
     public string $OTHER_DIAGNOSIS;
     public string $FIRST_CASE_RATE;
     public string $SECOND_CASE_RATE;
-   
+
     public bool $PRE_SIGN_DATA = false;
     public bool $OUTPUT_SIGN = false;
     public bool $HEADER = true; // default TRUE;
@@ -50,7 +50,7 @@ class PrintSoa6 extends Component
     private $contactServices;
     private $locationServices;
     private $hemoServices;
-  
+
     public int $NO_OF_TREATMENT;
     public string $allDate = '';
     public string $REPORT_HEADER_1;
@@ -98,7 +98,7 @@ class PrintSoa6 extends Component
             $this->PRE_SIGN_DATA = false;
             $this->HEADER = !$OUTPUT;
             $this->PreLoad($PRINT_ID);
-      
+
             return;
         }
         // pre-sign

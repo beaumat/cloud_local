@@ -72,40 +72,51 @@ use App\Services\ItemSoaServices;
                             @endphp
                             @php
                                 if ($list->ACTUAL_BASE) {
-                                    $defult_Qty = ItemSoaItemizedServices::getQuantityActual( $dateList, $LOCATION_ID, $PATIENT_ID, $list->ID, );
+                                    $defult_Qty = ItemSoaItemizedServices::getQuantityActual(
+                                        $dateList,
+                                        $LOCATION_ID,
+                                        $PATIENT_ID,
+                                        $list->ID,
+                                    );
                                     $AMOUNT = $defult_Qty * $list->RATE ?? 0;
                                 } else {
                                     $defult_Qty = $qty;
                                     $AMOUNT = $qty * $list->RATE ?? 0;
                                 }
-
                                 $TOTAL = $TOTAL + $AMOUNT;
                             @endphp
                         </td>
-
-
-                        <td class="pb-0 pt-0">{{  $list->ITEM_NAME }}</td>
+                        <td class="pb-0 pt-0">{{ $list->ITEM_NAME }}</td>
                         <td class="text-center">{{ $list->UNIT_NAME }}</td>
-                        <td class="text-right  pb-0 pt-0">{{ number_format($list->RATE, 2) }}</td>
+                        <td class="text-right  pb-0 pt-0">
+                            {{ $list->FIX_QTY > 0 ? number_format($AMOUNT / $list->FIX_QTY, 2) : number_format($list->RATE, 2) }}
+                        </td>
                         @if ($list->GROUP_ID > 0)
                             @if ($oneTimeQty == 0)
                                 @php
                                     $oneTimeQty = $defult_Qty;
-                                    $oneTimeTotal = ItemSoaServices::getTotal($list->GROUP_ID, $LOCATION_ID) * $defult_Qty;
+                                    $oneTimeTotal =
+                                        ItemSoaServices::getTotal($list->GROUP_ID, $LOCATION_ID) * $defult_Qty;
                                 @endphp
-                                <td class="text-center pb-0 pt-0 " style="border-bottom-color: white;"> {{ $oneTimeQty }}</td>
-                                <td class="text-right pb-0 pt-0" style="border-bottom-color: white;"> {{ number_format($oneTimeTotal, 2) }}</td>
+                                <td class="text-center pb-0 pt-0 " style="border-bottom-color: white;">
+                                    {{ $oneTimeQty }}</td>
+                                <td class="text-right pb-0 pt-0" style="border-bottom-color: white;">
+                                    {{ number_format($oneTimeTotal, 2) }}</td>
                             @else
                                 <td class="text-center pb-0 pt-0" style="border-top-color:white;"> </td>
-                                <td class="text-right pb-0 pt-0"   style="border-top-color:white;"></td>
+                                <td class="text-right pb-0 pt-0" style="border-top-color:white;"></td>
                             @endif
                         @else
                             @php
                                 $oneTimeQty = 0;
                                 $oneTimeTotal = 0.0;
                             @endphp
-                            <td class="text-center pb-0 pt-0 "> {{ $defult_Qty }}</td>
-                            <td class="text-right pb-0 pt-0">{{ number_format($AMOUNT, 2) }}</td>
+                            <td class="text-center pb-0 pt-0 ">
+                                {{ $list->FIX_QTY > 0 ? $list->FIX_QTY : $defult_Qty }}
+                            </td>
+                            <td class="text-right pb-0 pt-0">
+                                {{ number_format($AMOUNT, 2) }}
+                            </td>
                         @endif
 
                         @php
