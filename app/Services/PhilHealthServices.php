@@ -252,12 +252,14 @@ class PhilHealthServices
 
                 if ($con == $got_con) {
                     $soaData = $this->philHealthSoaCustomServices->Get($st['ID'], $LOCATON_ID);
+
                     if ($soaData) {
 
                         $this->LAB_N_DIAGNOSTICS_AMOUNT = $soaData->LAB_DIAG ?? 0;
                         $this->DRUG_N_MEDINE_AMOUNT = $soaData->DRUG_MED ?? 0;
                         $this->OPERATING_ROOM_FEE_AMOUNT = $soaData->OPERATING_ROOM_FEE ?? 0;
                         $this->OTHER_CHARGES_AMOUNT = $soaData->ADMIN_OTHER_FEE ?? 0;
+
                         $this->ROOM_FEE = $soaData->OPERATING_ROOM_FEE;
                         $this->SUPPLIES = $soaData->SUPPLIES ?? 0;
 
@@ -348,6 +350,7 @@ class PhilHealthServices
                 $A_SUPPLIES = $this->ItemizedBaseTotalActual($data->LOCATION_ID, $data->CONTACT_ID, 2, $data->DATE_ADMITTED, $data->DATE_DISCHARGED);
                 $A_LAB_N_DIAGNOSTICS_AMOUNT = $this->ItemizedBaseTotalActual($data->LOCATION_ID, $data->CONTACT_ID, 3, $data->DATE_ADMITTED, $data->DATE_DISCHARGED);
                 $A_OTHER_CHARGES_AMOUNT = $this->ItemizedBaseTotalActual($data->LOCATION_ID, $data->CONTACT_ID, 4, $data->DATE_ADMITTED, $data->DATE_DISCHARGED);
+
                 $A_OPERATING_ROOM_FEE_AMOUNT = $this->ItemizedBaseTotalActual($data->LOCATION_ID, $data->CONTACT_ID, 6, $data->DATE_ADMITTED, $data->DATE_DISCHARGED);
             }
 
@@ -358,6 +361,7 @@ class PhilHealthServices
             $OPERATE_FEE = (float) ($this->OPERATING_ROOM_FEE_AMOUNT * $NO_OF_TREATMENT) + $A_OPERATING_ROOM_FEE_AMOUNT; //
             $CHARGES_SUPPLIES = (float) ($this->SUPPLIES * $NO_OF_TREATMENT) + $A_SUPPLIES;
             $CHARGES_OTHERS = (float) ($this->OTHER_CHARGES_AMOUNT * $NO_OF_TREATMENT) + $A_OTHER_CHARGES_AMOUNT;
+
             $GOV_SUB_TOTAL = 0;
 
             $useDisc = false;

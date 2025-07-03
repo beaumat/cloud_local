@@ -4,7 +4,7 @@ use App\Services\ItemSoaItemizedServices;
 
 <div class="mt-1 row">
     <div class="col-8">
-        <table class="w-100" border="2">
+        <table class="w-100" border="1">
             <thead>
                 <tr class="text-center text-sm">
                     <th>SERVICE DATE</th>
@@ -48,7 +48,18 @@ use App\Services\ItemSoaItemizedServices;
                         @endphp
                     @endif
                     @php
-                        $TYPE = $list->TYPE_NAME;
+                        if (in_array((int) $LOCATION_ID, [36, 38, 39, 40])) {
+                            // For Luzon Branches
+                            // If TYPE_NAME is 'ADMINISTRATIVE & OTHER FEES', change it to '
+    if ($list->TYPE_NAME == 'ADMINISTRATIVE & OTHER FEES') {
+        $TYPE = 'OTHERS';
+                            } else {
+                                $TYPE = $list->TYPE_NAME;
+                            }
+                        } else {
+                            $TYPE = $list->TYPE_NAME;
+                        }
+
                     @endphp
                     <tr>
                         <td class="text-center font-weight-bold text-sm pb-0 pt-0">
@@ -86,21 +97,22 @@ use App\Services\ItemSoaItemizedServices;
                         <td class="text-right text-sm pb-0 pt-0">{{ number_format($AMOUNT, 2) }}</td>
                     </tr>
                 @endforeach
-
-                <tr class="font-weight-bold">
-                    <td></td>
-                    <td class="text-sm pb-0 pt-0">{{ $TYPE }} TOTAL</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td class="text-right text-sm pb-0 pt-0">{{ number_format($TOTAL, 2) }}</td>
-                </tr>
+                @if ($TYPE != 'OTHERS')
+                    <tr class="font-weight-bold">
+                        <td></td>
+                        <td class="text-sm pb-0 pt-0">{{ $TYPE }} TOTAL</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="text-right text-sm pb-0 pt-0">{{ number_format($TOTAL, 2) }}</td>
+                    </tr>
+                @endif
             </tbody>
         </table>
 
     </div>
     <div class="col-4">
-        <table class="w-100" border="2">
+        <table class="w-100" border="1">
             <thead class="text-sm">
                 <tr class="text-center">
                     <th class="">ROUTINE MONTHLY LABORATORIES</th>

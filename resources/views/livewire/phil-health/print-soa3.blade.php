@@ -50,7 +50,7 @@
                                 <div class="col-4" @if ($HEADER) style="opacity: 0.0" @endif>
                                     PATIENT`S NAME :
                                 </div>
-                                <div class="col-8 bottom-line"
+                                <div class="col-8 bottom-line2"
                                     @if ($HEADER) style="opacity: 0.0" @endif>
                                     <div class="row">
                                         <div class="col-9"> &nbsp; {{ $PATIENT_NAME }}</div>
@@ -60,23 +60,20 @@
                                 <div @if ($HEADER) style="opacity: 0.0" @endif class="col-4">
                                     ADDRESS : </div>
                                 <div @if ($HEADER) style="opacity: 0.0" @endif
-                                    class="col-8 bottom-line text-xs"> &nbsp; {{ $ADDRESS1 }}</div>
+                                    class="col-8 bottom-line2 text-xs"> &nbsp; {{ $ADDRESS1 }}</div>
                                 <div @if ($HEADER) style="opacity: 0.0" @endif class="col-4">
                                     &nbsp;</div>
                                 <div @if ($HEADER) style="opacity: 0.0" @endif
-                                    class="col-8 bottom-line text-xs"> &nbsp; {{ $ADDRESS2 }}</div>
+                                    class="col-8 bottom-line2 text-xs"> &nbsp; {{ $ADDRESS2 }}</div>
                                 <div @if ($HEADER) style="opacity: 0.0" @endif class="col-4">
                                     FINAL DIAGNOSIS :
                                 </div>
                                 <div @if ($HEADER) style="opacity: 0.0" @endif
-                                    class="col-8 bottom-line text-xs"> &nbsp; {{ $FINAL_DIAGNOSIS }}</div>
-                                {{-- <div @if ($HEADER) style="opacity: 0.0" @endif class="col-4">
-                                    OTHER DIAGNOSIS : </div>
-                                <div @if ($HEADER) style="opacity: 0.0" @endif
-                                    class="col-8 bottom-line text-xs"> &nbsp; {{ $OTHER_DIAGNOSIS }}</div> --}}
+                                    class="col-8 bottom-line2 text-xs"> &nbsp; {{ $FINAL_DIAGNOSIS }}</div>
+
                                 <div @if ($HEADER) style="opacity: 0.0" @endif class="col-4">
                                     TREATMENT DATES : </div>
-                                <div class="col-8 @if (!$PRE_SIGN_DATA) bottom-line @endif text-sm">
+                                <div class="col-8 @if (!$PRE_SIGN_DATA) bottom-line2 @endif text-sm">
                                     &nbsp;
                                     {{ $allDate }}
                                 </div>
@@ -90,19 +87,19 @@
                                 <div @if ($HEADER) style="opacity: 0.0" @endif class="col-5">
                                     PHILHEALTH No. :
                                 </div>
-                                <div class="col-7 @if ($OUTPUT_SIGN) bottom-line @endif">
+                                <div class="col-7 @if ($OUTPUT_SIGN) bottom-line2 @endif">
                                     {{ substr($PIN, 0, 1) . substr($PIN, 1, 1) . '-' . substr($PIN, 2, 1) . substr($PIN, 3, 1) . substr($PIN, 4, 1) . substr($PIN, 5, 1) . substr($PIN, 6, 1) . substr($PIN, 7, 1) . substr($PIN, 8, 1) . substr($PIN, 9, 1) . substr($PIN, 10, 1) . '-' . substr($PIN, 11, 1) }}
 
                                 </div>
                                 <div @if ($HEADER) style="opacity: 0.0" @endif class="col-5">DATE
                                     & TIME ADMITTED :</div>
-                                <div class="col-7 @if ($OUTPUT_SIGN) bottom-line @endif">
+                                <div class="col-7 @if ($OUTPUT_SIGN) bottom-line2 @endif">
                                     {{ $DATE_ADMITTED ? \Carbon\Carbon::parse($DATE_ADMITTED)->format('m/d/Y') : '' }}
                                     {{ $TIME_ADMITTED ? \Carbon\Carbon::parse($TIME_ADMITTED)->format('h:i:s A') : '' }}
                                 </div>
                                 <div @if ($HEADER) style="opacity: 0.0" @endif class="col-5">DATE
                                     & TIME DISCHARGED :</div>
-                                <div class="col-7 @if ($OUTPUT_SIGN) bottom-line @endif">
+                                <div class="col-7 @if ($OUTPUT_SIGN) bottom-line2 @endif">
                                     {{ $DATE_DISCHARGED ? \Carbon\Carbon::parse($DATE_DISCHARGED)->format('m/d/Y') : '' }}
                                     {{ $TIME_DISCHARGED ? \Carbon\Carbon::parse($TIME_DISCHARGED)->format('h:i:s A') : '' }}
                                 </div>
@@ -110,15 +107,15 @@
                                 <div @if ($HEADER) style="opacity: 0.0" @endif class="col-5">
                                     FIRST CASE RATE :</div>
                                 <div @if ($HEADER) style="opacity: 0.0" @endif
-                                    class="col-7 bottom-line"> {{ $FIRST_CASE_RATE }}</div>
+                                    class="col-7 bottom-line2"> {{ $FIRST_CASE_RATE }}</div>
                                 <div @if ($HEADER) style="opacity: 0.0" @endif class="col-5">
                                     SECOND CASE RATE :</div>
                                 <div @if ($HEADER) style="opacity: 0.0" @endif
-                                    class="col-7 bottom-line"> &nbsp; </div>
+                                    class="col-7 bottom-line2"> &nbsp; </div>
                                 <div @if ($HEADER) style="opacity: 0.0" @endif class="col-5">NO.
                                     OF TREATMENT :</div>
                                 <div
-                                    class="col-7  @if ($OUTPUT_SIGN) bottom-line @endif text-center font-weight-bold ">
+                                    class="col-7  @if ($OUTPUT_SIGN) bottom-line2 @endif text-center font-weight-bold ">
                                     {{ $NO_OF_TREATMENT > 0 ? $NO_OF_TREATMENT : '' }}</div>
                             </div>
                         </div>

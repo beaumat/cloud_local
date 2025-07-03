@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
 class PrintSoa3 extends Component
-{   
+{
 
     public $PATIENT_ID = null;
     public int $PRINT_ID;
@@ -35,7 +35,7 @@ class PrintSoa3 extends Component
     public string $OTHER_DIAGNOSIS;
     public string $FIRST_CASE_RATE;
     public string $SECOND_CASE_RATE;
-    
+
     public bool $PRE_SIGN_DATA =  false;
     public bool $OUTPUT_SIGN = false;
     public bool $HEADER = true; // default TRUE;
@@ -67,14 +67,14 @@ class PrintSoa3 extends Component
         LocationServices $locationServices,
         HemoServices $hemoServices,
         PhilHealthSoaCustomServices $philHealthSoaCustomServices,
-   
+
     ) {
         $this->philHealthServices = $philHealthServices;
         $this->contactServices = $contactServices;
         $this->locationServices = $locationServices;
         $this->hemoServices = $hemoServices;
         $this->philHealthSoaCustomServices = $philHealthSoaCustomServices;
-    
+
     }
     private function gotHide()
     {
@@ -92,11 +92,9 @@ class PrintSoa3 extends Component
         $this->OUTPUT_SIGN = $OUTPUT;
         if ($PRINT_ID > 0) {
             $this->PRE_SIGN_DATA = false;
-
             $this->HEADER = !$OUTPUT;
-
             $this->PreLoad($PRINT_ID);
-     
+
             return;
         }
         // pre-sign
@@ -131,7 +129,7 @@ class PrintSoa3 extends Component
                 $this->FIRST_CASE_RATE = 'Hemodialysis-' . $contact->FIRST_CASE_RATE ?? '';
                 $this->SECOND_CASE_RATE = $contact->SECOND_CASE_RATE ?? '';
             }
-         
+
             $locData = $this->locationServices->get($this->LOCATION_ID);
             if ($locData) {
                 $this->REPORT_HEADER_1 = $locData->REPORT_HEADER_1 ?? '';
@@ -151,31 +149,29 @@ class PrintSoa3 extends Component
         if (is_numeric($ID)) {
             $data = $this->philHealthServices->get($ID);
             if ($data) {
-                $this->LOCATION_ID =        $data->LOCATION_ID;
+                $this->LOCATION_ID          =    $data->LOCATION_ID;
                 $this->gotHide();
-                $this->CONTACT_ID =         $data->CONTACT_ID;
-                $this->CODE =               $data->CODE;
-                $this->DATE_ADMITTED =      $data->DATE_ADMITTED;
-                $this->TIME_ADMITTED =      $data->TIME_ADMITTED;
-                $this->DATE_DISCHARGED =    $data->DATE_DISCHARGED;
-                $this->TIME_DISCHARGED =    $this->IS_HIDE ? $data->TIME_HIDE  : $data->TIME_DISCHARGED;
-                $this->FINAL_DIAGNOSIS =    $data->FINAL_DIAGNOSIS ?? '';
-                $this->OTHER_DIAGNOSIS =    $data->OTHER_DIAGNOSIS ?? '';
-                $this->FIRST_CASE_RATE =    $data->FIRST_CASE_RATE ?? '';
-                $this->SECOND_CASE_RATE =   $data->SECOND_CASE_RATE ?? '';
-
-              
-                $this->PREPARED_BY_ID = $data->PREPARED_BY_ID ?? 0;
-                $this->DATE_SIGNED = $data->DATE_SIGNED ?? '';
-                $this->OTHER_NAME = $data->OTHER_NAME ?? '';
-                $contact = $this->contactServices->get($this->CONTACT_ID, 3);
+                $this->CONTACT_ID           =    $data->CONTACT_ID;
+                $this->CODE                 =    $data->CODE;
+                $this->DATE_ADMITTED        =    $data->DATE_ADMITTED;
+                $this->TIME_ADMITTED        =    $data->TIME_ADMITTED;
+                $this->DATE_DISCHARGED      =    $data->DATE_DISCHARGED;
+                $this->TIME_DISCHARGED      =    $this->IS_HIDE ? $data->TIME_HIDE  : $data->TIME_DISCHARGED;
+                $this->FINAL_DIAGNOSIS      =    $data->FINAL_DIAGNOSIS ?? '';
+                $this->OTHER_DIAGNOSIS      =    $data->OTHER_DIAGNOSIS ?? '';
+                $this->FIRST_CASE_RATE      =    $data->FIRST_CASE_RATE ?? '';
+                $this->SECOND_CASE_RATE     =    $data->SECOND_CASE_RATE ?? '';
+                $this->PREPARED_BY_ID       =    $data->PREPARED_BY_ID ?? 0;
+                $this->DATE_SIGNED          =    $data->DATE_SIGNED ?? '';
+                $this->OTHER_NAME           =    $data->OTHER_NAME ?? '';
+                $contact                    = $this->contactServices->get($this->CONTACT_ID, 3);
 
                 if ($contact) {
-                    $MI = substr($contact->MIDDLE_NAME, 0, 1);
-                    $MI_COUNT  = strlen($contact->MIDDLE_NAME);
-                    $EX_COUNT = strlen($contact->SALUTATION);
-                    $MI_NAME = $MI_COUNT > 0 ? ' ' . $MI . '. ' : ' ';
-                    $EX_NAME = $EX_COUNT > 0 ? ' ' . $contact->SALUTATION . '.' : ' ';
+                    $MI             = substr($contact->MIDDLE_NAME, 0, 1);
+                    $MI_COUNT       = strlen($contact->MIDDLE_NAME);
+                    $EX_COUNT       = strlen($contact->SALUTATION);
+                    $MI_NAME        = $MI_COUNT > 0 ? ' ' . $MI . '. ' : ' ';
+                    $EX_NAME        = $EX_COUNT > 0 ? ' ' . $contact->SALUTATION . '.' : ' ';
 
                     if ($contact->IS_DEPENDENT) {
                         $this->PIN = $contact->PIN_DEPENDENT ?? '';
@@ -183,24 +179,24 @@ class PrintSoa3 extends Component
                         $this->PIN = $contact->PIN  ?? '';
                     }
 
-                    $this->DATE_BIRTH = date('m/d/Y', strtotime($contact->DATE_OF_BIRTH));
-                    $this->PATIENT_NAME = strtoupper($contact->LAST_NAME . ', ' .   $contact->FIRST_NAME . ' '  . $contact->MIDDLE_NAME . ' ' . $EX_NAME);
-                    $this->AGE = $this->contactServices->calculateUserAge($contact->DATE_OF_BIRTH);
-                    $this->ADDRESS1 = $this->GetAddress1($contact);
-                    $this->ADDRESS2 = $this->GetAddress2($contact);
-                    $this->PATIENT_CONTACT = $contact->MOBILE_NO ?? $contact->TELEPHONE_NO;
-                    $this->FINAL_DIAGNOSIS = 'CHRONIC KIDNEY DISEASE'; //$this->philHealthServices->DEFAULT_DIAGNOSIS2 . $contact->FINAL_DIAGNOSIS ?? '';
-                    $this->OTHER_DIAGNOSIS = $contact->OTHER_DIAGNOSIS ?? '';
-                    $this->FIRST_CASE_RATE = 'Hemodialysis-' . $contact->FIRST_CASE_RATE ?? '';
+                    $this->DATE_BIRTH       = date('m/d/Y', strtotime($contact->DATE_OF_BIRTH));
+                    $this->PATIENT_NAME     = strtoupper($contact->LAST_NAME . ', ' .   $contact->FIRST_NAME . ' '  . $contact->MIDDLE_NAME . ' ' . $EX_NAME);
+                    $this->AGE              = $this->contactServices->calculateUserAge($contact->DATE_OF_BIRTH);
+                    $this->ADDRESS1         = $this->GetAddress1($contact);
+                    $this->ADDRESS2         = $this->GetAddress2($contact);
+                    $this->PATIENT_CONTACT  = $contact->MOBILE_NO ?? $contact->TELEPHONE_NO;
+                    $this->FINAL_DIAGNOSIS  = 'CHRONIC KIDNEY DISEASE'; //$this->philHealthServices->DEFAULT_DIAGNOSIS2 . $contact->FINAL_DIAGNOSIS ?? '';
+                    $this->OTHER_DIAGNOSIS  = $contact->OTHER_DIAGNOSIS ?? '';
+                    $this->FIRST_CASE_RATE  = 'Hemodialysis-' . $contact->FIRST_CASE_RATE ?? '';
                     $this->SECOND_CASE_RATE = $contact->SECOND_CASE_RATE ?? '';
                 }
 
 
                 $locData = $this->locationServices->get($this->LOCATION_ID);
                 if ($locData) {
-                    $this->REPORT_HEADER_1 = $locData->REPORT_HEADER_1 ?? '';
-                    $this->REPORT_HEADER_2 = $locData->REPORT_HEADER_2 ?? '';
-                    $this->REPORT_HEADER_3 = $locData->REPORT_HEADER_3 ?? '';
+                    $this->REPORT_HEADER_1  = $locData->REPORT_HEADER_1 ?? '';
+                    $this->REPORT_HEADER_2  = $locData->REPORT_HEADER_2 ?? '';
+                    $this->REPORT_HEADER_3  = $locData->REPORT_HEADER_3 ?? '';
                     $this->LOGO_FILE = $locData->LOGO_FILE ?? '';
                     $conUser = $this->contactServices->get($locData->PHIC_INCHARGE_ID ?? Auth()->user()->contact_id, 2); // Employee
                     if ($conUser) {
@@ -215,7 +211,7 @@ class PrintSoa3 extends Component
 
                 $dataList = $this->hemoServices->GetSummary($this->CONTACT_ID, $this->LOCATION_ID, $this->DATE_ADMITTED ?? '', $this->DATE_DISCHARGED ?? '');
                 $this->breakDownDate = $dataList;
-                
+
                 $LastDate = '';
 
                 foreach ($dataList as $list) {

@@ -20,7 +20,7 @@ class PhilHealthSoaCustomServices
         $result =  PhilHealthSoaCustom::where('ID', $ID)
             ->where('LOCATION_ID', $LOCATION_ID)
             ->first();
-            
+
         if ($result) {
             return $result;
         }

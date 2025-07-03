@@ -125,6 +125,7 @@ class PrintSummaryLuzon extends Component
                 $this->CHARGES_OPERATING_ROOM_FEE = $data->CHARGES_OPERATING_ROOM_FEE;
                 $this->CHARGES_SUPPLIES = $data->CHARGES_SUPPLIES;
                 $this->CHARGES_OTHERS = $data->CHARGES_OTHERS;
+
                 $this->CHARGES_SUB_TOTAL = $data->CHARGES_SUB_TOTAL;
                 $this->OTHER_SPECIFY = $data->OTHER_SPECIFY ?? '';
                 $this->VAT_ROOM_N_BOARD = $data->VAT_ROOM_N_BOARD;
