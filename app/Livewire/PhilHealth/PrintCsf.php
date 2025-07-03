@@ -80,7 +80,7 @@ class PrintCsf extends Component
         $this->OUTPUT_SIGN = $OUTPUT;
 
         if ($id > 0) {
-            $PRE_SIGN_DATA = false;
+            $this->PRE_SIGN_DATA = false;
             $data          = $this->philHealthServices->get($id);
 
             if ($data) {
@@ -148,7 +148,7 @@ class PrintCsf extends Component
                         $this->PIN_DEPENDENT = $this->PIN;
                     }
 
-        
+
                     $this->MEMBER_IS_CHILD   = $contact->MEMBER_IS_CHILD;
                     $this->MEMBER_IS_PARENT  = $contact->MEMBER_IS_PARENT;
                     $this->MEMBER_IS_SPOUSE  = $contact->MEMBER_IS_SPOUSE;
@@ -249,7 +249,6 @@ class PrintCsf extends Component
                 $fee = $this->patientDoctorServices->GetList($PATIENT_ID);
                 $row = 1;
                 foreach ($fee as $list) {
-
                     switch ($row) {
                         case '1':
                             $this->HCP_1_AN   = str_replace('-', '', $list->PIN);

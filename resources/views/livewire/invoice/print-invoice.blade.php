@@ -18,7 +18,13 @@
                     @endif
                 </div>
                 <div class="col-12 text-center">
-                    <b class="h3">Delivery Receipt</b>
+                    @if ($LOCATION_ID == 34)
+                        <b class="h3">Delivery Receipt</b>
+                    @else
+                        <b class="h3">Sales Invoice</b>
+                    @endif
+
+
                     <br />
                     <br />
                 </div>
