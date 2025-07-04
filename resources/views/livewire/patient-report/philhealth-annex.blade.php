@@ -24,8 +24,6 @@
                     <div class="form-group bg-light p-2 border border-secondary">
                         <div class="row">
                             <div class="col-md-8">
-
-
                                 <div class="row">
                                     <div class="col-1 text-right">
                                         <label class="text-xs">Year:</label>
@@ -41,20 +39,31 @@
                                         <select class="form-control form-control-sm text-xs" name="MONTH"
                                             wire:model.live='MONTH'>
                                             @foreach ($monthList as $item)
-                                                <option value="{{ $item['ID'] }}"> {{ $item['NAME'] }}
+                                                <option value="{{ $item['ID'] }}">
+                                                    {{ $item['NAME'] }}
                                                 </option>
                                             @endforeach
                                         </select>
                                     </div>
                                     <div class="col-2">
-                                        <button wire:click='generateB()' class="btn btn-xs btn-primary w-100">Annex
-                                            B</button>
+                                        <button wire:click='generateB()' class="btn btn-xs btn-primary w-100">
+                                            Annex B
+                                        </button>
                                     </div>
                                     <div class='col-2'>
-                                        <button wire:click='generateC()' class="btn btn-xs btn-info w-100">Annex
-                                            C</button>
+                                        <button wire:click='generateC()' class="btn btn-xs btn-info w-100">
+                                            Annex C
+                                        </button>
                                     </div>
-
+                                    <div class='col-2'>
+                                        @if ($columnType == 1)
+                                            <a href="{{ route('reportsphilhealth_annex_one_print', ['locationid' => $LOCATION_ID, 'year' => $YEAR, 'month' => $MONTH]) }}"
+                                                target="_blank" class="btn btn-xs btn-warning w-100"> Print </a>
+                                        @elseif($columnType == 2)
+                                            <a href="{{ route('reportsphilhealth_annex_two_print', ['locationid' => $LOCATION_ID, 'year' => $YEAR, 'month' => $MONTH]) }}"
+                                                target="_blank" class="btn btn-xs btn-warning w-100"> Print </a>
+                                        @endif
+                                    </div>
                                 </div>
                             </div>
 
@@ -94,7 +103,8 @@
                                 @if ($columnType == 1)
                                     <tr>
                                         <td class=" bg-dark"></td>
-                                        <td class="col-1 bg-dark"><button wire:click='autoSet()' wire:confirm='Are you sure?' class="btn btn-xs btn-success w-100">Auto
+                                        <td class="col-1 bg-dark"><button wire:click='autoSet()'
+                                                wire:confirm='Are you sure?' class="btn btn-xs btn-success w-100">Auto
                                                 Set Code</button></td>
                                         <td class=" bg-primary"></td>
                                         <td class=" bg-primary text-center">Patient</td>

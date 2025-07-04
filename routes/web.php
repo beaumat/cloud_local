@@ -1,6 +1,5 @@
 <?php
 
-use App\Livewire\AccountingReport\GeneralJournalReport;
 use App\Livewire\AccountingReport\GeneralLedgerReport;
 use App\Livewire\AccountingReport\TransactionDetailsReport;
 use App\Livewire\AccountingReport\TransactionJournalReport;
@@ -15,8 +14,8 @@ use App\Livewire\BillCredit\BillCreditList;
 use App\Livewire\BillPayments\BillPaymentForm;
 use App\Livewire\BillPayments\BillPaymentList;
 use App\Livewire\BillPayments\BillPaymentPrint;
-use App\Livewire\BillPayments\DoctorFeePrint;
 use App\Livewire\BillPayments\DoctorFeePrint2;
+use App\Livewire\BillPayments\DoctorFeePrint;
 use App\Livewire\Bills\BillingForm;
 use App\Livewire\Bills\BillingList;
 use App\Livewire\Bills\BillingPrint;
@@ -28,21 +27,21 @@ use App\Livewire\CostAdjustment\CostAdjustmentForm;
 use App\Livewire\CostAdjustment\CostAdjustmentList;
 use App\Livewire\CreditMemo\CreditMemoForm;
 use App\Livewire\CreditMemo\CreditMemoList;
+use App\Livewire\CustomerReport\CustomerSalesReport;
 use App\Livewire\Customer\CustomerForm;
 use App\Livewire\Customer\CustomerList;
-use App\Livewire\CustomerReport\CustomerSalesReport;
 use App\Livewire\DashboardPage\Dashboard;
 use App\Livewire\Deposit\DepositForm;
 use App\Livewire\Deposit\DepositList;
 use App\Livewire\Depreciation\DepreciationForm;
 use App\Livewire\Depreciation\DepreciationList;
-use App\Livewire\Doctor\DoctorForm;
-use App\Livewire\Doctor\DoctorList;
 use App\Livewire\DoctorBatchPayment\DoctorBatchForm;
 use App\Livewire\DoctorBatchPayment\DoctorBatchList;
 use App\Livewire\DoctorBatchPayment\DoctorBatchPrint;
 use App\Livewire\DoctorBatchPayment\DoctorBatchSummaryPrint;
 use App\Livewire\DoctorFee\DoctorFeeList;
+use App\Livewire\Doctor\DoctorForm;
+use App\Livewire\Doctor\DoctorList;
 use App\Livewire\Employees\EmployeeForm;
 use App\Livewire\Employees\EmployeeList;
 use App\Livewire\FinancialReport\BalanceSheetReport;
@@ -57,61 +56,23 @@ use App\Livewire\FundTransfer\FundTransferPrint;
 use App\Livewire\GeneralJournal\GeneralJournalForm;
 use App\Livewire\GeneralJournal\GeneralJournalList;
 use App\Livewire\GeneralJournal\GeneralJournalPrint;
+use App\Livewire\HemodialysisMachine\HemoMachineForm;
+use App\Livewire\HemodialysisMachine\HemoMachineList;
 use App\Livewire\Hemodialysis\AgreementForm;
 use App\Livewire\Hemodialysis\HemoForm;
 use App\Livewire\Hemodialysis\HemoList;
 use App\Livewire\Hemodialysis\PrintForm;
 use App\Livewire\Hemodialysis\PrintFormBack;
 use App\Livewire\Hemodialysis\PrintFormFrontBack;
-use App\Livewire\HemodialysisMachine\HemoMachineForm;
-use App\Livewire\HemodialysisMachine\HemoMachineList;
 use App\Livewire\Import\XeroImportForm;
 use App\Livewire\IncomeStatement\IncomeStatementAccountDetails;
-use App\Livewire\InventoryAdjustment\InventoryAdjustmentForm;
-use App\Livewire\InventoryAdjustment\InventoryAdjustmentList;
-use App\Livewire\Invoice\InvoiceForm;
-use App\Livewire\Invoice\InvoiceList;
-use App\Livewire\List\ItemActiveList;
-use App\Livewire\Location\DoctorNotes;
-use App\Livewire\Location\LocationDoctors;
-use App\Livewire\Option\OptionSettings;
-use App\Livewire\PatientPayment\PatientPaymentForm;
-use App\Livewire\PatientPayment\PatientPaymentList;
-use App\Livewire\PatientReport\GuaranteeLetterReport;
-use App\Livewire\PatientReport\PatientInventoryReport;
-use App\Livewire\PatientReport\PhilhealthAnnex;
-use App\Livewire\PatientReport\PhilHealthAvailmentListPrint;
-use App\Livewire\PayableReport\VendorBalance;
-use App\Livewire\Payment\PaymentForm;
-use App\Livewire\Payment\PaymentList;
-use App\Livewire\PhilHealth\PhilHealthForm;
-use App\Livewire\PhilHealth\PhilHealthList;
-use App\Livewire\PhilhealthPrint\PrintOutCf2;
-use App\Livewire\PhilhealthPrint\PrintOutCf4TempOut;
-use App\Livewire\Requirement\RequirementForm;
-use App\Livewire\Requirement\RequirementList;
-use App\Livewire\SalesOrder\SalesOrderForm;
-use App\Livewire\SalesOrder\SalesOrderList;
-use App\Livewire\Scheduler\PrintSchedulesPrintOut;
-use App\Livewire\Scheduler\SchedulerForm;
-use App\Livewire\Scheduler\SchedulerList;
-use App\Livewire\ServiceCharge\ServiceChargeForm;
-use App\Livewire\ServiceCharge\ServiceChargeList;
-use App\Livewire\Shift\ShiftForm;
-use App\Livewire\Shift\ShiftList;
-use App\Livewire\Statement\Statement;
-use App\Livewire\StatementOfAccount\SoaModule;
-use App\Livewire\StockTransfer\StockReceived;
-use App\Livewire\StockTransfer\StockTransferForm;
-use App\Livewire\StockTransfer\StockTransferList;
-use App\Livewire\TaxCredit\TaxCreditForm;
-use App\Livewire\TaxCredit\TaxCreditList;
-use App\Livewire\TestPage;
-use App\Livewire\WithHoldingTax\WithHoldingTaxList;
-use Illuminate\Support\Facades\Route;
 use App\Livewire\InventoryAdjustmentTypePage\InventoryAdjustmentTypeForm;
 use App\Livewire\InventoryAdjustmentTypePage\InventoryAdjustmentTypeList;
+use App\Livewire\InventoryAdjustment\InventoryAdjustmentForm;
+use App\Livewire\InventoryAdjustment\InventoryAdjustmentList;
 use App\Livewire\InventoryReport\ValidationSummaryReport;
+use App\Livewire\Invoice\InvoiceForm;
+use App\Livewire\Invoice\InvoiceList;
 use App\Livewire\Invoice\PrintInvoice;
 use App\Livewire\ItemClassPage\ItemClassForm;
 use App\Livewire\ItemClassPage\ItemClassList;
@@ -123,42 +84,50 @@ use App\Livewire\ItemSubClassPage\ItemSubClassForm;
 use App\Livewire\ItemSubClassPage\ItemSubClassList;
 use App\Livewire\ItemTreatment\ItemTreatmentForm;
 use App\Livewire\ItemTreatment\ItemTreatmentList;
+use App\Livewire\List\ItemActiveList;
 use App\Livewire\List\ItemInventoryDetails;
+use App\Livewire\LocationGroup\LocationGroupForm;
+use App\Livewire\LocationGroup\LocationGroupList;
+use App\Livewire\Location\DoctorNotes;
+use App\Livewire\Location\LocationDoctors;
 use App\Livewire\Location\LocationForm;
 use App\Livewire\Location\LocationList;
 use App\Livewire\Location\SoaItem;
-use App\Livewire\LocationGroup\LocationGroupForm;
-use App\Livewire\LocationGroup\LocationGroupList;
 use App\Livewire\ManufacturerPage\ManufacturerForm;
 use App\Livewire\ManufacturerPage\ManufacturerList;
-use App\Livewire\Patient\MedcertPrint;
-use App\Livewire\Patient\PatientForm;
-use App\Livewire\Patient\PatientList;
-use App\Livewire\Patient\PhilhealthAvailment;
-use App\Livewire\Patient\PhilhealthModify;
-use App\Livewire\Patient\PrintAvailment;
-use App\Livewire\PatientReport\DoctorProFeeReport;
+use App\Livewire\Option\OptionSettings;
+use App\Livewire\PatientPayment\PatientPaymentForm;
+use App\Livewire\PatientPayment\PatientPaymentList;
 use App\Livewire\PatientReport\DoctorsFeeReportPrint;
+use App\Livewire\PatientReport\GuaranteeLetterReport;
 use App\Livewire\PatientReport\PatientBalanceReport;
-use App\Livewire\PatientReport\PatientMonthlyTreatmentReport;
+use App\Livewire\PatientReport\PatientInventoryReport;
 use App\Livewire\PatientReport\PatientSalesReport;
 use App\Livewire\PatientReport\PatientSalesReportPrint;
 use App\Livewire\PatientReport\PatientTreatmentReport;
+use App\Livewire\PatientReport\PhilhealthAnnex;
+use App\Livewire\PatientReport\PhilhealthAnnexOnePrint;
+use App\Livewire\PatientReport\PhilhealthAnnexTwoPrint;
 use App\Livewire\PatientReport\PhilHealthAvailmentList;
+use App\Livewire\PatientReport\PhilHealthAvailmentListPrint;
 use App\Livewire\PatientReport\PhilHealthMonitoringReport;
+use App\Livewire\Patient\MedcertPrint;
+use App\Livewire\Patient\PatientForm;
+use App\Livewire\Patient\PatientList;
+use App\Livewire\Patient\PrintAvailment;
 use App\Livewire\PayableReport\AccountPayableAging;
+use App\Livewire\PayableReport\VendorBalance;
 use App\Livewire\PaymentMethod\PaymentMethodForm;
 use App\Livewire\PaymentMethod\PaymentMethodList;
 use App\Livewire\PaymentPeriod\PaymentPeriodForm;
 use App\Livewire\PaymentPeriod\PaymentPeriodList;
 use App\Livewire\PaymentTerm\PaymentTermForm;
 use App\Livewire\PaymentTerm\PaymentTermList;
-use App\Livewire\PhilHealth\PhilHealthPrintFormTempOut;
-use App\Livewire\PhilHealth\PhilHealthPrintTemp;
-use App\Livewire\PhilHealth\PhilHealthPrintTempOut;
-use App\Livewire\PhilHealthPayment\PhilHealthPaymentForm;
+use App\Livewire\Payment\PaymentForm;
+use App\Livewire\Payment\PaymentList;
+use App\Livewire\PhilhealthPrint\PrintOutCf2;
 use App\Livewire\PhilhealthPrint\PrintOutCf4;
-use App\Livewire\PhilhealthPrint\PrintOutCf4Temp;
+use App\Livewire\PhilhealthPrint\PrintOutCf4TempOut;
 use App\Livewire\PhilhealthPrint\PrintOutCsf;
 use App\Livewire\PhilhealthPrint\PrintOutCsfTemp;
 use App\Livewire\PhilhealthPrint\PrintOutCsfTempOut;
@@ -170,6 +139,8 @@ use App\Livewire\PhilhealthPrint\PrintOutSummaryTemp;
 use App\Livewire\PhilhealthPrint\PrintOutSummaryTempOut;
 use App\Livewire\PhilHealthSoaCustom\PhilCustomSoaForm;
 use App\Livewire\PhilHealthSoaCustom\PhilCustomSoaList;
+use App\Livewire\PhilHealth\PhilHealthForm;
+use App\Livewire\PhilHealth\PhilHealthList;
 use App\Livewire\PriceLevelPage\PriceLevelForm;
 use App\Livewire\PriceLevelPage\PriceLevelList;
 use App\Livewire\PriceLocation\PriceLocationList;
@@ -182,19 +153,37 @@ use App\Livewire\ReceivableReport\AccountReceivableAging;
 use App\Livewire\ReceivableReport\CustomerBalance;
 use App\Livewire\ReceiveMoney\ReceiveMoneyForm;
 use App\Livewire\ReceiveMoney\ReceiveMoneyList;
+use App\Livewire\Requirement\RequirementForm;
+use App\Livewire\Requirement\RequirementList;
 use App\Livewire\RolePermissionPage\RolePermissionConfig;
 use App\Livewire\RolePermissionPage\RolePermissionList;
+use App\Livewire\SalesOrder\SalesOrderForm;
+use App\Livewire\SalesOrder\SalesOrderList;
 use App\Livewire\SalesReceipt\SalesReceiptForm;
 use App\Livewire\SalesReceipt\SalesReceiptList;
+use App\Livewire\Scheduler\PrintSchedulesPrintOut;
+use App\Livewire\Scheduler\SchedulerForm;
+use App\Livewire\Scheduler\SchedulerList;
+use App\Livewire\ServiceCharge\ServiceChargeForm;
+use App\Livewire\ServiceCharge\ServiceChargeList;
+use App\Livewire\Shift\ShiftForm;
+use App\Livewire\Shift\ShiftList;
 use App\Livewire\ShipViaPage\ShipViaForm;
 use App\Livewire\ShipViaPage\ShipViaList;
 use App\Livewire\SpendMoney\SpendMoneyForm;
 use App\Livewire\SpendMoney\SpendMoneyList;
+use App\Livewire\Statement\Statement;
 use App\Livewire\StockBinPage\StockBinForm;
 use App\Livewire\StockBinPage\StockBinList;
+use App\Livewire\StockTransfer\StockReceived;
+use App\Livewire\StockTransfer\StockTransferForm;
+use App\Livewire\StockTransfer\StockTransferList;
+use App\Livewire\TaxCredit\TaxCreditForm;
+use App\Livewire\TaxCredit\TaxCreditList;
 use App\Livewire\Tax\TaxForm;
 use App\Livewire\Tax\TaxList;
 use App\Livewire\TestHemoPage;
+use App\Livewire\TestPage;
 use App\Livewire\UnitOfMeasurePage\UnitOfMeasureForm;
 use App\Livewire\UnitOfMeasurePage\UnitOfMeasureList;
 use App\Livewire\User\UserForm;
@@ -203,9 +192,11 @@ use App\Livewire\User\UserRoles;
 use App\Livewire\Vendor\VendorForm;
 use App\Livewire\Vendor\VendorList;
 use App\Livewire\WithHoldingTax\WithHoldingTaxForm;
+use App\Livewire\WithHoldingTax\WithHoldingTaxList;
 use App\Livewire\WriteCheck\WriteCheckForm;
 use App\Livewire\WriteCheck\WriteCheckFormPrint;
 use App\Livewire\WriteCheck\WriteCheckList;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -260,7 +251,6 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/{id}/agreement_form', AgreementForm::class)->name('agreement_form')->middleware(['permission:patient.treatment.print']);
         });
 
-
         Route::prefix('/phil-health')->group(function () {
             Route::get('/', PhilHealthList::class)->name('phic')->middleware(['permission:patient.philhealth.view']);
             Route::get('/create', PhilHealthForm::class)->name('phic_create')->middleware(['permission:patient.philhealth.create']);
@@ -273,7 +263,6 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/{id}/printout-cf4', PrintOutCf4::class)->name('printout_cf4')->middleware(['permission:patient.philhealth.print']);
             Route::get('/{id}/printout-cf2', PrintOutCf2::class)->name('printout_cf2')->middleware(['permission:patient.philhealth.print']);
 
-
             // Print Temporary Pre-sign
             Route::get('/{id}/printout-soa-temp', PrintOutSoaTemp::class)->name('printout_soa_temp')->middleware(['permission:patient.philhealth.print']);
             Route::get('/{id}/printout-summary-temp', PrintOutSummaryTemp::class)->name('printout_summary_temp')->middleware(['permission:patient.philhealth.print']);
@@ -285,7 +274,6 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/{id}/printout-csf-temp-out', PrintOutCsfTempOut::class)->name('printout_csf_temp_out')->middleware(['permission:patient.philhealth.print']);
             // PrintOutCf4TempOut
             Route::get('/{id}/printout-cf4-temp-out', PrintOutCf4TempOut::class)->name('printout_cf4_temp_out')->middleware(['permission:patient.philhealth.print']);
-
 
         });
 
@@ -304,7 +292,6 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/', PaymentPeriodList::class)->name('payment_period')->middleware(['permission:patient.payment-period.view']);
             Route::get('/{id}/details', PaymentPeriodForm::class)->name('payment_period_details')->middleware(['permission:patient.payment-period.view']);
         });
-
 
     });
 
@@ -384,7 +371,6 @@ Route::middleware(['auth'])->group(function () {
         });
     });
 
-
     Route::prefix('/company')->name('company')->group(function () {
 
         Route::prefix('/build-assembly')->group(function () {
@@ -411,11 +397,9 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/create', StockTransferForm::class)->name('stock_transfer_create')->middleware(['permission:company.stock-transfer.create']);
             Route::get('/{id}/edit', StockTransferForm::class)->name('stock_transfer_edit')->middleware(['permission:company.stock-transfer.view']);
 
-
         });
 
         Route::get('/stock-received', StockReceived::class)->name('stock_received')->middleware(['permission:company.stock-received']);
-
 
         // temporary
         Route::prefix('/pull-out')->group(function () {
@@ -424,7 +408,6 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/{id}/edit', PullOutForm::class)->name('pull_out_edit')->middleware(['permission:company.pull-out.view']);
             Route::get('/{id}/print', PullOutPrint::class)->name('pull_out_print')->middleware(['permission:company.pull-out.print']);
         });
-
 
         Route::prefix('/depreciation')->group(function () {
             Route::get('/', DepreciationList::class)->name('depreciation');
@@ -477,7 +460,6 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/{id}/edit', WriteCheckForm::class)->name('make_cheque_edit')->middleware(['permission:banking.make-cheque.view']);
             Route::get('/{id}/print', WriteCheckFormPrint::class)->name('make_cheque_print')->middleware(['permission:banking.make-cheque.print']);
         });
-
 
         Route::prefix('/bank-recon')->group(function () {
             Route::get('/', BankReconList::class)->name('bank_recon')->middleware(['permission:banking.bank-recon.view']);
@@ -715,11 +697,11 @@ Route::middleware(['auth'])->group(function () {
                 Route::get('/', GuaranteeLetterReport::class)->name('guarantee_letter')->middleware(['permission:report.guarantee.letter']);
             });
 
-
             Route::prefix('/philhealth-annex')->group(function () {
                 Route::get('/', PhilhealthAnnex::class)->name('philhealth_annex_report')->middleware(['permission:report.philhealth.annex']);
+                Route::get('/B-Print/{locationid}/{year}/{month}', PhilhealthAnnexOnePrint::class)->name('philhealth_annex_one_print')->middleware(['permission:report.philhealth.annex']);
+                Route::get('/C-Print/{locationid}/{year}/{month}', PhilhealthAnnexTwoPrint::class)->name('philhealth_annex_two_print')->middleware(['permission:report.philhealth.annex']);
             });
-
 
         });
 
@@ -777,8 +759,6 @@ Route::middleware(['auth'])->group(function () {
         Route::prefix('/inventory')->group(function () {
             Route::get('/validation-summary', ValidationSummaryReport::class)->name('validation_summry')->middleware(['permission:report.inventory.validation-summary']);
         });
-
-
 
         // Route::prefix('/documents')->group(function () { });
     });

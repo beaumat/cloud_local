@@ -70,14 +70,22 @@ class PhilhealthAnnex extends Component
     public function Exporting()
     {
 
+        if ($this->columnType == 1) {
+            $this->dataList = $this->philHealthServices->GenerateAnnex($this->YEAR, $this->MONTH, $this->LOCATION_ID, 0);
+            return;
+        }
+
+        if ($this->columnType == 2) {
+            $this->dataList = $this->philHealthServices->GenerateAnnex($this->YEAR, $this->MONTH, $this->LOCATION_ID, 1);
+            return;
+        }
     }
     private int $autoNumber = 0;
     private function setData($data)
     {
         $this->autoNumber++;
 
-        $ref = strtoupper(date('M', mktime(0, 0, 0, $this->MONTH, 1))) . substr((string) $this->YEAR, -2) . str_pad($this->autoNumber, 3, '0', STR_PAD_LEFT); // Generate a reference number based on the month and year
-
+        $ref     = strtoupper(date('M', mktime(0, 0, 0, $this->MONTH, 1))) . substr((string) $this->YEAR, -2) . str_pad($this->autoNumber, 3, '0', STR_PAD_LEFT); // Generate a reference number based on the month and year
         $isExist = $this->philHealthServices->ifClaimNoExists($data->ID, $ref);
         if (! $isExist) {
             // if claim number does not exist, update it
