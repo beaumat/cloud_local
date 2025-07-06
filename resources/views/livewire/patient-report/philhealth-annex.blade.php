@@ -47,12 +47,12 @@
                                     </div>
                                     <div class="col-2">
                                         <button wire:click='generateB()' class="btn btn-xs btn-primary w-100">
-                                            Annex B
+                                            Annex C
                                         </button>
                                     </div>
                                     <div class='col-2'>
                                         <button wire:click='generateC()' class="btn btn-xs btn-info w-100">
-                                            Annex C
+                                            Annex D
                                         </button>
                                     </div>
                                     <div class='col-2'>

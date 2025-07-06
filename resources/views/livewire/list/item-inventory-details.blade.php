@@ -39,8 +39,6 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-body">
-
-
                             <div id="tableContainer" style="max-height:70vh; overflow-y: auto;">
                                 <table class="table table-sm table-bordered table-hover">
                                     <thead class="text-xs bg-sky sticky-header">
