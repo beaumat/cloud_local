@@ -31,13 +31,14 @@
                             <table class="table table-sm table-bordered table-hover">
                                 <thead class="text-xs bg-sky">
                                     <tr>
-                                        <th>Name</th>
-                                        <th clss="col-1">Inactive</th>
-                                        <th class="text-center col-3">
-                                            <a href="{{ route('maintenancesettingslocation_create') }}"
-                                                class="text-white">
-                                                <i class="fas fa-plus"></i></a>
+                                        <th class="col-1">Name</th>
+
+                                        <th class="text-center col-10">
+
                                         </th>
+                                        <th clss="col-1">           <a href="{{ route('maintenancesettingslocation_create') }}"
+                                                class="text-white btn btn-success btn-xs w-100">
+                                                <i class="fas fa-plus"></i></a></th>
                                     </tr>
                                 </thead>
                                 <tbody class="text-xs">
@@ -49,46 +50,47 @@
                                                     {{ $list->NAME }}
                                                 </a>
                                             </td>
-                                            <td>
-                                                @if ($list->INACTIVE)
-                                                    <strong class="text-danger">Yes</strong>
-                                                @else
-                                                    <strong class="text-primary">No</strong>
-                                                @endif
-                                            </td>
+
                                             <td class="text-center">
                                                 <a title="View"
                                                     href="{{ route('maintenancesettingslocation_edit', ['id' => $list->ID]) }}"
                                                     class="btn btn-info btn-xs">
-                                                    <i class="fas fa-eye" aria-hidden="true"></i>
+                                                    <i class="fas fa-eye" aria-hidden="true"></i> Details
                                                 </a>
                                                 <a class="btn btn-dark btn-xs"
                                                     href="{{ route('maintenancesettingsdoctor_notes', ['id' => $list->ID]) }}">
-                                                    <i class="fa fa-commenting" aria-hidden="true"></i>
+                                                    <i class="fa fa-commenting" aria-hidden="true"></i> Doctor Notes
 
                                                 </a>
                                                 <a title="Doctor Location"
                                                     href="{{ route('maintenancesettingslocation_doctor', ['id' => $list->ID]) }}"
                                                     class="btn btn-success btn-xs">
-                                                    <i class="fas fa-user" aria-hidden="true"></i>
+                                                    <i class="fas fa-user" aria-hidden="true"></i> Doctor Link
                                                 </a>
                                                 <a title="Soa Item"
                                                     href="{{ route('maintenancesettingssoa_item', ['id' => $list->ID]) }}"
                                                     class="btn btn-secondary btn-xs">
-                                                    <i class="fas fa-sitemap" aria-hidden="true"></i>
+                                                    <i class="fas fa-sitemap" aria-hidden="true"></i> Soa Item
                                                 </a>
                                                 <a title="Custom Soa"
                                                     href="{{ route('maintenancesettingslocation_custom_soa', ['id' => $list->ID]) }}"
                                                     class="btn btn-xs btn-warning">
-                                                    <i class="fa fa-book" aria-hidden="true"></i>
+                                                    <i class="fa fa-book" aria-hidden="true"></i> Custom Soa
                                                 </a>
 
                                                 <button title="Delete" type="button"
                                                     wire:click='delete({{ $list->ID }})'
                                                     wire:confirm="Are you sure you want to delete this?"
                                                     class="btn btn-danger btn-xs">
-                                                    <i class="fas fa-trash" aria-hidden="true"></i>
+                                                    <i class="fas fa-trash" aria-hidden="true"></i> Delete
                                                     </a>
+                                            </td>
+                                            <td class="text-center">
+                                                @if ($list->INACTIVE)
+                                                    <strong class="text-danger">Yes</strong>
+                                                @else
+                                                    <strong class="text-primary">No</strong>
+                                                @endif
                                             </td>
                                         </tr>
                                     @endforeach

@@ -1,6 +1,6 @@
 <?php
-
 namespace App\Livewire\PatientReport;
+
 use App\Services\DateServices;
 use App\Services\LocationServices;
 use App\Services\PhilHealthServices;
@@ -8,12 +8,12 @@ use App\Services\UserServices;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
 use Livewire\Component;
+
 #[Title("Annex C Print")]
 class PhilhealthAnnexTwoPrint extends Component
 {
     public int $YEAR;
-
-     public $dataList = [];
+    public $dataList = [];
     private $philHealthServices;
     private $locationServices;
     private $userServices;
@@ -26,9 +26,9 @@ class PhilhealthAnnexTwoPrint extends Component
         $this->dateServices       = $dateServices;
     }
 
-    public function mount( int $locationid, int $year, int $month)
+    public function mount(int $locationid, int $year, int $month)
     {
-        $this->YEAR = $year;
+        $this->YEAR     = $year;
         $this->dataList = $this->philHealthServices->GenerateAnnex($year, $month, $locationid, 1);
         $this->dispatch('preview_print');
     }

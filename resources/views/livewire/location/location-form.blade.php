@@ -8,7 +8,27 @@
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item active">
-
+                            <div>
+                                <a class="btn btn-dark btn-xs"
+                                    href="{{ route('maintenancesettingsdoctor_notes', ['id' => $ID]) }}">
+                                    <i class="fa fa-commenting" aria-hidden="true"></i> Doctor Notes
+                                </a>
+                                <a title="Doctor Location"
+                                    href="{{ route('maintenancesettingslocation_doctor', ['id' => $ID]) }}"
+                                    class="btn btn-success btn-xs">
+                                    <i class="fas fa-user" aria-hidden="true"></i> Doctor Link
+                                </a>
+                                <a title="Soa Item"
+                                    href="{{ route('maintenancesettingssoa_item', ['id' => $ID]) }}"
+                                    class="btn btn-secondary btn-xs">
+                                    <i class="fas fa-sitemap" aria-hidden="true"></i> Soa Item
+                                </a>
+                                <a title="Custom Soa"
+                                    href="{{ route('maintenancesettingslocation_custom_soa', ['id' => $ID]) }}"
+                                    class="btn btn-xs btn-warning">
+                                    <i class="fa fa-book" aria-hidden="true"></i> Custom Soa
+                                </a>
+                            </div>
                         </li>
                     </ol>
                 </div><!-- /.col -->
