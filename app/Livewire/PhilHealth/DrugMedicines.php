@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Livewire\PhilHealth;
 
 use App\Services\HemoServices;
@@ -52,11 +51,11 @@ class DrugMedicines extends Component
         HemoServices $hemoServices
     ) {
         $this->philhealthDrugsMedicineServices = $philhealthDrugsMedicineServices;
-        $this->locationServices = $locationServices;
-        $this->philHealthServices = $philHealthServices;
-        $this->itemSoaServices = $itemSoaServices;
-        $this->itemSoaItemizedServices = $itemSoaItemizedServices;
-        $this->hemoServices = $hemoServices;
+        $this->locationServices                = $locationServices;
+        $this->philHealthServices              = $philHealthServices;
+        $this->itemSoaServices                 = $itemSoaServices;
+        $this->itemSoaItemizedServices         = $itemSoaItemizedServices;
+        $this->hemoServices                    = $hemoServices;
     }
     public function mount()
     {
@@ -68,12 +67,12 @@ class DrugMedicines extends Component
     private function GetAutoAllowed()
     {
         $this->exists = $this->philhealthDrugsMedicineServices->drugMedicineAlreadyEntry($this->PHILHEALTH_ID);
-        $data = $this->philHealthServices->get($this->PHILHEALTH_ID);
+        $data         = $this->philHealthServices->get($this->PHILHEALTH_ID);
         if ($data) {
-            $this->LOCATION_ID = $data->LOCATION_ID;
-            $this->DATE_ADMITTED = $data->DATE_ADMITTED;
+            $this->LOCATION_ID     = $data->LOCATION_ID;
+            $this->DATE_ADMITTED   = $data->DATE_ADMITTED;
             $this->DATE_DISCHARGED = $data->DATE_DISCHARGED;
-            $this->CONTACT_ID = $data->CONTACT_ID;
+            $this->CONTACT_ID      = $data->CONTACT_ID;
 
             $this->isItemized = $this->locationServices->isITEMIZED($this->LOCATION_ID);
 
@@ -81,18 +80,18 @@ class DrugMedicines extends Component
     }
     private function clearField()
     {
-        $this->GENERIC_NAME = '';
-        $this->QUANTITY = 0;
-        $this->DOSSAGE = '';
-        $this->ROUTE = '';
-        $this->FREQUENCY = '';
-        $this->TOTAL_COST = 0;
+        $this->GENERIC_NAME      = '';
+        $this->QUANTITY          = 0;
+        $this->DOSSAGE           = '';
+        $this->ROUTE             = '';
+        $this->FREQUENCY         = '';
+        $this->TOTAL_COST        = 0;
         $this->CONT_GENERIC_NAME = '';
-        $this->CONT_QUANTITY = 0;
-        $this->CONT_DOSSAGE = '';
-        $this->CONT_ROUTE = '';
-        $this->CONT_FREQUENCY = '';
-        $this->CONT_TOTAL_COST = 0;
+        $this->CONT_QUANTITY     = 0;
+        $this->CONT_DOSSAGE      = '';
+        $this->CONT_ROUTE        = '';
+        $this->CONT_FREQUENCY    = '';
+        $this->CONT_TOTAL_COST   = 0;
         $this->GetAutoAllowed();
     }
     public function save()
@@ -115,7 +114,6 @@ class DrugMedicines extends Component
         $this->clearField();
     }
 
-
     public string $E_GENERIC_NAME;
     public float $E_QUANTITY;
     public string $E_DOSSAGE;
@@ -133,36 +131,36 @@ class DrugMedicines extends Component
     {
         $data = $this->philhealthDrugsMedicineServices->GetDrugMedicine($ID);
         if ($data) {
-            $this->ID = $data->ID;
-            $this->E_GENERIC_NAME = $data->GENERIC_NAME;
-            $this->E_QUANTITY = $data->QUANTITY;
-            $this->E_DOSSAGE = $data->DOSSAGE;
-            $this->E_ROUTE = $data->ROUTE;
-            $this->E_FREQUENCY = $data->FREQUENCY;
-            $this->E_TOTAL_COST = $data->TOTAL_COST;
+            $this->ID                  = $data->ID;
+            $this->E_GENERIC_NAME      = $data->GENERIC_NAME;
+            $this->E_QUANTITY          = $data->QUANTITY;
+            $this->E_DOSSAGE           = $data->DOSSAGE;
+            $this->E_ROUTE             = $data->ROUTE;
+            $this->E_FREQUENCY         = $data->FREQUENCY;
+            $this->E_TOTAL_COST        = $data->TOTAL_COST;
             $this->E_CONT_GENERIC_NAME = $data->CONT_GENERIC_NAME;
-            $this->E_CONT_QUANTITY = $data->CONT_QUANTITY;
-            $this->E_CONT_DOSSAGE = $data->CONT_DOSSAGE;
-            $this->E_CONT_ROUTE = $data->CONT_ROUTE;
-            $this->E_CONT_FREQUENCY = $data->CONT_FREQUENCY;
-            $this->E_CONT_TOTAL_COST = $data->CONT_TOTAL_COST;
+            $this->E_CONT_QUANTITY     = $data->CONT_QUANTITY;
+            $this->E_CONT_DOSSAGE      = $data->CONT_DOSSAGE;
+            $this->E_CONT_ROUTE        = $data->CONT_ROUTE;
+            $this->E_CONT_FREQUENCY    = $data->CONT_FREQUENCY;
+            $this->E_CONT_TOTAL_COST   = $data->CONT_TOTAL_COST;
         }
     }
     public function canceled()
     {
-        $this->ID = null;
-        $this->E_GENERIC_NAME = '';
-        $this->E_QUANTITY = 0;
-        $this->E_DOSSAGE = '';
-        $this->E_ROUTE = '';
-        $this->E_FREQUENCY = '';
-        $this->E_TOTAL_COST = 0;
+        $this->ID                  = null;
+        $this->E_GENERIC_NAME      = '';
+        $this->E_QUANTITY          = 0;
+        $this->E_DOSSAGE           = '';
+        $this->E_ROUTE             = '';
+        $this->E_FREQUENCY         = '';
+        $this->E_TOTAL_COST        = 0;
         $this->E_CONT_GENERIC_NAME = '';
-        $this->E_CONT_QUANTITY = 0;
-        $this->E_CONT_DOSSAGE = '';
-        $this->E_CONT_ROUTE = '';
-        $this->E_CONT_FREQUENCY = '';
-        $this->E_CONT_TOTAL_COST = 0;
+        $this->E_CONT_QUANTITY     = 0;
+        $this->E_CONT_DOSSAGE      = '';
+        $this->E_CONT_ROUTE        = '';
+        $this->E_CONT_FREQUENCY    = '';
+        $this->E_CONT_TOTAL_COST   = 0;
     }
     public function update(
     ) {
@@ -205,19 +203,21 @@ class DrugMedicines extends Component
         }
 
         $dateList = [];
-        $qty = 0;
+        $qty      = 0;
         $dataList = $this->hemoServices->GetSummary($this->CONTACT_ID, $this->LOCATION_ID, $this->DATE_ADMITTED ?? '', $this->DATE_DISCHARGED ?? '');
         foreach ($dataList as $list) {
             $dateList[] = $list->DATE;
             $qty++;
         }
-        $isSC_BASE = $this->itemSoaServices->HaveServiceChargeBase($this->LOCATION_ID);
 
+        $isSC_BASE = $this->itemSoaServices->HaveServiceChargeBase($this->LOCATION_ID);
+        // Check if the location has a service charge base
         if ($isSC_BASE) {
+            // If it has a service charge base, get the medicine list based on the service charge base
             $itemList = $this->itemSoaServices->GetMedicineListBySCBase($this->LOCATION_ID);
             foreach ($itemList as $list) {
                 $defult_Qty = $this->itemSoaItemizedServices->getQuantityActual($dateList, $this->LOCATION_ID, $this->CONTACT_ID, $list->ID, );
-                $AMOUNT = $defult_Qty * $list->RATE ?? 0;
+                $AMOUNT     = $defult_Qty * $list->RATE ?? 0;
                 if ($AMOUNT > 0) {
                     $GEN_NAME = $list->BRAND ? ' (' . $list->BRAND . ')' : '';
                     $this->philhealthDrugsMedicineServices->DrugMedicineStore(
@@ -240,13 +240,13 @@ class DrugMedicines extends Component
 
         }
 
-
         $IS_SOA_BASE = $this->itemSoaServices->HaveSOABase($this->LOCATION_ID);
+        // Check if the location has a SOA base
         if ($IS_SOA_BASE) {
-
-            $dataPhic = $this->philHealthServices->get($this->PHILHEALTH_ID);
+            // If it has a SOA base, get the medicine list based on the SOA base
+            $dataPhic   = $this->philHealthServices->get($this->PHILHEALTH_ID);
             $defult_Qty = $this->philHealthServices->getNumberOfTreatment($dataPhic->CONTACT_ID, $dataPhic->LOCATION_ID, $dataPhic->DATE_ADMITTED, $dataPhic->DATE_DISCHARGED);
-            $itemList = $this->itemSoaServices->GetMedicineListBySOA_Base($this->LOCATION_ID);
+            $itemList   = $this->itemSoaServices->GetMedicineListBySOA_Base($this->LOCATION_ID);
             foreach ($itemList as $list) {
                 $AMOUNT = $defult_Qty * $list->RATE ?? 0;
                 if ($AMOUNT > 0) {
@@ -270,43 +270,74 @@ class DrugMedicines extends Component
             }
         }
 
+        if (! $isSC_BASE) {
 
+            $IS_ONE_QTY = false;
 
-        if (!$isSC_BASE) {
-            $itemList = $this->itemSoaServices->GetMedicineList($this->LOCATION_ID);
-            foreach ($itemList as $list) {
-                if ($list->ACTUAL_BASE) {
-                    $defult_Qty = $this->itemSoaItemizedServices->getQuantityActual($dateList, $this->LOCATION_ID, $this->CONTACT_ID, $list->ID, );
-                    $AMOUNT = $defult_Qty * $list->RATE ?? 0;
-                } else {
-                    $defult_Qty = $qty;
-                    $AMOUNT = $qty * $list->RATE ?? 0;
+            if (! $IS_ONE_QTY) {
+
+                // If it does not have a service charge base, get the medicine list based on the actual base
+                $itemList = $this->itemSoaServices->GetMedicineList($this->LOCATION_ID);
+                foreach ($itemList as $list) {
+                    if ($list->ACTUAL_BASE) {
+                        $defult_Qty = $this->itemSoaItemizedServices->getQuantityActual($dateList, $this->LOCATION_ID, $this->CONTACT_ID, $list->ID, );
+                        $AMOUNT     = $defult_Qty * $list->RATE ?? 0;
+                    } else {
+                        $defult_Qty = $qty;
+                        $AMOUNT     = $qty * $list->RATE ?? 0;
+                    }
+
+                    if ($AMOUNT > 0) {
+                        $GEN_NAME = $list->BRAND ? ' (' . $list->BRAND . ')' : '';
+                        $this->philhealthDrugsMedicineServices->DrugMedicineStore(
+                            $this->PHILHEALTH_ID,
+                            $list->ITEM_NAME . $GEN_NAME,
+                            $defult_Qty,
+                            $list->DOSAGE ?? '',
+                            $list->ROUTE ?? '',
+                            $list->FREQUENCY ?? '',
+                            $AMOUNT,
+                            "",
+                            0,
+                            "",
+                            "",
+                            "",
+                            0,
+                        );
+                    }
                 }
+            } else {
+                                                // If it has a service charge base, loop through the quantity
+                for ($i = 0; $i < $qty; $i++) { // Loop through the quantity
+                    $F_QTY = 1;                     // Default quantity is 1
+                                                    // If it has a service charge base, get the medicine list based on the service charge
+                    $itemList = $this->itemSoaServices->GetMedicineList($this->LOCATION_ID);
+                    foreach ($itemList as $list) {
+                        $AMOUNT = $F_QTY * $list->RATE ?? 0;
+                        if ($AMOUNT > 0) {
+                            $GEN_NAME = $list->BRAND ? ' (' . $list->BRAND . ')' : '';
+                            $this->philhealthDrugsMedicineServices->DrugMedicineStore(
+                                $this->PHILHEALTH_ID,
+                                $list->ITEM_NAME . $GEN_NAME,
+                                $F_QTY,
+                                $list->DOSAGE ?? '',
+                                $list->ROUTE ?? '',
+                                $list->FREQUENCY ?? '',
+                                $AMOUNT,
+                                "",
+                                0,
+                                "",
+                                "",
+                                "",
+                                0,
+                            );
+                        }
 
-                if ($AMOUNT > 0) {
-                    $GEN_NAME = $list->BRAND ? ' (' . $list->BRAND . ')' : '';
-                    $this->philhealthDrugsMedicineServices->DrugMedicineStore(
-                        $this->PHILHEALTH_ID,
-                        $list->ITEM_NAME . $GEN_NAME,
-                        $defult_Qty,
-                        $list->DOSAGE ?? '',
-                        $list->ROUTE ?? '',
-                        $list->FREQUENCY ?? '',
-                        $AMOUNT,
-                        "",
-                        0,
-                        "",
-                        "",
-                        "",
-                        0,
-                    );
+                    }
                 }
             }
+
         }
-
-
-
-
         $this->clearField();
     }
     public function render()
