@@ -119,24 +119,24 @@ class ItemInventoryServices
             'ENDING_COST'      => $this->numberServices->doubleNumber($ENDING_COST),
         ]);
 
-        $this->itemRecountServers->Insert($ITEM_ID, $LOCATION_ID, $SOURCE_REF_DATE);
+        $nextData = $this->getNextEndingStore($ITEM_ID, $LOCATION_ID, $SOURCE_REF_DATE);
 
-        // $nextData = $this->getNextEndingStore($ITEM_ID, $LOCATION_ID, $SOURCE_REF_DATE);
-        // foreach ($nextData as $list) {
-        //     $ENDING_QUANTITY = $ENDING_QUANTITY + (float) $list->QUANTITY ?? 0;
-        //     $NEW_ENDING_COST = $ENDING_QUANTITY + (float) $list->ENDING_UNIT_COST ?? 0;
+        foreach ($nextData as $list) {
+            $ENDING_QUANTITY = $ENDING_QUANTITY + (float) $list->QUANTITY ?? 0;
+            $NEW_ENDING_COST = $ENDING_QUANTITY + (float) $list->ENDING_UNIT_COST ?? 0;
 
-        //     $this->getNextUpdate(
-        //         $list->ID,
-        //         $ITEM_ID,
-        //         $LOCATION_ID,
-        //         $list->SOURCE_REF_TYPE,
-        //         $list->SOURCE_REF_ID,
-        //         $list->SOURCE_REF_DATE,
-        //         $ENDING_QUANTITY,
-        //         $NEW_ENDING_COST
-        //     );
-        // }
+            $this->getNextUpdate(
+                $list->ID,
+                $ITEM_ID,
+                $LOCATION_ID,
+                $list->SOURCE_REF_TYPE,
+                $list->SOURCE_REF_ID,
+                $list->SOURCE_REF_DATE,
+                $ENDING_QUANTITY,
+                $NEW_ENDING_COST
+            );
+        }
+
     }
     private function Update(int $ITEM_ID, int $LOCATION_ID, int $SOURCE_REF_TYPE, int $SOURCE_REF_ID, string $SOURCE_REF_DATE, float $QUANTITY, float $COST = 0)
     {
@@ -163,8 +163,9 @@ class ItemInventoryServices
                 $ENDING_COST = 0;
 
             }
-            $data->update(['QUANTITY' => $QUANTITY, 'ENDING_QUANTITY' => $ENDING_QUANTITY, 'ENDING_COST' => $this->numberServices->doubleNumber($ENDING_COST)]);
-            // $this->fixList($ITEM_ID, $LOCATION_ID, $SOURCE_REF_DATE, $ID, $ENDING_QUANTITY);
+            $data->update(['QUANTITY' => $QUANTITY,
+                'ENDING_QUANTITY'         => $ENDING_QUANTITY,
+                'ENDING_COST'             => $this->numberServices->doubleNumber($ENDING_COST)]);
 
             $this->itemRecountServers->Insert($ITEM_ID, $LOCATION_ID, $SOURCE_REF_DATE);
         }
@@ -231,48 +232,48 @@ class ItemInventoryServices
 
     //     return $result;
     // }
-    // private function getNextEndingStore(int $ITEM_ID, int $LOCATION_ID, string $SOURCE_REF_DATE)
-    // {
+    private function getNextEndingStore(int $ITEM_ID, int $LOCATION_ID, string $SOURCE_REF_DATE)
+    {
 
-    //     $result = DB::table('item_inventory')
-    //         ->select([
-    //             'ID',
-    //             'QUANTITY',
-    //             'ENDING_UNIT_COST',
-    //             'SOURCE_REF_TYPE',
-    //             'SOURCE_REF_ID',
-    //             'SOURCE_REF_DATE',
-    //             'ENDING_COST',
-    //         ])
-    //         ->where('ITEM_ID', '=', $ITEM_ID)
-    //         ->where('LOCATION_ID', '=', $LOCATION_ID)
-    //         ->where('SOURCE_REF_DATE', '>', $SOURCE_REF_DATE)
-    //         ->orderBy('SOURCE_REF_DATE', 'asc')
-    //         ->orderBy('ID', 'asc')
-    //         ->get();
+        $result = DB::table('item_inventory')
+            ->select([
+                'ID',
+                'QUANTITY',
+                'ENDING_UNIT_COST',
+                'SOURCE_REF_TYPE',
+                'SOURCE_REF_ID',
+                'SOURCE_REF_DATE',
+                'ENDING_COST',
+            ])
+            ->where('ITEM_ID', '=', $ITEM_ID)
+            ->where('LOCATION_ID', '=', $LOCATION_ID)
+            ->where('SOURCE_REF_DATE', '>', $SOURCE_REF_DATE)
+            ->orderBy('SOURCE_REF_DATE', 'asc')
+            ->orderBy('ID', 'asc')
+            ->get();
 
-    //     return $result;
-    // }
-    // private function getNextUpdate(int $ID, int $ITEM_ID, int $LOCATION_ID, int $SOURCE_REF_TYPE, int $SOURCE_REF_ID, string $SOURCE_REF_DATE, float $ENDING_QUANTITY, float $ENDING_COST)
-    // {
-    //     $U_COST = 0;
-    //     if ((float) $ENDING_COST > 0 && (float) $ENDING_QUANTITY > 0) {
+        return $result;
+    }
+    private function getNextUpdate(int $ID, int $ITEM_ID, int $LOCATION_ID, int $SOURCE_REF_TYPE, int $SOURCE_REF_ID, string $SOURCE_REF_DATE, float $ENDING_QUANTITY, float $ENDING_COST)
+    {
+        $U_COST = 0;
+        if ((float) $ENDING_COST > 0 && (float) $ENDING_QUANTITY > 0) {
 
-    //         $U_COST = $ENDING_COST / $ENDING_QUANTITY;
-    //     }
+            $U_COST = $ENDING_COST / $ENDING_QUANTITY;
+        }
 
-    //     ItemInventory::where('ID', $ID)
-    //         ->where('ITEM_ID', $ITEM_ID)
-    //         ->where('LOCATION_ID', $LOCATION_ID)
-    //         ->where('SOURCE_REF_TYPE', $SOURCE_REF_TYPE)
-    //         ->where('SOURCE_REF_ID', $SOURCE_REF_ID)
-    //         ->where('SOURCE_REF_DATE', $SOURCE_REF_DATE)
-    //         ->update([
-    //             'ENDING_QUANTITY'  => $ENDING_QUANTITY,
-    //             'ENDING_UNIT_COST' => $this->numberServices->doubleNumber($U_COST),
-    //             'ENDING_COST'      => $this->numberServices->doubleNumber($ENDING_COST),
-    //         ]);
-    // }
+        ItemInventory::where('ID', $ID)
+            ->where('ITEM_ID', $ITEM_ID)
+            ->where('LOCATION_ID', $LOCATION_ID)
+            ->where('SOURCE_REF_TYPE', $SOURCE_REF_TYPE)
+            ->where('SOURCE_REF_ID', $SOURCE_REF_ID)
+            ->where('SOURCE_REF_DATE', $SOURCE_REF_DATE)
+            ->update([
+                'ENDING_QUANTITY'  => $ENDING_QUANTITY,
+                'ENDING_UNIT_COST' => $this->numberServices->doubleNumber($U_COST),
+                'ENDING_COST'      => $this->numberServices->doubleNumber($ENDING_COST),
+            ]);
+    }
 
     private function getPreviousEnding(int $ITEM_ID, int $LOCATION_ID, string $SOURCE_REF_DATE, int $ID): array
     {
@@ -547,6 +548,14 @@ class ItemInventoryServices
                 $QTY,
                 $COST
             );
+
+            if ($SOURCE_REF_TYPE == 27 && $SOURCE_REF_DATE == $this->dateServices->NowDate()) {
+                // do nothing
+            } else {
+                // make it auto compute
+                $this->itemRecountServers->Insert($ITEM_ID, $LOCATION_ID, $SOURCE_REF_DATE);
+            }
+
         }
     }
 
@@ -611,6 +620,8 @@ class ItemInventoryServices
                         $gotCOST == false ? $ENDING_UNIT_COST : $ENDING_COST / $ENDING_QUANTITY,
                         $ENDING_COST
                     );
+
+                    $this->itemRecountServers->Insert($ITEM_ID, $LOCATION_ID, $SOURCE_REF_DATE);
 
                 } else {
 

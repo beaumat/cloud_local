@@ -25,8 +25,6 @@
                                 wire:loading.attr='disabled' class="btn btn-primary btn-sm">
                                 <i class="fa fa-refresh" aria-hidden="true"></i> Recount
                             </button>
-
-
                         </li>
                     </ol>
                 </div><!-- /.col -->

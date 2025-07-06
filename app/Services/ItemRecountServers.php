@@ -7,6 +7,11 @@ class ItemRecountServers
 {
     private $dateServices;
 
+
+    public function __construct(DateServices $dateServices)
+    {
+        $this->dateServices = $dateServices;
+    }
     public function Insert(int $ITEM_ID, int $LOCATION_ID, string $DATE_ON): void
     {
 
