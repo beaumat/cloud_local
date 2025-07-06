@@ -90,13 +90,13 @@ class PhilHealthAvailmentList extends Component
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
         }
-        
+
     }
     public function updatedYear()
     {
         $this->ResetData();
     }
-    
+
     public function render()
     {
 

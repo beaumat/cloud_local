@@ -2,19 +2,31 @@
     <div class="content-header">
         <div class="container-fluid">
             <div class="row">
-                <div class="col-sm-6">
+                <div class="col-sm-4">
                     <h5 class="m-0">
                         <a href="{{ route('maintenanceothersitem-active-list') }}">Item Inventory </a> |
                         {{ $ITEM_NAME }}
+                        <div wire:loading.delay>
+                            <span class='spinner'></span>
+                        </div>
+                        <button type="button" wire:click='exportData()' wire:loading.attr='disabled'
+                            class="btn btn-success btn-sm">
+                            <i class="fa fa-file-excel-o" aria-hidden="true"></i> Export
+                        </button>
                     </h5>
                 </div><!-- /.col -->
-                <div class="col-sm-6">
+                <div class="col-sm-8">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item active">
-                            <button type="button" wire:click='exportData()' wire:loading.attr='disabled'
-                                class="btn btn-success btn-sm">
-                                <i class="fa fa-file-excel-o" aria-hidden="true"></i> Export
+                            <input type="date" class="text-sm" wire:model='DATE_ON'
+                                wire:loading.attr='disabled'>
+                            <button type="button" wire:confirm='Are you sure'
+                                wire:click='reCountItem()'
+                                wire:loading.attr='disabled' class="btn btn-primary btn-sm">
+                                <i class="fa fa-refresh" aria-hidden="true"></i> Recount
                             </button>
+
+
                         </li>
                     </ol>
                 </div><!-- /.col -->
@@ -66,31 +78,18 @@
                                             </tr>
                                         @endforeach
                                     </tbody>
-
                                 </table>
-
                             </div>
                         </div>
-                        {{-- <div class="card-footer">
+                        <div class="card-footer">
                             <div class="container-fluid">
                                 <div class="row">
-                                    <div class="col-md-6 text-left">
-                                 
-
-                                        <div wire:loading.delay>
-                                            <span class='spinner'></span>
-                                        </div>
-                                    </div>
-                                    <div class='col-md-6 text-right'>
-                                        <button type="button" wire:click='scrollDown()' class="btn btn-info btn-sm"><i
-                                                class="fa fa-angle-double-down" aria-hidden="true"></i>
-                                            Last Row</button>
-                                        <button type="button" wire:click='closeModal()'
-                                            class="btn btn-danger btn-sm">Close</button>
+                                    <div class="col-12 col-md-12">
+                                        {{ $dataList->links() }}
                                     </div>
                                 </div>
                             </div>
-                        </div> --}}
+                        </div>
                     </div>
                 </div>
 
@@ -98,7 +97,7 @@
         </div>
     </section>
 
-    @script
+    {{-- @script
         <script>
             $wire.on('scrollToBottom', (eventData) => {
                 const tableContainer = document.getElementById('tableContainer');
@@ -107,6 +106,6 @@
                 }
             });
         </script>
-    @endscript
+    @endscript --}}
 
 </div>
