@@ -95,7 +95,7 @@ class PrintCf4Back extends Component
 
                 $getData = $this->hemoServices->GetSummary($data->CONTACT_ID, $data->LOCATION_ID, $data->DATE_ADMITTED ?? '', $data->DATE_DISCHARGED ?? '');
                 $getIsExist = $this->doctorOrderDefaultServices->HaveAData($data->LOCATION_ID);
-                // Make it 
+                // Make it
 
                 foreach ($getData as $item) {
 
@@ -133,7 +133,7 @@ class PrintCf4Back extends Component
                 $this->DR_NAME = strtoupper($list->NAME);
                 return;
             }
-            
+
         } else {
             $this->makeTemp();
             $this->getMed(0);
@@ -158,7 +158,7 @@ class PrintCf4Back extends Component
     }
     public function getMed(int $ID)
     {
-        for ($i = 0; $i < 8; $i++) {
+        for ($i = 0; $i <= 8; $i++) {
             // first Initialize default value.
             $this->dataMed[$i]['GENERIC_NAME'] = '';
             $this->dataMed[$i]['QUANTITY'] = '';
@@ -180,7 +180,7 @@ class PrintCf4Back extends Component
             $r = 0;
 
             foreach ($dt as $list) {
-                if ($r == 7) {
+                if ($r == 8) {
                     return;
                 }
                 $this->dataMed[$r]['GENERIC_NAME'] = $list->GENERIC_NAME ?? '';
