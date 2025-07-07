@@ -95,6 +95,28 @@ class DrugMedicines extends Component
     }
     public function save()
     {
+
+
+        $this->validate([
+            'PHILHEALTH_ID'      => 'required|integer',
+            'GENERIC_NAME'       => 'required|string|max:255',
+            'QUANTITY'           => 'required|numeric|min:0',
+            'DOSSAGE'            => 'nullable|string|max:255',
+            'ROUTE'              => 'nullable|string|max:255',
+            'FREQUENCY'          => 'nullable|string|max:255',
+            'TOTAL_COST'         => 'required|numeric|min:0',
+
+        ],[],[
+            'PHILHEALTH_ID'      => 'PhilHealth ID',
+            'GENERIC_NAME'       => 'Generic Name',
+            'QUANTITY'           => 'Quantity',
+            'DOSSAGE'            => 'Dosage',
+            'ROUTE'              => 'Route',
+            'FREQUENCY'          => 'Frequency',
+            'TOTAL_COST'         => 'Total Cost',
+        ]);
+
+
         $this->philhealthDrugsMedicineServices->DrugMedicineStore(
             $this->PHILHEALTH_ID,
             $this->GENERIC_NAME,

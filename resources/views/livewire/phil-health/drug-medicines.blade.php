@@ -7,6 +7,8 @@
         </div>
     </div>
     <div class="col-md-9">
+        @livewire('alert-layout', ['errors' => $errors->any() ? $errors->all() : '', 'message' => session('message'), 'error' => session('error')])
+
         <table class="table table-sm w-100 table-bordered">
             <thead class="text-xs bg-sky ">
                 <tr>
@@ -136,24 +138,27 @@
                         </td>
                     </tr>
                 @endforeach
-                <form wire:submit.prevent='save' wire:loading.attr='disabled'>
-                    <tr>
-                        <td> <input type="text" class="text-sm w-100" wire:model='GENERIC_NAME' /> </td>
-                        <td> <input type="number" class="text-sm w-100" wire:model='QUANTITY' /> </td>
-                        <td> <input type="text" class="text-sm w-100" wire:model='DOSSAGE' /> </td>
-                        <td> <input type="text" class="text-sm w-100" wire:model='ROUTE' /> </td>
-                        <td> <input type="text" class="text-sm w-100" wire:model='FREQUENCY' /> </td>
-                        <td> <input type="number" class="text-sm w-100" wire:model='TOTAL_COST' /> </td>
-                        <td> <input type="text" class="text-sm w-100" wire:model='CONT_GENERIC_NAME' /> </td>
-                        <td> <input type="number" class="text-sm w-100" wire:model='CONT_QUANTITY' /> </td>
-                        <td> <input type="text" class="text-sm w-100" wire:model='CONT_DOSSAGE' /> </td>
-                        <td> <input type="text" class="text-sm w-100" wire:model='CONT_ROUTE' /> </td>
-                        <td> <input type="text" class="text-sm w-100" wire:model='CONT_FREQUENCY' /> </td>
-                        <td> <input type="number" class="text-sm w-100" wire:model='CONT_TOTAL_COST' /> </td>
-                        <td> <button type="submit" class="btn btn-xs btn-success w-100"> <i class="fa fa-plus"
-                                    aria-hidden="true"></i> </button> </td>
-                    </tr>
-                </form>
+
+                <tr wire:loading.attr='disabled'>
+                    <td> <input type="text" class="text-sm w-100" wire:model='GENERIC_NAME' /> </td>
+                    <td> <input type="number" class="text-sm w-100" wire:model='QUANTITY' /> </td>
+                    <td> <input type="text" class="text-sm w-100" wire:model='DOSSAGE' /> </td>
+                    <td> <input type="text" class="text-sm w-100" wire:model='ROUTE' /> </td>
+                    <td> <input type="text" class="text-sm w-100" wire:model='FREQUENCY' /> </td>
+                    <td> <input type="number" class="text-sm w-100" wire:model='TOTAL_COST' /> </td>
+                    <td> <input type="text" class="text-sm w-100" wire:model='CONT_GENERIC_NAME' /> </td>
+                    <td> <input type="number" class="text-sm w-100" wire:model='CONT_QUANTITY' /> </td>
+                    <td> <input type="text" class="text-sm w-100" wire:model='CONT_DOSSAGE' /> </td>
+                    <td> <input type="text" class="text-sm w-100" wire:model='CONT_ROUTE' /> </td>
+                    <td> <input type="text" class="text-sm w-100" wire:model='CONT_FREQUENCY' /> </td>
+                    <td> <input type="number" class="text-sm w-100" wire:model='CONT_TOTAL_COST' /> </td>
+                    <td>
+                        <button type="button" wire:loading.class='loading-form' wire:click='save()'
+                            class="btn btn-xs btn-success w-100">
+                            <i class="fa fa-plus" aria-hidden="true"></i> </button>
+                    </td>
+                </tr>
+
                 @if ($isItemized)
                     @if (!$exists)
                         <tr>
