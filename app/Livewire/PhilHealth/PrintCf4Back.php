@@ -158,7 +158,7 @@ class PrintCf4Back extends Component
     }
     public function getMed(int $ID)
     {
-        for ($i = 0; $i <= 8; $i++) {
+        for ($i = 0; $i < 8; $i++) {
             // first Initialize default value.
             $this->dataMed[$i]['GENERIC_NAME'] = '';
             $this->dataMed[$i]['QUANTITY'] = '';
