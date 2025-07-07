@@ -73,8 +73,7 @@ class DrugMedicines extends Component
             $this->DATE_ADMITTED   = $data->DATE_ADMITTED;
             $this->DATE_DISCHARGED = $data->DATE_DISCHARGED;
             $this->CONTACT_ID      = $data->CONTACT_ID;
-
-            $this->isItemized = $this->locationServices->isITEMIZED($this->LOCATION_ID);
+            $this->isItemized      = $this->locationServices->isITEMIZED($this->LOCATION_ID);
 
         }
     }
@@ -202,6 +201,8 @@ class DrugMedicines extends Component
             return;
         }
 
+        $IS_ONE_QTY = false;
+
         $dateList = [];
         $qty      = 0;
         $dataList = $this->hemoServices->GetSummary($this->CONTACT_ID, $this->LOCATION_ID, $this->DATE_ADMITTED ?? '', $this->DATE_DISCHARGED ?? '');
@@ -214,28 +215,59 @@ class DrugMedicines extends Component
         // Check if the location has a service charge base
         if ($isSC_BASE) {
             // If it has a service charge base, get the medicine list based on the service charge base
+            $AS_ONE_PER = (bool) $this->locationServices->AllowedFixLocation($this->LOCATION_ID, [32, 33]);
+
             $itemList = $this->itemSoaServices->GetMedicineListBySCBase($this->LOCATION_ID);
             foreach ($itemList as $list) {
-                $defult_Qty = $this->itemSoaItemizedServices->getQuantityActual($dateList, $this->LOCATION_ID, $this->CONTACT_ID, $list->ID, );
-                $AMOUNT     = $defult_Qty * $list->RATE ?? 0;
-                if ($AMOUNT > 0) {
-                    $GEN_NAME = $list->BRAND ? ' (' . $list->BRAND . ')' : '';
-                    $this->philhealthDrugsMedicineServices->DrugMedicineStore(
-                        $this->PHILHEALTH_ID,
-                        $list->GENERIC_NAME . $GEN_NAME,
-                        $defult_Qty,
-                        $list->DOSAGE ?? '',
-                        $list->ROUTE ?? '',
-                        $list->FREQUENCY ?? '',
-                        $AMOUNT,
-                        "",
-                        0,
-                        "",
-                        "",
-                        "",
-                        0,
-                    );
+                $defult_Qty = (int) $this->itemSoaItemizedServices->getQuantityActual($dateList, $this->LOCATION_ID, $this->CONTACT_ID, $list->ID, );
+
+                if ($AS_ONE_PER) {
+                // If it has a service charge base and is set to one per day, loop through the quantity
+                    for ($i = 0; $i < $defult_Qty; $i++) {
+                        $AMOUNT = 1 * $list->RATE ?? 0;
+                        if ($AMOUNT > 0) {
+                            $GEN_NAME = $list->BRAND ? ' (' . $list->BRAND . ')' : '';
+                            $this->philhealthDrugsMedicineServices->DrugMedicineStore(
+                                $this->PHILHEALTH_ID,
+                                $list->GENERIC_NAME . $GEN_NAME,
+                                1,
+                                $list->DOSAGE ?? '',
+                                $list->ROUTE ?? '',
+                                $list->FREQUENCY ?? '',
+                                $AMOUNT,
+                                "",
+                                0,
+                                "",
+                                "",
+                                "",
+                                0,
+                            );
+                        }
+                    }
+                } else {
+                    // If it has a service charge base and is not set to one per day, use the default quantity
+                    $AMOUNT = $defult_Qty * $list->RATE ?? 0;
+                    if ($AMOUNT > 0) {
+                        $GEN_NAME = $list->BRAND ? ' (' . $list->BRAND . ')' : '';
+                        $this->philhealthDrugsMedicineServices->DrugMedicineStore(
+                            $this->PHILHEALTH_ID,
+                            $list->GENERIC_NAME . $GEN_NAME,
+                            $defult_Qty,
+                            $list->DOSAGE ?? '',
+                            $list->ROUTE ?? '',
+                            $list->FREQUENCY ?? '',
+                            $AMOUNT,
+                            "",
+                            0,
+                            "",
+                            "",
+                            "",
+                            0,
+                        );
+                    }
+
                 }
+
             }
 
         }
@@ -271,8 +303,6 @@ class DrugMedicines extends Component
         }
 
         if (! $isSC_BASE) {
-
-            $IS_ONE_QTY = false;
 
             if (! $IS_ONE_QTY) {
 

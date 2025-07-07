@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Services;
 
 use App\Models\Locations;
@@ -46,7 +45,7 @@ class LocationServices
                 'm.PRINT_NAME_AS as MANAGER_NAME',
                 'm.NICKNAME as MANAGER_POSITION',
                 'p.PRINT_NAME_AS as PHIC_NAME',
-                'p.NICKNAME as PHIC_POSITION'
+                'p.NICKNAME as PHIC_POSITION',
             ])
             ->leftJoin('contact as m', 'm.ID', '=', 'location.HCI_MANAGER_ID')
             ->leftJoin('contact as p', 'p.ID', '=', 'location.PHIC_INCHARGE_ID')
@@ -107,37 +106,37 @@ class LocationServices
     ): int {
         $ID = $this->object->ObjectNextID('LOCATION');
         Locations::create([
-            'ID' => $ID,
-            'NAME' => $NAME,
-            'INACTIVE' => $INACTIVE,
-            'PRICE_LEVEL_ID' => $PRICE_LEVEL_ID > 0 ? $PRICE_LEVEL_ID : null,
-            'GROUP_ID' => $GROUP_ID > 0 ? $GROUP_ID : null,
-            'HCI_MANAGER_ID' => $HCI_MANAGER_ID > 0 ? $HCI_MANAGER_ID : null,
-            'PHIC_INCHARGE_ID' => $PHIC_INCHARGE_ID > 0 ? $PHIC_INCHARGE_ID : null,
-            'NAME_OF_BUSINESS' => strtoupper($NAME_OF_BUSINESS),
-            'ACCREDITATION_NO' => $ACCREDITATION_NO,
-            'BLDG_NAME_LOT_BLOCK' => strtoupper($BLDG_NAME_LOT_BLOCK),
-            'STREET_SUB_VALL' => strtoupper($STREET_SUB_VALL),
-            'BRGY_CITY_MUNI' => strtoupper($BRGY_CITY_MUNI),
-            'PROVINCE' => strtoupper($PROVINCE),
-            'ZIP_CODE' => $ZIP_CODE,
-            'REPORT_HEADER_1' => $REPORT_HEADER_1,
-            'REPORT_HEADER_2' => $REPORT_HEADER_2,
-            'REPORT_HEADER_3' => $REPORT_HEADER_3,
-            'PHIC_SOA_FORMAT' => $PHIC_SOA_FORMAT,
-            'PHIC_FORM_MODIFY' => $PHIC_FORM_MODIFY,
-            'IS_DAILY' => $IS_DAILY,
-            'LOGO_FILE' => $LOGO_FILE,
-            'USED_DRY_WEIGHT' => $USED_DRY_WEIGHT,
-            'DOCTOR_ORDER_DEFAULT' => $DOCTOR_ORDER_DEFAULT,
-            'OTHER_SIGN' => $OTHER_SIGN,
-            'PREPARED_BY_ID' => $PREPARED_BY_ID > 0 ? $HD_FACILITY_REP_ID : null,
-            'HD_FACILITY_REP_ID' => $HD_FACILITY_REP_ID > 0 ? $HD_FACILITY_REP_ID : null,
-            'ITEMIZED_BASE' => $ITEMIZED_BASE,
-            'PHIC_INCHARGE2_ID' => $PHIC_INCHARGE2_ID > 0 ? $PHIC_INCHARGE2_ID : null,
+            'ID'                              => $ID,
+            'NAME'                            => $NAME,
+            'INACTIVE'                        => $INACTIVE,
+            'PRICE_LEVEL_ID'                  => $PRICE_LEVEL_ID > 0 ? $PRICE_LEVEL_ID : null,
+            'GROUP_ID'                        => $GROUP_ID > 0 ? $GROUP_ID : null,
+            'HCI_MANAGER_ID'                  => $HCI_MANAGER_ID > 0 ? $HCI_MANAGER_ID : null,
+            'PHIC_INCHARGE_ID'                => $PHIC_INCHARGE_ID > 0 ? $PHIC_INCHARGE_ID : null,
+            'NAME_OF_BUSINESS'                => strtoupper($NAME_OF_BUSINESS),
+            'ACCREDITATION_NO'                => $ACCREDITATION_NO,
+            'BLDG_NAME_LOT_BLOCK'             => strtoupper($BLDG_NAME_LOT_BLOCK),
+            'STREET_SUB_VALL'                 => strtoupper($STREET_SUB_VALL),
+            'BRGY_CITY_MUNI'                  => strtoupper($BRGY_CITY_MUNI),
+            'PROVINCE'                        => strtoupper($PROVINCE),
+            'ZIP_CODE'                        => $ZIP_CODE,
+            'REPORT_HEADER_1'                 => $REPORT_HEADER_1,
+            'REPORT_HEADER_2'                 => $REPORT_HEADER_2,
+            'REPORT_HEADER_3'                 => $REPORT_HEADER_3,
+            'PHIC_SOA_FORMAT'                 => $PHIC_SOA_FORMAT,
+            'PHIC_FORM_MODIFY'                => $PHIC_FORM_MODIFY,
+            'IS_DAILY'                        => $IS_DAILY,
+            'LOGO_FILE'                       => $LOGO_FILE,
+            'USED_DRY_WEIGHT'                 => $USED_DRY_WEIGHT,
+            'DOCTOR_ORDER_DEFAULT'            => $DOCTOR_ORDER_DEFAULT,
+            'OTHER_SIGN'                      => $OTHER_SIGN,
+            'PREPARED_BY_ID'                  => $PREPARED_BY_ID > 0 ? $HD_FACILITY_REP_ID : null,
+            'HD_FACILITY_REP_ID'              => $HD_FACILITY_REP_ID > 0 ? $HD_FACILITY_REP_ID : null,
+            'ITEMIZED_BASE'                   => $ITEMIZED_BASE,
+            'PHIC_INCHARGE2_ID'               => $PHIC_INCHARGE2_ID > 0 ? $PHIC_INCHARGE2_ID : null,
             'LEAVE_BLANK_AG_ADMIN_OFFICE_FEE' => $LEAVE_BLANK_AG_ADMIN_OFFICE_FEE,
-            'PF_TAX_ID' => $PF_TAX_ID,
-            'HCI_MANAGER_TREATMENT_ID' => $HCI_MANAGER_TREATMENT_ID > 0 ? $HCI_MANAGER_TREATMENT_ID : null
+            'PF_TAX_ID'                       => $PF_TAX_ID,
+            'HCI_MANAGER_TREATMENT_ID'        => $HCI_MANAGER_TREATMENT_ID > 0 ? $HCI_MANAGER_TREATMENT_ID : null,
         ]);
 
         return $ID;
@@ -180,36 +179,36 @@ class LocationServices
 
         Locations::where('ID', $ID)
             ->update([
-                'NAME' => $NAME,
-                'INACTIVE' => $INACTIVE,
-                'PRICE_LEVEL_ID' => $PRICE_LEVEL_ID > 0 ? $PRICE_LEVEL_ID : null,
-                'GROUP_ID' => $GROUP_ID > 0 ? $GROUP_ID : null,
-                'HCI_MANAGER_ID' => $HCI_MANAGER_ID > 0 ? $HCI_MANAGER_ID : null,
-                'PHIC_INCHARGE_ID' => $PHIC_INCHARGE_ID > 0 ? $PHIC_INCHARGE_ID : null,
-                'NAME_OF_BUSINESS' => strtoupper($NAME_OF_BUSINESS),
-                'ACCREDITATION_NO' => $ACCREDITATION_NO,
-                'BLDG_NAME_LOT_BLOCK' => strtoupper($BLDG_NAME_LOT_BLOCK),
-                'STREET_SUB_VALL' => strtoupper($STREET_SUB_VALL),
-                'BRGY_CITY_MUNI' => strtoupper($BRGY_CITY_MUNI),
-                'PROVINCE' => strtoupper($PROVINCE),
-                'ZIP_CODE' => $ZIP_CODE,
-                'REPORT_HEADER_1' => $REPORT_HEADER_1,
-                'REPORT_HEADER_2' => $REPORT_HEADER_2,
-                'REPORT_HEADER_3' => $REPORT_HEADER_3,
-                'PHIC_SOA_FORMAT' => $PHIC_SOA_FORMAT,
-                'PHIC_FORM_MODIFY' => $PHIC_FORM_MODIFY,
-                'IS_DAILY' => $IS_DAILY,
-                'LOGO_FILE' => $LOGO_FILE,
-                'USED_DRY_WEIGHT' => $USED_DRY_WEIGHT,
-                'DOCTOR_ORDER_DEFAULT' => $DOCTOR_ORDER_DEFAULT,
-                'OTHER_SIGN' => $OTHER_SIGN,
-                'PREPARED_BY_ID' => $PREPARED_BY_ID > 0 ? $PREPARED_BY_ID : null,
-                'HD_FACILITY_REP_ID' => $HD_FACILITY_REP_ID > 0 ? $HD_FACILITY_REP_ID : null,
-                'ITEMIZED_BASE' => $ITEMIZED_BASE,
-                'PHIC_INCHARGE2_ID' => $PHIC_INCHARGE2_ID,
+                'NAME'                            => $NAME,
+                'INACTIVE'                        => $INACTIVE,
+                'PRICE_LEVEL_ID'                  => $PRICE_LEVEL_ID > 0 ? $PRICE_LEVEL_ID : null,
+                'GROUP_ID'                        => $GROUP_ID > 0 ? $GROUP_ID : null,
+                'HCI_MANAGER_ID'                  => $HCI_MANAGER_ID > 0 ? $HCI_MANAGER_ID : null,
+                'PHIC_INCHARGE_ID'                => $PHIC_INCHARGE_ID > 0 ? $PHIC_INCHARGE_ID : null,
+                'NAME_OF_BUSINESS'                => strtoupper($NAME_OF_BUSINESS),
+                'ACCREDITATION_NO'                => $ACCREDITATION_NO,
+                'BLDG_NAME_LOT_BLOCK'             => strtoupper($BLDG_NAME_LOT_BLOCK),
+                'STREET_SUB_VALL'                 => strtoupper($STREET_SUB_VALL),
+                'BRGY_CITY_MUNI'                  => strtoupper($BRGY_CITY_MUNI),
+                'PROVINCE'                        => strtoupper($PROVINCE),
+                'ZIP_CODE'                        => $ZIP_CODE,
+                'REPORT_HEADER_1'                 => $REPORT_HEADER_1,
+                'REPORT_HEADER_2'                 => $REPORT_HEADER_2,
+                'REPORT_HEADER_3'                 => $REPORT_HEADER_3,
+                'PHIC_SOA_FORMAT'                 => $PHIC_SOA_FORMAT,
+                'PHIC_FORM_MODIFY'                => $PHIC_FORM_MODIFY,
+                'IS_DAILY'                        => $IS_DAILY,
+                'LOGO_FILE'                       => $LOGO_FILE,
+                'USED_DRY_WEIGHT'                 => $USED_DRY_WEIGHT,
+                'DOCTOR_ORDER_DEFAULT'            => $DOCTOR_ORDER_DEFAULT,
+                'OTHER_SIGN'                      => $OTHER_SIGN,
+                'PREPARED_BY_ID'                  => $PREPARED_BY_ID > 0 ? $PREPARED_BY_ID : null,
+                'HD_FACILITY_REP_ID'              => $HD_FACILITY_REP_ID > 0 ? $HD_FACILITY_REP_ID : null,
+                'ITEMIZED_BASE'                   => $ITEMIZED_BASE,
+                'PHIC_INCHARGE2_ID'               => $PHIC_INCHARGE2_ID,
                 'LEAVE_BLANK_AG_ADMIN_OFFICE_FEE' => $LEAVE_BLANK_AG_ADMIN_OFFICE_FEE,
-                'PF_TAX_ID' => $PF_TAX_ID,
-                'HCI_MANAGER_TREATMENT_ID' => $HCI_MANAGER_TREATMENT_ID > 0 ? $HCI_MANAGER_TREATMENT_ID : null
+                'PF_TAX_ID'                       => $PF_TAX_ID,
+                'HCI_MANAGER_TREATMENT_ID'        => $HCI_MANAGER_TREATMENT_ID > 0 ? $HCI_MANAGER_TREATMENT_ID : null,
 
             ]);
     }
@@ -229,7 +228,7 @@ class LocationServices
                     'location.PRICE_LEVEL_ID',
                     'location.GROUP_ID',
                     'price_level.DESCRIPTION as PRICE_LEVEL',
-                    'item_group.DESCRIPTION as ITEM_GROUP'
+                    'item_group.DESCRIPTION as ITEM_GROUP',
                 ]
             )
             ->leftJoin('price_level', 'price_level.ID', '=', 'location.PRICE_LEVEL_ID')
@@ -246,14 +245,23 @@ class LocationServices
     {
         Locations::where('ID', '=', $ID)
             ->update([
-                'HD_FACILITY_REP_ID' => $HD_FACILITY_REP_ID > 0 ? $HD_FACILITY_REP_ID : null
+                'HD_FACILITY_REP_ID' => $HD_FACILITY_REP_ID > 0 ? $HD_FACILITY_REP_ID : null,
             ]);
     }
     public function UpdatePhicIncharge(int $ID, int $PHIC_INCHARGE_ID)
     {
         Locations::where('ID', '=', $ID)
             ->update([
-                'PHIC_INCHARGE2_ID' => $PHIC_INCHARGE_ID > 0 ? $PHIC_INCHARGE_ID : null
+                'PHIC_INCHARGE2_ID' => $PHIC_INCHARGE_ID > 0 ? $PHIC_INCHARGE_ID : null,
             ]);
+    }
+    public function AllowedFixLocation(int $LOCATION_ID, array $ALLOWED_LOCATIONS = []): bool
+    {
+        if (in_array((int) $LOCATION_ID, $ALLOWED_LOCATIONS)) {
+            // These locations are allowed to be fixed
+            return true;
+        }
+        // how will allowed --- IGNORE ---
+        return false;
     }
 }
