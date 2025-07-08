@@ -41,7 +41,7 @@
                                     $TOTAL_TREATMENT = $TOTAL_TREATMENT + $list->TOTAL_COUNT;
                                     $TOTAL_PAID = $TOTAL_PAID + $list->AMOUNT ?? 0;
                                     $TOTAL_TAX = $TOTAL_TAX + $list->TAX_AMOUNT ?? 0;
-                                    $TOTAL_AMOUNT = $TOTAL_AMOUNT + ($list->AMOUNT ?? 0 + $list->TAX_AMOUNT ?? 0 );
+                                    $TOTAL_AMOUNT = $TOTAL_AMOUNT + ($list->AMOUNT ?? 0) + ($list->TAX_AMOUNT ?? 0 );
                                 @endphp
                                 <tr>
                                     <th class="text-center  font-weight-normalf">{{ $n }}</th>
