@@ -25,6 +25,7 @@ class PhilhealthAnnexTwo extends Component
     private $locationServices;
     private $userServices;
     private $dateServices;
+
     public function boot(PhilHealthServices $philHealthServices, LocationServices $locationServices, UserServices $userServices, DateServices $dateServices)
     {
         $this->philHealthServices = $philHealthServices;

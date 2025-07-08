@@ -1,6 +1,7 @@
 <?php
 namespace App\Livewire\PatientReport;
 
+use App\Services\ContactServices;
 use App\Services\DateServices;
 use App\Services\LocationServices;
 use App\Services\PhilHealthServices;
@@ -14,24 +15,47 @@ use Livewire\Component;
 class PhilhealthAnnexOnePrint extends Component
 {
 
+    public string $EMPLOYEE_NAME;
+    public string $EMPLOYEE_POSITION;
+
+    public string $MANAGER_NAME;
+    public string $APPROVED_BY;
 
     public $dataList = [];
     private $philHealthServices;
     private $locationServices;
     private $userServices;
     private $dateServices;
-    public function boot(PhilHealthServices $philHealthServices, LocationServices $locationServices, UserServices $userServices, DateServices $dateServices)
+    private $contactServices;
+    public function boot(PhilHealthServices $philHealthServices, LocationServices $locationServices, UserServices $userServices, DateServices $dateServices, ContactServices $contactServices)
     {
         $this->philHealthServices = $philHealthServices;
         $this->locationServices   = $locationServices;
         $this->userServices       = $userServices;
         $this->dateServices       = $dateServices;
+        $this->contactServices    = $contactServices;
     }
 
-    public function mount( int $locationid, int $year, int $month)
+    public function mount(int $locationid, int $year, int $month)
     {
         $this->dataList = $this->philHealthServices->GenerateAnnex($year, $month, $locationid, 0);
         $this->dispatch('preview_print');
+
+        $locData = $this->locationServices->get($locationid);
+
+        if ($locData) {
+
+            $conPHIC = $this->contactServices->get($locData->PREPARED_BY_ID ?? Auth()->user()->contact_id, 2); // Employee
+            if ($conPHIC) {
+                $this->EMPLOYEE_POSITION = "Billing Clerk";
+                $this->EMPLOYEE_NAME     = strtoupper($conPHIC->PRINT_NAME_AS) ?? '';
+            }
+
+            $conMgr = $this->contactServices->get($locData->HCI_MANAGER_TREATMENT_ID, 2); // Employee
+            if ($conMgr) {
+                $this->MANAGER_NAME = strtoupper($conMgr->PRINT_NAME_AS) ?? '';
+            }
+        }
     }
     #[On('preview_print')]
     public function print()

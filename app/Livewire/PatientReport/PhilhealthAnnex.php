@@ -12,7 +12,6 @@ use Livewire\Component;
 class PhilhealthAnnex extends Component
 {
 
-    public int $columnType;
     public int $YEAR;
     public int $MONTH;
     public $monthList = [];
@@ -44,6 +43,13 @@ class PhilhealthAnnex extends Component
     {
         $this->columnType = 0;
         $this->dataList   = [];
+
+        try {
+            $this->userServices->SwapLocation($this->LOCATION_ID);
+        } catch (\Exception $e) {
+            $errorMessage = 'Error occurred: ' . $e->getMessage();
+            session()->flash('error', $errorMessage);
+        }
     }
     public function updatedYEAR()
     {
@@ -55,31 +61,11 @@ class PhilhealthAnnex extends Component
         $this->columnType = 0;
         $this->dataList   = [];
     }
-    public function generateB()
+    public function generate()
     {
-        $this->columnType = 1;
-
-        $this->dataList = $this->philHealthServices->GenerateAnnex($this->YEAR, $this->MONTH, $this->LOCATION_ID, 0);
-
+        $this->dataList = $this->philHealthServices->GenerateAnnex($this->YEAR, $this->MONTH, $this->LOCATION_ID);
     }
-    public function generateC()
-    {
-        $this->columnType = 2;
-        $this->dataList   = $this->philHealthServices->GenerateAnnex($this->YEAR, $this->MONTH, $this->LOCATION_ID, 1);
-    }
-    public function Exporting()
-    {
 
-        if ($this->columnType == 1) {
-            $this->dataList = $this->philHealthServices->GenerateAnnex($this->YEAR, $this->MONTH, $this->LOCATION_ID, 0);
-            return;
-        }
-
-        if ($this->columnType == 2) {
-            $this->dataList = $this->philHealthServices->GenerateAnnex($this->YEAR, $this->MONTH, $this->LOCATION_ID, 1);
-            return;
-        }
-    }
     private int $autoNumber = 0;
     private function setData($data)
     {
@@ -101,14 +87,15 @@ class PhilhealthAnnex extends Component
         $this->autoNumber == 0;
         // Reset autoNumber to 0 before generating new data
         if ($this->columnType == 1) {
-            $dataList = $this->philHealthServices->GenerateAnnex($this->YEAR, $this->MONTH, $this->LOCATION_ID, 0);
+            $dataList = $this->philHealthServices->GenerateAnnex($this->YEAR, $this->MONTH, $this->LOCATION_ID);
             foreach ($dataList as $data) {
                 $this->setData($data);
             }
-            $this->generateB();
+            $this->generate();
         }
 
     }
+
     public function render()
     {
         return view('livewire.patient-report.philhealth-annex');
