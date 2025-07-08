@@ -26,7 +26,7 @@ class Locations extends Model
         'BLDG_NAME_LOT_BLOCK',
         'STREET_SUB_VALL',
         'BRGY_CITY_MUNI',
-        'PROVINCE',        
+        'PROVINCE',
         'ZIP_CODE',
         'REPORT_HEADER_1',
         'REPORT_HEADER_2',
@@ -44,6 +44,7 @@ class Locations extends Model
         'PHIC_INCHARGE2_ID',
         'LEAVE_BLANK_AG_ADMIN_OFFICE_FEE',
         'PF_TAX_ID',
-        'HCI_MANAGER_TREATMENT_ID',  
+        'HCI_MANAGER_TREATMENT_ID',
+        'MEDICAL_DIRECTOR'
     ];
 }
