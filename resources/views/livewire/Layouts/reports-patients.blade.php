@@ -85,9 +85,17 @@ use App\Services\UserServices;
         @if (UserServices::GetUserRightAccess('report.philhealth.annex'))
             <li class="nav-item ">
                 <a href="{{ route('reportsphilhealth_annex_report') }}"
-                    class="nav-link {{ request()->is('reports/patients/philhealth-annex*') ? 'text-warning font-weight-bold' : '' }}">
+                    class="nav-link {{ request()->is('reports/patients/philhealth-annex/one*') ? 'text-warning font-weight-bold' : '' }}">
                     <i class="fa fa-print nav-icon"></i>
-                    <p>(IBNR) Report</p>
+                    <p>Annex C</p>
+                </a>
+            </li>
+
+            <li class="nav-item ">
+                <a href="{{ route('reportsphilhealth_annex_two_report') }}"
+                    class="nav-link {{ request()->is('reports/patients/philhealth-annex/two*') ? 'text-warning font-weight-bold' : '' }}">
+                    <i class="fa fa-print nav-icon"></i>
+                    <p>Annex D</p>
                 </a>
             </li>
         @endif

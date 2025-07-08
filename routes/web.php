@@ -107,6 +107,7 @@ use App\Livewire\PatientReport\PatientSalesReportPrint;
 use App\Livewire\PatientReport\PatientTreatmentReport;
 use App\Livewire\PatientReport\PhilhealthAnnex;
 use App\Livewire\PatientReport\PhilhealthAnnexOnePrint;
+use App\Livewire\PatientReport\PhilhealthAnnexTwo;
 use App\Livewire\PatientReport\PhilhealthAnnexTwoPrint;
 use App\Livewire\PatientReport\PhilHealthAvailmentList;
 use App\Livewire\PatientReport\PhilHealthAvailmentListPrint;
@@ -698,9 +699,10 @@ Route::middleware(['auth'])->group(function () {
             });
 
             Route::prefix('/philhealth-annex')->group(function () {
-                Route::get('/', PhilhealthAnnex::class)->name('philhealth_annex_report')->middleware(['permission:report.philhealth.annex']);
-                Route::get('/B-Print/{locationid}/{year}/{month}', PhilhealthAnnexOnePrint::class)->name('philhealth_annex_one_print')->middleware(['permission:report.philhealth.annex']);
-                Route::get('/C-Print/{locationid}/{year}/{month}', PhilhealthAnnexTwoPrint::class)->name('philhealth_annex_two_print')->middleware(['permission:report.philhealth.annex']);
+                Route::get('/one', PhilhealthAnnex::class)->name('philhealth_annex_report')->middleware(['permission:report.philhealth.annex']);
+                Route::get('/one/Print/{locationid}/{year}/{month}', PhilhealthAnnexOnePrint::class)->name('philhealth_annex_one_print')->middleware(['permission:report.philhealth.annex']);
+                Route::get('/two', PhilhealthAnnexTwo::class)->name('philhealth_annex_two_report')->middleware(['permission:report.philhealth.annex']);
+                Route::get('/two/Print/{locationid}/{year}/{month}', PhilhealthAnnexTwoPrint::class)->name('philhealth_annex_two_print')->middleware(['permission:report.philhealth.annex']);
             });
 
         });

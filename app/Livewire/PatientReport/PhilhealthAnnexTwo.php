@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Livewire\PatientReport;
 
 use App\Services\DateServices;
@@ -8,8 +9,8 @@ use App\Services\UserServices;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 
-#[Title(('Annex C Report'))]
-class PhilhealthAnnex extends Component
+#[Title(('Annex D Report'))]
+class PhilhealthAnnexTwo extends Component
 {
 
     public int $columnType;
@@ -111,6 +112,6 @@ class PhilhealthAnnex extends Component
     }
     public function render()
     {
-        return view('livewire.patient-report.philhealth-annex');
+        return view('livewire.patient-report.philhealth-annex-two');
     }
 }
