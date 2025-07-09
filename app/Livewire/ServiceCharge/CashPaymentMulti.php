@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Livewire\ServiceCharge;
 
 use App\Services\PatientPaymentServices;
@@ -30,9 +29,9 @@ class CashPaymentMulti extends Component
         PatientPaymentServices $patientPaymentServices,
         UserServices $userServices
     ) {
-        $this->serviceChargeServices = $serviceChargeServices;
+        $this->serviceChargeServices  = $serviceChargeServices;
         $this->patientPaymentServices = $patientPaymentServices;
-        $this->userServices = $userServices;
+        $this->userServices           = $userServices;
     }
     #[On('cash-payment-prompt-multi')]
     public function openModal()
@@ -41,8 +40,8 @@ class CashPaymentMulti extends Component
         $this->SelectAll = false;
         $this->reset('itemSelected');
 
-        $this->itemList = $this->serviceChargeServices->ItemView($this->SERVICE_CHARGES_ID, true);
-        $this->DATE = $this->userServices->getTransactionDateDefault();
+        $this->itemList  = $this->serviceChargeServices->ItemView($this->SERVICE_CHARGES_ID, true);
+        $this->DATE      = $this->userServices->getTransactionDateDefault();
         $this->showModal = true;
     }
     public function updateditemSelected()
@@ -64,7 +63,7 @@ class CashPaymentMulti extends Component
         $arrayItem = [];
         foreach ($this->itemSelected as $id => $isSelected) {
             if ($isSelected) {
-                $arrayItem[] =  $id;
+                $arrayItem[] = $id;
             }
         }
         $this->AMOUNT = $this->serviceChargeServices->getItemListSum($this->SERVICE_CHARGES_ID, $arrayItem);
@@ -96,17 +95,17 @@ class CashPaymentMulti extends Component
     {
         $this->validate(
             [
-                'AMOUNT'            => 'required|not_in:0',
-                'RECEIPT_REF_NO'    => 'required'
+                'AMOUNT'         => 'required|not_in:0',
+                'RECEIPT_REF_NO' => 'required',
             ],
             [],
             [
-                'AMOUNT'            => 'Payment Amount',
-                'RECEIPT_REF_NO'    => 'SL No.'
+                'AMOUNT'         => 'Payment Amount',
+                'RECEIPT_REF_NO' => 'SL No.',
             ]
         );
 
-        if (!$this->CheckIsItemSelected()) {
+        if (! $this->CheckIsItemSelected()) {
             session()->flash('error', 'Invalid item not selected');
             return;
         }
@@ -122,7 +121,7 @@ class CashPaymentMulti extends Component
         if ($data) {
             DB::beginTransaction();
             try {
-                $PATIENT_PAYMENT_ID =  $this->patientPaymentServices->Store(
+                $PATIENT_PAYMENT_ID = $this->patientPaymentServices->Store(
                     "",
                     $this->DATE,
                     $data->PATIENT_ID,
@@ -144,8 +143,8 @@ class CashPaymentMulti extends Component
 
                 // DATA
                 DB::commit();
-                $getResult = $this->serviceChargeServices->ReComputed($this->SERVICE_CHARGES_ID);
-                $this->AMOUNT = 0;
+                $getResult            = $this->serviceChargeServices->ReComputed($this->SERVICE_CHARGES_ID);
+                $this->AMOUNT         = 0;
                 $this->RECEIPT_REF_NO = '';
                 $this->dispatch('update-amount', result: $getResult);
                 $this->dispatch('update-status');
@@ -160,14 +159,14 @@ class CashPaymentMulti extends Component
     {
         foreach ($this->itemSelected as $id => $isSelected) {
             if ($isSelected) {
-                $AMOUNT =  (float) $this->serviceChargeServices->getItemSum($this->SERVICE_CHARGES_ID, $id);
+                $AMOUNT = (float) $this->serviceChargeServices->getItemSum($this->SERVICE_CHARGES_ID, $id);
                 $this->itemDataStore($PATIENT_PAYMENT_ID, $id, $AMOUNT);
             }
         }
     }
     private function itemDataStore(int $PATIENT_PAYMENT_ID, int $SERVICE_CHARGES_ITEM_ID, float $AMOUNT)
     {
-        $PC_ID    = (int) $this->patientPaymentServices->PaymentChargeStore(
+        $PC_ID = (int) $this->patientPaymentServices->PaymentChargeStore(
             $PATIENT_PAYMENT_ID,
             $SERVICE_CHARGES_ITEM_ID,
             0,

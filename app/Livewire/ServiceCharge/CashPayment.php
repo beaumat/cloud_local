@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Livewire\ServiceCharge;
 
 use App\Services\PatientPaymentServices;
@@ -29,9 +28,9 @@ class CashPayment extends Component
         PatientPaymentServices $patientPaymentServices,
         UserServices $userServices
     ) {
-        $this->serviceChargeServices = $serviceChargeServices;
+        $this->serviceChargeServices  = $serviceChargeServices;
         $this->patientPaymentServices = $patientPaymentServices;
-        $this->userServices = $userServices;
+        $this->userServices           = $userServices;
     }
     #[On('cash-payment-prompt')]
     public function openModal($itemdata)
@@ -39,9 +38,9 @@ class CashPayment extends Component
         $this->SERVICE_CHARGES_ITEM_ID = (int) $itemdata['SERVICE_CHARGES_ITEM_ID'];
         $this->serviceChargeServices->updateServiceChargesItemPaid($this->SERVICE_CHARGES_ITEM_ID);
         $this->ITEM_AMOUNT = (float) $itemdata['SERVICE_CHARGES_ITEM_AMOUNT'];
-        $this->AMOUNT = $this->ITEM_AMOUNT;
-        $this->DATE = $this->userServices->getTransactionDateDefault();
-        $this->showModal = true;
+        $this->AMOUNT      = $this->ITEM_AMOUNT;
+        $this->DATE        = $this->userServices->getTransactionDateDefault();
+        $this->showModal   = true;
     }
     public function closeModal()
     {
@@ -51,13 +50,13 @@ class CashPayment extends Component
     {
         $this->validate(
             [
-                'AMOUNT' => 'required|numeric|not_in:0',
-                'RECEIPT_REF_NO' => 'required'
+                'AMOUNT'         => 'required|numeric|not_in:0',
+                'RECEIPT_REF_NO' => 'required',
             ],
             [],
             [
-                'AMOUNT' => 'Payment Amount',
-                'RECEIPT_REF_NO' => 'SL No.'
+                'AMOUNT'         => 'Payment Amount',
+                'RECEIPT_REF_NO' => 'SL No.',
             ]
         );
 
@@ -72,17 +71,17 @@ class CashPayment extends Component
         }
 
         $PATIENT_PAYMENT_ID = 0;
-        $data = $this->serviceChargeServices->get($this->SERVICE_CHARGES_ID);
+        $data               = $this->serviceChargeServices->get($this->SERVICE_CHARGES_ID);
         if ($data) {
             DB::beginTransaction();
             try {
-                $PATIENT_PAYMENT_ID = $this->patientPaymentServices->Store("", $this->DATE, $data->PATIENT_ID, $data->LOCATION_ID, $this->AMOUNT, $this->AMOUNT, 1, "", null, $this->RECEIPT_REF_NO, null, "", 1, 0, 0, 4);
-                $PC_ID = (int) $this->patientPaymentServices->PaymentChargeStore($PATIENT_PAYMENT_ID, $this->SERVICE_CHARGES_ITEM_ID, 0, $this->AMOUNT, 0, 4);
+                $PATIENT_PAYMENT_ID = (int) $this->patientPaymentServices->Store("", $this->DATE, $data->PATIENT_ID, $data->LOCATION_ID, $this->AMOUNT, $this->AMOUNT, 1, "", null, $this->RECEIPT_REF_NO, null, "", 1, 0, 0, 4);
+                $PC_ID              = (int) $this->patientPaymentServices->PaymentChargeStore($PATIENT_PAYMENT_ID, $this->SERVICE_CHARGES_ITEM_ID, 0, $this->AMOUNT, 0, 4);
                 $this->patientPaymentServices->PaymentChargesUpdate($PC_ID, $PATIENT_PAYMENT_ID, $this->SERVICE_CHARGES_ITEM_ID, 0, $this->AMOUNT);
                 $this->serviceChargeServices->updateServiceChargesItemPaid($this->SERVICE_CHARGES_ITEM_ID);
                 DB::commit();
-                $getResult = $this->serviceChargeServices->ReComputed($this->SERVICE_CHARGES_ID);
-                $this->AMOUNT = 0;
+                $getResult            = $this->serviceChargeServices->ReComputed($this->SERVICE_CHARGES_ID);
+                $this->AMOUNT         = 0;
                 $this->RECEIPT_REF_NO = '';
                 $this->dispatch('update-amount', result: $getResult);
                 $this->dispatch('update-status');

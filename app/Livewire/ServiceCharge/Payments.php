@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Livewire\ServiceCharge;
 
 use App\Services\PatientPaymentServices;
@@ -25,7 +24,7 @@ class Payments extends Component
     public function boot(PatientPaymentServices $patientPaymentServices, ServiceChargeServices $serviceChargeServices)
     {
         $this->patientPaymentServices = $patientPaymentServices;
-        $this->serviceChargeServices = $serviceChargeServices;
+        $this->serviceChargeServices  = $serviceChargeServices;
     }
     public function mount()
     {
@@ -36,7 +35,7 @@ class Payments extends Component
     }
     public function delete(int $ID, int $PATIENT_PAYMENT_ID, int $SERVICE_CHARGES_ITEM_ID)
     {
-        
+
         DB::beginTransaction();
         try {
             //code...

@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Livewire\ServiceCharge;
 
 use App\Services\PatientPaymentServices;
@@ -24,11 +23,11 @@ class PaymentAvailable extends Component
     public $dataList = [];
     public float $PAY_AVAILABLE;
     public bool $gotInsert = false;
-    private  $serviceChargeServices;
+    private $serviceChargeServices;
     public function boot(PatientPaymentServices $patientPaymentServices, ServiceChargeServices $serviceChargeServices)
     {
         $this->patientPaymentServices = $patientPaymentServices;
-        $this->serviceChargeServices = $serviceChargeServices;
+        $this->serviceChargeServices  = $serviceChargeServices;
     }
     public function openModal()
     {
@@ -41,7 +40,7 @@ class PaymentAvailable extends Component
     public function AddPayment(int $PATIENT_PAYMENT_ID)
     {
 
-        $AMOUNT_APPLIED = (float)  $this->paymentAmounts[$PATIENT_PAYMENT_ID];
+        $AMOUNT_APPLIED = (float) $this->paymentAmounts[$PATIENT_PAYMENT_ID];
 
         if ($AMOUNT_APPLIED <= 0) {
 
@@ -53,7 +52,7 @@ class PaymentAvailable extends Component
         $payData = $this->patientPaymentServices->get($PATIENT_PAYMENT_ID);
 
         if ($payData) {
-            $balance = $payData->AMOUNT ?? 0  - $payData->AMOUNT_APPLIED ?? 0;
+            $balance = $payData->AMOUNT ?? 0 - $payData->AMOUNT_APPLIED ?? 0;
             if ($balance < $AMOUNT_APPLIED) {
                 session()->flash('error', 'The remaining balance is too low.');
                 return;
@@ -83,20 +82,20 @@ class PaymentAvailable extends Component
         $this->SERVICE_CHARGES_ITEM_ID = (int) $itemdata['SERVICE_CHARGES_ITEM_ID'];
         $this->serviceChargeServices->updateServiceChargesItemPaid($this->SERVICE_CHARGES_ITEM_ID);
         $this->SERVICE_CHARGES_ITEM_AMOUNT = (float) $itemdata['SERVICE_CHARGES_ITEM_AMOUNT'];
-        $this->GOT_APPLIED = (float) $this->patientPaymentServices->GetPaymentRemainingItem($this->SERVICE_CHARGES_ITEM_ID);
-        $data = $this->serviceChargeServices->get($this->SERVICE_CHARGES_ID);
-        $this->dataList =  $this->patientPaymentServices->PaymentAvailableList_SC($data->PATIENT_ID, $data->LOCATION_ID, $this->SERVICE_CHARGES_ITEM_ID);
+        $this->GOT_APPLIED                 = (float) $this->patientPaymentServices->GetPaymentRemainingItem($this->SERVICE_CHARGES_ITEM_ID);
+        $data                              = $this->serviceChargeServices->get($this->SERVICE_CHARGES_ID);
+        $this->dataList                    = $this->patientPaymentServices->PaymentAvailableList_SC($data->PATIENT_ID, $data->LOCATION_ID, $this->SERVICE_CHARGES_ITEM_ID);
 
         $this->showModal = true;
         foreach ($this->dataList as $list) {
             if ($list->IS_COUNT == 0) {
 
-                $AMOUNT         =  (float) $list->AMOUNT ?? 0;
-                $AMOUNT_APPLIED =  (float) $list->AMOUNT_APPLIED ?? 0;
-                $BALANCE        =  (float) $AMOUNT - $AMOUNT_APPLIED;
-                $RECOMMENDED    =  (float) $this->SERVICE_CHARGES_ITEM_AMOUNT - $this->GOT_APPLIED;
-                $PAY_AVAILABLE  =  (float) $BALANCE > $RECOMMENDED ?  $RECOMMENDED :  $BALANCE;
-                $this->paymentAmounts[$list->ID] = (float)  $PAY_AVAILABLE;
+                $AMOUNT                          = (float) $list->AMOUNT ?? 0;
+                $AMOUNT_APPLIED                  = (float) $list->AMOUNT_APPLIED ?? 0;
+                $BALANCE                         = (float) $AMOUNT - $AMOUNT_APPLIED;
+                $RECOMMENDED                     = (float) $this->SERVICE_CHARGES_ITEM_AMOUNT - $this->GOT_APPLIED;
+                $PAY_AVAILABLE                   = (float) $BALANCE > $RECOMMENDED ? $RECOMMENDED : $BALANCE;
+                $this->paymentAmounts[$list->ID] = (float) $PAY_AVAILABLE;
                 return;
             }
         }
