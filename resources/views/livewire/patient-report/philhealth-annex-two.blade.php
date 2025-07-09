@@ -4,7 +4,7 @@
             <div class="row">
                 <div class="col-sm-6">
                     <h5 class="m-0">
-                        <a href="{{ route('reportsphilhealth_annex_report') }}">Philhealth Annex Report (IBNR)
+                        <a href="{{ route('reportsphilhealth_annex_report') }}">Philhealth Annex D (IBNR)
                         </a>
                     </h5>
                 </div>
@@ -26,43 +26,28 @@
                             <div class="col-md-8">
                                 <div class="row">
                                     <div class="col-1 text-right">
-                                        <label class="text-xs">Year:</label>
+
                                     </div>
                                     <div class="col-1">
-                                        <input type="number" class="form-control form-control-sm text-xs"
-                                            wire:model='YEAR' />
+
                                     </div>
                                     <div class="col-1 text-right">
-                                        <label class="text-xs">Month:</label>
+
                                     </div>
                                     <div class="col-2">
-                                        <select class="form-control form-control-sm text-xs" name="MONTH"
-                                            wire:model.live='MONTH'>
-                                            @foreach ($monthList as $item)
-                                                <option value="{{ $item['ID'] }}">
-                                                    {{ $item['NAME'] }}
-                                                </option>
-                                            @endforeach
-                                        </select>
+
                                     </div>
                                     <div class="col-2">
                                         <button wire:click='generateB()' class="btn btn-xs btn-primary w-100">
-                                            Annex C
+                                            Generate
                                         </button>
                                     </div>
                                     <div class='col-2'>
-                                        <button wire:click='generateC()' class="btn btn-xs btn-info w-100">
-                                            Annex D
-                                        </button>
+
                                     </div>
                                     <div class='col-2'>
-                                        @if ($columnType == 1)
-                                            <a href="{{ route('reportsphilhealth_annex_one_print', ['locationid' => $LOCATION_ID, 'year' => $YEAR, 'month' => $MONTH]) }}"
-                                                target="_blank" class="btn btn-xs btn-warning w-100"> Print </a>
-                                        @elseif($columnType == 2)
-                                            <a href="{{ route('reportsphilhealth_annex_two_print', ['locationid' => $LOCATION_ID, 'year' => $YEAR, 'month' => $MONTH]) }}"
-                                                target="_blank" class="btn btn-xs btn-warning w-100"> Print </a>
-                                        @endif
+
+
                                     </div>
                                 </div>
                             </div>
