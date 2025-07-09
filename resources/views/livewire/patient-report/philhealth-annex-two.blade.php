@@ -4,7 +4,7 @@
             <div class="row">
                 <div class="col-sm-6">
                     <h5 class="m-0">
-                        <a href="{{ route('reportsphilhealth_annex_report') }}">Philhealth Annex D (IBNR)
+                        <a href="{{ route('reportsphilhealth_annex_two_report') }}">Philhealth Annex D (IBNR)
                         </a>
                     </h5>
                 </div>
@@ -25,26 +25,27 @@
                         <div class="row">
                             <div class="col-md-8">
                                 <div class="row">
-                                    <div class="col-1 text-right">
-
-                                    </div>
                                     <div class="col-1">
+                                        <label class="text-xs ">Show All </label> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <input type="checkbox" wire:model='showAll'
+                                            class="form-check-input form-check-inline">
 
                                     </div>
-                                    <div class="col-1 text-right">
-
-                                    </div>
-                                    <div class="col-2">
-
-                                    </div>
-                                    <div class="col-2">
-                                        <button wire:click='generateB()' class="btn btn-xs btn-primary w-100">
+                                    <div class="col-2 text-left">
+                                        <button wire:click='generate()' type="button"
+                                            class="btn btn-xs btn-primary w-100">
                                             Generate
                                         </button>
                                     </div>
-                                    <div class='col-2'>
+                                    <div class="col-2">
 
                                     </div>
+
+
+                                    <div class="col-2">
+
+                                    </div>
+
                                     <div class='col-2'>
 
                                     </div>
@@ -84,158 +85,78 @@
                         <table class="table table-sm table-bordered table-hover">
                             <thead class="text-xs  sticky-header">
 
-                                @if ($columnType == 1)
-                                    <tr>
-                                        <td class=" bg-dark"></td>
-                                        <td class="col-1 bg-dark"><button wire:click='autoSet()'
-                                                wire:confirm='Are you sure?' class="btn btn-xs btn-success w-100">Auto
-                                                Set Code</button></td>
-                                        <td class=" bg-primary"></td>
-                                        <td class=" bg-primary text-center">Patient</td>
-                                        <td class=" bg-primary"></td>
-                                        <td class=" bg-info"></td>
-                                        <td class="bg-info text-center">Member</td>
-                                        <td class="bg-info"></td>
-                                        <td class="col-1 bg-dark"></td>
-                                        <td class="col-1 bg-dark"></td>
-                                        <td class="col-1 bg-dark"></td>
-                                        <td class="col-1 bg-dark"></td>
-                                        <td class="col-1 bg-dark"></td>
-                                        <td class="col-1 bg-dark"></td>
-                                    </tr>
-                                    <tr>
-                                        <td class=" bg-dark">Item No.</td>
-                                        <td class="col-1 bg-dark">Claims/Code Reference</td>
-                                        <td class=" bg-primary">Surname</td>
-                                        <td class=" bg-primary">Firstname</td>
-                                        <td class=" bg-primary">Middlename</td>
-                                        <td class="bg-info">Surname</td>
-                                        <td class=" bg-info">Firstname</td>
-                                        <td class=" bg-info">Middlename</td>
-                                        <td class="col-1 bg-dark">Member's PIN</td>
-                                        <td class="col-1 bg-dark">Date of Admission</td>
-                                        <td class="col-1 bg-dark">Date of Discharged</td>
-                                        <td class="col-1 bg-dark">Case Rate/ Claim Amount</td>
-                                        <td class="col-1 bg-dark">ICD 10/RVS code</td>
-                                        <td class="col-1 bg-dark">*Claim Status</td>
-                                    </tr>
-                                @endif
+                                <tr>
+                                    <th class=" bg-dark">Item No.</th>
+                                    <th class="bg-dark">Yr. Start <br /> From.</th>
+                                    <th class="bg-dark">Claims Series Reference</th>
+                                    <th class=" bg-primary">Patient Surname</th>
+                                    <th class=" bg-primary">Patient Firstname</th>
+                                    <th class=" bg-primary">Patient Middlename</th>
+                                    <th class="bg-info">Member Surname</th>
+                                    <th class=" bg-info">Member Patient Firstname</th>
+                                    <th class=" bg-info">Member Middlename</th>
+                                    <th class=" bg-dark">Member's PIN</th>
+                                    <th class=" bg-dark">Date of Admission</th>
+                                    <th class=" bg-dark">Date of Discharged</th>
+                                    <th class=" bg-dark">Date of Filed</th>
+                                    <th class=" bg-dark">Date of Refiled</th>
+                                    <th class=" bg-dark">ICD 10/RVS code</th>
+                                    <th class=" bg-dark">Case Rate/ Claim Amt.</th>
+                                    <th class="bg-dark">*Claim Status</th>
+                                </tr>
 
-                                @if ($columnType == 2)
-                                    <tr>
-                                        <td class=" bg-dark"></td>
-                                        <td class="col-1 bg-dark"></td>
-                                        <td class="col-1 bg-dark"></td>
-                                        <td class=" bg-primary"></td>
-                                        <td class=" bg-primary text-center">Patient</td>
-                                        <td class=" bg-primary"></td>
-                                        <td class=" bg-info"></td>
-                                        <td class="bg-info text-center">Member</td>
-                                        <td class="bg-info"></td>
-                                        <td class="col-1 bg-dark"></td>
-                                        <td class="col-1 bg-dark"></td>
-                                        <td class="col-1 bg-dark"></td>
-                                        <td class="col-1 bg-dark"></td>
-                                        <td class="col-1 bg-dark"></td>
-                                        <td class="col-1 bg-dark"></td>
-                                        <td class="col-1 bg-dark"></td>
-                                        <td class="col-1 bg-dark"></td>
-                                    </tr>
-                                    <tr>
-                                        <td class=" bg-dark">Item No.</td>
-                                        <td class="col-1 bg-dark">Yr. Start From.</td>
-                                        <td class="col-1 bg-dark">Claims Series Reference</td>
-                                        <td class=" bg-primary">Surname</td>
-                                        <td class=" bg-primary">Firstname</td>
-                                        <td class=" bg-primary">Middlename</td>
-                                        <td class="bg-info">Surname</td>
-                                        <td class=" bg-info">Firstname</td>
-                                        <td class=" bg-info">Middlename</td>
-                                        <td class="col-1 bg-dark">Member's PIN</td>
-                                        <td class="col-1 bg-dark">Date of Admission</td>
-                                        <td class="col-1 bg-dark">Date of Discharged</td>
-                                        <td class="col-1 bg-dark">Date of Filed</td>
-                                        <td class="col-1 bg-dark">Date of Refiled</td>
-                                        <td class="col-1 bg-dark">ICD 10/RVS code</td>
-                                        <td class="col-1 bg-dark">Case Rate/ Claim Amount</td>
-                                        <td class="col-1 bg-dark">*Claim Status</td>
-                                    </tr>
-                                @endif
 
                             </thead>
                             <tbody class="text-xs">
                                 @php
-
                                     $r = 0;
+                                    $TOTAL = 0;
                                 @endphp
-                                @if ($columnType == 1)
-                                    @foreach ($dataList as $list)
-                                        @php
-                                            $r++;
-
-                                        @endphp
-                                        <tr>
-                                            <td>{{ $r }}</td>
-                                            <td>{{ $list->CLAIM_NO }}</td>
+                                @foreach ($dataList as $list)
+                                    @php
+                                        $r++;
+                                    @endphp
+                                    <tr>
+                                        <td>{{ $r }}</td>
+                                        <td>{{ $list->YEAR }}</td>
+                                        <td>{{ $list->AR_NO }}</td>
+                                        <td>{{ $list->LAST_NAME }}</td>
+                                        <td>{{ $list->FIRST_NAME }}</td>
+                                        <td>{{ $list->MIDDLE_NAME }}</td>
+                                        @if ($list->IS_PATIENT)
                                             <td>{{ $list->LAST_NAME }}</td>
                                             <td>{{ $list->FIRST_NAME }}</td>
                                             <td>{{ $list->MIDDLE_NAME }}</td>
-                                            @if ($list->IS_PATIENT)
-                                                <td>{{ $list->LAST_NAME }}</td>
-                                                <td>{{ $list->FIRST_NAME }}</td>
-                                                <td>{{ $list->MIDDLE_NAME }}</td>
-                                            @else
-                                                <td>{{ $list->MEMBER_LAST_NAME }}</td>
-                                                <td>{{ $list->MEMBER_FIRST_NAME }}</td>
-                                                <td>{{ $list->MEMBER_MIDDLE_NAME }}</td>
-                                            @endif
+                                        @else
+                                            <td>{{ $list->MEMBER_LAST_NAME }}</td>
+                                            <td>{{ $list->MEMBER_FIRST_NAME }}</td>
+                                            <td>{{ $list->MEMBER_MIDDLE_NAME }}</td>
+                                        @endif
 
-                                            <td>{{ $list->PIN_NO }}</td>
-                                            <td>{{ date('M/d/Y', strtotime($list->DATE_ADMITTED)) }}</td>
-                                            <td>{{ date('M/d/Y', strtotime($list->DATE_DISCHARGED)) }}</td>
-                                            <td>{{ number_format($list->P1_TOTAL, 2) }}</td>
-                                            <td>90935</td>
-                                            <td>FOR FILE</td>
-                                        </tr>
-                                    @endforeach
-                                @endif
-
-                                @if ($columnType == 2)
-
-                                    @foreach ($dataList as $list)
+                                        <td>{{ $list->PIN_NO }}</td>
+                                        <td>{{ date('M/d/Y', strtotime($list->DATE_ADMITTED)) }}</td>
+                                        <td>{{ date('M/d/Y', strtotime($list->DATE_DISCHARGED)) }}</td>
+                                        <td>{{ date('M/d/Y', strtotime($list->AR_DATE)) }}</td>
+                                        <td>N/A</td>
+                                        <td>90935</td>
+                                        <td class="text-right">{{ number_format($list->P1_TOTAL, 2) }}</td>
                                         @php
-                                            $r++;
-
+                                            $TOTAL += $list->P1_TOTAL;
                                         @endphp
-                                        <tr>
-                                            <td>{{ $r }}</td>
-                                            <td>{{ $YEAR }}</td>
-                                            <td>{{ $list->AR_NO }}</td>
-                                            <td>{{ $list->LAST_NAME }}</td>
-                                            <td>{{ $list->FIRST_NAME }}</td>
-                                            <td>{{ $list->MIDDLE_NAME }}</td>
-                                            @if ($list->IS_PATIENT)
-                                                <td>{{ $list->LAST_NAME }}</td>
-                                                <td>{{ $list->FIRST_NAME }}</td>
-                                                <td>{{ $list->MIDDLE_NAME }}</td>
+                                        <td>
+                                            @if ($list->PAYMENT_AMOUNT > 0)
+                                                <strong class="text-success">Paid</strong>
                                             @else
-                                                <td>{{ $list->MEMBER_LAST_NAME }}</td>
-                                                <td>{{ $list->MEMBER_FIRST_NAME }}</td>
-                                                <td>{{ $list->MEMBER_MIDDLE_NAME }}</td>
+                                                <strong class="text-danger">In-Progress</strong>
                                             @endif
-
-                                            <td>{{ $list->PIN_NO }}</td>
-                                            <td>{{ date('M/d/Y', strtotime($list->DATE_ADMITTED)) }}</td>
-                                            <td>{{ date('M/d/Y', strtotime($list->DATE_DISCHARGED)) }}</td>
-                                            <td>{{ date('M/d/Y', strtotime($list->AR_DATE)) }}</td>
-                                            <td>N/A</td>
-                                            <td>90935</td>
-                                            <td>{{ number_format($list->P1_TOTAL, 2) }}</td>
-                                            <td>In Progress</td>
-                                        </tr>
-                                    @endforeach
-                                @endif
-
+                                        </td>
+                                    </tr>
+                                @endforeach
+                                <tr class="bg-secondary">
+                                    <td colspan="15" class="text-right">Total</td>
+                                    <td class="text-right">{{ number_format($TOTAL, 2) }}</td>
+                                    <td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>

@@ -10,7 +10,7 @@ use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 
-#[Title("Annex B Print")]
+#[Title("Annex C Print")]
 
 class PhilhealthAnnexOnePrint extends Component
 {
@@ -19,10 +19,8 @@ class PhilhealthAnnexOnePrint extends Component
     public string $REPORT_HEADER_2;
     public string $REPORT_HEADER_3;
     public string $LOGO_FILE;
-
     public string $EMPLOYEE_NAME;
     public string $EMPLOYEE_POSITION;
-
     public string $MANAGER_NAME;
     public string $APPROVED_BY;
 

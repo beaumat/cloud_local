@@ -973,7 +973,7 @@ class PhilHealthServices
             $INPUT_TAX_ID         = 14;
             $INPUT_TAX_ACCOUNT_ID = 28;
 
-            $BILL_ID              = $this->billingServices->Store(
+            $BILL_ID = $this->billingServices->Store(
                 '',
                 $DATE,
                 $DOCTOR_ID,
@@ -1217,11 +1217,61 @@ class PhilHealthServices
                     $join->where('l.ID', $locationId);
                 }
             })
-
             ->join('document_status_map as s', 's.ID', '=', 'philhealth.STATUS_ID')
-
             ->whereMonth('philhealth.DATE_ADMITTED', '=', $Month)
             ->whereYear('philhealth.DATE_ADMITTED', '=', $Year)
+            ->where('IS_TEMP', '0')
+            ->orderBy('philhealth.ID', 'asc')
+            ->get();
+
+        return $result;
+    }
+    public function generateAnnex2(int $locationId, bool $showAll)
+    {
+        $result = PhilHealth::query()
+            ->select([
+                'philhealth.ID',
+                'philhealth.RECORDED_ON',
+                'philhealth.CODE',
+                'philhealth.DATE',
+                'philhealth.DATE_ADMITTED',
+                'philhealth.DATE_DISCHARGED',
+                'philhealth.CHARGE_TOTAL',
+                DB::raw("CONCAT(c.LAST_NAME, ', ', c.FIRST_NAME, ' .', LEFT(c.MIDDLE_NAME, 1), IF(c.SALUTATION IS NOT NULL AND c.SALUTATION != '', CONCAT(' .', c.SALUTATION), '')) as CONTACT_NAME"),
+                'c.LAST_NAME',
+                'c.FIRST_NAME',
+                'c.MIDDLE_NAME',
+                'c.MEMBER_LAST_NAME',
+                'c.MEMBER_FIRST_NAME',
+                'c.MEMBER_MIDDLE_NAME',
+                'l.NAME as LOCATION_NAME',
+                's.DESCRIPTION as STATUS',
+                DB::raw('(select count(*) from service_charges inner join service_charges_items on service_charges_items.SERVICE_CHARGES_ID = service_charges.ID where service_charges_items.ITEM_ID = ' . $this->PHIL_HEALTH_ITEM_ID . ' and service_charges.LOCATION_ID = philhealth.LOCATION_ID  and service_charges.PATIENT_ID = philhealth.CONTACT_ID and service_charges.DATE between philhealth.DATE_ADMITTED and philhealth.DATE_DISCHARGED) as HEMO_TOTAL '),
+                'philhealth.P1_TOTAL',
+                'philhealth.PAYMENT_AMOUNT',
+                'philhealth.AR_NO',
+                'philhealth.AR_DATE',
+                'philhealth.CLAIM_NO',
+                DB::raw('if(ISNULL(philhealth.AR_DATE),false,true)  as IN_PROGRESS'),
+                'c.PIN as PIN_NO',
+                'c.IS_PATIENT',
+                'pc.DESCRIPTION as CLASS',
+                DB::raw('YEAR(philhealth.DATE_ADMITTED) as YEAR')
+
+            ])
+            ->join('contact as c', 'c.ID', '=', 'philhealth.CONTACT_ID')
+            ->leftJoin('patient_class as pc', 'pc.ID', '=', 'c.CLASS_ID')
+            ->join('location as l', function ($join) use (&$locationId) {
+                $join->on('l.ID', '=', 'philhealth.LOCATION_ID');
+                if ($locationId > 0) {
+                    $join->where('l.ID', $locationId);
+                }
+            })
+            ->join('document_status_map as s', 's.ID', '=', 'philhealth.STATUS_ID')
+            ->whereNotNull('philhealth.AR_DATE')
+            ->when(! $showAll, function ($query) {
+                $query->where('philhealth.PAYMENT_AMOUNT', '=', 0);
+            })
             ->where('IS_TEMP', '0')
             ->orderBy('philhealth.ID', 'asc')
             ->get();

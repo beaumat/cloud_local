@@ -86,13 +86,13 @@ class PhilhealthAnnex extends Component
     {
         $this->autoNumber == 0;
         // Reset autoNumber to 0 before generating new data
-        if ($this->columnType == 1) {
+
             $dataList = $this->philHealthServices->GenerateAnnex($this->YEAR, $this->MONTH, $this->LOCATION_ID);
             foreach ($dataList as $data) {
                 $this->setData($data);
             }
             $this->generate();
-        }
+
 
     }
 

@@ -13,10 +13,7 @@ use Livewire\Component;
 class PhilhealthAnnexTwo extends Component
 {
 
-    public int $columnType;
-    public int $YEAR;
-    public int $MONTH;
-    public $monthList = [];
+    public $showAll = false;
     public int $LOCATION_ID;
     public $locationList = [];
     public $dataList     = [];
@@ -44,73 +41,36 @@ class PhilhealthAnnexTwo extends Component
     }
     public function updatedLOCATIONID()
     {
-        $this->columnType = 0;
+
         $this->dataList   = [];
+
+
+        try {
+            $this->userServices->SwapLocation($this->LOCATION_ID);
+        } catch (\Exception $e) {
+            $errorMessage = 'Error occurred: ' . $e->getMessage();
+            session()->flash('error', $errorMessage);
+        }
     }
     public function updatedYEAR()
     {
-        $this->columnType = 0;
+
         $this->dataList   = [];
     }
     public function updatedMONTH()
     {
-        $this->columnType = 0;
+
         $this->dataList   = [];
     }
-    public function generateB()
-    {
-        $this->columnType = 1;
-
-        $this->dataList = $this->philHealthServices->GenerateAnnex($this->YEAR, $this->MONTH, $this->LOCATION_ID, 0);
-
-    }
-    public function generateC()
-    {
-        $this->columnType = 2;
-        $this->dataList   = $this->philHealthServices->GenerateAnnex($this->YEAR, $this->MONTH, $this->LOCATION_ID, 1);
-    }
-    public function Exporting()
+    public function generate()
     {
 
-        if ($this->columnType == 1) {
-            $this->dataList = $this->philHealthServices->GenerateAnnex($this->YEAR, $this->MONTH, $this->LOCATION_ID, 0);
-            return;
-        }
 
-        if ($this->columnType == 2) {
-            $this->dataList = $this->philHealthServices->GenerateAnnex($this->YEAR, $this->MONTH, $this->LOCATION_ID, 1);
-            return;
-        }
-    }
-    private int $autoNumber = 0;
-    private function setData($data)
-    {
-        $this->autoNumber++;
-
-        $ref     = strtoupper(date('M', mktime(0, 0, 0, $this->MONTH, 1))) . substr((string) $this->YEAR, -2) . str_pad($this->autoNumber, 3, '0', STR_PAD_LEFT); // Generate a reference number based on the month and year
-        $isExist = $this->philHealthServices->ifClaimNoExists($data->ID, $ref);
-        if (! $isExist) {
-            // if claim number does not exist, update it
-            $this->philHealthServices->updateClaimNo($data->ID, $ref);
-        } else {
-            // try again with a different reference number
-            $this->setData($data);
-        }
+        $this->dataList = $this->philHealthServices->GenerateAnnex2( $this->LOCATION_ID, $this->showAll);
 
     }
-    public function autoSet()
-    {
-        $this->autoNumber == 0;
-        // Reset autoNumber to 0 before generating new data
-        if ($this->columnType == 1) {
-            $dataList = $this->philHealthServices->GenerateAnnex($this->YEAR, $this->MONTH, $this->LOCATION_ID, 0);
-            foreach ($dataList as $data) {
-                $this->setData($data);
-            }
-            $this->generateB();
-        }
 
-    }
+
     public function render()
     {
         return view('livewire.patient-report.philhealth-annex-two');

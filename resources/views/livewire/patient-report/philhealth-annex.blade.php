@@ -94,34 +94,19 @@
                     <div style="max-height: 75vh; overflow-y: auto;">
                         <table class="table table-sm table-bordered table-hover">
                             <thead class="text-xs  sticky-header">
-                                <tr>
-                                    <td class=" bg-dark"></td>
-                                    <td class="bg-dark"><button wire:click='autoSet()' wire:confirm='Are you sure?'
-                                            class="btn btn-xs btn-success w-100">Auto
-                                            Set Code</button></td>
-                                    <td class=" bg-primary"></td>
-                                    <td class=" bg-primary text-center">Patient</td>
-                                    <td class=" bg-primary"></td>
-                                    <td class=" bg-info"></td>
-                                    <td class="bg-info text-center">Member</td>
-                                    <td class="bg-info"></td>
-                                    <td class="col-1 bg-dark"></td>
-                                    <td class="col-1 bg-dark"></td>
-                                    <td class="col-1 bg-dark"></td>
-                                    <td class="col-1 bg-dark"></td>
-                                    <td class="col-1 bg-dark"></td>
-                                    <td class="col-1 bg-dark"></td>
-                                    <td class="col-1 bg-dark"></td>
-                                </tr>
+
                                 <tr>
                                     <td class=" bg-dark">Item No.</td>
-                                    <td class=" bg-dark">Claims Ref#</td>
-                                    <td class=" bg-primary">Surname</td>
-                                    <td class=" bg-primary">Firstname</td>
-                                    <td class=" bg-primary">Middlename</td>
-                                    <td class="bg-info">Surname</td>
-                                    <td class=" bg-info">Firstname</td>
-                                    <td class=" bg-info">Middlename</td>
+                                    <td class=" bg-dark">Claims Ref# <button class="btn btn-xs btn-success w-25"
+                                            wire:click='autoSet()' wire:confirm='Are you sure to Auto Set?'>
+                                            <i class="fas fa-plus"></i>
+                                        </button></td>
+                                    <td class=" bg-primary">Patient Surname</td>
+                                    <td class=" bg-primary">Patient Firstname</td>
+                                    <td class=" bg-primary">Patient Middlename</td>
+                                    <td class="bg-info">Member Surname</td>
+                                    <td class=" bg-info">Member Firstname</td>
+                                    <td class=" bg-info">Member Middlename</td>
                                     <td class="col-1 bg-dark">Member's PIN</td>
                                     <td class="col-1 bg-dark">Member's Category</td>
                                     <td class="col-1 bg-dark">Date of Admission</td>
@@ -134,6 +119,7 @@
                             <tbody class="text-xs">
                                 @php
                                     $r = 0;
+                                    $TOTAL = 0;
                                 @endphp
 
                                 @foreach ($dataList as $list)
@@ -161,12 +147,21 @@
                                         <td>{{ $list->CLASS }}</td>
                                         <td>{{ date('M/d/Y', strtotime($list->DATE_ADMITTED)) }}</td>
                                         <td>{{ date('M/d/Y', strtotime($list->DATE_DISCHARGED)) }}</td>
-                                        <td>{{ number_format($list->P1_TOTAL, 2) }}</td>
-                                        <td>90935</td>
-                                        <td>FOR FILE</td>
+                                        <td class="text-right">{{ number_format($list->P1_TOTAL, 2) }}</td>
+                                        @php
+                                            $TOTAL += $list->P1_TOTAL;
+                                        @endphp
+                                        <td class="text-center">90935</td>
+                                        <td class="text-center">FOR FILE</td>
                                     </tr>
                                 @endforeach
 
+                                <tr class="bg-secondary">
+                                    <td colspan="12" class="text-right">Total</td>
+                                    <td class="text-right">{{ number_format($TOTAL, 2) }}</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
 
 
 
