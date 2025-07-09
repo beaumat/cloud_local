@@ -325,9 +325,9 @@ class ServiceChargeFormItems extends Component
 
             $getResult = $this->serviceChargeServices->ReComputed($this->SERVICE_CHARGES_ID);
             $this->dispatch('update-amount', result: $getResult);
+
             // Philhealth Purpose
             $prime_item_id = $this->ITEM_ID;
-
             $this->ITEM_ID           = 0;
             $this->QUANTITY          = 0;
             $this->UNIT_ID           = 0;
