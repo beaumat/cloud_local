@@ -1178,7 +1178,7 @@ class PhilHealthServices
             ->where('LOCATION_ID', '=', $LOCATION_ID)
             ->exists();
     }
-    public function GenerateAnnex(int $Year, int $Month, int $locationId, bool $showNotPaid = false)
+    public function GenerateAnnex(int $Year, int $Month, int $locationId)
     {
         $result = PhilHealth::query()
             ->select([
