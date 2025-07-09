@@ -972,6 +972,7 @@ class PhilHealthServices
             $AMOUNT               = $data->FIRST_CASE ?? 0;
             $INPUT_TAX_ID         = 14;
             $INPUT_TAX_ACCOUNT_ID = 28;
+
             $BILL_ID              = $this->billingServices->Store(
                 '',
                 $DATE,
@@ -990,6 +991,7 @@ class PhilHealthServices
                 $INPUT_TAX_ACCOUNT_ID,
                 15
             );
+
             $this->billingServices->ExpenseStore(
                 $BILL_ID,
                 $this->PROFESSIONAL_FEE_ACCOUNT_ID,

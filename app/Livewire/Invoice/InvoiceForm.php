@@ -1,23 +1,18 @@
 <?php
-
 namespace App\Livewire\Invoice;
 
 use App\Services\AccountJournalServices;
 use App\Services\AccountServices;
 use App\Services\ContactServices;
 use App\Services\DocumentStatusServices;
-use App\Services\DocumentTypeServices;
-use App\Services\HemoServices;
 use App\Services\InvoiceServices;
 use App\Services\ItemInventoryServices;
-use App\Services\ItemServices;
 use App\Services\LocationServices;
-use App\Services\ObjectServices;
 use App\Services\PatientPaymentServices;
 use App\Services\PaymentTermServices;
+use App\Services\PhilHealthProfFeeServices;
 use App\Services\PhilHealthServices;
 use App\Services\PriceLevelLineServices;
-use App\Services\PriceLevelServices;
 use App\Services\ServiceChargeServices;
 use App\Services\ShipViaServices;
 use App\Services\SystemSettingServices;
@@ -62,13 +57,14 @@ class InvoiceForm extends Component
     public float $TAXABLE_AMOUNT;
     public float $NONTAXABLE_AMOUNT;
     public int $ACCOUNTS_RECEIVABLE_ID;
-    public $contactList = [];
-    public $locationList = [];
-    public $shipViaList = [];
+    public $contactList     = [];
+    public $locationList    = [];
+    public $shipViaList     = [];
     public $paymentTermList = [];
-    public $taxList = [];
-    public $accountList = [];
+    public $taxList         = [];
+    public $accountList     = [];
     public bool $Modify;
+    public int $BILL_ID;
     private $locationServices;
     private $contactServices;
     private $shipViaServices;
@@ -85,6 +81,7 @@ class InvoiceForm extends Component
     private $philHealthServices;
     private $priceLevelLineServices;
     private $serviceChargeServices;
+    private $philHealthProfFeeServices;
     public string $tab = "item";
     public function SelectTab(string $select)
     {
@@ -106,39 +103,42 @@ class InvoiceForm extends Component
         PatientPaymentServices $patientPaymentServices,
         PhilHealthServices $philHealthServices,
         PriceLevelLineServices $priceLevelLineServices,
-        ServiceChargeServices $serviceChargeServices
+        ServiceChargeServices $serviceChargeServices,
+        PhilHealthProfFeeServices $philHealthProfFeeServices
     ) {
-        $this->invoiceServices = $invoiceServices;
-        $this->locationServices = $locationServices;
-        $this->contactServices = $contactServices;
-        $this->shipViaServices = $shipViaServices;
-        $this->paymentTermServices = $paymentTermServices;
-        $this->taxServices = $taxServices;
-        $this->userServices = $userServices;
-        $this->documentStatusServices = $documentStatusServices;
-        $this->systemSettingServices = $systemSettingServices;
-        $this->accountServices = $accountServices;
-        $this->itemInventoryServices = $itemInventoryServices;
-        $this->accountJournalServices = $accountJournalServices;
-        $this->patientPaymentServices = $patientPaymentServices;
-        $this->philHealthServices = $philHealthServices;
-        $this->priceLevelLineServices = $priceLevelLineServices;
-        $this->serviceChargeServices = $serviceChargeServices;
+        $this->invoiceServices           = $invoiceServices;
+        $this->locationServices          = $locationServices;
+        $this->contactServices           = $contactServices;
+        $this->shipViaServices           = $shipViaServices;
+        $this->paymentTermServices       = $paymentTermServices;
+        $this->taxServices               = $taxServices;
+        $this->userServices              = $userServices;
+        $this->documentStatusServices    = $documentStatusServices;
+        $this->systemSettingServices     = $systemSettingServices;
+        $this->accountServices           = $accountServices;
+        $this->itemInventoryServices     = $itemInventoryServices;
+        $this->accountJournalServices    = $accountJournalServices;
+        $this->patientPaymentServices    = $patientPaymentServices;
+        $this->philHealthServices        = $philHealthServices;
+        $this->priceLevelLineServices    = $priceLevelLineServices;
+        $this->serviceChargeServices     = $serviceChargeServices;
+        $this->philHealthProfFeeServices = $philHealthProfFeeServices;
+
     }
     public function LoadDropdown()
     {
-        $this->contactList = $this->contactServices->getCustoPatientList();
-        $this->locationList = $this->locationServices->getList();
-        $this->shipViaList = $this->shipViaServices->getList();
+        $this->contactList     = $this->contactServices->getCustoPatientList();
+        $this->locationList    = $this->locationServices->getList();
+        $this->shipViaList     = $this->shipViaServices->getList();
         $this->paymentTermList = $this->paymentTermServices->getList();
-        $this->taxList = $this->taxServices->getList();
-        $this->accountList = $this->accountServices->getReceivable();
+        $this->taxList         = $this->taxServices->getList();
+        $this->accountList     = $this->accountServices->getReceivable();
     }
     public function getTax()
     {
         $tax = $this->taxServices->get($this->OUTPUT_TAX_ID);
         if ($tax) {
-            $this->OUTPUT_TAX_RATE = (float) $tax->OUTPUT_TAX_RATE;
+            $this->OUTPUT_TAX_RATE       = (float) $tax->OUTPUT_TAX_RATE;
             $this->OUTPUT_TAX_VAT_METHOD = (int) $tax->VAT_METHOD;
             $this->OUTPUT_TAX_ACCOUNT_ID = (int) $tax->TAX_ACCOUNT_ID;
         }
@@ -146,45 +146,46 @@ class InvoiceForm extends Component
 
     private function getInfo($Data)
     {
-        $this->ID = $Data->ID;
-        $this->CODE = $Data->CODE;
-        $this->DATE = $Data->DATE;
-        $this->DUE_DATE = $Data->DUE_DATE ?? null;
-        $this->LOCATION_ID = $Data->LOCATION_ID;
-        $this->CUSTOMER_ID = $Data->CUSTOMER_ID;
-        $this->SALES_REP_ID = $Data->SALES_REP_ID ?? 0;
-        $this->SHIP_VIA_ID = $Data->SHIP_VIA_ID ?? 0;
-        $this->PAYMENT_TERMS_ID = $Data->PAYMENT_TERMS_ID ? $Data->PAYMENT_TERMS_ID : 0;
-        $this->CLASS_ID = $Data->CLASS_ID ? $Data->CLASS_ID : 0;
-        $this->PO_NUMBER = $Data->PO_NUMBER ?? '';
-        $this->DISCOUNT_DATE = $Data->DISCOUNT_DATE ?? null;
-        $this->DISCOUNT_PCT = $Data->DISCOUNT_PCT ?? 0;
-        $this->NOTES = $Data->NOTES ?? '';
-        $this->AMOUNT = $Data->AMOUNT;
-        $this->BALANCE_DUE = $Data->BALANCE_DUE;
+        $this->ID                     = $Data->ID;
+        $this->CODE                   = $Data->CODE;
+        $this->DATE                   = $Data->DATE;
+        $this->DUE_DATE               = $Data->DUE_DATE ?? null;
+        $this->LOCATION_ID            = $Data->LOCATION_ID;
+        $this->CUSTOMER_ID            = $Data->CUSTOMER_ID;
+        $this->SALES_REP_ID           = $Data->SALES_REP_ID ?? 0;
+        $this->SHIP_VIA_ID            = $Data->SHIP_VIA_ID ?? 0;
+        $this->PAYMENT_TERMS_ID       = $Data->PAYMENT_TERMS_ID ? $Data->PAYMENT_TERMS_ID : 0;
+        $this->CLASS_ID               = $Data->CLASS_ID ? $Data->CLASS_ID : 0;
+        $this->PO_NUMBER              = $Data->PO_NUMBER ?? '';
+        $this->DISCOUNT_DATE          = $Data->DISCOUNT_DATE ?? null;
+        $this->DISCOUNT_PCT           = $Data->DISCOUNT_PCT ?? 0;
+        $this->NOTES                  = $Data->NOTES ?? '';
+        $this->AMOUNT                 = $Data->AMOUNT;
+        $this->BALANCE_DUE            = $Data->BALANCE_DUE;
         $this->ACCOUNTS_RECEIVABLE_ID = $Data->ACCOUNTS_RECEIVABLE_ID;
-        $this->STATUS = $Data->STATUS;
-        $this->OUTPUT_TAX_ID = $Data->OUTPUT_TAX_ID ? $Data->OUTPUT_TAX_ID : 0;
-        $this->OUTPUT_TAX_RATE = $Data->OUTPUT_TAX_RATE ? $Data->OUTPUT_TAX_RATE : 0;
-        $this->OUTPUT_TAX_AMOUNT = $Data->OUTPUT_TAX_AMOUNT ? $Data->OUTPUT_TAX_AMOUNT : 0;
-        $this->OUTPUT_TAX_VAT_METHOD = $Data->OUTPUT_TAX_VAT_METHOD ? $Data->OUTPUT_TAX_VAT_METHOD : 0;
-        $this->OUTPUT_TAX_ACCOUNT_ID = $Data->OUTPUT_TAX_ACCOUNT_ID ? $Data->OUTPUT_TAX_ACCOUNT_ID : 0;
-        $this->TAXABLE_AMOUNT = $Data->TAXABLE_AMOUNT ? $Data->TAXABLE_AMOUNT : 0;
-        $this->NONTAXABLE_AMOUNT = $Data->NONTAXABLE_AMOUNT ? $Data->NONTAXABLE_AMOUNT : 0;
-        $this->STATUS_DESCRIPTION = $this->documentStatusServices->getDesc($this->STATUS);
+        $this->STATUS                 = $Data->STATUS;
+        $this->OUTPUT_TAX_ID          = $Data->OUTPUT_TAX_ID ? $Data->OUTPUT_TAX_ID : 0;
+        $this->OUTPUT_TAX_RATE        = $Data->OUTPUT_TAX_RATE ? $Data->OUTPUT_TAX_RATE : 0;
+        $this->OUTPUT_TAX_AMOUNT      = $Data->OUTPUT_TAX_AMOUNT ? $Data->OUTPUT_TAX_AMOUNT : 0;
+        $this->OUTPUT_TAX_VAT_METHOD  = $Data->OUTPUT_TAX_VAT_METHOD ? $Data->OUTPUT_TAX_VAT_METHOD : 0;
+        $this->OUTPUT_TAX_ACCOUNT_ID  = $Data->OUTPUT_TAX_ACCOUNT_ID ? $Data->OUTPUT_TAX_ACCOUNT_ID : 0;
+        $this->TAXABLE_AMOUNT         = $Data->TAXABLE_AMOUNT ? $Data->TAXABLE_AMOUNT : 0;
+        $this->NONTAXABLE_AMOUNT      = $Data->NONTAXABLE_AMOUNT ? $Data->NONTAXABLE_AMOUNT : 0;
+        $this->STATUS_DESCRIPTION     = $this->documentStatusServices->getDesc($this->STATUS);
     }
 
     public function updatedPAYMENTTERMSID()
     {
         $this->DUE_DATE = $this->paymentTermServices->getDueDate($this->PAYMENT_TERMS_ID, $this->DATE);
     }
-    public function updatedDate() {
+    public function updatedDate()
+    {
 
         $this->updatedPAYMENTTERMSID();
     }
     public function mount($id = null, $IS_MODAL = false, $PATIENT_PAYMENT_ID = 0)
     {
-        $this->IS_MODAL = $IS_MODAL;
+        $this->IS_MODAL           = $IS_MODAL;
         $this->PATIENT_PAYMENT_ID = $PATIENT_PAYMENT_ID;
 
         if (is_numeric($id)) {
@@ -193,56 +194,64 @@ class InvoiceForm extends Component
                 $this->LoadDropdown();
                 $this->getInfo($data);
                 $this->Modify = false;
+
+                $PhicData = $this->philHealthServices->getDataByInvoiceId($this->ID);
+                if ($PhicData) {
+                    $PF_DATA = $this->philHealthProfFeeServices->getProfFeeFirst($PhicData->ID);
+                    if ($PF_DATA) {
+                        $this->BILL_ID = $PF_DATA->BILL_ID ?? 0;
+                    }
+
+                }
+
                 return;
             }
             $errorMessage = 'Error occurred: Record not found. ';
             return Redirect::route('customersinvoice')->with('error', $errorMessage);
         }
 
-
         if ($this->PATIENT_PAYMENT_ID > 0) {
             $dataPay = $this->patientPaymentServices->get($this->PATIENT_PAYMENT_ID);
             if ($dataPay) {
                 $this->CUSTOMER_ID = $dataPay->PATIENT_ID ?? 0;
-                $this->DATE = $dataPay->DATE ?? '';
+                $this->DATE        = $dataPay->DATE ?? '';
                 $this->LOCATION_ID = $dataPay->LOCATION_ID ?? '';
-                $this->NOTES = $dataPay->NOTES ?? '';
-                $this->PO_NUMBER = $dataPay->RECEIPT_REF_NO ?? '';
+                $this->NOTES       = $dataPay->NOTES ?? '';
+                $this->PO_NUMBER   = $dataPay->RECEIPT_REF_NO ?? '';
             }
-            
+
         } else {
 
             $this->CUSTOMER_ID = 0;
-            $this->DATE = $this->userServices->getTransactionDateDefault();
+            $this->DATE        = $this->userServices->getTransactionDateDefault();
             $this->LOCATION_ID = $this->userServices->getLocationDefault();
-            $this->NOTES = '';
-            $this->PO_NUMBER = '';
+            $this->NOTES       = '';
+            $this->PO_NUMBER   = '';
         }
 
-
         $this->LoadDropdown();
-        $this->Modify = true;
-        $this->ID = 0;
-        $this->CODE = '';
-        $this->SALES_REP_ID = 0;
-        $this->SHIP_VIA_ID = $this->shipViaServices->getFirst();
-        $this->CLASS_ID = 0;
-        $this->PAYMENT_TERMS_ID = (int) $this->systemSettingServices->GetValue('DefaultPaymentTermsId');
-        $this->DUE_DATE = $this->paymentTermServices->getDueDate($this->PAYMENT_TERMS_ID);
-        $this->AMOUNT = 0;
-        $this->BALANCE_DUE = 0;
+        $this->Modify                 = true;
+        $this->ID                     = 0;
+        $this->CODE                   = '';
+        $this->SALES_REP_ID           = 0;
+        $this->SHIP_VIA_ID            = $this->shipViaServices->getFirst();
+        $this->CLASS_ID               = 0;
+        $this->PAYMENT_TERMS_ID       = (int) $this->systemSettingServices->GetValue('DefaultPaymentTermsId');
+        $this->DUE_DATE               = $this->paymentTermServices->getDueDate($this->PAYMENT_TERMS_ID);
+        $this->AMOUNT                 = 0;
+        $this->BALANCE_DUE            = 0;
         $this->ACCOUNTS_RECEIVABLE_ID = (int) $this->accountServices->getByName('Accounts Receivables');
-        $this->STATUS = 0;
-        $this->OUTPUT_TAX_ID = (int) $this->systemSettingServices->GetValue('OutputTaxId');
-        $this->OUTPUT_TAX_RATE = 0;
-        $this->OUTPUT_TAX_AMOUNT = 0;
-        $this->OUTPUT_TAX_VAT_METHOD = 0;
-        $this->OUTPUT_TAX_ACCOUNT_ID = 0;
-        $this->TAXABLE_AMOUNT = 0;
-        $this->NONTAXABLE_AMOUNT = 0;
-        $this->STATUS_DESCRIPTION = "";
-        $this->DISCOUNT_DATE = null;
-        $this->DISCOUNT_PCT = 0;
+        $this->STATUS                 = 0;
+        $this->OUTPUT_TAX_ID          = (int) $this->systemSettingServices->GetValue('OutputTaxId');
+        $this->OUTPUT_TAX_RATE        = 0;
+        $this->OUTPUT_TAX_AMOUNT      = 0;
+        $this->OUTPUT_TAX_VAT_METHOD  = 0;
+        $this->OUTPUT_TAX_ACCOUNT_ID  = 0;
+        $this->TAXABLE_AMOUNT         = 0;
+        $this->NONTAXABLE_AMOUNT      = 0;
+        $this->STATUS_DESCRIPTION     = "";
+        $this->DISCOUNT_DATE          = null;
+        $this->DISCOUNT_PCT           = 0;
         $this->getTax();
     }
     public function getModify()
@@ -256,23 +265,23 @@ class InvoiceForm extends Component
 
                 $this->validate(
                     [
-                        'CUSTOMER_ID'               => 'required|not_in:0|exists:contact,id',
-                        'OUTPUT_TAX_ID'             => 'required|not_in:0',
-                        'DATE'                      => 'required|date_format:Y-m-d',
-                        'LOCATION_ID'               => 'required|not_in:0|exists:location,id',
-                        'PAYMENT_TERMS_ID'          => 'required|',
-                        'ACCOUNTS_RECEIVABLE_ID'    => 'required|exists:account,id',
-                        'OUTPUT_TAX_ACCOUNT_ID'     => 'required|exists:account,id'
+                        'CUSTOMER_ID'            => 'required|not_in:0|exists:contact,id',
+                        'OUTPUT_TAX_ID'          => 'required|not_in:0',
+                        'DATE'                   => 'required|date_format:Y-m-d',
+                        'LOCATION_ID'            => 'required|not_in:0|exists:location,id',
+                        'PAYMENT_TERMS_ID'       => 'required|',
+                        'ACCOUNTS_RECEIVABLE_ID' => 'required|exists:account,id',
+                        'OUTPUT_TAX_ACCOUNT_ID'  => 'required|exists:account,id',
                     ],
                     [],
                     [
-                        'CUSTOMER_ID'               => 'Customer',
-                        'OUTPUT_TAX_ID'             => 'Tax',
-                        'DATE'                      => 'Date',
-                        'LOCATION_ID'               => 'Location',
-                        'PAYMENT_TERMS_ID'          => 'Payment Terms',
-                        'ACCOUNTS_RECEIVABLE_ID'    => 'Accounts Receivable',
-                        'OUTPUT_TAX_ACCOUNT_ID'     => 'Output Tax Accounts'
+                        'CUSTOMER_ID'            => 'Customer',
+                        'OUTPUT_TAX_ID'          => 'Tax',
+                        'DATE'                   => 'Date',
+                        'LOCATION_ID'            => 'Location',
+                        'PAYMENT_TERMS_ID'       => 'Payment Terms',
+                        'ACCOUNTS_RECEIVABLE_ID' => 'Accounts Receivable',
+                        'OUTPUT_TAX_ACCOUNT_ID'  => 'Output Tax Accounts',
                     ]
                 );
                 DB::beginTransaction();
@@ -301,7 +310,6 @@ class InvoiceForm extends Component
                     $this->OUTPUT_TAX_ACCOUNT_ID
                 );
 
-
                 if ($this->PATIENT_PAYMENT_ID > 0) {
                     $this->getPatientItemAutoSave();
                     $this->patientPaymentServices->CustomerRef($this->PATIENT_PAYMENT_ID, true, $this->ID);
@@ -324,31 +332,31 @@ class InvoiceForm extends Component
 
                 $this->validate(
                     [
-                        'CUSTOMER_ID'               => 'required|not_in:0',
-                        'CODE'                      => 'required|max:20|unique:invoice,code,' . $this->ID,
-                        'OUTPUT_TAX_ID'             => 'required|not_in:0',
-                        'DATE'                      => 'required',
-                        'LOCATION_ID'               => 'required',
-                        'PAYMENT_TERMS_ID'          => 'required',
-                        'ACCOUNTS_RECEIVABLE_ID'    => 'required|exists:account,id',
-                        'OUTPUT_TAX_ACCOUNT_ID'     => 'required|exists:account,id'
+                        'CUSTOMER_ID'            => 'required|not_in:0',
+                        'CODE'                   => 'required|max:20|unique:invoice,code,' . $this->ID,
+                        'OUTPUT_TAX_ID'          => 'required|not_in:0',
+                        'DATE'                   => 'required',
+                        'LOCATION_ID'            => 'required',
+                        'PAYMENT_TERMS_ID'       => 'required',
+                        'ACCOUNTS_RECEIVABLE_ID' => 'required|exists:account,id',
+                        'OUTPUT_TAX_ACCOUNT_ID'  => 'required|exists:account,id',
                     ],
                     [],
                     [
-                        'CUSTOMER_ID'               => 'Petient',
-                        'CODE'                      => 'Reference No.',
-                        'OUTPUT_TAX_ID'             => 'Tax',
-                        'DATE'                      => 'Date',
-                        'LOCATION_ID'               => 'Location',
-                        'PAYMENT_TERMS_ID'          => 'Payment Terms',
-                        'ACCOUNTS_RECEIVABLE_ID'    => 'Accounts Receivable',
-                        'OUTPUT_TAX_ACCOUNT_ID'     => 'Output Tax Accounts'
+                        'CUSTOMER_ID'            => 'Petient',
+                        'CODE'                   => 'Reference No.',
+                        'OUTPUT_TAX_ID'          => 'Tax',
+                        'DATE'                   => 'Date',
+                        'LOCATION_ID'            => 'Location',
+                        'PAYMENT_TERMS_ID'       => 'Payment Terms',
+                        'ACCOUNTS_RECEIVABLE_ID' => 'Accounts Receivable',
+                        'OUTPUT_TAX_ACCOUNT_ID'  => 'Output Tax Accounts',
                     ]
                 );
 
                 DB::beginTransaction();
 
-                $data =  $this->invoiceServices->Get($this->ID);
+                $data = $this->invoiceServices->Get($this->ID);
 
                 if ($data) {
                     if ($this->STATUS == 16) {
@@ -435,7 +443,7 @@ class InvoiceForm extends Component
         if ($this->PATIENT_PAYMENT_ID > 0) {
             $dataPay = $this->patientPaymentServices->get($this->PATIENT_PAYMENT_ID);
             if ($dataPay) {
-                if ($this->patientPaymentServices->PHILHEALTH_METHOD_ID  == $dataPay->PAYMENT_METHOD_ID) {
+                if ($this->patientPaymentServices->PHILHEALTH_METHOD_ID == $dataPay->PAYMENT_METHOD_ID) {
 
                     $PHILHEALTH_ID = $this->philHealthServices->getPhilHealthIdbyPatientPayment($this->PATIENT_PAYMENT_ID);
                     $this->philHealthServices->setUpdateTwoId($PHILHEALTH_ID, $this->PATIENT_PAYMENT_ID, $this->ID);
@@ -450,12 +458,7 @@ class InvoiceForm extends Component
 
                         // get Service Charge
 
-                        $RATE =  $this->serviceChargeServices->getPhilHealthItem($PhData->DATE_ADMITTED, $this->LOCATION_ID, $this->CUSTOMER_ID);
-                            
-                        // $RATE = $this->priceLevelLineServices->GetPriceByLocation(
-                        //     $this->LOCATION_ID,
-                        //     $this->philHealthServices->PHIL_HEALTH_ITEM_ID
-                        // );
+                        $RATE = $this->serviceChargeServices->getPhilHealthItem($PhData->DATE_ADMITTED, $this->LOCATION_ID, $this->CUSTOMER_ID);
 
                         //philheatlh
                         $this->invoiceServices->ItemStore(
@@ -514,10 +517,10 @@ class InvoiceForm extends Component
     public function getUpdateAmount($result)
     {
         foreach ($result as $list) {
-            $this->AMOUNT = $list['AMOUNT'];
-            $this->BALANCE_DUE = $list['BALANCE_DUE'];
+            $this->AMOUNT            = $list['AMOUNT'];
+            $this->BALANCE_DUE       = $list['BALANCE_DUE'];
             $this->OUTPUT_TAX_AMOUNT = $list['TAX_AMOUNT'];
-            $this->TAXABLE_AMOUNT = $list['TAXABLE_AMOUNT'];
+            $this->TAXABLE_AMOUNT    = $list['TAXABLE_AMOUNT'];
             $this->NONTAXABLE_AMOUNT = $list['NONTAXABLE_AMOUNT'];
         }
     }
@@ -557,8 +560,8 @@ class InvoiceForm extends Component
     {
         try {
             $SOURCE_REF_TYPE = (int) $this->invoiceServices->document_type_id;
-            $data = $this->invoiceServices->ItemInventory($this->ID);
-            
+            $data            = $this->invoiceServices->ItemInventory($this->ID);
+
             if ($data) {
                 $this->itemInventoryServices->InventoryExecute(
                     $data,
@@ -579,11 +582,11 @@ class InvoiceForm extends Component
     {
         try {
 
-            $invoice = (int) $this->invoiceServices->object_type_invoice;
+            $invoice      = (int) $this->invoiceServices->object_type_invoice;
             $invoiceItems = (int) $this->invoiceServices->object_type_invoice_item;
 
             $JOURNAL_NO = $this->accountJournalServices->getRecord($this->invoiceServices->object_type_invoice, $this->ID);
-            if ($JOURNAL_NO  ==  0) {
+            if ($JOURNAL_NO == 0) {
                 $JOURNAL_NO = $this->accountJournalServices->getJournalNo($this->invoiceServices->object_type_invoice, $this->ID) + 1;
             }
 
@@ -609,7 +612,7 @@ class InvoiceForm extends Component
             //Checking if balance
             $data = $this->accountJournalServices->getSumDebitCredit($JOURNAL_NO);
 
-            $debit_sum = (float) $data['DEBIT'];
+            $debit_sum  = (float) $data['DEBIT'];
             $credit_sum = (float) $data['CREDIT'];
 
             if ($debit_sum == $credit_sum) {
@@ -633,17 +636,16 @@ class InvoiceForm extends Component
                 return;
             }
 
-
             DB::beginTransaction();
 
             if ($this->contactServices->IsNotPatient($this->CUSTOMER_ID)) {
-                if (!$this->ItemInventory()) {
+                if (! $this->ItemInventory()) {
                     DB::rollBack();
                     return;
                 }
             }
 
-            if (!$this->AccountJournal()) {
+            if (! $this->AccountJournal()) {
                 DB::rollBack();
                 return;
             }
@@ -670,6 +672,7 @@ class InvoiceForm extends Component
             session()->flash('error', $errorMessage);
         }
     }
+
     public function render()
     {
         return view('livewire.invoice.invoice-form');

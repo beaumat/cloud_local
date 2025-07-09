@@ -45,7 +45,6 @@ class ReceivedPayment extends Component
     private $paymentMethodServices;
     private $accountServices;
     private $accountJournalServices;
-
     private $philHealthServices;
     public function boot(
         PaymentServices $paymentServices,
@@ -144,7 +143,6 @@ class ReceivedPayment extends Component
                 $this->ACCOUNTS_RECEIVABLE_ID
             );
             $this->invoiceServices->updateInvoiceBalance($this->INVOICE_ID);
-
             $isGood = $this->paymentServices->getPosted($ID, $this->userServices->getTransactionDateDefault(), $this->LOCATION_ID);
             if ($isGood) {
                 $PHILHEALTH_ID =  $this->philHealthServices->Get_ID_by_INVOICE_ID($this->INVOICE_ID);

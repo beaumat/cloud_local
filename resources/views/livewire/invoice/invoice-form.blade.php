@@ -288,6 +288,13 @@
                                     <div class="col-md-4 text-left">
                                         <div class="row">
                                             <div class="col-md-4">
+                                                @if ($BILL_ID > 0)
+                                                    <a class="btn btn-sm btn-secondary"
+                                                        href="{{ route('vendorsbills_edit', ['id' => $BILL_ID]) }}"
+                                                        target="_blank">
+                                                        <i class="fa fa-file"></i> Doctor Bills
+                                                    </a>
+                                                @endif
                                             </div>
                                             <div class="col-md-4">
                                             </div>
@@ -325,10 +332,6 @@
             </div>
         </section>
 
-
-        <section>
-
-        </section>
     @endif
     @livewire('AccountJournal.AccountJournalModal')
 </div>

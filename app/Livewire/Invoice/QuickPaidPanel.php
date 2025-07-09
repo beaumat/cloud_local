@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Livewire\Invoice;
 
 use App\Services\AccountServices;
@@ -21,7 +20,6 @@ use Livewire\Component;
 
 class QuickPaidPanel extends Component
 {
-
 
     public bool $refreshComponent = false;
     public int $PAYMENT_METHOD_ID = 5;
@@ -48,13 +46,13 @@ class QuickPaidPanel extends Component
     private $contactServices;
     private $taxServices;
 
-    public $taxList = [];
+    public $taxList           = [];
     public $paymentPeriodList = [];
     private $paymentPeriodServices;
     private $userServices;
     private $philHealthServices;
     public bool $isPhilHealth = false;
-    public bool $isGL = false;
+    public bool $isGL         = false;
 
     private $patientPaymentServices;
     private $serviceChargeServices;
@@ -75,31 +73,31 @@ class QuickPaidPanel extends Component
         HemoServices $hemoServices,
         PhilHealthProfFeeServices $philHealthProfFeeServices
     ) {
-        $this->invoiceServices = $invoiceServices;
-        $this->paymentServices = $paymentServices;
-        $this->taxCreditServices = $taxCreditServices;
-        $this->contactServices = $contactServices;
-        $this->taxServices = $taxServices;
-        $this->accountServices = $accountServices;
-        $this->paymentPeriodServices = $paymentPeriodServices;
-        $this->userServices = $userServices;
-        $this->philHealthServices = $philHealthServices;
-        $this->patientPaymentServices = $patientPaymentServices;
-        $this->serviceChargeServices = $serviceChargeServices;
-        $this->hemoServices = $hemoServices;
+        $this->invoiceServices           = $invoiceServices;
+        $this->paymentServices           = $paymentServices;
+        $this->taxCreditServices         = $taxCreditServices;
+        $this->contactServices           = $contactServices;
+        $this->taxServices               = $taxServices;
+        $this->accountServices           = $accountServices;
+        $this->paymentPeriodServices     = $paymentPeriodServices;
+        $this->userServices              = $userServices;
+        $this->philHealthServices        = $philHealthServices;
+        $this->patientPaymentServices    = $patientPaymentServices;
+        $this->serviceChargeServices     = $serviceChargeServices;
+        $this->hemoServices              = $hemoServices;
         $this->philHealthProfFeeServices = $philHealthProfFeeServices;
 
     }
 
     private function clearField()
     {
-        $this->TAX_ID = 0;
-        $this->PAYMENT_AMOUNT = 0;
+        $this->TAX_ID            = 0;
+        $this->PAYMENT_AMOUNT    = 0;
         $this->PAYMENT_PERIOD_ID = 0;
 
-        $this->EWT_RATE = 0;
+        $this->EWT_RATE        = 0;
         $this->AMOUNT_WITHHELD = 0;
-        $this->EWT_ACCOUNT_ID = 0;
+        $this->EWT_ACCOUNT_ID  = 0;
         $this->TAX_DESCRIPTION = '';
     }
     #[On('quick-paid')]
@@ -109,17 +107,17 @@ class QuickPaidPanel extends Component
         $this->clearField();
         $data = $this->invoiceServices->get($this->INVOICE_ID);
         if ($data) {
-            $this->CUSTOMER_ID = $data->CUSTOMER_ID;
+            $this->CUSTOMER_ID            = $data->CUSTOMER_ID;
             $this->ACCOUNTS_RECEIVABLE_ID = $data->ACCOUNTS_RECEIVABLE_ID;
-            $this->CODE = $data->CODE ?? '';
-            $this->DATE = $data->DATE;
-            $this->DUE_DATE = $data->DUE_DATE;
-            $this->LOCATION_ID = $data->LOCATION_ID;
+            $this->CODE                   = $data->CODE ?? '';
+            $this->DATE                   = $data->DATE;
+            $this->DUE_DATE               = $data->DUE_DATE;
+            $this->LOCATION_ID            = $data->LOCATION_ID;
             $this->ReloadPeriodList();
-            $this->PO_NUMBER = $data->PO_NUMBER ?? '';
-            $this->AMOUNT = $data->AMOUNT ?? 0;
+            $this->PO_NUMBER   = $data->PO_NUMBER ?? '';
+            $this->AMOUNT      = $data->AMOUNT ?? 0;
             $this->BALANCE_DUE = $data->BALANCE_DUE ?? 0;
-            $con = $this->contactServices->getSingleData($this->CUSTOMER_ID);
+            $con               = $this->contactServices->getSingleData($this->CUSTOMER_ID);
             if ($con) {
                 $this->NAME = $con->NAME ?? '';
             }
@@ -147,35 +145,34 @@ class QuickPaidPanel extends Component
     {
         $data = $this->philHealthServices->getDataByInvoiceId($INVOICE_ID);
         if ($data) {
-            $this->isPhilHealth = true;
-            $this->PH_CODE = $data->CODE ?? '';
-            $this->PH_DATE_ADMITTED = $data->DATE_ADMITTED ?? '';
+            $this->isPhilHealth       = true;
+            $this->PH_CODE            = $data->CODE ?? '';
+            $this->PH_DATE_ADMITTED   = $data->DATE_ADMITTED ?? '';
             $this->PH_DATE_DISCHARGED = $data->DATE_DISCHARGED ?? '';
-            $dataPF = $this->philHealthProfFeeServices->getProfFeeFirst($data->ID);
+            $dataPF                   = $this->philHealthProfFeeServices->getProfFeeFirst($data->ID);
             if ($dataPF) {
                 $this->PH_DOCTOR_NAME = $dataPF->NAME ?? '';
-                $this->DOCTOR_FEE = $dataPF->FIRST_CASE ?? 0;
+                $this->DOCTOR_FEE     = $dataPF->FIRST_CASE ?? 0;
             }
 
             return;
         }
 
-        $this->isPhilHealth = false;
-        $this->PH_CODE = '';
-        $this->PH_DATE_ADMITTED = '';
+        $this->isPhilHealth       = false;
+        $this->PH_CODE            = '';
+        $this->PH_DATE_ADMITTED   = '';
         $this->PH_DATE_DISCHARGED = '';
 
         $this->PH_DOCTOR_NAME = '';
-        $this->DOCTOR_FEE = 0;
+        $this->DOCTOR_FEE     = 0;
     }
-
 
     #[On('period-refresh')]
     public function ReloadPeriodList()
     {
 
         $this->paymentPeriodList = $this->paymentPeriodServices->GetDropDownList($this->LOCATION_ID);
-        $this->refreshComponent = $this->refreshComponent ? false : true;
+        $this->refreshComponent  = $this->refreshComponent ? false : true;
     }
     public float $EWT_RATE;
     public float $AMOUNT_WITHHELD;
@@ -185,17 +182,17 @@ class QuickPaidPanel extends Component
     {
         $tax = $this->taxServices->get($this->TAX_ID);
         if ($tax) {
-            $this->EWT_RATE = $tax->RATE ?? 0;
+            $this->EWT_RATE        = $tax->RATE ?? 0;
             $this->AMOUNT_WITHHELD = $this->BALANCE_DUE * ($this->EWT_RATE / 100);
-            $this->EWT_ACCOUNT_ID = $tax->ASSET_ACCOUNT_ID ?? 0;
-            $acctData = $this->accountServices->Get($this->EWT_ACCOUNT_ID);
+            $this->EWT_ACCOUNT_ID  = $tax->ASSET_ACCOUNT_ID ?? 0;
+            $acctData              = $this->accountServices->Get($this->EWT_ACCOUNT_ID);
             if ($acctData) {
                 $this->TAX_DESCRIPTION = $acctData->NAME ?? '';
             }
         } else {
-            $this->EWT_RATE = 0;
+            $this->EWT_RATE        = 0;
             $this->AMOUNT_WITHHELD = 0;
-            $this->EWT_ACCOUNT_ID = 0;
+            $this->EWT_ACCOUNT_ID  = 0;
             $this->TAX_DESCRIPTION = '';
         }
         $this->NewPaymentAMount();
@@ -226,7 +223,6 @@ class QuickPaidPanel extends Component
             '',
             $this->ACCOUNTS_RECEIVABLE_ID
         );
-
 
         $this->taxCreditServices->StoreInvoice(
             $ID,
@@ -284,13 +280,13 @@ class QuickPaidPanel extends Component
     {
         $this->validate(
             [
-                'PAYMENT_AMOUNT' => 'required|numeric|not_in:0',
+                'PAYMENT_AMOUNT'    => 'required|numeric|not_in:0',
                 'PAYMENT_PERIOD_ID' => 'required|numeric|not_in:0|exists:payment_period,id',
             ],
             [],
             [
-                'PAYMENT_AMOUNT' => 'Payment Amount',
-                'PAYMENT_PERIOD_ID' => 'Payment Period'
+                'PAYMENT_AMOUNT'    => 'Payment Amount',
+                'PAYMENT_PERIOD_ID' => 'Payment Period',
             ]
         );
 
@@ -302,7 +298,6 @@ class QuickPaidPanel extends Component
             return;
         }
 
-
         // $dtCheck = (bool) $this->DateRangeChecking($dataPeriod);
         // if ($dtCheck == false) {
         //     session()->flash('error', "Invalid. the date period between admitted or discharge is out of range");
@@ -313,14 +308,14 @@ class QuickPaidPanel extends Component
         try {
 
             $isgood = $this->AddTAX();
-            if (!$isgood) {
+            if (! $isgood) {
                 DB::rollBack();
                 session()->flash('error', 'rollback tax');
                 return;
             }
 
             $isPayGood = $this->AddPayment();
-            if (!$isPayGood) {
+            if (! $isPayGood) {
                 DB::rollBack();
                 session()->flash('error', 'rollback payment');
                 return;
@@ -369,7 +364,7 @@ class QuickPaidPanel extends Component
                             );
                         }
 
-                        $phData = $this->philHealthServices->get($data->TRANSACTION_REF_ID);
+                        $phData      = $this->philHealthServices->get($data->TRANSACTION_REF_ID);
                         $summaryList = $this->hemoServices->GetSummary($data->CUSTOMER_ID, $data->LOCATION_ID, $phData->DATE_ADMITTED, $phData->DATE_DISCHARGED);
                         foreach ($summaryList as $sumList) {
                             $PP_ITEM_ID = $this->patientPaymentServices->PaymentChargesExist($PATIENT_PAYMENT_ID, $sumList->SCI_ID);
@@ -384,15 +379,11 @@ class QuickPaidPanel extends Component
                         }
                     }
 
-
                 }
 
             }
 
-
         }
-
-
 
     }
     public function render()
