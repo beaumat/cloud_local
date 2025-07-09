@@ -284,6 +284,12 @@ class InvoiceForm extends Component
                         'OUTPUT_TAX_ACCOUNT_ID'  => 'Output Tax Accounts',
                     ]
                 );
+
+                if (! $this->contactServices->isActive($this->CUSTOMER_ID)) {
+                    session()->flash('error', 'Customer is not active');
+                    return;
+                }
+
                 DB::beginTransaction();
                 $this->getTax();
                 $this->ID = (int) $this->invoiceServices->Store(
