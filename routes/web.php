@@ -706,17 +706,13 @@ Route::middleware(['auth'])->group(function () {
             });
 
         });
-
         Route::prefix('/accounting')->name('accounting')->group(function () {
-
             Route::prefix('/general-ledger')->middleware(['permission:report.accounting.general-ledger'])->group(function () {
                 Route::get('/', GeneralLedgerReport::class)->name('general_ledeger_report');
             });
-
             Route::prefix('/trial-balance')->middleware(['permission:report.accounting.trial-balance'])->group(function () {
                 Route::get('/', TrialBalanceReport::class)->name('trial_balance_report');
             });
-
             Route::prefix('/account-transaction')->middleware(['permission:report.accounting.transaction-details'])->group(function () {
                 Route::get('/', TransactionDetailsReport::class)->name('transaction_details_report');
             });
