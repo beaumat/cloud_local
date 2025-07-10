@@ -6,6 +6,7 @@ use App\Models\PatientDoctor;
 use App\Models\PhilHealth;
 use App\Models\PhilhealthDrugsMedicines;
 use App\Models\PhilHealthProfFee;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 class PhilHealthServices
@@ -1178,7 +1179,7 @@ class PhilHealthServices
             ->where('LOCATION_ID', '=', $LOCATION_ID)
             ->exists();
     }
-    public function GenerateAnnex(int $Year, int $Month, int $locationId)
+    public function GenerateAnnex(int $Year, int $Month, int $locationId): array | Collection
     {
         $result = PhilHealth::query()
             ->select([
@@ -1256,7 +1257,7 @@ class PhilHealthServices
                 'c.PIN as PIN_NO',
                 'c.IS_PATIENT',
                 'pc.DESCRIPTION as CLASS',
-                DB::raw('YEAR(philhealth.DATE_ADMITTED) as YEAR')
+                DB::raw('YEAR(philhealth.DATE_ADMITTED) as YEAR'),
 
             ])
             ->join('contact as c', 'c.ID', '=', 'philhealth.CONTACT_ID')

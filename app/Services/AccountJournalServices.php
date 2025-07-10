@@ -10,7 +10,7 @@ class AccountJournalServices
 {
     public string $CHECK_TYPE = "(
         (select `check_type_map`.`NAME` from `check` inner join check_type_map on check_type_map.ID = check.TYPE where  check.ID = aj.OBJECT_ID limit 1 )
-        union 
+        union
         (select `check_type_map`.`NAME` from `check` inner join check_type_map on check_type_map.ID = check.TYPE inner join check_bills on check_bills.CHECK_ID = check.ID where  check_bills.ID = aj.OBJECT_ID limit 1 )
         union
         (select `check_type_map`.`NAME` from `check` inner join check_type_map on check_type_map.ID = check.TYPE inner join check_items on check_items.CHECK_ID = check.ID where  check_items.ID = aj.OBJECT_ID limit 1 )
@@ -21,7 +21,7 @@ class AccountJournalServices
 
     public string $CHECK_TYPE_ID = "(
         (select `check_type_map`.`ID` from `check` inner join check_type_map on check_type_map.ID = check.TYPE where  check.ID = aj.OBJECT_ID limit 1 )
-        union 
+        union
         (select `check_type_map`.`ID` from `check` inner join check_type_map on check_type_map.ID = check.TYPE inner join check_bills on check_bills.CHECK_ID = check.ID where  check_bills.ID = aj.OBJECT_ID limit 1 )
         union
         (select `check_type_map`.`ID` from `check` inner join check_type_map on check_type_map.ID = check.TYPE inner join check_items on check_items.CHECK_ID = check.ID where  check_items.ID = aj.OBJECT_ID limit 1 )
@@ -49,8 +49,8 @@ class AccountJournalServices
         WHEN o.`ID` = 53    THEN ( select `sales_receipt`.`PAYMENT_REF_NO` from `sales_receipt_items` join sales_receipt on sales_receipt.ID = sales_receipt_items.SALES_RECEIPT_ID  where `sales_receipt_items`.ID = aj.OBJECT_ID and `sales_receipt`.DATE = aj.OBJECT_DATE  and `sales_receipt`.LOCATION_ID = aj.LOCATION_ID)
         WHEN o.`ID` = 57    THEN ( select `check`.`CUSTOM_FIELD1` from `check`  where `check`.ID = aj.OBJECT_ID and `check`.DATE = aj.OBJECT_DATE  and `check`.LOCATION_ID = aj.LOCATION_ID)
         WHEN o.`ID` = 58    THEN ( select `check`.`CUSTOM_FIELD1` from `check_bills` join `check` on check.ID = check_bills.CHECK_ID  where `check_bills`.ID = aj.OBJECT_ID and `check`.DATE = aj.OBJECT_DATE  and `check`.LOCATION_ID = aj.LOCATION_ID)
-        WHEN o.`ID` = 75    THEN ( select `check`.`CUSTOM_FIELD1` from `check_items` join `check` on check.ID = check_items.CHECK_ID  where `check_items`.ID = aj.OBJECT_ID and `check`.DATE = aj.OBJECT_DATE  and `check`.LOCATION_ID = aj.LOCATION_ID)    
-        WHEN o.`ID` = 79    THEN ( select `check`.`CUSTOM_FIELD1` from `check_expenses` join `check` on check.ID = check_expenses.CHECK_ID  where `check_expenses`.ID = aj.OBJECT_ID and `check`.DATE = aj.OBJECT_DATE  and `check`.LOCATION_ID = aj.LOCATION_ID)    
+        WHEN o.`ID` = 75    THEN ( select `check`.`CUSTOM_FIELD1` from `check_items` join `check` on check.ID = check_items.CHECK_ID  where `check_items`.ID = aj.OBJECT_ID and `check`.DATE = aj.OBJECT_DATE  and `check`.LOCATION_ID = aj.LOCATION_ID)
+        WHEN o.`ID` = 79    THEN ( select `check`.`CUSTOM_FIELD1` from `check_expenses` join `check` on check.ID = check_expenses.CHECK_ID  where `check_expenses`.ID = aj.OBJECT_ID and `check`.DATE = aj.OBJECT_DATE  and `check`.LOCATION_ID = aj.LOCATION_ID)
         WHEN o.`ID` = 59    THEN ( select bill_credit.`CUSTOM_FIELD1` from bill_credit  where bill_credit.ID = aj.OBJECT_ID and bill_credit.DATE = aj.OBJECT_DATE  and bill_credit.LOCATION_ID = aj.LOCATION_ID )
         WHEN o.`ID` = 60    THEN ( select bill_credit.`CUSTOM_FIELD1` from bill_credit_items join bill_credit on bill_credit.ID = bill_credit_items.BILL_CREDIT_ID  where bill_credit_items.ID = aj.OBJECT_ID and bill_credit.DATE = aj.OBJECT_DATE  and bill_credit.LOCATION_ID = aj.LOCATION_ID )
         WHEN o.`ID` = 80    THEN ( select bill_credit.`CUSTOM_FIELD1` from bill_credit_expenses join bill_credit on bill_credit.ID = bill_credit_expenses.BILL_CREDIT_ID  where bill_credit_expenses.ID = aj.OBJECT_ID and bill_credit.DATE = aj.OBJECT_DATE  and bill_credit.LOCATION_ID = aj.LOCATION_ID)
@@ -88,8 +88,8 @@ class AccountJournalServices
         WHEN o.`ID` = 53    THEN ( select `sales_receipt`.`CODE` from `sales_receipt_items` join sales_receipt on sales_receipt.ID = sales_receipt_items.SALES_RECEIPT_ID  where `sales_receipt_items`.ID = aj.OBJECT_ID and `sales_receipt`.DATE = aj.OBJECT_DATE  and `sales_receipt`.LOCATION_ID = aj.LOCATION_ID)
         WHEN o.`ID` = 57    THEN ( select `check`.`CODE` from `check`  where `check`.ID = aj.OBJECT_ID and `check`.DATE = aj.OBJECT_DATE  and `check`.LOCATION_ID = aj.LOCATION_ID)
         WHEN o.`ID` = 58    THEN ( select `check`.`CODE` from `check_bills` join `check` on check.ID = check_bills.CHECK_ID  where `check_bills`.ID = aj.OBJECT_ID and `check`.DATE = aj.OBJECT_DATE  and `check`.LOCATION_ID = aj.LOCATION_ID)
-        WHEN o.`ID` = 75    THEN ( select `check`.`CODE` from `check_items` join `check` on check.ID = check_items.CHECK_ID  where `check_items`.ID = aj.OBJECT_ID and `check`.DATE = aj.OBJECT_DATE  and `check`.LOCATION_ID = aj.LOCATION_ID)    
-        WHEN o.`ID` = 79    THEN ( select `check`.`CODE` from `check_expenses` join `check` on check.ID = check_expenses.CHECK_ID  where `check_expenses`.ID = aj.OBJECT_ID and `check`.DATE = aj.OBJECT_DATE  and `check`.LOCATION_ID = aj.LOCATION_ID)    
+        WHEN o.`ID` = 75    THEN ( select `check`.`CODE` from `check_items` join `check` on check.ID = check_items.CHECK_ID  where `check_items`.ID = aj.OBJECT_ID and `check`.DATE = aj.OBJECT_DATE  and `check`.LOCATION_ID = aj.LOCATION_ID)
+        WHEN o.`ID` = 79    THEN ( select `check`.`CODE` from `check_expenses` join `check` on check.ID = check_expenses.CHECK_ID  where `check_expenses`.ID = aj.OBJECT_ID and `check`.DATE = aj.OBJECT_DATE  and `check`.LOCATION_ID = aj.LOCATION_ID)
         WHEN o.`ID` = 59    THEN ( select bill_credit.`CODE` from bill_credit  where bill_credit.ID = aj.OBJECT_ID and bill_credit.DATE = aj.OBJECT_DATE  and bill_credit.LOCATION_ID = aj.LOCATION_ID )
         WHEN o.`ID` = 60    THEN ( select bill_credit.`CODE` from bill_credit_items join bill_credit on bill_credit.ID = bill_credit_items.BILL_CREDIT_ID  where bill_credit_items.ID = aj.OBJECT_ID and bill_credit.DATE = aj.OBJECT_DATE  and bill_credit.LOCATION_ID = aj.LOCATION_ID )
         WHEN o.`ID` = 80    THEN ( select bill_credit.`CODE` from bill_credit_expenses join bill_credit on bill_credit.ID = bill_credit_expenses.BILL_CREDIT_ID  where bill_credit_expenses.ID = aj.OBJECT_ID and bill_credit.DATE = aj.OBJECT_DATE  and bill_credit.LOCATION_ID = aj.LOCATION_ID)
@@ -103,7 +103,7 @@ class AccountJournalServices
         WHEN o.`ID` = 73    THEN ( select tax_credit.`CODE` from tax_credit_invoices join tax_credit on tax_credit.ID = tax_credit_invoices.TAX_CREDIT_ID  where tax_credit_invoices.ID = aj.OBJECT_ID and tax_credit.DATE = aj.OBJECT_DATE  and tax_credit.LOCATION_ID = aj.LOCATION_ID  )
         WHEN o.`ID` = 113   THEN ( select pull_out.`CODE` from pull_out where pull_out.ID = aj.OBJECT_ID and pull_out.DATE = aj.OBJECT_DATE and pull_out.LOCATION_ID = aj.LOCATION_ID   )
         WHEN o.`ID` = 114   THEN ( select pull_out.`CODE` from pull_out_items join pull_out on pull_out.ID = pull_out_items.PULL_OUT_ID where pull_out_items.ID = aj.OBJECT_ID and pull_out.DATE = aj.OBJECT_DATE and pull_out.LOCATION_ID = aj.LOCATION_ID )
-        
+
         WHEN o.`ID` = 127   THEN ( select depreciation.`CODE` from depreciation where depreciation.ID = aj.OBJECT_ID and depreciation.DATE = aj.OBJECT_DATE  and depreciation.LOCATION_ID = aj.LOCATION_ID  )
         WHEN o.`ID` = 128   THEN ( select depreciation.`CODE` from depreciation_items join depreciation on depreciation.ID = depreciation_items.DEPRECIATION_ID where depreciation_items.ID = aj.OBJECT_ID and depreciation.DATE = aj.OBJECT_DATE  and depreciation.LOCATION_ID = aj.LOCATION_ID )
         WHEN o.`ID` = 135    THEN ( select bank_transfer.`CODE` from bank_transfer where bank_transfer.ID = aj.OBJECT_ID and bank_transfer.DATE = aj.OBJECT_DATE  and (bank_transfer.TO_LOCATION_ID = aj.LOCATION_ID or bank_transfer.FROM_LOCATION_ID = aj.LOCATION_ID ))
@@ -112,7 +112,7 @@ class AccountJournalServices
 
         WHEN o.`ID` = 67   THEN ( select withholding_tax.`CODE` from withholding_tax where withholding_tax.ID = aj.OBJECT_ID and withholding_tax.DATE = aj.OBJECT_DATE  and withholding_tax.LOCATION_ID = aj.LOCATION_ID  )
         WHEN o.`ID` = 68   THEN ( select withholding_tax.`CODE` from withholding_tax_bills join withholding_tax on withholding_tax.ID = withholding_tax_bills.WITHHOLDING_TAX_ID  where withholding_tax_bills.ID = aj.OBJECT_ID and withholding_tax.DATE = aj.OBJECT_DATE and withholding_tax.LOCATION_ID = aj.LOCATION_ID  )
-      
+
         END as TX_CODE';
 
     public string $TX_NOTES = '
@@ -135,8 +135,8 @@ class AccountJournalServices
         WHEN o.`ID` = 53    THEN ( select `sales_receipt`.`NOTES` from `sales_receipt_items` join sales_receipt on sales_receipt.ID = sales_receipt_items.SALES_RECEIPT_ID  where `sales_receipt_items`.ID = aj.OBJECT_ID and `sales_receipt`.DATE = aj.OBJECT_DATE  and `sales_receipt`.LOCATION_ID = aj.LOCATION_ID)
         WHEN o.`ID` = 57    THEN ( select `check`.`NOTES` from `check`  where `check`.ID = aj.OBJECT_ID and `check`.DATE = aj.OBJECT_DATE  and `check`.LOCATION_ID = aj.LOCATION_ID)
         WHEN o.`ID` = 58    THEN ( select `check`.`NOTES` from `check_bills` join `check` on check.ID = check_bills.CHECK_ID  where `check_bills`.ID = aj.OBJECT_ID and `check`.DATE = aj.OBJECT_DATE  and `check`.LOCATION_ID = aj.LOCATION_ID)
-        WHEN o.`ID` = 75    THEN ( select `check`.`NOTES` from `check_items` join `check` on check.ID = check_items.CHECK_ID  where `check_items`.ID = aj.OBJECT_ID and `check`.DATE = aj.OBJECT_DATE  and `check`.LOCATION_ID = aj.LOCATION_ID)    
-        WHEN o.`ID` = 79    THEN ( select `check`.`NOTES` from `check_expenses` join `check` on check.ID = check_expenses.CHECK_ID  where `check_expenses`.ID = aj.OBJECT_ID and `check`.DATE = aj.OBJECT_DATE  and `check`.LOCATION_ID = aj.LOCATION_ID)    
+        WHEN o.`ID` = 75    THEN ( select `check`.`NOTES` from `check_items` join `check` on check.ID = check_items.CHECK_ID  where `check_items`.ID = aj.OBJECT_ID and `check`.DATE = aj.OBJECT_DATE  and `check`.LOCATION_ID = aj.LOCATION_ID)
+        WHEN o.`ID` = 79    THEN ( select `check`.`NOTES` from `check_expenses` join `check` on check.ID = check_expenses.CHECK_ID  where `check_expenses`.ID = aj.OBJECT_ID and `check`.DATE = aj.OBJECT_DATE  and `check`.LOCATION_ID = aj.LOCATION_ID)
         WHEN o.`ID` = 59    THEN ( select bill_credit.`NOTES` from bill_credit  where bill_credit.ID = aj.OBJECT_ID and bill_credit.DATE = aj.OBJECT_DATE  and bill_credit.LOCATION_ID = aj.LOCATION_ID )
         WHEN o.`ID` = 60    THEN ( select bill_credit.`NOTES` from bill_credit_items join bill_credit on bill_credit.ID = bill_credit_items.BILL_CREDIT_ID  where bill_credit_items.ID = aj.OBJECT_ID and bill_credit.DATE = aj.OBJECT_DATE  and bill_credit.LOCATION_ID = aj.LOCATION_ID )
         WHEN o.`ID` = 80    THEN ( select bill_credit.`NOTES` from bill_credit_expenses join bill_credit on bill_credit.ID = bill_credit_expenses.BILL_CREDIT_ID  where bill_credit_expenses.ID = aj.OBJECT_ID and bill_credit.DATE = aj.OBJECT_DATE  and bill_credit.LOCATION_ID = aj.LOCATION_ID)
@@ -146,10 +146,10 @@ class AccountJournalServices
         WHEN o.`ID` = 93    THEN ( select fund_transfer.`NOTES` from fund_transfer where fund_transfer.ID = aj.OBJECT_ID and fund_transfer.DATE = aj.OBJECT_DATE  and (fund_transfer.TO_LOCATION_ID = aj.LOCATION_ID or fund_transfer.FROM_LOCATION_ID = aj.LOCATION_ID ))
         WHEN o.`ID` = 70    THEN ( select build_assembly.`NOTES` from build_assembly where build_assembly.ID = aj.OBJECT_ID and build_assembly.DATE = aj.OBJECT_DATE  and build_assembly.LOCATION_ID = aj.LOCATION_ID  )
         WHEN o.`ID` = 71    THEN ( select build_assembly.`NOTES` from build_assembly_items join build_assembly on build_assembly.ID = build_assembly_items.BUILD_ASSEMBLY_ID  where build_assembly_items.ID = aj.OBJECT_ID and build_assembly.DATE = aj.OBJECT_DATE  and build_assembly.LOCATION_ID = aj.LOCATION_ID  )
-        
+
         WHEN o.`ID` = 72    THEN ( select tax_credit.`NOTES` from tax_credit where tax_credit.ID = aj.OBJECT_ID and tax_credit.DATE = aj.OBJECT_DATE  and tax_credit.LOCATION_ID = aj.LOCATION_ID  )
         WHEN o.`ID` = 73    THEN ( select tax_credit.`NOTES` from tax_credit_invoices join tax_credit on tax_credit.ID = tax_credit_invoices.TAX_CREDIT_ID  where tax_credit_invoices.ID = aj.OBJECT_ID and tax_credit.DATE = aj.OBJECT_DATE  and tax_credit.LOCATION_ID = aj.LOCATION_ID  )
-      
+
         WHEN o.`ID` = 113    THEN ( select pull_out.`NOTES` from pull_out where pull_out.ID = aj.OBJECT_ID and pull_out.DATE = aj.OBJECT_DATE and pull_out.LOCATION_ID = aj.LOCATION_ID   )
         WHEN o.`ID` = 114    THEN ( select pull_out.`NOTES` from pull_out_items join pull_out on pull_out.ID = pull_out_items.PULL_OUT_ID where pull_out_items.ID = aj.OBJECT_ID and pull_out.DATE = aj.OBJECT_DATE and pull_out.LOCATION_ID = aj.LOCATION_ID )
 
@@ -158,7 +158,7 @@ class AccountJournalServices
         WHEN o.`ID` = 135   THEN ( select bank_transfer.`NOTES` from bank_transfer where bank_transfer.ID = aj.OBJECT_ID and bank_transfer.DATE = aj.OBJECT_DATE  and (bank_transfer.TO_LOCATION_ID = aj.LOCATION_ID or bank_transfer.FROM_LOCATION_ID = aj.LOCATION_ID ))
         WHEN o.`ID` = 67   THEN ( select withholding_tax.`NOTES` from withholding_tax where withholding_tax.ID = aj.OBJECT_ID and withholding_tax.DATE = aj.OBJECT_DATE  and withholding_tax.LOCATION_ID = aj.LOCATION_ID  )
         WHEN o.`ID` = 68   THEN ( select withholding_tax.`NOTES` from withholding_tax_bills join withholding_tax on withholding_tax.ID = withholding_tax_bills.WITHHOLDING_TAX_ID  where withholding_tax_bills.ID = aj.OBJECT_ID and withholding_tax.DATE = aj.OBJECT_DATE and withholding_tax.LOCATION_ID = aj.LOCATION_ID  )
-    
+
         END as TX_NOTES';
 
 
@@ -183,8 +183,8 @@ class AccountJournalServices
         WHEN o.`ID` = 53    THEN ( select contact.PRINT_NAME_AS from `sales_receipt_items` join sales_receipt on sales_receipt.ID = sales_receipt_items.SALES_RECEIPT_ID join contact on contact.ID = sales_receipt.CUSTOMER_ID   where `sales_receipt_items`.ID = aj.OBJECT_ID and `sales_receipt`.DATE = aj.OBJECT_DATE  and `sales_receipt`.LOCATION_ID = aj.LOCATION_ID)
         WHEN o.`ID` = 57    THEN ( select contact.PRINT_NAME_AS from `check` join contact on contact.ID = check.PAY_TO_ID where `check`.ID = aj.OBJECT_ID and `check`.DATE = aj.OBJECT_DATE  and `check`.LOCATION_ID = aj.LOCATION_ID)
         WHEN o.`ID` = 58    THEN ( select contact.PRINT_NAME_AS from `check_bills` join `check` on check.ID = check_bills.CHECK_ID  join contact on contact.ID = check.PAY_TO_ID where `check_bills`.ID = aj.OBJECT_ID and `check`.DATE = aj.OBJECT_DATE  and `check`.LOCATION_ID = aj.LOCATION_ID)
-        WHEN o.`ID` = 75    THEN ( select contact.PRINT_NAME_AS from `check_items` join `check` on check.ID = check_items.CHECK_ID  join contact on contact.ID = check.PAY_TO_ID where `check_items`.ID = aj.OBJECT_ID and `check`.DATE = aj.OBJECT_DATE  and `check`.LOCATION_ID = aj.LOCATION_ID)    
-        WHEN o.`ID` = 79    THEN ( select contact.PRINT_NAME_AS from `check_expenses` join `check` on check.ID = check_expenses.CHECK_ID  join contact on contact.ID = check.PAY_TO_ID where `check_expenses`.ID = aj.OBJECT_ID and `check`.DATE = aj.OBJECT_DATE  and `check`.LOCATION_ID = aj.LOCATION_ID)    
+        WHEN o.`ID` = 75    THEN ( select contact.PRINT_NAME_AS from `check_items` join `check` on check.ID = check_items.CHECK_ID  join contact on contact.ID = check.PAY_TO_ID where `check_items`.ID = aj.OBJECT_ID and `check`.DATE = aj.OBJECT_DATE  and `check`.LOCATION_ID = aj.LOCATION_ID)
+        WHEN o.`ID` = 79    THEN ( select contact.PRINT_NAME_AS from `check_expenses` join `check` on check.ID = check_expenses.CHECK_ID  join contact on contact.ID = check.PAY_TO_ID where `check_expenses`.ID = aj.OBJECT_ID and `check`.DATE = aj.OBJECT_DATE  and `check`.LOCATION_ID = aj.LOCATION_ID)
         WHEN o.`ID` = 59    THEN ( select contact.PRINT_NAME_AS from bill_credit join contact on contact.ID = bill_credit.VENDOR_ID  where bill_credit.ID = aj.OBJECT_ID and bill_credit.DATE = aj.OBJECT_DATE  and bill_credit.LOCATION_ID = aj.LOCATION_ID )
         WHEN o.`ID` = 60    THEN ( select contact.PRINT_NAME_AS from bill_credit_items join bill_credit on bill_credit.ID = bill_credit_items.BILL_CREDIT_ID join contact on contact.ID = bill_credit.VENDOR_ID   where bill_credit_items.ID = aj.OBJECT_ID and bill_credit.DATE = aj.OBJECT_DATE  and bill_credit.LOCATION_ID = aj.LOCATION_ID )
         WHEN o.`ID` = 80    THEN ( select contact.PRINT_NAME_AS from bill_credit_expenses join bill_credit on bill_credit.ID = bill_credit_expenses.BILL_CREDIT_ID join contact on contact.ID = bill_credit.VENDOR_ID  where bill_credit_expenses.ID = aj.OBJECT_ID and bill_credit.DATE = aj.OBJECT_DATE  and bill_credit.LOCATION_ID = aj.LOCATION_ID)
@@ -193,9 +193,9 @@ class AccountJournalServices
         WHEN o.`ID` = 84    THEN ( select contact.PRINT_NAME_AS from general_journal_details join general_journal on general_journal.ID = general_journal_details.GENERAL_JOURNAL_ID left outer join contact on contact.ID = general_journal.CONTACT_ID where general_journal_details.ID = aj.OBJECT_ID and general_journal.DATE = aj.OBJECT_DATE  and general_journal.LOCATION_ID = aj.LOCATION_ID  )
         WHEN o.`ID` = 93    THEN ( select if(aj.LOCATION_ID = fund_transfer.FROM_LOCATION_ID , ( select contact.PRINT_NAME_AS from contact where contact.ID = fund_transfer.FROM_NAME_ID   limit 1) , if(aj.LOCATION_ID = fund_transfer.TO_LOCATION_ID , ( select contact.PRINT_NAME_AS from contact where contact.ID = fund_transfer.TO_NAME_ID   limit 1) , null ) )   as PRIN_NAME_AS  from fund_transfer  where fund_transfer.ID = aj.OBJECT_ID and fund_transfer.DATE = aj.OBJECT_DATE  and (fund_transfer.TO_LOCATION_ID = aj.LOCATION_ID or fund_transfer.FROM_LOCATION_ID = aj.LOCATION_ID ))
         WHEN o.`ID` = 70    THEN ( select item.DESCRIPTION from build_assembly join item on item.ID = build_assembly.ASSEMBLY_ITEM_ID  where build_assembly.ID = aj.OBJECT_ID and build_assembly.DATE = aj.OBJECT_DATE  and build_assembly.LOCATION_ID = aj.LOCATION_ID  )
-        WHEN o.`ID` = 71    THEN ( select item.DESCRIPTION from build_assembly_items join build_assembly on build_assembly.ID = build_assembly_items.BUILD_ASSEMBLY_ID  join  item on item.ID = build_assembly_items.ITEM_ID  where build_assembly_items.ID = aj.OBJECT_ID and build_assembly.DATE = aj.OBJECT_DATE  and build_assembly.LOCATION_ID = aj.LOCATION_ID  )    
+        WHEN o.`ID` = 71    THEN ( select item.DESCRIPTION from build_assembly_items join build_assembly on build_assembly.ID = build_assembly_items.BUILD_ASSEMBLY_ID  join  item on item.ID = build_assembly_items.ITEM_ID  where build_assembly_items.ID = aj.OBJECT_ID and build_assembly.DATE = aj.OBJECT_DATE  and build_assembly.LOCATION_ID = aj.LOCATION_ID  )
         WHEN o.`ID` = 72    THEN ( select contact.`PRINT_NAME_AS` from tax_credit left join contact on contact.ID = tax_credit.CUSTOMER_ID where tax_credit.ID = aj.OBJECT_ID and tax_credit.DATE = aj.OBJECT_DATE  and tax_credit.LOCATION_ID = aj.LOCATION_ID  )
-        WHEN o.`ID` = 73    THEN ( select contact.`PRINT_NAME_AS` from tax_credit_invoices join tax_credit on tax_credit.ID = tax_credit_invoices.TAX_CREDIT_ID  left join contact on contact.ID = tax_credit.CUSTOMER_ID where tax_credit_invoices.ID = aj.OBJECT_ID and tax_credit.DATE = aj.OBJECT_DATE  and tax_credit.LOCATION_ID = aj.LOCATION_ID  )    
+        WHEN o.`ID` = 73    THEN ( select contact.`PRINT_NAME_AS` from tax_credit_invoices join tax_credit on tax_credit.ID = tax_credit_invoices.TAX_CREDIT_ID  left join contact on contact.ID = tax_credit.CUSTOMER_ID where tax_credit_invoices.ID = aj.OBJECT_ID and tax_credit.DATE = aj.OBJECT_DATE  and tax_credit.LOCATION_ID = aj.LOCATION_ID  )
         WHEN o.`ID` = 113   THEN ( select contact.`PRINT_NAME_AS` from pull_out  left join contact on contact.ID = pull_out.PREPARED_BY_ID where pull_out.ID = aj.OBJECT_ID and pull_out.DATE = aj.OBJECT_DATE and pull_out.LOCATION_ID = aj.LOCATION_ID   )
         WHEN o.`ID` = 114   THEN ( select contact.`PRINT_NAME_AS` from pull_out_items join pull_out on pull_out.ID = pull_out_items.PULL_OUT_ID left join contact on contact.ID = pull_out.PREPARED_BY_ID where pull_out_items.ID = aj.OBJECT_ID and pull_out.DATE = aj.OBJECT_DATE and pull_out.LOCATION_ID = aj.LOCATION_ID )
         WHEN o.`ID` = 135   THEN ( select if(aj.LOCATION_ID = bank_transfer.FROM_LOCATION_ID , ( select contact.PRINT_NAME_AS from contact where contact.ID = bank_transfer.FROM_NAME_ID   limit 1) , if(aj.LOCATION_ID = bank_transfer.TO_LOCATION_ID , ( select contact.PRINT_NAME_AS from contact where contact.ID = bank_transfer.TO_NAME_ID   limit 1) , null ) )   as PRIN_NAME_AS  from bank_transfer  where bank_transfer.ID = aj.OBJECT_ID and bank_transfer.DATE = aj.OBJECT_DATE  and (bank_transfer.TO_LOCATION_ID = aj.LOCATION_ID or bank_transfer.FROM_LOCATION_ID = aj.LOCATION_ID ))
@@ -203,7 +203,7 @@ class AccountJournalServices
         WHEN o.`ID` = 109   THEN ( select contact.`PRINT_NAME_AS` from hemodialysis left outer join contact on contact.ID = hemodialysis.CUSTOMER_ID inner join hemodialysis_items on hemodialysis.ID = hemodialysis_items.HEMO_ID where hemodialysis_items.ID = aj.OBJECT_ID and hemodialysis.DATE = aj.OBJECT_DATE  and hemodialysis.LOCATION_ID = aj.LOCATION_ID  )
         WHEN o.`ID` = 67   THEN ( select contact.`PRINT_NAME_AS` from withholding_tax left join contact on contact.ID = withholding_tax.WITHHELD_FROM_ID where withholding_tax.ID = aj.OBJECT_ID and withholding_tax.DATE = aj.OBJECT_DATE  and withholding_tax.LOCATION_ID = aj.LOCATION_ID  )
         WHEN o.`ID` = 68   THEN ( select contact.`PRINT_NAME_AS` from withholding_tax_bills join withholding_tax on withholding_tax.ID = withholding_tax_bills.WITHHOLDING_TAX_ID left join contact on contact.ID = withholding_tax.WITHHELD_FROM_ID  where withholding_tax_bills.ID = aj.OBJECT_ID and withholding_tax.DATE = aj.OBJECT_DATE and withholding_tax.LOCATION_ID = aj.LOCATION_ID  )
-      
+
 
     END as TX_NAME';
 
@@ -228,8 +228,8 @@ class AccountJournalServices
         WHEN o.`ID` = 53    THEN ( select `sales_receipt`.`ID` from `sales_receipt_items` join sales_receipt on sales_receipt.ID = sales_receipt_items.SALES_RECEIPT_ID  where `sales_receipt_items`.ID = aj.OBJECT_ID and `sales_receipt`.DATE = aj.OBJECT_DATE  and `sales_receipt`.LOCATION_ID = aj.LOCATION_ID)
         WHEN o.`ID` = 57    THEN ( select `check`.`ID` from `check`  where `check`.ID = aj.OBJECT_ID and `check`.DATE = aj.OBJECT_DATE  and `check`.LOCATION_ID = aj.LOCATION_ID)
         WHEN o.`ID` = 58    THEN ( select `check`.`ID` from `check_bills` join `check` on check.ID = check_bills.CHECK_ID  where `check_bills`.ID = aj.OBJECT_ID and `check`.DATE = aj.OBJECT_DATE  and `check`.LOCATION_ID = aj.LOCATION_ID)
-        WHEN o.`ID` = 75    THEN ( select `check`.`ID` from `check_items` join `check` on check.ID = check_items.CHECK_ID  where `check_items`.ID = aj.OBJECT_ID and `check`.DATE = aj.OBJECT_DATE  and `check`.LOCATION_ID = aj.LOCATION_ID)    
-        WHEN o.`ID` = 79    THEN ( select `check`.`ID` from `check_expenses` join `check` on check.ID = check_expenses.CHECK_ID  where `check_expenses`.ID = aj.OBJECT_ID and `check`.DATE = aj.OBJECT_DATE  and `check`.LOCATION_ID = aj.LOCATION_ID)    
+        WHEN o.`ID` = 75    THEN ( select `check`.`ID` from `check_items` join `check` on check.ID = check_items.CHECK_ID  where `check_items`.ID = aj.OBJECT_ID and `check`.DATE = aj.OBJECT_DATE  and `check`.LOCATION_ID = aj.LOCATION_ID)
+        WHEN o.`ID` = 79    THEN ( select `check`.`ID` from `check_expenses` join `check` on check.ID = check_expenses.CHECK_ID  where `check_expenses`.ID = aj.OBJECT_ID and `check`.DATE = aj.OBJECT_DATE  and `check`.LOCATION_ID = aj.LOCATION_ID)
         WHEN o.`ID` = 59    THEN ( select bill_credit.`ID` from bill_credit  where bill_credit.ID = aj.OBJECT_ID and bill_credit.DATE = aj.OBJECT_DATE  and bill_credit.LOCATION_ID = aj.LOCATION_ID )
         WHEN o.`ID` = 60    THEN ( select bill_credit.`ID` from bill_credit_items join bill_credit on bill_credit.ID = bill_credit_items.BILL_CREDIT_ID  where bill_credit_items.ID = aj.OBJECT_ID and bill_credit.DATE = aj.OBJECT_DATE  and bill_credit.LOCATION_ID = aj.LOCATION_ID )
         WHEN o.`ID` = 80    THEN ( select bill_credit.`ID` from bill_credit_expenses join bill_credit on bill_credit.ID = bill_credit_expenses.BILL_CREDIT_ID  where bill_credit_expenses.ID = aj.OBJECT_ID and bill_credit.DATE = aj.OBJECT_DATE  and bill_credit.LOCATION_ID = aj.LOCATION_ID)
@@ -243,7 +243,7 @@ class AccountJournalServices
         WHEN o.`ID` = 73    THEN ( select tax_credit.`ID` from tax_credit_invoices join tax_credit on tax_credit.ID = tax_credit_invoices.TAX_CREDIT_ID  where tax_credit_invoices.ID = aj.OBJECT_ID and tax_credit.DATE = aj.OBJECT_DATE  and tax_credit.LOCATION_ID = aj.LOCATION_ID  )
         WHEN o.`ID` = 113   THEN ( select pull_out.`ID` from pull_out where pull_out.ID = aj.OBJECT_ID and pull_out.DATE = aj.OBJECT_DATE and pull_out.LOCATION_ID = aj.LOCATION_ID   )
         WHEN o.`ID` = 114   THEN ( select pull_out.`ID` from pull_out_items join pull_out on pull_out.ID = pull_out_items.PULL_OUT_ID where pull_out_items.ID = aj.OBJECT_ID and pull_out.DATE = aj.OBJECT_DATE and pull_out.LOCATION_ID = aj.LOCATION_ID )
-        
+
         WHEN o.`ID` = 127  THEN ( select depreciation.`ID` from depreciation where depreciation.ID = aj.OBJECT_ID and depreciation.DATE = aj.OBJECT_DATE  and depreciation.LOCATION_ID = aj.LOCATION_ID  )
         WHEN o.`ID` = 128  THEN ( select depreciation.`ID` from depreciation_items join depreciation on depreciation.ID = depreciation_items.DEPRECIATION_ID where depreciation_items.ID = aj.OBJECT_ID and depreciation.DATE = aj.OBJECT_DATE  and depreciation.LOCATION_ID = aj.LOCATION_ID )
         WHEN o.`ID` = 135  THEN ( select bank_transfer.`ID` from bank_transfer where bank_transfer.ID = aj.OBJECT_ID and bank_transfer.DATE = aj.OBJECT_DATE  and (bank_transfer.TO_LOCATION_ID = aj.LOCATION_ID or bank_transfer.FROM_LOCATION_ID = aj.LOCATION_ID ))
@@ -251,7 +251,7 @@ class AccountJournalServices
         WHEN o.`ID` = 109  THEN ( select hemodialysis.`ID` from hemodialysis inner join hemodialysis_items on hemodialysis.ID = hemodialysis_items.HEMO_ID where hemodialysis_items.ID = aj.OBJECT_ID and hemodialysis.DATE = aj.OBJECT_DATE  and hemodialysis.LOCATION_ID = aj.LOCATION_ID  )
         WHEN o.`ID` = 67   THEN ( select withholding_tax.`ID` from withholding_tax where withholding_tax.ID = aj.OBJECT_ID and withholding_tax.DATE = aj.OBJECT_DATE  and withholding_tax.LOCATION_ID = aj.LOCATION_ID  )
         WHEN o.`ID` = 68   THEN ( select withholding_tax.`ID` from withholding_tax_bills join withholding_tax on withholding_tax.ID = withholding_tax_bills.WITHHOLDING_TAX_ID  where withholding_tax_bills.ID = aj.OBJECT_ID and withholding_tax.DATE = aj.OBJECT_DATE and withholding_tax.LOCATION_ID = aj.LOCATION_ID  )
-     
+
         END as TX_ROUTE_ID';
 
     private $object;
@@ -364,7 +364,6 @@ class AccountJournalServices
             ->select(['JOURNAL_NO'])
             ->where('OBJECT_TYPE', $OBJECT_TYPE)
             ->where('OBJECT_ID', $OBJECT_ID)
-
             ->first();
 
         if ($data) { // if exists

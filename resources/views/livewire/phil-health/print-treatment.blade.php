@@ -3,7 +3,6 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-12 text-center mb-4" @if ($HEADER) style="opacity: 0.0" @endif>
-
                     @if (empty($LOGO_FILE))
                         <img class="print-logo" src="{{ asset('dist/logo/vida_logo.png') }}" />
                         <div class="text-center">
@@ -16,7 +15,6 @@
                         {{-- nothing customize --}}
                         <img class="print-logo" src="{{ asset("dist/logo/$LOGO_FILE") }}" />
                     @endif
-
                 </div>
                 <div class="col-12">
                     <div class="row">
