@@ -46,7 +46,8 @@
                                         </select>
                                     </div>
                                     <div class="col-2">
-                                        <button wire:click='generate()' class="btn btn-xs btn-primary w-100">
+                                        <button wire:click='generate()' class="btn btn-xs btn-primary w-100"
+                                            wire:loading.attr="disabled">
                                             Generate
                                         </button>
                                     </div>
@@ -97,8 +98,8 @@
 
                                 <tr>
                                     <td class=" bg-dark">Item No.</td>
-                                    <td class=" bg-dark">Claims Ref# <button class="btn btn-xs btn-success w-25"
-                                            wire:click='autoSet()' wire:confirm='Are you sure to Auto Set?'>
+                                    <td class=" bg-dark">Claims Ref# <button class="btn btn-xs btn-success text-xs w-100"
+                                            wire:click='autoSet()' wire:confirm='Are you sure to Auto Set?'  wire:loading.attr="disabled">
                                             <i class="fas fa-plus"></i>
                                         </button></td>
                                     <td class=" bg-primary">Patient Surname</td>
@@ -116,7 +117,11 @@
                                     <td class="col-1 bg-dark">*Claim Status</td>
                                 </tr>
                             </thead>
-                            <tbody class="text-xs">
+                            <div wire:loading.delay>
+                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                Loading...
+                            </div>
+                            <tbody class="text-xs" wire:loading.attr='hidden'>
                                 @php
                                     $r = 0;
                                     $TOTAL = 0;

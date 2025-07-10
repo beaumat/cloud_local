@@ -17,6 +17,8 @@ class PhilhealthAnnexTwo extends Component
     public int $LOCATION_ID;
     public $locationList = [];
     public $dataList     = [];
+    public $yearList = [];
+    public $YEAR = 0;
     public $columnList   = [];
     private $philHealthServices;
     private $locationServices;
@@ -33,18 +35,14 @@ class PhilhealthAnnexTwo extends Component
     public function mount()
     {
         $this->LOCATION_ID = $this->userServices->getLocationDefault();
-        $this->YEAR        = $this->dateServices->NowYear();
-        $this->MONTH       = $this->dateServices->NowMonth();
-
+        $this->YEAR        = 0;
         $this->locationList = $this->locationServices->getList();
-        $this->monthList    = $this->dateServices->MonthList();
+        $this->yearList     = $this->dateServices->YearList();
     }
     public function updatedLOCATIONID()
     {
 
         $this->dataList   = [];
-
-
         try {
             $this->userServices->SwapLocation($this->LOCATION_ID);
         } catch (\Exception $e) {
@@ -64,13 +62,8 @@ class PhilhealthAnnexTwo extends Component
     }
     public function generate()
     {
-
-
-        $this->dataList = $this->philHealthServices->GenerateAnnex2( $this->LOCATION_ID, $this->showAll);
-
+        $this->dataList = $this->philHealthServices->GenerateAnnex2( $this->LOCATION_ID, $this->showAll, $this->YEAR);
     }
-
-
     public function render()
     {
         return view('livewire.patient-report.philhealth-annex-two');

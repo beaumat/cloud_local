@@ -263,8 +263,8 @@ class DateServices
     {
         $currentYear = (int) date('Y');
         $years = [];
-
-        for ($year = 2022; $year <= $currentYear; $year++) {
+        $years[] = ['ID' => 0, 'NAME' => ''];
+        for ($year = 2024; $year <= $currentYear; $year++) {
             $years[] = ['ID' => $year, 'NAME' => (string) $year];
         }
 

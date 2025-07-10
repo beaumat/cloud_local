@@ -1226,7 +1226,7 @@ class PhilHealthServices
 
         return $result;
     }
-    public function generateAnnex2(int $locationId, bool $showAll)
+    public function generateAnnex2(int $locationId, bool $showAll, int $YEAR)
     {
         $result = PhilHealth::query()
             ->select([
@@ -1271,6 +1271,9 @@ class PhilHealthServices
             ->whereNotNull('philhealth.AR_DATE')
             ->when(! $showAll, function ($query) {
                 $query->where('philhealth.PAYMENT_AMOUNT', '=', 0);
+            })
+            ->when($YEAR > 0, function ($query) use (&$YEAR) {
+                $query->whereYear('philhealth.DATE_ADMITTED', '=', $YEAR);
             })
             ->where('IS_TEMP', '0')
             ->orderBy('philhealth.ID', 'asc')

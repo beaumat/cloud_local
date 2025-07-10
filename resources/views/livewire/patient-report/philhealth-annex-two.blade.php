@@ -25,33 +25,37 @@
                         <div class="row">
                             <div class="col-md-8">
                                 <div class="row">
+                                    <div class="col-1 text-right">
+                                        <label class="text-xs ">Show All &nbsp;&nbsp;</label>
+                                    </div>
                                     <div class="col-1">
-                                        <label class="text-xs ">Show All </label> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                         <input type="checkbox" wire:model='showAll'
                                             class="form-check-input form-check-inline">
+                                    </div>
 
+                                    <div class="col-1 text-right">
+                                        <label class="text-xs">Year:</label>
+                                    </div>
+                                    <div class="col-2">
+                                        <select class="form-control form-control-sm text-xs" name="YEAR"
+                                            wire:model.live='YEAR'>
+                                            @foreach ($yearList as $item)
+                                                <option value="{{ $item['ID'] }}">
+                                                    {{ $item['NAME'] }}
+                                                </option>
+                                            @endforeach
+                                        </select>
                                     </div>
                                     <div class="col-2 text-left">
-                                        <button wire:click='generate()' type="button"
+                                        <button wire:click='generate()' wire:loading.attr="disabled" type="button"
                                             class="btn btn-xs btn-primary w-100">
                                             Generate
                                         </button>
                                     </div>
-                                    <div class="col-2">
-
-                                    </div>
-
-
-                                    <div class="col-2">
-
-                                    </div>
-
-                                    <div class='col-2'>
-
+                                    <div class="col-2 text-left">
                                     </div>
                                 </div>
                             </div>
-
                             <div class="col-md-4">
                                 <div class="row">
                                     <div class="col-md-8 text-right">
@@ -107,7 +111,12 @@
 
 
                             </thead>
-                            <tbody class="text-xs">
+                            <div wire:loading.delay>
+                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                Loading...
+                            </div>
+
+                            <tbody class="text-xs" wire:loading.attr='hidden'>
                                 @php
                                     $r = 0;
                                     $TOTAL = 0;
