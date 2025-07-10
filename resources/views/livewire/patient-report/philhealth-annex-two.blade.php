@@ -53,7 +53,7 @@
                                         </button>
                                     </div>
                                     <div class="col-2 text-left">
-                                        <a href="{{ route('reportsphilhealth_annex_two_print', ['locationid' => $LOCATION_ID, 'year' => $YEAR,'show' => $showAll ? 'true': 'false']) }}"
+                                        <a href="{{ route('reportsphilhealth_annex_two_print', ['locationid' => $LOCATION_ID, 'year' => $YEAR,'show' => $showAll ? 1: 0]) }}"
                                             target="_blank" class="btn btn-xs btn-warning w-100"> Print </a>
                                     </div>
                                 </div>

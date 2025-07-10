@@ -38,10 +38,10 @@ class PhilhealthAnnexTwoPrint extends Component
         $this->contactServices    = $contactServices;
     }
 
-    public function mount(int $locationid, int $year, bool $showAll = false)
+    public function mount(int $locationid, int $year, int $show)
     {
 
-        $this->dataList = $this->philHealthServices->generateAnnex2($locationid, $showAll, $year);
+        $this->dataList = $this->philHealthServices->generateAnnex2($locationid, $show == 1 ? true: false, $year);
         $locData        = $this->locationServices->get($locationid);
 
         if ($locData) {

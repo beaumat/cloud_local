@@ -58,14 +58,10 @@
                         <th>ICD 10/RVS CODE</th>
                         <th>CASE RATE/ CLAIM AMOUNT</th>
                         <th>*CLAIM STATUS</th>
-
-
                     </tr>
                 <tbody style="font-size: 11px;">
-
-
                     @php
-
+                        $TOTAL = 0;
                         $r = 0;
                     @endphp
                     @foreach ($dataList as $list)
@@ -89,25 +85,49 @@
                                 <td>{{ $list->MEMBER_FIRST_NAME }}</td>
                                 <td>{{ $list->MEMBER_MIDDLE_NAME }}</td>
                             @endif
-
                             <td>{{ $list->PIN_NO }}</td>
                             <td>{{ date('M/d/Y', strtotime($list->DATE_ADMITTED)) }}</td>
                             <td>{{ date('M/d/Y', strtotime($list->DATE_DISCHARGED)) }}</td>
                             <td>{{ date('M/d/Y', strtotime($list->AR_DATE)) }}</td>
                             <td>N/A</td>
                             <td>90935</td>
-                            <td>{{ number_format($list->P1_TOTAL, 2) }}</td>
-                            <td>In Progress</td>
+                            <td class="text-right">{{ number_format($list->P1_TOTAL, 2) }}</td>
+                            @php
+                                $TOTAL += $list->P1_TOTAL;
+                            @endphp
+                            <td class="text-center">
+                                @if ($list->PAYMENT_AMOUNT > 0)
+                                    <strong class="text-success">Paid</strong>
+                                @else
+                                    <strong class="text-danger">Inprogress</strong>
+                                @endif
+
+                            </td>
                         </tr>
                     @endforeach
-
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="font-weight-bold">TOTAL</td>
+                        <td class="text-right">{{ number_format($TOTAL, 2) }}</td>
+                        <td></td>
                 </tbody>
             </table>
 
         </div>
         <div class="col-12">
-
-
             <div class="row mt-4" style="font-size: 11px; ">
                 <div class="col-4">
                     Prepared by:
