@@ -42,7 +42,7 @@ class PhilhealthAnnexOnePrint extends Component
     public function mount(int $locationid, int $year, int $month)
     {
         $this->dataList = $this->philHealthServices->GenerateAnnex($year, $month, $locationid);
-        $this->dispatch('preview_print');
+
 
         $locData = $this->locationServices->get($locationid);
 
@@ -63,6 +63,7 @@ class PhilhealthAnnexOnePrint extends Component
                 $this->MANAGER_NAME = strtoupper($conMgr->PRINT_NAME_AS) ?? '';
             }
         }
+          $this->dispatch('preview_print');
     }
     #[On('preview_print')]
     public function print()

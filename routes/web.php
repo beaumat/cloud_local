@@ -702,7 +702,7 @@ Route::middleware(['auth'])->group(function () {
                 Route::get('/one', PhilhealthAnnex::class)->name('philhealth_annex_report')->middleware(['permission:report.philhealth.annex']);
                 Route::get('/one/Print/{locationid}/{year}/{month}', PhilhealthAnnexOnePrint::class)->name('philhealth_annex_one_print')->middleware(['permission:report.philhealth.annex']);
                 Route::get('/two', PhilhealthAnnexTwo::class)->name('philhealth_annex_two_report')->middleware(['permission:report.philhealth.annex']);
-                Route::get('/two/Print/{locationid}/{year}/{month}', PhilhealthAnnexTwoPrint::class)->name('philhealth_annex_two_print')->middleware(['permission:report.philhealth.annex']);
+                Route::get('/two/Print/{locationid}/{year}/{show}', PhilhealthAnnexTwoPrint::class)->name('philhealth_annex_two_print')->middleware(['permission:report.philhealth.annex']);
             });
 
         });

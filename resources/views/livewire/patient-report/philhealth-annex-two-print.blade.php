@@ -1,85 +1,152 @@
 <div class="content-wrapper" id="printableContent">
+    <style>
+        @media print {
+            @page {
+                size: legal landscape;
+                /* Letter size in landscape */
 
-    <table border="1" class="text-xs">
-        <tbody>
-            <tr>
-                <td class=""></td>
-                <td class="col-1"></td>
-                <td class="col-1"></td>
-                <td class=" "></td>
-                <td class=" text-center">Patient</td>
-                <td class=""></td>
-                <td class=""></td>
-                <td class=" text-center">Member</td>
-                <td class=""></td>
-                <td class=""></td>
-                <td class=""></td>
-                <td class=""></td>
-                <td class=""></td>
-                <td class=""></td>
-                <td class=""></td>
-                <td class=""></td>
-                <td class=""></td>
-            </tr>
-            <tr>
-                <td class=" bg-dark">Item No.</td>
-                <td class="">Yr. Start From.</td>
-                <td class="">Claims Series Reference</td>
-                <td class=" ">Surname</td>
-                <td class=" ">Firstname</td>
-                <td class=" ">Middlename</td>
-                <td class="">Surname</td>
-                <td class=" ">Firstname</td>
-                <td class=" ">Middlename</td>
-                <td class="">Member's PIN</td>
-                <td class="">Date of Admission</td>
-                <td class="">Date of Discharged</td>
-                <td class="">Date of Filed</td>
-                <td class="">Date of Refiled</td>
-                <td class="">ICD 10/RVS code</td>
-                <td class="">Case Rate/ Claim Amount</td>
-                <td class="">*Claim Status</td>
-            </tr>
+                /* Sets the paper size to Legal */
+                /* Custom long size: width 8.5in (letter width), length 14in */
+                /* margin: 0.5in; */
+                /* Adjust margins as desired */
+                margin-left: 10px;
+                margin-right: 10px;
+                margin-top: 20px;
+                margin-bottom: 10px;
+            }
 
-            @php
+        }
+    </style>
 
-                $r = 0;
-            @endphp
-            @foreach ($dataList as $list)
-                @php
-                    $r++;
+    <div class="row">
 
-                @endphp
-                <tr>
-                    <td>{{ $r }}</td>
-                    <td>{{ $YEAR }}</td>
-                    <td>{{ $list->AR_NO }}</td>
-                    <td>{{ $list->LAST_NAME }}</td>
-                    <td>{{ $list->FIRST_NAME }}</td>
-                    <td>{{ $list->MIDDLE_NAME }}</td>
-                    @if ($list->IS_PATIENT)
-                        <td>{{ $list->LAST_NAME }}</td>
-                        <td>{{ $list->FIRST_NAME }}</td>
-                        <td>{{ $list->MIDDLE_NAME }}</td>
-                    @else
-                        <td>{{ $list->MEMBER_LAST_NAME }}</td>
-                        <td>{{ $list->MEMBER_FIRST_NAME }}</td>
-                        <td>{{ $list->MEMBER_MIDDLE_NAME }}</td>
-                    @endif
+        <div class="col-12 text-center mb-4">
 
-                    <td>{{ $list->PIN_NO }}</td>
-                    <td>{{ date('M/d/Y', strtotime($list->DATE_ADMITTED)) }}</td>
-                    <td>{{ date('M/d/Y', strtotime($list->DATE_DISCHARGED)) }}</td>
-                    <td>{{ date('M/d/Y', strtotime($list->AR_DATE)) }}</td>
-                    <td>N/A</td>
-                    <td>90935</td>
-                    <td>{{ number_format($list->P1_TOTAL, 2) }}</td>
-                    <td>In Progress</td>
-                </tr>
-            @endforeach
+            @if (empty($LOGO_FILE))
+                <img class="print-logo" src="{{ asset('dist/logo/vida_logo.png') }}" />
+                <div class="text-center">
+                    <b class="print-address1 text-center">
+                        {{ $REPORT_HEADER_1 }} <br />
+                        {{ $REPORT_HEADER_2 }} <br />
+                        {{ $REPORT_HEADER_3 }}</b>
+                </div>
+            @else
+                {{-- nothing customize --}}
+                <img class="print-logo" src="{{ asset("dist/logo/$LOGO_FILE") }}" />
+            @endif
 
-        </tbody>
-    </table>
+        </div>
+        <div class="col-12">
+            <table border="1">
+                <thead style="font-size: 11px;">
+                    <tr>
+
+                        <th>ITEM NO.</th>
+                        <th>YR. START FROM.</th>
+                        <th>CLAIMS SERIES REFERENCE</th>
+                        <th>PATIENT SURNAME</th>
+                        <th>PATIENT FIRSTNAME</th>
+                        <th>PATIENT MIDDLENAME</th>
+                        <th>MEMBER SURNAME</th>
+                        <th>MEMBER FIRSTNAME</th>
+                        <th>MEMBER MIDDLENAME</th>
+                        <th>MEMBER'S PIN</th>
+                        <th>DATE OF ADMISSION</th>
+                        <th>DATE OF DISCHARGED</th>
+                        <th>DATE OF FILED</th>
+                        <th>DATE OF REFILED</th>
+                        <th>ICD 10/RVS CODE</th>
+                        <th>CASE RATE/ CLAIM AMOUNT</th>
+                        <th>*CLAIM STATUS</th>
+
+
+                    </tr>
+                <tbody style="font-size: 11px;">
+
+
+                    @php
+
+                        $r = 0;
+                    @endphp
+                    @foreach ($dataList as $list)
+                        @php
+                            $r++;
+
+                        @endphp
+                        <tr>
+                            <td>{{ $r }}</td>
+                            <td>{{ $list->YEAR }}</td>
+                            <td>{{ $list->AR_NO }}</td>
+                            <td>{{ $list->LAST_NAME }}</td>
+                            <td>{{ $list->FIRST_NAME }}</td>
+                            <td>{{ $list->MIDDLE_NAME }}</td>
+                            @if ($list->IS_PATIENT)
+                                <td>{{ $list->LAST_NAME }}</td>
+                                <td>{{ $list->FIRST_NAME }}</td>
+                                <td>{{ $list->MIDDLE_NAME }}</td>
+                            @else
+                                <td>{{ $list->MEMBER_LAST_NAME }}</td>
+                                <td>{{ $list->MEMBER_FIRST_NAME }}</td>
+                                <td>{{ $list->MEMBER_MIDDLE_NAME }}</td>
+                            @endif
+
+                            <td>{{ $list->PIN_NO }}</td>
+                            <td>{{ date('M/d/Y', strtotime($list->DATE_ADMITTED)) }}</td>
+                            <td>{{ date('M/d/Y', strtotime($list->DATE_DISCHARGED)) }}</td>
+                            <td>{{ date('M/d/Y', strtotime($list->AR_DATE)) }}</td>
+                            <td>N/A</td>
+                            <td>90935</td>
+                            <td>{{ number_format($list->P1_TOTAL, 2) }}</td>
+                            <td>In Progress</td>
+                        </tr>
+                    @endforeach
+
+                </tbody>
+            </table>
+
+        </div>
+        <div class="col-12">
+
+
+            <div class="row mt-4" style="font-size: 11px; ">
+                <div class="col-4">
+                    Prepared by:
+                    <div class="form-group row ">
+                        <div class="col-7 text-center bottom-line">
+                            <strong>
+                                &nbsp;{{ $EMPLOYEE_NAME }}
+                            </strong>
+                        </div>
+                        <div class="col-7 text-center"><i>{{ $EMPLOYEE_POSITION }}</i></div>
+                    </div>
+
+                </div>
+                <div class="col-4">
+                    <div class="form-group row ">
+                        <div class="col-12">Certified Complete and Accurate</div>
+                        <div class="col-7 text-center bottom-line">
+                            <strong>
+                                &nbsp;{{ $MANAGER_NAME }}
+                            </strong>
+                        </div>
+                        <div class="col-7 text-center"><i>Administrator</i></div>
+                    </div>
+
+                </div>
+                <div class="col-4">
+                    <div class="form-group row ">
+                        <div class="col-12">Approved By:</div>
+                        <div class="col-7 text-center bottom-line"><strong class="">
+                                &nbsp;{{ $APPROVED_BY }}
+                            </strong>
+                        </div>
+                        <div class="col-7 text-center"><i>Medical Director/ Chief of Hospital</i></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
 
 @script
