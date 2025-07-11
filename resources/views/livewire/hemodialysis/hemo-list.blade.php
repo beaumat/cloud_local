@@ -48,7 +48,7 @@
                             <div class="row">
                                 <div class="col-md-12 mb-2">
                                     <div class="row">
-                                        <div class="col-12 col-md-4">
+                                        <div class="col-12 col-md-6">
                                             <div class="mt-0">
                                                 <label class="text-xs">
                                                     <a href="#" wire:click='refreshList()'>Search:</a>
@@ -58,15 +58,11 @@
                                             </div>
                                         </div>
                                         <div class="col-6 col-md-2">
-                                            <label class="text-xs">Date From:</label>
+                                            <label class="text-xs">Date Treatment:</label>
                                             <input type="date" class="form-control form-control-sm text-xs"
                                                 wire:model.live='DATE_FROM' />
                                         </div>
-                                        <div class="col-6 col-md-2">
-                                            <label class="text-xs">Date To:</label>
-                                            <input type="date" class="form-control form-control-sm text-xs"
-                                                wire:model.live='DATE_TO' />
-                                        </div>
+
                                         <div class="col-4 col-md-2">
                                             <div class="mt-0">
                                                 <label class="text-xs">Status:</label>
@@ -129,7 +125,7 @@
                                                 </th>
                                             </tr>
                                         </thead>
-                                        <tbody class="text-xs bg-light">
+                                        <tbody class="text-xs bg-light" wire:loading.attr='hidden'>
                                             {{-- unposted --}}
                                             @foreach ($pendingList as $list)
                                                 <tr>
@@ -240,7 +236,7 @@
 
                                         </tbody>
                                         {{-- end of pending --}}
-                                        <tbody class="text-xs">
+                                        <tbody class="text-xs" wire:loading.attr='hidden'>
                                             @foreach ($dataList as $list)
                                                 <tr>
                                                     @php
@@ -371,6 +367,11 @@
                                             @endforeach
                                         </tbody>
                                     </table>
+                                    <div wire:loading.delay>
+                                        <span class="spinner-border spinner-border-sm" role="status"
+                                            aria-hidden="true"></span>
+                                        Loading...
+                                    </div>
                                 </div>
                             </div>
                         </div>

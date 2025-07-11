@@ -32,7 +32,6 @@ class HemoList extends Component
     private $userServices;
     public $pendingList = [];
     public string $DATE_FROM;
-    public string $DATE_TO;
     private $dateServices;
     private $scheduleServices;
     public function boot(
@@ -100,7 +99,6 @@ class HemoList extends Component
             $this->locationid,
             $this->perPage,
             $this->DATE_FROM == '' ? $this->dateServices->NowDate() : $this->DATE_FROM,
-            $this->DATE_TO == '' ? $this->dateServices->NowDate() : $this->DATE_TO,
             $this->statusid
         );
         return Excel::download(new TreatmentListExport($dataList), 'hemo-treatment-.xlsx');
@@ -153,7 +151,6 @@ class HemoList extends Component
             $this->locationid,
             $this->perPage,
             $this->DATE_FROM == '' ? $this->dateServices->NowDate() : $this->DATE_FROM,
-            $this->DATE_TO == '' ? $this->dateServices->NowDate() : $this->DATE_TO,
             $this->statusid
         );
         return view('livewire.hemodialysis.hemo-list', ['dataList' => $dataList]);
