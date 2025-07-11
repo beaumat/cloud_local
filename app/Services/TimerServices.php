@@ -103,7 +103,7 @@ class TimerServices
         $this->generateWaitingList($transDate);
         $this->GenerateItemServiceCharges($transDate);
         $this->generateItemHemo($transDate);
-        $this->UserDefaultUserDate();
+        $this->userDefaultUserDate();
     }
 
     public function getPosted(int $CONTACT_ID, string $DATE, int $LOCATION_ID)
@@ -171,7 +171,7 @@ class TimerServices
             Log::error('Error executing Schedule executed in getPosted: ' . $e->getMessage() . '[' . $CONTACT_ID . ',' . $LOCATION_ID . ', ' . $DATE . ']');
         }
     }
-    public function UserDefaultUserDate()
+    public function userDefaultUserDate()
     {
         $this->userServices->resetDefaultTime();
     }
