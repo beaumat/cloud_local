@@ -66,10 +66,6 @@
 
                             </div>
 
-                            <div wire:loading.delay>
-                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                                Loading...
-                            </div>
                             <table class="table table-sm table-bordered table-hover">
                                 <thead class="text-xs bg-sky">
                                     <tr>
@@ -156,8 +152,7 @@
                                         </th>
 
                                         <th>
-                                            <span name="ageSort" type="button"
-                                                wire:click="sorting('AGE')">Age</span>
+                                            <span name="ageSort" type="button" wire:click="sorting('AGE')">Age</span>
                                             @if ($sortby == 'AGE')
                                                 @if ($isDesc)
                                                     <i class="fa fa-caret-up" aria-hidden="true"></i>
@@ -283,7 +278,10 @@
                                         </th>
                                     </tr>
                                 </thead>
+
                                 <tbody class="text-xs" wire:loading.attr='hidden'>
+
+
                                     @foreach ($dataList as $list)
                                         <tr class="@if (!$list->IS_COMPLETE) text-secondary @endif">
                                             <td>
@@ -352,7 +350,11 @@
                                     @endforeach
                                 </tbody>
                             </table>
-
+                            <div wire:loading.delay>
+                                <span class="spinner-border spinner-border-sm" role="status"
+                                    aria-hidden="true"></span>
+                                Loading...
+                            </div>
                         </div>
                     </div>
                 </div>

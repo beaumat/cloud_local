@@ -41,13 +41,8 @@ use App\Services\UserServices;
                                                 wire:model.live='DATE_FROM' />
                                         </div>
                                         <div class="col-md-2">
-                                            {{-- <label class="text-sm">Date To:</label>
-                                            <input type="date" class="form-control form-control-sm"
-                                                wire:model.live='DATE_TO' /> --}}
-
                                             <label class="text-sm">Use Nurse Remarks:</label>
                                             <input type="checkbox" wire:model.live='nurseMark' name="nurseMark" />
-
                                         </div>
                                         <div class="col-md-2">
                                             <div class="mt-0">
@@ -95,7 +90,7 @@ use App\Services\UserServices;
                                         @endcan
                                     </tr>
                                 </thead>
-                                <tbody class="text-xs">
+                                <tbody class="text-xs" wire:loading.attr='hidden'>
                                     @foreach ($dataList as $list)
                                         <tr>
                                             <td>
@@ -157,6 +152,11 @@ use App\Services\UserServices;
                                     @endforeach
                                 </tbody>
                             </table>
+                            <div wire:loading.delay>
+                                <span class="spinner-border spinner-border-sm" role="status"
+                                    aria-hidden="true"></span>
+                                Loading...
+                            </div>
                         </div>
                     </div>
                 </div>
