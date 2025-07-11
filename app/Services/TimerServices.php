@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Services;
 
 use Illuminate\Support\Facades\DB;
@@ -12,21 +11,22 @@ class TimerServices
     private $dateServices;
     private $itemInventoryServices;
     private $serviceChargeServices;
-
+    private $userServices;
     function __construct(
         ScheduleServices $scheduleServices,
         HemoServices $hemoServices,
         DateServices $dateServices,
         ItemInventoryServices $itemInventoryServices,
-        ServiceChargeServices $serviceChargeServices
+        ServiceChargeServices $serviceChargeServices,
+        UserServices $userServices
 
     ) {
-        $this->scheduleServices = $scheduleServices;
-        $this->hemoServices = $hemoServices;
-        $this->dateServices = $dateServices;
+        $this->scheduleServices      = $scheduleServices;
+        $this->hemoServices          = $hemoServices;
+        $this->dateServices          = $dateServices;
         $this->itemInventoryServices = $itemInventoryServices;
         $this->serviceChargeServices = $serviceChargeServices;
-
+        $this->userServices          = $userServices;
     }
     private function generateUnposted()
     {
@@ -54,7 +54,6 @@ class TimerServices
             Log::warning('Done Hemo ID:' . $list->HEMO_ID . ' - DATE:' . $list->DATE . '- LOCATION_ID:' . $list->LOCATION_ID);
         }
 
-
     }
     private function updateUnpostedItemOnly(int $HEMO_ID)
     {
@@ -74,7 +73,7 @@ class TimerServices
         DB::beginTransaction();
         try {
             $SOURCE_REF_TYPE = 29;
-            $itemData = $this->serviceChargeServices->GetWalkInServiceChargeTransaction($transDate);
+            $itemData        = $this->serviceChargeServices->GetWalkInServiceChargeTransaction($transDate);
             foreach ($itemData as $list) {
                 $QTY = (float) ($list->QUANTITY * $list->UNIT_BASE_QUANTITY ?? 1) * -1;
                 $this->itemInventoryServices->InventoryModify(
@@ -97,13 +96,14 @@ class TimerServices
     }
     public function getExecute()
     {
-         $transDate = $this->dateServices->NowDate();
-      // $transDate = $this->dateServices->BackDate();
-    
+        $transDate = $this->dateServices->NowDate();
+        // $transDate = $this->dateServices->BackDate();
+
         $this->generateUnposted();
         $this->generateWaitingList($transDate);
-        $this->GenerateItemServiceCharges($transDate);      
+        $this->GenerateItemServiceCharges($transDate);
         $this->generateItemHemo($transDate);
+        $this->UserDefaultUserDate();
     }
 
     public function getPosted(int $CONTACT_ID, string $DATE, int $LOCATION_ID)
@@ -112,25 +112,24 @@ class TimerServices
 
             $data = $this->hemoServices->getTreatmentID($CONTACT_ID, $DATE, $LOCATION_ID);
 
-            $ID = (int) $data['ID']; //HEMO_ID
+            $ID         = (int) $data['ID']; //HEMO_ID
             $TIME_START = empty($data['TIME_START']) ? null : $data['TIME_START'];
-            $TIME_END = empty($data['TIME_END']) ? null : $data['TIME_END'];
-            $STATUS_ID = (int) $data['STATUS_ID'];
-            $IS_PF = (bool) $data['IS_PF'];
+            $TIME_END   = empty($data['TIME_END']) ? null : $data['TIME_END'];
+            $STATUS_ID  = (int) $data['STATUS_ID'];
+            $IS_PF      = (bool) $data['IS_PF'];
 
-
-            $PRE_WEIGHT = (int) $data['PRE_WEIGHT'];
-            $PRE_BLOOD_PRESSURE = (int) $data['PRE_BLOOD_PRESSURE'];
+            $PRE_WEIGHT          = (int) $data['PRE_WEIGHT'];
+            $PRE_BLOOD_PRESSURE  = (int) $data['PRE_BLOOD_PRESSURE'];
             $PRE_BLOOD_PRESSURE2 = (int) $data['PRE_BLOOD_PRESSURE2'];
-            $PRE_HEART_RATE = (int) $data['PRE_HEART_RATE'];
-            $PRE_O2_SATURATION = (int) $data['PRE_O2_SATURATION'];
+            $PRE_HEART_RATE      = (int) $data['PRE_HEART_RATE'];
+            $PRE_O2_SATURATION   = (int) $data['PRE_O2_SATURATION'];
 
-            $POST_WEIGHT = (int) $data['POST_WEIGHT'];
-            $POST_BLOOD_PRESSURE = (int) $data['POST_BLOOD_PRESSURE'];
+            $POST_WEIGHT          = (int) $data['POST_WEIGHT'];
+            $POST_BLOOD_PRESSURE  = (int) $data['POST_BLOOD_PRESSURE'];
             $POST_BLOOD_PRESSURE2 = (int) $data['POST_BLOOD_PRESSURE2'];
-            $POST_HEART_RATE = (int) $data['POST_HEART_RATE'];
-            $POST_O2_SATURATION = (int) $data['POST_O2_SATURATION'];
-            $IS_INCOMPLETE = (bool) $data['IS_INCOMPLETE'];
+            $POST_HEART_RATE      = (int) $data['POST_HEART_RATE'];
+            $POST_O2_SATURATION   = (int) $data['POST_O2_SATURATION'];
+            $IS_INCOMPLETE        = (bool) $data['IS_INCOMPLETE'];
 
             DB::beginTransaction();
 
@@ -141,7 +140,7 @@ class TimerServices
                     // Do nothing
                 } else {
                     if ($PRE_WEIGHT == 0 || $PRE_BLOOD_PRESSURE == 0 || $PRE_BLOOD_PRESSURE2 == 0 || $PRE_HEART_RATE == 0 || $PRE_O2_SATURATION == 0) {
-                        $this->hemoServices->StatusUpdate($ID, 3); // VOID
+                        $this->hemoServices->StatusUpdate($ID, 3);                                  // VOID
                         $this->scheduleServices->StatusUpdate($CONTACT_ID, $DATE, $LOCATION_ID, 2); // ABSENT
                         DB::commit();
                         return;
@@ -151,15 +150,15 @@ class TimerServices
                 $this->scheduleServices->StatusUpdate($CONTACT_ID, $DATE, $LOCATION_ID, 1); //PRESENT
                 if ($POST_WEIGHT == 0 || $POST_BLOOD_PRESSURE == 0 || $POST_BLOOD_PRESSURE2 == 0 || $POST_HEART_RATE == 0 || $POST_O2_SATURATION == 0 || empty($TIME_START) == true || empty($TIME_END) == true) {
                     if ($IS_INCOMPLETE == true || $IS_PF == true) {
-                        $this->hemoServices->StatusUpdate($ID, 2); // POSTED
-                        $this->hemoServices->getMakeJournal($ID); // to journal
+                        $this->hemoServices->StatusUpdate($ID, 2);   // POSTED
+                        $this->hemoServices->getMakeJournal($ID);    // to journal
                         $this->hemoServices->makeItemInventory($ID); // item inventory
                     } else {
                         $this->hemoServices->StatusUpdate($ID, 4); // UNPOSTED
                     }
                 } else {
-                    $this->hemoServices->StatusUpdate($ID, 2); // POSTED
-                    $this->hemoServices->getMakeJournal($ID); // to journal
+                    $this->hemoServices->StatusUpdate($ID, 2);   // POSTED
+                    $this->hemoServices->getMakeJournal($ID);    // to journal
                     $this->hemoServices->makeItemInventory($ID); // item inventory
                 }
                 DB::commit();
@@ -171,5 +170,9 @@ class TimerServices
             DB::rollBack();
             Log::error('Error executing Schedule executed in getPosted: ' . $e->getMessage() . '[' . $CONTACT_ID . ',' . $LOCATION_ID . ', ' . $DATE . ']');
         }
+    }
+    public function UserDefaultUserDate()
+    {
+        $this->userServices->resetDefaultTime();
     }
 }

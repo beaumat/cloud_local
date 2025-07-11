@@ -1,11 +1,10 @@
 <?php
-
 namespace App\Services;
 
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Auth;
 
 class UserServices
 {
@@ -14,7 +13,7 @@ class UserServices
     public function __construct(SystemSettingServices $systemSettingServices, DateServices $dateServices)
     {
         $this->systemSetting = $systemSettingServices;
-        $this->dateServices = $dateServices;
+        $this->dateServices  = $dateServices;
     }
     public function getTransactionDateDefault(): string
     {
@@ -49,17 +48,17 @@ class UserServices
     {
 
         $user = User::create([
-            'name' => $Username,
-            'email' => null,
+            'name'              => $Username,
+            'email'             => null,
             'email_verified_at' => now(),
-            'password' => Hash::make($Password),
-            'remember_token' => Str::random(10),
-            'contact_id' => $Contact_id ? $Contact_id : null,
-            'inactive' => $Inactive,
-            'location_id' => $Location_id > 0 ? $Location_id : 0,
-            'trans_date' => $trans_date == '' ? null : $trans_date,
-            'locked_location' => $locked_location,
-            'date_enabled' => $date_enabled
+            'password'          => Hash::make($Password),
+            'remember_token'    => Str::random(10),
+            'contact_id'        => $Contact_id ? $Contact_id : null,
+            'inactive'          => $Inactive,
+            'location_id'       => $Location_id > 0 ? $Location_id : 0,
+            'trans_date'        => $trans_date == '' ? null : $trans_date,
+            'locked_location'   => $locked_location,
+            'date_enabled'      => $date_enabled,
         ]);
 
         return $user->id;
@@ -72,14 +71,14 @@ class UserServices
     {
         if ($Password) {
             User::where('id', $id)->update([
-                'name' => $Username,
-                'password' => Hash::make($Password),
-                'contact_id' => $Contact_id ? $Contact_id : null,
-                'inactive' => $Inactive,
-                'location_id' => $Location_id > 0 ? $Location_id : 0,
-                'trans_date' => $trans_date == '' ? null : $trans_date,
+                'name'            => $Username,
+                'password'        => Hash::make($Password),
+                'contact_id'      => $Contact_id ? $Contact_id : null,
+                'inactive'        => $Inactive,
+                'location_id'     => $Location_id > 0 ? $Location_id : 0,
+                'trans_date'      => $trans_date == '' ? null : $trans_date,
                 'locked_location' => $locked_location,
-                'date_enabled' => $date_enabled
+                'date_enabled'    => $date_enabled,
             ]);
 
             return;
@@ -87,13 +86,13 @@ class UserServices
 
         User::where('id', $id)
             ->update([
-                'name' => $Username,
-                'contact_id' => $Contact_id ? $Contact_id : null,
-                'inactive' => $Inactive,
-                'location_id' => $Location_id > 0 ? $Location_id : 0,
-                'trans_date' => $trans_date == '' ? null : $trans_date,
+                'name'            => $Username,
+                'contact_id'      => $Contact_id ? $Contact_id : null,
+                'inactive'        => $Inactive,
+                'location_id'     => $Location_id > 0 ? $Location_id : 0,
+                'trans_date'      => $trans_date == '' ? null : $trans_date,
                 'locked_location' => $locked_location,
-                'date_enabled' => $date_enabled
+                'date_enabled'    => $date_enabled,
             ]);
     }
     public function IsPasswordCorrect(int $userID, string $Password): bool
@@ -116,7 +115,7 @@ class UserServices
         // Check if the user exists and the provided password matches the stored password
         if ($user && Hash::check($currentPassword, $user->password)) {
             $user->update([
-                'password' => Hash::make($NewPassword)
+                'password' => Hash::make($NewPassword),
             ]);
         }
     }
@@ -138,7 +137,7 @@ class UserServices
                     'l.NAME as location',
                     'users.trans_date',
                     'users.locked_location as locked',
-                    'users.date_enabled as date_edit'
+                    'users.date_enabled as date_edit',
                 ]
             )
             ->leftJoin('contact', 'contact.id', '=', 'users.contact_id')
@@ -165,7 +164,7 @@ class UserServices
         $id = Auth::user()->id;
         User::where('id', '=', $id)
             ->update([
-                'location_id' => $LOCATION_ID
+                'location_id' => $LOCATION_ID,
             ]);
     }
 
@@ -196,4 +195,14 @@ class UserServices
 
     }
 
+    public function resetDefaultTime()
+    {
+        try {
+            User::whereNotNull('trans_date')
+            ->update(['trans_date' => null]);
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
+
+    }
 }
