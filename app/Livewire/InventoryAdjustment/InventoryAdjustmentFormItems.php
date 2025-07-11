@@ -82,7 +82,7 @@ class InventoryAdjustmentFormItems extends Component
     }
     public function updatedquantity() {
 
-        
+
     }
     public function updateditemid()
     {
@@ -139,7 +139,7 @@ class InventoryAdjustmentFormItems extends Component
                 session()->flash('error', 'Item already added.');
                 return;
             }
-            
+
             $unitRelated = $this->unitOfMeasureServices->GetItemUnitDetails($this->ITEM_ID, $this->UNIT_ID ?? 0);
 
             $this->inventoryAdjustmentServices->ItemStore(
@@ -244,17 +244,7 @@ class InventoryAdjustmentFormItems extends Component
 
     public function deleteItem($Id)
     {
-        // try {
-        //     $this->inventoryAdjustmentServices->ItemDelete(
-        //         $Id,
-        //         $this->INVENTORY_ADJUSTMENT_ID
-        //     );
-        //     $this->dispatch('update-amount');
-        // } catch (\Exception $e) {
-        //     $errorMessage = 'Error occurred: ' . $e->getMessage();
-        //     session()->flash('error', $errorMessage);
-        // }
-
+        // TO Fix
 
         DB::beginTransaction();
         try {
@@ -293,13 +283,13 @@ class InventoryAdjustmentFormItems extends Component
                             1,
 
                         );
-                    
+
                     }
                 }
             }
 
 
-            $this->inventoryAdjustmentServices->ItemDelete($Id, $this->INVENTORY_ADJUSTMENT_ID);        
+            $this->inventoryAdjustmentServices->ItemDelete($Id, $this->INVENTORY_ADJUSTMENT_ID);
             DB::commit();
             $this->dispatch('update-amount');
         } catch (\Exception $e) {

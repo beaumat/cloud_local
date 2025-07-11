@@ -2,7 +2,9 @@
 
 namespace App\Livewire\InventoryAdjustment;
 
+use App\Services\AccountJournalServices;
 use App\Services\InventoryAdjustmentServices;
+use App\Services\ItemInventoryServices;
 use App\Services\LocationServices;
 use App\Services\UserServices;
 use Illuminate\Support\Facades\DB;
@@ -22,11 +24,15 @@ class InventoryAdjustmentList extends Component
     private $inventoryAdjustmentServices;
     private $locationServices;
     private $userServices;
-    public function boot(InventoryAdjustmentServices $inventoryAdjustmentServices, LocationServices $locationServices, UserServices $userServices)
+    private $accountJournalServices;
+    private $itemInventoryServices;
+    public function boot(InventoryAdjustmentServices $inventoryAdjustmentServices, LocationServices $locationServices, UserServices $userServices, AccountJournalServices $accountJournalServices, ItemInventoryServices $itemInventoryServices )
     {
         $this->inventoryAdjustmentServices = $inventoryAdjustmentServices;
         $this->locationServices = $locationServices;
         $this->userServices = $userServices;
+        $this->accountJournalServices = $accountJournalServices;
+        $this->itemInventoryServices = $itemInventoryServices;
     }
 
     public function mount()
@@ -54,13 +60,13 @@ class InventoryAdjustmentList extends Component
         return view('livewire.inventory-adjustment.inventory-adjustment-list', ['dataList' => $dataList]);
     }
     public function updatedlocationid()
-    {   
+    {
         try {
             $this->userServices->SwapLocation($this->locationid );
         } catch (\Exception $e) {
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
         }
- 
+
     }
 }
