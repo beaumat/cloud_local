@@ -270,7 +270,6 @@ class InventoryAdjustmentFormItems extends Component
                             0,
                             0
                         );
-
                         // Journal
                         $this->accountJournalServices->DeleteJournal(
                             $adjustmentItemData->ASSET_ACCOUNT_ID,
