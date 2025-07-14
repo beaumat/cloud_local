@@ -150,6 +150,7 @@ use App\Livewire\PullOut\PullOutList;
 use App\Livewire\PullOut\PullOutPrint;
 use App\Livewire\PurchaseOrder\PurchaseOrderForm;
 use App\Livewire\PurchaseOrder\PurchaseOrderList;
+use App\Livewire\PurchaseOrder\PurchaseOrderPrint;
 use App\Livewire\ReceivableReport\AccountReceivableAging;
 use App\Livewire\ReceivableReport\CustomerBalance;
 use App\Livewire\ReceiveMoney\ReceiveMoneyForm;
@@ -340,6 +341,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/', PurchaseOrderList::class)->name('purchase_order')->middleware(['permission:vendor.purchase-order.view']);
             Route::get('/create', PurchaseOrderForm::class)->name('purchase_order_create')->middleware(['permission:vendor.purchase-order.create']);
             Route::get('/{id}/edit', PurchaseOrderForm::class)->name('purchase_order_edit')->middleware(['permission:vendor.purchase-order.view']);
+            Route::get('/{id}/print', PurchaseOrderPrint::class)->name('purchase_order_print')->middleware(['permission:vendor.purchase-order.view']);
         });
 
         Route::prefix('/bills')->group(function () {
