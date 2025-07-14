@@ -177,7 +177,7 @@
                                     </div>
                                     <div class="text-right col-6 col-md-6">
                                         @if ($ID > 0 && $STATUS > 0)
-                                            <a href="{{ route('vendorspurchase_order_print', ['id' => $ID]) }}"
+                                            <a  target="_blank" href="{{ route('vendorspurchase_order_print', ['id' => $ID]) }}"
                                                 type="button" class="btn btn-sm btn-primary">
                                                Print
                                             </a>

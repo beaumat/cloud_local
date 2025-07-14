@@ -63,7 +63,7 @@ class PurchaseOrderPrint extends Component
                 $this->LOCATION_NAME  = $locData->NAME;
                 $this->LOGO_FILE = $locData->LOGO_FILE ?? null;
             }
-            $this->itemList = $this->purchaseOrderServices->ItemView($this->BILL_ID);
+            $this->itemList = $this->purchaseOrderServices->ItemView($this->PO_ID);
             $this->dispatch('preview_print');
             return;
         }

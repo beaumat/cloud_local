@@ -16,7 +16,10 @@
                         <img class="print-logo" src="{{ asset("dist/logo/$LOGO_FILE") }}" />
                     @endif
                 </div>
-                <div class="col-4  text-left">
+                <div class="col-12 text-center mt-4">
+                    <b class="h4 font-weight-bold">PURCHASE ORDER</b>
+                </div>
+                <div class="col-5  text-left">
                     <div class="row">
                         <div class="col-3"> Vendor : </div>
                         <div class="col-9 bottom-line"> {{ $CONTACT_NAME }}</div>
@@ -26,10 +29,10 @@
                         <div class="col-9 bottom-line"> {{ $LOCATION_NAME }}</div>
                     </div>
                 </div>
-                <div class="col-4 text-center">
-                    <b class="h4">Voucher</b>
+                <div class="col-3 text-center">
+
                 </div>
-                <div class="col-4 ">
+                <div class="col-4">
                     <div class="row ">
                         <div class="col-4 text-right"> Reference No. : </div>
                         <div class="col-6 bottom-line"> {{ $CODE }}</div>
@@ -61,7 +64,7 @@
                                     @endphp
                                     <tr class="border-dark border-bottom">
                                         <td class="text-left p-1">{{ $rows }}</td>
-                                        <td class="text-left p-1">{{ $list->DESCRIPTION }}</td>
+                                        <td class="text-left p-1">{{ $list->PURCHASE_DESCRIPTION }}</td>
                                         <td class="text-right">{{ number_format($list->QUANTITY, 1) }}&nbsp;</td>
                                         <td>{{ $list->UNIT_NAME }}</td>
                                         <td class="text-right">{{ number_format($list->RATE, 2) }}&nbsp;</td>
