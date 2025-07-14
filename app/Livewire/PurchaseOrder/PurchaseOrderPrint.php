@@ -6,8 +6,10 @@ use App\Services\ContactServices;
 use App\Services\LocationServices;
 use App\Services\PurchaseOrderServices;
 use Livewire\Attributes\On;
+use Livewire\Attributes\Title;
 use Livewire\Component;
 
+#[Title("PO Print")]
 class PurchaseOrderPrint extends Component
 {
 
