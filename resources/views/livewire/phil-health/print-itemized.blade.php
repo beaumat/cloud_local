@@ -90,10 +90,20 @@ use App\Services\ItemSoaItemizedServices;
                         <td class="text-sm pb-0 pt-0">{{ $list->ITEM_NAME }}</td>
                         <td class="text-sm text-center">{{ $list->UNIT_NAME }}</td>
                         <td class=" text-right text-sm pb-0 pt-0">
-                            {{ $list->FIX_QTY > 0 ? number_format($AMOUNT / $list->FIX_QTY, 2) : number_format($list->RATE, 2) }}
+                            @if ($defult_Qty >= $list->FIX_QTY)
+                                {{ $list->FIX_QTY > 0 ? number_format($AMOUNT / $list->FIX_QTY, 2) : number_format($list->RATE, 2) }}
+                            @else
+                                {{ number_format($list->RATE, 2) }}
+                            @endif
                         </td>
                         <td class="text-center text-sm pb-0 pt-0">
-                            {{ $list->FIX_QTY > 0 ? $list->FIX_QTY : $defult_Qty }}</td>
+                            @if ($defult_Qty >= $list->FIX_QTY)
+                                {{ $list->FIX_QTY > 0 ? $list->FIX_QTY : $defult_Qty }}
+                            @else
+                                {{ $defult_Qty }}
+                            @endif
+
+                        </td>
                         <td class="text-right text-sm pb-0 pt-0">{{ number_format($AMOUNT, 2) }}</td>
                     </tr>
                 @endforeach
