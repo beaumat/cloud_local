@@ -97,6 +97,7 @@
                                 <td class="col-3">Particular</td>
                                 <th class="col-1 text-right">Debit</th>
                                 <th class="col-1 text-right">Credit</th>
+                                <th class="col-1">Location</th>
                             </tr>
                         </thead>
                         <tbody class="text-xs">
@@ -130,6 +131,7 @@
                                             }
                                         @endphp
                                     </td>
+                                    <td> {{ $list->LOCATION }}</td>
                                 </tr>
                             @endforeach
                             <tr>
