@@ -62,7 +62,7 @@ class PhilhealthAvailment extends Component
     public function getDialyzer(int $LOCATION_ID, int $YEAR): int
     {
         $groupList = $this->itemServices->GetAllItemByGroup(1);
-        $list = array_column($groupList, 'ID'); 
+        $list = array_column($groupList, 'ID');
 
         $count = DB::table('service_charges')
             ->join('service_charges_items', 'service_charges_items.SERVICE_CHARGES_ID', '=', 'service_charges.ID')
@@ -95,7 +95,7 @@ class PhilhealthAvailment extends Component
 
             $this->TOTAL_MAIN = $this->TOTAL_DAYS;
             $this->TOTAL_OTHER = $this->philhealthItemAdjustmentServices->ItemTotalOther($contact->ID, $locationid, $year);
-            $this->TOTAL_ITEM = $this->getDialyzer($locationid, $year);
+            $this->TOTAL_ITEM = $this->getDialyzer($locationid, $year) + $this->philhealthItemAdjustmentServices->ItemTotalOther1($contact->ID, $locationid, $year);
             $this->DATE = $this->dateServices->NowDate();
             $this->DONE_DATE = $this->otherServices->formatSpecialDate($this->dateServices->NowDate());
 

@@ -302,6 +302,7 @@ class ContactServices
                 DB::raw("CONCAT(LAST_NAME, ', ', FIRST_NAME, ', ', LEFT(MIDDLE_NAME, 1)) as NAME"),
                 DB::raw("(select count(*) from service_charges join service_charges_items on service_charges_items.SERVICE_CHARGES_ID = service_charges.ID  where service_charges.PATIENT_ID = contact.ID and service_charges_items.ITEM_ID = '2'  and service_charges.LOCATION_ID = $LOCATION_ID  and YEAR(service_charges.DATE) = $YEAR) as TOTAL_DAYS"),
                 DB::raw("(select count(*) from service_charges join service_charges_items on service_charges_items.SERVICE_CHARGES_ID = service_charges.ID  where service_charges.PATIENT_ID = contact.ID and service_charges_items.ITEM_ID IN ($list)  and service_charges.LOCATION_ID = $LOCATION_ID  and YEAR(service_charges.DATE) = $YEAR) as TOTAL_ITEMS"),
+                DB::raw("(select IfNULL(sum(philhealth_item_adjustment.NO_OF_ITEM),0) from philhealth_item_adjustment WHERE philhealth_item_adjustment.PATIENT_ID = contact.ID and  philhealth_item_adjustment.LOCATION_ID = $LOCATION_ID and philhealth_item_adjustment.YEAR = $YEAR ) as TOTAL_OTHER_ITEM"),
                 DB::raw("(select IfNULL(sum(philhealth_item_adjustment.NO_OF_USED),0) from philhealth_item_adjustment WHERE philhealth_item_adjustment.PATIENT_ID = contact.ID and  philhealth_item_adjustment.LOCATION_ID = $LOCATION_ID and philhealth_item_adjustment.YEAR = $YEAR ) as TOTAL_OTHER"),
             ])->where('TYPE', 3)
             ->where('INACTIVE', '0')

@@ -19,6 +19,7 @@
                                 <tr>
                                     <th class="col-1">Year</th>
                                     <th class="col-1">No of Used</th>
+                                    <th class="col-1">No of Dialyzer</th>
                                     <th>Notes</th>
                                     <th class="col-2 text-center">Attachment</th>
                                     <th class="text-center col-1">
@@ -46,6 +47,15 @@
                                                     wire:model='E_NO_OF_USED' />
                                             @else
                                                 {{ $list->NO_OF_USED }}
+                                            @endif
+
+                                        </td>
+                                        <td>
+                                            @if ($list->ID == $E_ID)
+                                                <input type="number" class="form-control form-control-sm"
+                                                    wire:model='E_NO_OF_ITEM' />
+                                            @else
+                                                {{ $list->NO_OF_ITEM }}
                                             @endif
 
                                         </td>
@@ -94,7 +104,7 @@
                                                     <div class="col-6">
                                                         <button type="button" class="btn btn-xs btn-primary w-100"
                                                             wire:click='Update()'>
-                                                          <i class="fa fa-floppy-o" aria-hidden="true"></i>
+                                                            <i class="fa fa-floppy-o" aria-hidden="true"></i>
                                                         </button>
                                                     </div>
                                                     <div class="col-6">
@@ -131,6 +141,10 @@
                                     <td>
                                         <input type="number" class="form-control form-control-sm"
                                             wire:model='NO_OF_USED' />
+                                    </td>
+                                    <td>
+                                        <input type="number" class="form-control form-control-sm"
+                                            wire:model='NO_OF_ITEM' />
                                     </td>
                                     <td>
                                         <input type="text" class="form-control form-control-sm" wire:model='NOTES' />

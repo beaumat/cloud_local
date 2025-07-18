@@ -20,6 +20,7 @@ class PhilhealthItemAdjustment extends Model
         'YEAR',
         'NOTES',
         'FILE_NAME',
-        'FILE_PATH'
+        'FILE_PATH',
+        'NO_OF_ITEM'
     ];
 }
