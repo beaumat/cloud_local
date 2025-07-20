@@ -160,7 +160,7 @@ use App\Services\UserServices;
                         </div>
                     </div>
                 </div>
-                <div class="col-6 col-md-6">
+                <div class="col-6 col-md-6"  wire:loading.attr='hidden'>
                     {{ $dataList->links() }}
                 </div>
             </div>

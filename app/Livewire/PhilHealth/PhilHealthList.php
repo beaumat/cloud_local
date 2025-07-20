@@ -104,7 +104,7 @@ class PhilHealthList extends Component
                     if ($Stats == 11) {
                         $PAYMENT_ID = $this->invoiceServices->getPaymentIdVIaInvoice($list->INVOICE_ID);
                         if ($PAYMENT_ID > 0) {
-                            $dataPayment = $this->paymentServices->get($PAYMENT_ID);
+                            $dataPayment = (object) $this->paymentServices->get($PAYMENT_ID);
                             if ($dataPayment) {
                                 $PATIENT_PAYMENT_ID = $this->patientPaymentServices->PH_exists($list->ID);
                                 if ($PATIENT_PAYMENT_ID == 0) {

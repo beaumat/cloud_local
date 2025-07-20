@@ -18,6 +18,7 @@ use App\Services\UserServices;
             </div>
         </div>
     </div>
+
     <section class="content">
         <div class="container-fluid">
             <div class="row">
@@ -88,7 +89,6 @@ use App\Services\UserServices;
                                         <th class="text-center">#Trmt. </th>
                                         <th class='text-right'>FC Amt.</th>
                                         <th class="text-right">Paid Amt.</th>
-
                                         <th>Status</th>
                                         <th>Location</th>
                                         <th class="text-center col-2">
@@ -96,7 +96,7 @@ use App\Services\UserServices;
                                         </th>
                                     </tr>
                                 </thead>
-                                <tbody class="text-xs">
+                                <tbody class="text-xs" wire:loading.attr='hidden'>
                                     @foreach ($dataList as $list)
                                         <tr>
                                             <td>
@@ -120,7 +120,7 @@ use App\Services\UserServices;
                                                         </button>
                                                         <button title="Cancel Edit" type="button"
                                                             wire:click='cancelCM()' class="btn btn-xs btn-secondary">
-                                                           <i class="fa fa-ban" aria-hidden="true"></i>
+                                                            <i class="fa fa-ban" aria-hidden="true"></i>
                                                         </button>
                                                     @else
                                                         <button title="Edit Claim No." type="button"
@@ -204,10 +204,15 @@ use App\Services\UserServices;
 
                                 </tbody>
                             </table>
+                            <div wire:loading.delay>
+                                <span class="spinner-border spinner-border-sm" role="status"
+                                    aria-hidden="true"></span>
+                                Loading...
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-6 col-md-6">
+                <div class="col-6 col-md-6" wire:loading.attr='hidden'>
                     {{ $dataList->links() }}
                 </div>
             </div>
