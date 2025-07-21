@@ -98,7 +98,6 @@ use App\Services\UserServices;
                                                     class="text-primary">
                                                     {{ $list->CODE }}
                                                 </a>
-
                                             </td>
                                             <td> {{ date('m/d/Y', strtotime($list->DATE)) }}</td>
                                             <td> {{ $list->CONTACT_NAME }}</td>
@@ -123,9 +122,6 @@ use App\Services\UserServices;
                                                     class="text-center @if ($list->STATUS_ID == 0) bg-warning @elseif ($list->STATUS_ID == 2) bg-primary  @elseif ($list->STATUS_ID == 11) bg-success @else bg-secondary @endif ">
                                                     {{ substr($list->STATUS, 0, 1) }}</td>
                                             @endif
-
-
-
                                             @can('patient.service-charges.create')
                                                 <td class="text-center">
                                                     <a type="button" title="View details"

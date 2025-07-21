@@ -120,7 +120,7 @@
 
                 <div class="col-12" id="details" @if ($PRE_SIGN_DATA) style="opacity: 0.0" @endif>
                     @livewire('PhilHealth.PrintSummaryTable', ['ID' => $PRINT_ID, 'PRE_SIGN_DATA' => $PRE_SIGN_DATA, 'PATIENT_ID' => $PATIENT_ID])
-                    @livewire('PhilHealth.PrintItemized2', ['num' => $NO_OF_TREATMENT, 'locationid' => $LOCATION_ID, 'date' => $DATE_ADMITTED ?? null, 'breakDownDate' => $breakDownDate, 'patientId' => $CONTACT_ID, 'OUTPUT_SIGN' => $OUTPUT_SIGN])
+                    @livewire('PhilHealth.PrintItemized4', ['num' => $NO_OF_TREATMENT, 'locationid' => $LOCATION_ID, 'date' => $DATE_ADMITTED ?? null, 'breakDownDate' => $breakDownDate, 'patientId' => $CONTACT_ID, 'OUTPUT_SIGN' => $OUTPUT_SIGN])
                 </div>
                 <div class="col-12 ">
                     <div class="row">

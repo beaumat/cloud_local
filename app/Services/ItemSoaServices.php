@@ -155,9 +155,38 @@ class ItemSoaServices
             ->orderBy('TYPE', 'asc')
             ->orderBy('LINE', 'asc')
             ->get();
-              
+
         return $result;
     }
+public function GetListLoop(int $LOCATION_ID, int $LOOP)
+{
+    $result = ItemSoa::query()
+        ->select([
+            'soa_item.ID',
+            'soa_item.TYPE',
+            'soa_item_type.DESCRIPTION as TYPE_NAME',
+            'soa_item.ITEM_NAME',
+            'soa_item.UNIT_NAME',
+            'soa_item.RATE',
+            'soa_item.ACTUAL_BASE',
+            'soa_item.GROUP_ID',
+            'soa_item.FIX_QTY'
+        ])
+        ->join('soa_item_type', 'soa_item_type.ID', '=', 'TYPE')
+        ->where('LOCATION_ID', '=', $LOCATION_ID)
+        ->where('INACTIVE', '=', false)
+        ->orderBy('TYPE', 'asc')
+        ->orderBy('LINE', 'asc')
+        ->get();
+
+
+    // Duplicate rows based on $LOOP
+    $result = $result->flatMap(function ($item) use ($LOOP) {
+        return collect(array_fill(0, $LOOP, $item));
+    });
+
+    return $result->values();
+}
 
     public function GetListViaType(int $LOCATION_ID,int $TYPE)
     {
@@ -179,40 +208,44 @@ class ItemSoaServices
             ->orderBy('TYPE', 'asc')
             ->orderBy('LINE', 'asc')
             ->get();
-              
-        return $result;
-    }
-    public function GetListTypeFixedQty(int $LOCATION_ID, int $TYPE, int $QTY = 1)
-    {
-
-
-        $result = ItemSoa::query()
-            ->select([
-                'soa_item.ID',
-                'soa_item.TYPE',
-                'soa_item_type.DESCRIPTION as TYPE_NAME',
-                'soa_item.ITEM_NAME',
-                'soa_item.UNIT_NAME',
-                'soa_item.ACTUAL_BASE',
-                'soa_item.DOSAGE',
-                'soa_item.ROUTE',
-                'soa_item.FREQUENCY',
-                'soa_item.BRAND',
-                'soa_item.SC_BASE',
-                DB::raw(" ($QTY * soa_item.RATE) as RATE")
-
-            ])
-            ->join('soa_item_type', 'soa_item_type.ID', '=', 'TYPE')
-            ->where('LOCATION_ID', '=', $LOCATION_ID)
-            ->where('INACTIVE', '=', false)
-            ->where('TYPE', '=', $TYPE)
-            ->where('SOA_BASE', '=', true)
-            ->orderBy('TYPE', 'asc')
-            ->orderBy('LINE', 'asc')
-            ->get();
 
         return $result;
     }
+   public function GetListTypeFixedQty(int $LOCATION_ID, int $TYPE, int $LOOP = 1)
+{
+    $QTY = 1;
+
+    $result = ItemSoa::query()
+        ->select([
+            'soa_item.ID',
+            'soa_item.TYPE',
+            'soa_item_type.DESCRIPTION as TYPE_NAME',
+            'soa_item.ITEM_NAME',
+            'soa_item.UNIT_NAME',
+            'soa_item.ACTUAL_BASE',
+            'soa_item.DOSAGE',
+            'soa_item.ROUTE',
+            'soa_item.FREQUENCY',
+            'soa_item.BRAND',
+            'soa_item.SC_BASE',
+            DB::raw("($QTY * soa_item.RATE) as RATE")
+        ])
+        ->join('soa_item_type', 'soa_item_type.ID', '=', 'TYPE')
+        ->where('LOCATION_ID', '=', $LOCATION_ID)
+        ->where('INACTIVE', '=', false)
+        ->where('TYPE', '=', $TYPE)
+        ->where('SOA_BASE', '=', true)
+        ->orderBy('TYPE', 'asc')
+        ->orderBy('LINE', 'asc')
+        ->get();
+
+    // Repeat each entry based on $LOOP
+    $result = $result->flatMap(function ($item) use ($LOOP) {
+        return collect(array_fill(0, $LOOP, $item));
+    });
+
+    return $result->values(); // Reindex the collection
+}
     public static function getTotal(int $GROUP_ID, int $LOCATION_ID): float
     {
         return (float) ItemSoa::where('soa_item.GROUP_ID', '=', $GROUP_ID)
@@ -352,7 +385,7 @@ class ItemSoaServices
             ->where('ACTUAL_BASE', '=', false)
             ->where('INACTIVE', '=', false)
             ->sum('RATE');
-      
+
         if ($result > 0) {
             return (float) $result;
         }
@@ -366,6 +399,7 @@ class ItemSoaServices
     {
 
         $fromDataList = ItemSoa::where('LOCATION_ID', '=', $FORM_LOCATION_ID)->get();
+
         foreach ($fromDataList as $list) {
             $NEW_ID = $this->Store(
                 $TO_LOCATION_ID,
