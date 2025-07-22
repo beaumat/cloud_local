@@ -7,6 +7,9 @@ use App\Services\ItemSoaServices;
     <div class="col-12 font-weight-bold text-center text-danger">
         ITEMIZED CHARGES
     </div>
+    @php
+        $TEMP_NAME = '';
+    @endphp
     <div class="col-8">
         <table class="w-100" border="1">
             <thead>
@@ -44,9 +47,7 @@ use App\Services\ItemSoaServices;
                                     {{ date('M/d/Y', strtotime($breakDownDate[$row]['DATE'])) }}
                                 @endif
 
-                                @php
-                                    $row++;
-                                @endphp
+
                             </td>
                             <td class="pb-0 pt-0">{{ $TYPE }} TOTAL</td>
                             <td></td>
@@ -64,13 +65,28 @@ use App\Services\ItemSoaServices;
                     @endphp
                     <tr>
                         <td class="text-center font-weight-bold pb-0 pt-0">
-                            @if (isset($breakDownDate[$row]))
-                                {{ date('M/d/Y', strtotime($breakDownDate[$row]['DATE'])) }}
+
+                            @if ($list->TYPE_NAME == '')
+                                @php
+                                    $row = 0;
+                                @endphp
+                            @else
+                                @if ($TEMP_NAME != $list->ITEM_NAME)
+                                    @php
+                                        $row = 0;
+                                    @endphp
+                                @endif
+                                @if (isset($breakDownDate[$row]))
+                                    {{ date('M/d/Y', strtotime($breakDownDate[$row]['DATE'])) }}
+                                @endif
+                                @php
+                                    $row++;
+                                @endphp
                             @endif
 
-                            @php
-                                $row++;
-                            @endphp
+
+
+                       
                             @php
                                 if ($list->ACTUAL_BASE) {
                                     $defult_Qty = 1;
@@ -82,10 +98,14 @@ use App\Services\ItemSoaServices;
                                 $TOTAL = $TOTAL + $AMOUNT;
                             @endphp
                         </td>
+
                         <td class="pb-0 pt-0">{{ $list->ITEM_NAME }}</td>
+                        @php
+                            $TEMP_NAME = $list->ITEM_NAME;
+                        @endphp
                         <td class="text-center">{{ $list->UNIT_NAME }}</td>
                         <td class="text-right  pb-0 pt-0">
-                            {{  number_format($list->RATE, 2) }}
+                            {{ number_format($list->RATE, 2) }}
                         </td>
 
                         <td class="text-center pb-0 pt-0 ">
