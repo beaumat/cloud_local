@@ -1,9 +1,10 @@
 <div>
     <section class="content">
         <div class="container-fluid">
-            <div class="row">
+
+            <div class="row top-line2 right-line2 left-line2 text-center mt-1 ">
                 <div class="col-12 text-center " @if ($HEADER) style="opacity: 0.0" @endif>
-                    @if (empty($LOGO_FILE))
+                    {{-- @if (empty($LOGO_FILE))
                         <img class="print-logo" style="width:500px;" src="{{ asset('dist/logo/vida_logo.png') }}" />
                         <div class="text-center">
                             <b class="print-address1 text-center">
@@ -12,15 +13,15 @@
                                 {{ $REPORT_HEADER_3 }}</b>
                         </div>
                     @else
-                        {{-- nothing customize --}}
                         <img class="w-50" src="{{ asset("dist/logo/$LOGO_FILE") }}" />
-                    @endif
+                    @endif --}}
+                    <h4>STATEMENT OF ACCOUNT</h4>
                 </div>
                 <div class="col-12">
                     <div class="row">
                         <div class="col-7">
                             <b class="bottom-line2" @if ($HEADER) style="opacity: 0.0" @endif>
-                                PHILHEALTH ACCREDITED :
+
                             </b>
                         </div>
 
@@ -35,91 +36,80 @@
 
                             </div>
                         </div>
+                        <div class="col-12">
+                            <h5>VIDA DIALYSIS CENTER PHILS.</h5>
+                            {{ $REPORT_HEADER_1 }} <br />
+                            {{ $REPORT_HEADER_2 }}<br />
+                            {{ $REPORT_HEADER_3 }}</b>
+
+                        </div>
+                        <div class="col-12">
+                            &nbsp;
+                        </div>
                         <div class="col-7">
                             <div class="row">
 
-                                <div class="col-12 text-right"
+
+                                <div class="col-3 text-left"
                                     @if ($HEADER) style="opacity: 0.0" @endif>
-                                    <i>DATEBIRTH</i>: <b>{{ $DATE_BIRTH }}</b>
+                                    Patient Name :
                                 </div>
-                                <div class="col-4" @if ($HEADER) style="opacity: 0.0" @endif>
-                                    PATIENT`S NAME :
-                                </div>
-                                <div class="col-8 bottom-line2"
-                                    @if ($HEADER) style="opacity: 0.0" @endif>
-                                    <div class="row">
-                                        <div class="col-9"> &nbsp; {{ $PATIENT_NAME }}</div>
-                                        <div class="col-3 text-right">Age: {{ $AGE }}</div>
+                                <div class="col-9 " @if ($HEADER) style="opacity: 0.0" @endif>
+                                    <div class="row text-left">
+                                        <div class="col-10 bottom-line2"> &nbsp; {{ $PATIENT_NAME }}</div>
+                                        <div class="col-2">
+                                            <div class="row">
+                                                <div class="col-6 text-left"> Age:</div>
+                                                <div class="col-6 bottom-line2">{{ $AGE }}</div>
+                                            </div>
+
+                                        </div>
                                     </div>
                                 </div>
-                                <div @if ($HEADER) style="opacity: 0.0" @endif class="col-4">
-                                    ADDRESS : </div>
                                 <div @if ($HEADER) style="opacity: 0.0" @endif
-                                    class="col-8 bottom-line2 text-sm"> &nbsp; {{ $ADDRESS1 }}</div>
-                                <div @if ($HEADER) style="opacity: 0.0" @endif class="col-4">
-                                    &nbsp;</div>
+                                    class="col-3 text-left">
+                                    Address : </div>
                                 <div @if ($HEADER) style="opacity: 0.0" @endif
-                                    class="col-8 bottom-line2 text-sm"> &nbsp; {{ $ADDRESS2 }}</div>
-                                <div @if ($HEADER) style="opacity: 0.0" @endif class="col-4">
-                                    FINAL DIAGNOSIS :
+                                    class="col-9 bottom-line2 text-sm text-left"> &nbsp; {{ $ADDRESS1 }}
+                                    {{ $ADDRESS2 }}</div>
+
+                                <div @if ($HEADER) style="opacity: 0.0" @endif
+                                    class="col-12 text-left">
+                                    Final Diagnosis (ICD-10/RVS): <spin class=" bottom-line2 text-sm"> &nbsp; N18.5 /
+                                        90935 &nbsp;&nbsp;&nbsp; </spin>
                                 </div>
+
                                 <div @if ($HEADER) style="opacity: 0.0" @endif
-                                    class="col-8 bottom-line2 text-sm"> &nbsp; {{ $FINAL_DIAGNOSIS }}</div>
-                                {{-- <div @if ($HEADER) style="opacity: 0.0" @endif class="col-4">
-                                    OTHER DIAGNOSIS : </div>
-                                <div @if ($HEADER) style="opacity: 0.0" @endif
-                                    class="col-8 bottom-line2 text-xs"> &nbsp; {{ $OTHER_DIAGNOSIS }}</div> --}}
-                                <div @if ($HEADER) style="opacity: 0.0" @endif class="col-4">
-                                    TREATMENT DATES : </div>
-                                <div class="col-8 @if (!$PRE_SIGN_DATA) bottom-line2 @endif text-sm">
-                                    &nbsp;
-                                    {{ $allDate }}
+                                    class="col-12 text-left">
+                                    Other Diagnosis (ICD-10/RVS): <spin class=" bottom-line2 text-sm">
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    </spin>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-5">
-                            <div class="row">
-                                <div @if ($HEADER) style="opacity: 0.0" @endif class="col-6">
-                                    PHILHEALTH NO. :
-                                </div>
-                                <div class="col-6 @if ($OUTPUT_SIGN) bottom-line2 @endif"
-                                    @if ($HEADER) style="opacity: 0.0" @endif>
-                                    {{ substr($PIN, 0, 1) . substr($PIN, 1, 1) . '-' . substr($PIN, 2, 1) . substr($PIN, 3, 1) . substr($PIN, 4, 1) . substr($PIN, 5, 1) . substr($PIN, 6, 1) . substr($PIN, 7, 1) . substr($PIN, 8, 1) . substr($PIN, 9, 1) . substr($PIN, 10, 1) . '-' . substr($PIN, 11, 1) }}
 
-                                </div>
-                                <div @if ($HEADER) style="opacity: 0.0" @endif class="col-6">DATE
-                                    & TIME ADMITTED :</div>
-                                <div class="col-6 @if ($OUTPUT_SIGN) bottom-line2 @endif">
+                        <div class="col-5 ">
+                            <div class="row">
+
+                                <div @if ($HEADER) style="opacity: 0.0" @endif class="col-7 text-right">Date
+                                    & Time Admitted:</div>
+                                <div class="col-5 @if ($OUTPUT_SIGN) bottom-line2 @endif">
                                     {{ $DATE_ADMITTED ? \Carbon\Carbon::parse($DATE_ADMITTED)->format('m/d/Y') : '' }}
                                     {{ $TIME_ADMITTED ? \Carbon\Carbon::parse($TIME_ADMITTED)->format('h:i A') : '' }}
                                 </div>
-                                <div @if ($HEADER) style="opacity: 0.0" @endif class="col-6">DATE
-                                    & TIME DISCHARGED :</div>
-                                <div class="col-6 @if ($OUTPUT_SIGN) bottom-line2 @endif">
+                                <div @if ($HEADER) style="opacity: 0.0" @endif class="col-7 text-right">Date
+                                    & Time Discharged:</div>
+                                <div class="col-5 @if ($OUTPUT_SIGN) bottom-line2 @endif">
                                     {{ $DATE_DISCHARGED ? \Carbon\Carbon::parse($DATE_DISCHARGED)->format('m/d/Y') : '' }}
                                     {{ $TIME_DISCHARGED ? \Carbon\Carbon::parse($TIME_DISCHARGED)->format('h:i A') : '' }}
                                 </div>
-
-                                <div @if ($HEADER) style="opacity: 0.0" @endif class="col-6">
-                                    FIRST CASE RATE :</div>
-                                <div @if ($HEADER) style="opacity: 0.0" @endif
-                                    class="col-6 bottom-line2"> {{ $FIRST_CASE_RATE }}</div>
-                                <div @if ($HEADER) style="opacity: 0.0" @endif class="col-6">
-                                    SECOND CASE RATE :</div>
-                                <div @if ($HEADER) style="opacity: 0.0" @endif
-                                    class="col-6 bottom-line2"> &nbsp; </div>
-                                <div @if ($HEADER) style="opacity: 0.0" @endif class="col-6">NO.
-                                    OF TREATMENT :</div>
-                                <div
-                                    class="col-6  @if ($OUTPUT_SIGN) bottom-line2 @endif text-center font-weight-bold ">
-                                    {{ $NO_OF_TREATMENT > 0 ? $NO_OF_TREATMENT : '' }}</div>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <div class="col-12" id="details" @if ($PRE_SIGN_DATA) style="opacity: 0.0" @endif>
-                    @livewire('PhilHealth.PrintSummaryTable', ['ID' => $PRINT_ID, 'PRE_SIGN_DATA' => $PRE_SIGN_DATA, 'PATIENT_ID' => $PATIENT_ID])
+                    @livewire('PhilHealth.PrintSummaryBizbox', ['ID' => $PRINT_ID, 'PRE_SIGN_DATA' => $PRE_SIGN_DATA, 'PATIENT_ID' => $PATIENT_ID])
                     @livewire('PhilHealth.PrintItemized4', ['num' => $NO_OF_TREATMENT, 'locationid' => $LOCATION_ID, 'date' => $DATE_ADMITTED ?? null, 'breakDownDate' => $breakDownDate, 'patientId' => $CONTACT_ID, 'OUTPUT_SIGN' => $OUTPUT_SIGN])
                 </div>
                 <div class="col-12 ">
