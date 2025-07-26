@@ -211,190 +211,138 @@
 
     <div class="row bottom-line2 right-line2 left-line2 text-sm">
         <div id="p-particular" class="col-3 text-left ">
-            <b>SUBTOTAL</b>
+            <b>Total</b>
         </div>
-        <div id="p-charge" class="col-1 text-right  left-line2 font-weight-bold">
+        <div id="p-charge" class="col-1 text-center  left-line2 font-weight-bold">
             @if ($CHARGES_SUB_TOTAL > 0)
                 {{ number_format($CHARGES_SUB_TOTAL, 2) }}
+            @else
+                -
             @endif
         </div>
-        <div id="p-vat" class="col-1 text-right  left-line2 font-weight-bold">
+        {{-- <div id="p-vat" class="col-1 text-right  left-line2 font-weight-bold">
             @if ($VAT_SUB_TOTAL > 0)
                 {{ number_format($VAT_SUB_TOTAL, 2) }}
             @endif
-        </div>
-        <div id="p-sp" class="col-1 text-right   left-line2 font-weight-bold">
+        </div> --}}
+        <div id="p-sp" class="col-2 text-center   left-line2 font-weight-bold">
             @if ($SP_SUB_TOTAL > 0)
                 {{ number_format($SP_SUB_TOTAL, 2) }}
+            @else
+                -
             @endif
         </div>
-
-        <div id="p-after-disc" class="col-1 text-right  left-line2 font-weight-bold">
+        {{-- <div id="p-after-disc" class="col-1 text-right  left-line2 font-weight-bold">
             @if ($AD_SUB_TOTAL > 0)
                 {{ number_format($AD_SUB_TOTAL, 2) }}
             @endif
-        </div>
-        <div id="p-first" class="col-2  left-line2 text-right  font-weight-bold">
+        </div> --}}
+        <div id="p-first" class="col-2  left-line2 text-center  font-weight-bold">
             @if ($P1_SUB_TOTAL > 0)
                 {{ number_format($P1_SUB_TOTAL, 2) }}
             @endif
         </div>
-        <div id="p-gov" class="col-2 text-right  left-line2 font-weight-bold">
+        <div id="p-gov" class="col-2 text-center  left-line2 font-weight-bold">
             @if ($GOV_SUB_TOTAL > 0)
                 {{ number_format($GOV_SUB_TOTAL, 2) }}
+            @else
+                -
             @endif
         </div>
-        <div id="p-pocket" class="col-1 text-right left-line2 font-weight-bold">
+        <div id="p-pocket" class="col-2 text-center left-line2 font-weight-bold">
             @if ($OP_SUB_TOTAL > 0)
                 {{ number_format($OP_SUB_TOTAL, 2) }}
             @else
                 &nbsp;-
             @endif
-
         </div>
     </div>
-    <div class="row bottom-line2 right-line2 left-line2 text-sm">
-        <div id="p-particular" class="col-12 text-center font-weight-bold text-left font-weight-light text-danger">
+    <div class="row  mt-4">
+        <div id="p-particular" class="col-12 text-center font-weight-bold text-left font-weight-light text-md">
             PROFESSIONAL FEES
+        </div>
+    </div>
+    <div class="row bottom-line2 right-line2 left-line2 top-line2 text-sm">
+        <div id="p-particular" class="col-3 text-center ">
+            Physician Accreditation Number
+        </div>
+        <div id="p-charge" class="col-3 text-center  left-line2 font-weight-bold">
+            Physician Name
+        </div>
+        <div id="p-vat" class="col-1 text-center left-line2 font-weight-bold"> Amount </div>
+        <div id="p-sp" class="col-1 text-center left-line2 font-weight-bold">
+            Discount
+        </div>
+        <div id="p-after-disc" class="col-1 text-center  left-line2 font-weight-bold">
+            Philhealth
+        </div>
+        <div id="p-first" class="col-2  left-line2 text-center font-weight-bold">
+            Others Funding Source
+        </div>
+        <div id="p-pocket" class="col-1 text-center  font-weight-bold left-line2">
+            Balance
         </div>
     </div>
     @php
         $i = 0;
+        $AMOUNT = 0;
+        $DISCOUNT = 0;
+        $TOTAL = 0;
     @endphp
     @foreach ($feeList as $list)
         @php
-            $i++;
+            $AMOUNT = $list->AMOUNT;
+            $DISCOUNT = $list->DISCOUNT;
+            $TOTAL = $list->FIRST_CASE;
         @endphp
-        <div class="row bottom-line2 right-line2 left-line2 text-sm">
-            <div id="p-particular" class="col-3 text-left ">
-                {{ $i . '. ' }} <span class="text-sm">{{ $list->NAME }}</span>
-
+        <div class="row bottom-line2 right-line2 left-line2 top-line2 text-sm">
+            <div id="p-particular" class="col-3 text-center ">
+                {{ $list->PIN }}
             </div>
-            <div id="p-charge" class="col-1 text-right  left-line2 font-italic">
+            <div id="p-charge" class="col-3 text-center  left-line2 font-weight-bold">
+                <span class="text-sm">{{ $list->NAME }}</span>
+            </div>
+            <div id="p-vat" class="col-1 text-center left-line2 font-weight-bold">
                 @if ($list->AMOUNT > 0)
                     <i> {{ number_format($list->AMOUNT, 2) }}</i>
                 @endif
             </div>
-            <div id="p-vat" class="col-1 text-right left-line2 font-italic"> </div>
-            <div id="p-sp" class="col-1 text-right left-line2 font-italic">
+            <div id="p-sp" class="col-1 text-center left-line2 font-weight-bold">
                 @if ($list->DISCOUNT > 0)
                     <i>{{ number_format($list->DISCOUNT, 2) }}</i>
                 @endif
             </div>
-
-            <div id="p-after-disc" class="col-1 text-right  left-line2 font-italic">
-                @if ($list->DISCOUNT > 0)
-                    <i> {{ number_format($list->AMOUNT - $list->DISCOUNT, 2) }}</i>
-                @endif
+            <div id="p-after-disc" class="col-1 text-center  left-line2 font-weight-bold">
+             -
             </div>
-            <div id="p-first" class="col-2  left-line2 text-right font-italic">
-                @if ($list->FIRST_CASE > 0)
-                    <i> {{ number_format($list->FIRST_CASE, 2) }}</i>
-                @endif
+            <div id="p-first" class="col-2  left-line2 text-center font-weight-bold">
+                -
             </div>
-            <div id="p-gov" class="col-2 text-right  left-line2 text-xs font-italic"> </div>
-            <div id="p-pocket" class="col-1 text-right left-line2">
-                &nbsp;-
-            </div>
-        </div>
-
-
-        <div class="row bottom-line2 right-line2 left-line2 text-sm">
-            <div id="p-particular" class="col-3 text-left ">
-                ACCREDITATION # <b class="font-weight-bold"> {{ $list->PIN }}</b>
-            </div>
-            <div id="p-charge" class="col-1 text-right  left-line2 font-weight-bold">
-
-            </div>
-            <div id="p-vat" class="col-1 text-right  left-line2 font-weight-bold"> </div>
-            <div id="p-sp" class="col-1 text-right   left-line2 font-weight-bold">
-
-            </div>
-
-            <div id="p-after-disc" class="col-1 text-right  left-line2 font-weight-bold">
-
-            </div>
-            <div id="p-first" class="col-2  left-line2 text-right font-weight-bold">
-
-            </div>
-            <div id="p-gov" class="col-2 text-right  left-line2 text-xs font-weight-bold"> </div>
-            <div id="p-pocket" class="col-1 text-right left-line2 font-weight-bold">
-                &nbsp;
+            <div id="p-pocket" class="col-1 text-center  font-weight-bold left-line2">
+                -
             </div>
         </div>
     @endforeach
 
+
     <div class="row bottom-line2 right-line2 left-line2 text-sm">
-        <div id="p-particular" class="col-3 text-left">
-            <b>SUBTOTAL</b>
-        </div>
-        <div id="p-charge" class="col-1 text-right  left-line2 font-weight-bold">
-            @if ($PROFESSIONAL_FEE_SUB_TOTAL > 0)
-                {{ number_format($PROFESSIONAL_FEE_SUB_TOTAL, 2) }}
-            @endif
-        </div>
-        <div id="p-vat" class="col-1 text-right  left-line2 font-weight-bold"> </div>
-        <div id="p-sp" class="col-1 text-right   left-line2 font-weight-bold">
-            @if ($PROFESSIONAL_DISCOUNT_SUB_TOTAL > 0)
-                {{ number_format($PROFESSIONAL_DISCOUNT_SUB_TOTAL, 2) }}
-            @endif
-        </div>
-
-        <div id="p-first" class="col-1  left-line2 text-right font-weight-bold">
-            @if ($PROFESSIONAL_P1_SUB_TOTAL > 0)
-                {{ number_format($PROFESSIONAL_P1_SUB_TOTAL, 2) }}
-            @endif
-        </div>
-        <div id="p-second" class="col-2 left-line2 text-right font-weight-bold ">
-            @if ($PROFESSIONAL_P1_SUB_TOTAL > 0)
-                {{ number_format($PROFESSIONAL_P1_SUB_TOTAL, 2) }}
-            @endif
-        </div>
-        <div id="p-pocket" class="col-2 text-right left-line2 ">
-
-        </div>
-        <div id="p-pocket" class="col-1 text-right left-line2 ">
-            -
-        </div>
-    </div>
-
-    <div class="row bottom-line2 right-line2 left-line2 text-sm text-danger">
-        <div id="p-particular" class="col-3 text-left ">
+        <div id="p-particular" class="col-6 text-left ">
             <b>TOTAL</b>
         </div>
-        <div id="p-charge" class="col-1 text-right  left-line2 font-weight-bold">
-            @if ($CHARGE_TOTAL > 0)
-                {{ number_format($CHARGE_TOTAL, 2) }}
-            @endif
+        <div id="p-sp" class="col-1 text-center   left-line2 font-weight-bold">
+            <i> {{ number_format($AMOUNT, 2) }}</i>
         </div>
-        <div id="p-vat" class="col-1 text-right  left-line2 font-weight-bold">
-            @if ($VAT_TOTAL > 0)
-                {{ number_format($VAT_TOTAL, 2) }}
-            @endif
+        <div id="p-d" class="col-1  left-line2 text-center font-weight-bold">
+            (<i>{{ number_format($DISCOUNT, 2) }}</i>)
         </div>
-        <div id="p-sp" class="col-1 text-right   left-line2 font-weight-bold">
-            @if ($SP_TOTAL > 0)
-                {{ number_format($SP_TOTAL, 2) }}
-            @endif
+        <div id="p-first" class="col-1 left-line2 text-center font-weight-bold">
+            <i>{{ number_format($TOTAL, 2) }}</i>
         </div>
-
-        <div id="p-after-disc" class="col-1 text-right  left-line2 font-weight-bold">
-            @if ($AD_TOTAL > 0)
-                {{ number_format($AD_TOTAL, 2) }}
-            @endif
-        </div>
-        <div id="p-first" class="col-2  left-line2 text-right font-weight-bold">
-            @if ($P1_TOTAL > 0)
-                {{ number_format($P1_TOTAL, 2) }}
-            @endif
-        </div>
-        <div id="p-second" class="col-2 left-line2 text-right  font-weight-bold">
-            @if ($GOV_TOTAL > 0)
-                {{ number_format($GOV_TOTAL, 2) }}
-            @endif
+        <div id="p-second" class="col-2 left-line2 text-center  font-weight-bold">
+            -
         </div>
         <div id="p-pocket" class="col-1 text-center text-xs left-line2 font-weight-bold">
-            ZERO COPAY
+            -
         </div>
     </div>
 </div>

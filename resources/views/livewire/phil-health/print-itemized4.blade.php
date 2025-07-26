@@ -46,8 +46,6 @@ use App\Services\ItemSoaServices;
                                 @if (isset($breakDownDate[$row]))
                                     {{ date('M/d/Y', strtotime($breakDownDate[$row]['DATE'])) }}
                                 @endif
-
-
                             </td>
                             <td class="pb-0 pt-0">{{ $TYPE }} TOTAL</td>
                             <td></td>

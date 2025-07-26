@@ -17,7 +17,6 @@ class PrintItemized4 extends Component
     public int $qty = 1;
     public int $LOCATION_ID = 0;
     public int $PATIENT_ID = 0;
-
     private $itemSoaServices;
 
     public function boot(ItemSoaServices $itemSoaServices)
