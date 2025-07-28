@@ -39,7 +39,7 @@
             <div class="col-12 text-center text-sm bottom-line2 right-line2 left-line2 ">
                 <div class="row ">
                     <div class="col-2 bottom-line2 right-line2 ">
-                        {{ date('M/d/Y', strtotime($list['DATE'])) }}
+                        {{ date('m-d-Y', strtotime($list['DATE'])) }}
                     </div>
                     <div class="col-5 bottom-line2 right-line2 ">{{ $list['ITEM_NAME'] }}</div>
                     @php

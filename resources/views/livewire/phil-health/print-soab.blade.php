@@ -179,7 +179,6 @@
                                         </div>
                                         <div class="col-12 text-left"
                                             @if (!$OUTPUT_SIGN) style="opacity: 0.0" @endif>
-
                                             CONTACT No. {{ $PATIENT_CONTACT }}
                                         </div>
                                     </div>
