@@ -1,241 +1,76 @@
-<?php
-use App\Services\ItemSoaItemizedServices;
-use App\Services\ItemSoaServices;
-?>
 
-<div class="row bottom-line2 right-line2 left-line2 text-sm">
-    <div class="col-12 font-weight-bold text-center text-danger">
-        ITEMIZED CHARGES
-    </div>
-    @php
-        $TEMP_NAME = '';
-    @endphp
-    <div class="col-8">
-        <table class="w-100" border="1">
-            <thead>
-                <tr class="text-center text-sm">
-                    <th>SERVICE DATE</th>
-                    <th>ITEM NAME</th>
-                    <th>UNIT OF MEASUREMENT</th>
-                    <th>PRICE</th>
-                    <th>QTY</th>
-                    <th>AMOUNT</th>
-                </tr>
-            </thead>
+<div>
+    <div class="row text-sm">
+        <div class="col-12 font-weight-bold text-center mt-4 text-md">
+            ITEMIZED CHARGES
+        </div>
+        @php
+            $TEMP_NAME = '';
+        @endphp
+        <div class="col-12 text-center text-sm bottom-line2 right-line2 left-line2  top-line2">
+            <div class="row ">
+                <div class="col-2 bottom-line2 right-line2 font-weight-bold">Service Date</div>
+                <div class="col-5 bottom-line2 right-line2 font-weight-bold">Item Name</div>
+                <div class="col-2 bottom-line2 right-line2 font-weight-bold">Unit of Measurement</div>
+                <div class="col-1 bottom-line2 right-line2 font-weight-bold">Price</div>
+                <div class="col-1 bottom-line2 right-line2 font-weight-bold">Quantity</div>
+                <div class="col-1 bottom-line2  font-weight-bold">Amount</div>
+            </div>
+        </div>
+        @php
+            $TOTAL = 0;
+            $TYPE = '';
+            $posted = false;
+        @endphp
+        @php
+            $row = 0;
+        @endphp
+
+        @php
+            $GRAND_TOTAL = 0;
+            $tempGroup = 0;
+            $oneTimeQty = 0;
+            $oneTimeTotal = 0;
+        @endphp
+        @foreach ($dataList as $list)
             @php
-                $TOTAL = 0;
-                $TYPE = '';
-                $posted = false;
+                $TYPE = $list['TYPE_NAME'];
             @endphp
+            <div class="col-12 text-center text-sm bottom-line2 right-line2 left-line2 ">
+                <div class="row ">
+                    <div class="col-2 bottom-line2 right-line2 ">
+                        {{ date('M/d/Y', strtotime($list['DATE'])) }}
+                    </div>
+                    <div class="col-5 bottom-line2 right-line2 ">{{ $list['ITEM_NAME'] }}</div>
+                    @php
+                        $TEMP_NAME = $list['ITEM_NAME'];
+                        $AMOUNT = $list['RATE'] * $defult_Qty;
+                    @endphp
+                    <div class="col-2 bottom-line2 right-line2 ">{{ $list['UNIT_NAME'] }}</div>
+                    <div class="col-1 bottom-line2 right-line2 ">{{ number_format($list['RATE'], 2) }}</div>
+                    <div class="col-1 bottom-line2 right-line2 "> {{ $defult_Qty }}</div>
+                    <div class="col-1 bottom-line2 "> {{ number_format($AMOUNT, 2) }}</div>
+                </div>
+            </div>
             @php
-                $row = 0;
+                $GRAND_TOTAL = $GRAND_TOTAL + $AMOUNT ?? 0;
             @endphp
-            <tbody class='text-xs'>
-                @php
-                    $GRAND_TOTAL = 0;
-                    $tempGroup = 0;
-                    $oneTimeQty = 0;
-                    $oneTimeTotal = 0;
-                @endphp
-
-                @foreach ($dataList as $list)
-                    @if ($TYPE == '')
-                    @elseif ($TYPE != $list->TYPE_NAME)
-                        <tr class="font-weight-bold">
-                            <td class="text-center  pb-0 pt-0">
-                                @if (isset($breakDownDate[$row]))
-                                    {{ date('M/d/Y', strtotime($breakDownDate[$row]['DATE'])) }}
-                                @endif
-                            </td>
-                            <td class="pb-0 pt-0">{{ $TYPE }} TOTAL</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td class="text-right pb-0 pt-0">{{ number_format($TOTAL, 2) }}</td>
-                        </tr>
-                        @php
-                            $TOTAL = 0;
-                        @endphp
-                    @endif
-
-                    @php
-                        $TYPE = $list->TYPE_NAME;
-                    @endphp
-                    <tr>
-                        <td class="text-center font-weight-bold pb-0 pt-0">
-
-                            @if ($list->TYPE_NAME == '')
-                                @php
-                                    $row = 0;
-                                @endphp
-                            @else
-                                @if ($TEMP_NAME != $list->ITEM_NAME)
-                                    @php
-                                        $row = 0;
-                                    @endphp
-                                @endif
-                                @if (isset($breakDownDate[$row]))
-                                    {{ date('M/d/Y', strtotime($breakDownDate[$row]['DATE'])) }}
-                                @endif
-                                @php
-                                    $row++;
-                                @endphp
-                            @endif
+            {{-- @php
+                $tempGroup = $list['GROUP_ID'] ?? 0;
+            @endphp --}}
+        @endforeach
 
 
+        <div class="col-12 text-center text-sm bottom-line2 right-line2 left-line2 ">
+            <div class="row  font-weight-bold">
+                <div class="col-11 bottom-line2 right-line2  text-left">
+                    TOTAL
+                </div>
 
-                       
-                            @php
-                                if ($list->ACTUAL_BASE) {
-                                    $defult_Qty = 1;
-                                    $AMOUNT = $defult_Qty * $list->RATE ?? 0;
-                                } else {
-                                    $defult_Qty = 1;
-                                    $AMOUNT = 1 * $list->RATE ?? 0;
-                                }
-                                $TOTAL = $TOTAL + $AMOUNT;
-                            @endphp
-                        </td>
-
-                        <td class="pb-0 pt-0">{{ $list->ITEM_NAME }}</td>
-                        @php
-                            $TEMP_NAME = $list->ITEM_NAME;
-                        @endphp
-                        <td class="text-center">{{ $list->UNIT_NAME }}</td>
-                        <td class="text-right  pb-0 pt-0">
-                            {{ number_format($list->RATE, 2) }}
-                        </td>
-
-                        <td class="text-center pb-0 pt-0 ">
-                            {{ $defult_Qty }}
-                        </td>
-                        <td class="text-right pb-0 pt-0">
-                            {{ number_format($AMOUNT, 2) }}
-                        </td>
+                <div class="col-1 bottom-line2 ">{{ number_format($GRAND_TOTAL, 2) }}</div>
+            </div>
+        </div>
 
 
-                        @php
-                            $GRAND_TOTAL = $GRAND_TOTAL + $AMOUNT ?? 0;
-                        @endphp
-                    </tr>
-
-
-                    @php
-                        $tempGroup = $list->GROUP_ID ?? 0;
-                    @endphp
-                @endforeach
-
-                <tr class="font-weight-bold">
-                    <td></td>
-                    <td class="pb-0 pt-0">{{ $TYPE }} TOTAL</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td class="text-right pb-0 pt-0">{{ number_format($TOTAL, 2) }}</td>
-                </tr>
-
-
-                <tr class="font-weight-bold text-danger">
-                    <td class="text-right">TOTAL:</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td class="text-right pb-0 pt-0">{{ number_format($GRAND_TOTAL, 2) }}</td>
-
-                </tr>
-            </tbody>
-        </table>
 
     </div>
-    <div class="col-4">
-        <table class="w-100" border="1">
-            <thead class="text-sm">
-                <tr class="text-center">
-                    <th class="">ROUTINE MONTHLY LABORATORIES</th>
-                </tr>
-            </thead>
-
-            <tbody class='text-sm'>
-                <tr>
-                    <th class="text-center  pb-0 pt-0">(CLINICAL CHEMISTRY)</th>
-                </tr>
-                <tr>
-                    <td class="text-center pb-0 pt-0">PRE AND POST DIALYSIS BUN</td>
-                </tr>
-                <tr>
-                    <td class="text-center  pb-0 pt-0"> SERUM CREATININE </td>
-                </tr>
-                <tr>
-                    <td class="text-center pb-0 pt-0"> POTASSIUM </td>
-                </tr>
-                <tr>
-                    <td class="text-center  pb-0 pt-0"> PHOSPHORUS </td>
-                </tr>
-                <tr>
-                    <td class="text-center  pb-0 pt-0"> CALCIUM </td>
-                </tr>
-                <tr>
-                    <td class="text-center  pb-0 pt-0"> SERUM SODIUM </td>
-                </tr>
-                <tr>
-                    <td class="text-center  pb-0 pt-0"> KT/V </td>
-                </tr>
-                <tr>
-                    <td class="text-center  pb-0 pt-0"> URR </td>
-                </tr>
-                <tr>
-                    <td class="text-center  pb-0 pt-0"> ALBUMIN </td>
-                </tr>
-
-                <tr>
-                    <td class="text-center "> URIC ACID </td>
-                </tr>
-
-                <tr>
-                    <th class="text-center  pb-0 pt-0">(HEMATOLOGY) COMPLETE BLOOD COUNT</th>
-                </tr>
-
-                <tr>
-                    <td class="text-center  pb-0 pt-0">HEMOGLOBIN</td>
-                </tr>
-                <tr>
-                    <td class="text-center  pb-0 pt-0"> HEMATOCRIT</td>
-                </tr>
-                <tr>
-                    <td class="text-center  pb-0 pt-0"> RED BLOOD CELLS </td>
-                </tr>
-                <tr>
-                    <td class="text-center  pb-0 pt-0"> MCV </td>
-                </tr>
-                <tr>
-                    <td class="text-center  pb-0 pt-0"> MCH </td>
-                </tr>
-                <tr>
-                    <td class="text-center  pb-0 pt-0"> MCHC</td>
-                </tr>
-                <tr>
-                    <td class="text-center  pb-0 pt-0"> WHTE BLOODCELLS </td>
-                </tr>
-                <tr>
-                    <td class="text-center  pb-0 pt-0"> NEUTROPHILS </td>
-                </tr>
-                <tr>
-                    <td class="text-center  pb-0 pt-0"> LYMPHOCYTES </td>
-                </tr>
-                <tr>
-                    <td class="text-center  pb-0 pt-0"> EOSINOPHILS </td>
-                </tr>
-                <tr>
-                    <td class="text-center  pb-0 pt-0"> BASOPHILS </td>
-                </tr>
-                <tr>
-                    <td class="text-center  pb-0 pt-0"> PLATELET COUNT </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-    <div class="col-12 pb-1">
-
-    </div>
-</div>

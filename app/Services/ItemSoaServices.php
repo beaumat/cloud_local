@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Services;
 
 use App\Models\ItemSoa;
@@ -13,7 +12,7 @@ class ItemSoaServices
     private $itemSoaItemizedServices;
     public function __construct(ObjectServices $objectServices, ItemSoaItemizedServices $itemSoaItemizedServices)
     {
-        $this->object = $objectServices;
+        $this->object                  = $objectServices;
         $this->itemSoaItemizedServices = $itemSoaItemizedServices;
     }
 
@@ -40,22 +39,22 @@ class ItemSoaServices
 
         ItemSoa::create(
             [
-                'ID' => $ID,
-                'LOCATION_ID' => $LOCATION_ID,
-                'LINE' => $LINE > 0 ? $LINE : $this->NextLine($TYPE, $LOCATION_ID),
-                'TYPE' => $TYPE,
-                'ITEM_NAME' => $ITEM_NAME,
-                'UNIT_NAME' => $UNIT_NAME,
-                'RATE' => $RATE,
-                'ACTUAL_BASE' => $ACTUAL_BASE,
-                'DOSAGE' => $DOSAGE,
-                'ROUTE' => $ROUTE,
-                'FREQUENCY' => $FREQUENCY,
-                'BRAND' => $BRAND,
-                'GROUP_ID' => $GROUP_ID > 0 ? $GROUP_ID : null,
-                'SC_BASE' => $SC_BASE,
-                'SOA_BASE' => $SOA_BASE,
-                'GENERIC_NAME' => $GENERIC_NAME
+                'ID'           => $ID,
+                'LOCATION_ID'  => $LOCATION_ID,
+                'LINE'         => $LINE > 0 ? $LINE : $this->NextLine($TYPE, $LOCATION_ID),
+                'TYPE'         => $TYPE,
+                'ITEM_NAME'    => $ITEM_NAME,
+                'UNIT_NAME'    => $UNIT_NAME,
+                'RATE'         => $RATE,
+                'ACTUAL_BASE'  => $ACTUAL_BASE,
+                'DOSAGE'       => $DOSAGE,
+                'ROUTE'        => $ROUTE,
+                'FREQUENCY'    => $FREQUENCY,
+                'BRAND'        => $BRAND,
+                'GROUP_ID'     => $GROUP_ID > 0 ? $GROUP_ID : null,
+                'SC_BASE'      => $SC_BASE,
+                'SOA_BASE'     => $SOA_BASE,
+                'GENERIC_NAME' => $GENERIC_NAME,
             ]
         );
 
@@ -66,22 +65,22 @@ class ItemSoaServices
         ItemSoa::where('ID', '=', $ID)
             ->update(
                 [
-                    'ID' => $ID,
-                    'TYPE' => $TYPE,
-                    'LINE' => $LINE,
-                    'ITEM_NAME' => $ITEM_NAME,
-                    'UNIT_NAME' => $UNIT_NAME,
-                    'RATE' => $RATE,
-                    'ACTUAL_BASE' => $ACTUAL_BASE,
-                    'DOSAGE' => $DOSAGE,
-                    'ROUTE' => $ROUTE,
-                    'FREQUENCY' => $FREQUENCY,
-                    'BRAND' => $BRAND,
-                    'GROUP_ID' => $GROUP_ID > 0 ? $GROUP_ID : null,
-                    'SC_BASE' => $SC_BASE,
-                    'SOA_BASE' => $SOA_BASE,
+                    'ID'           => $ID,
+                    'TYPE'         => $TYPE,
+                    'LINE'         => $LINE,
+                    'ITEM_NAME'    => $ITEM_NAME,
+                    'UNIT_NAME'    => $UNIT_NAME,
+                    'RATE'         => $RATE,
+                    'ACTUAL_BASE'  => $ACTUAL_BASE,
+                    'DOSAGE'       => $DOSAGE,
+                    'ROUTE'        => $ROUTE,
+                    'FREQUENCY'    => $FREQUENCY,
+                    'BRAND'        => $BRAND,
+                    'GROUP_ID'     => $GROUP_ID > 0 ? $GROUP_ID : null,
+                    'SC_BASE'      => $SC_BASE,
+                    'SOA_BASE'     => $SOA_BASE,
                     'GENERIC_NAME' => $GENERIC_NAME,
-                    'FIX_QTY' => $FIX_QTY
+                    'FIX_QTY'      => $FIX_QTY,
                 ]
             );
     }
@@ -117,7 +116,7 @@ class ItemSoaServices
                 'soa_item.SC_BASE',
                 'soa_item.SOA_BASE',
                 'soa_item.GENERIC_NAME',
-                'soa_item.FIX_QTY'
+                'soa_item.FIX_QTY',
             ])
             ->join('soa_item_type', 'soa_item_type.ID', '=', 'TYPE')
             ->where('LOCATION_ID', '=', $LOCATION_ID)
@@ -147,7 +146,7 @@ class ItemSoaServices
                 'soa_item.RATE',
                 'soa_item.ACTUAL_BASE',
                 'soa_item.GROUP_ID',
-                'soa_item.FIX_QTY'
+                'soa_item.FIX_QTY',
             ])
             ->join('soa_item_type', 'soa_item_type.ID', '=', 'TYPE')
             ->where('LOCATION_ID', '=', $LOCATION_ID)
@@ -158,37 +157,7 @@ class ItemSoaServices
 
         return $result;
     }
-public function GetListLoop(int $LOCATION_ID, int $LOOP)
-{
-    $result = ItemSoa::query()
-        ->select([
-            'soa_item.ID',
-            'soa_item.TYPE',
-            'soa_item_type.DESCRIPTION as TYPE_NAME',
-            'soa_item.ITEM_NAME',
-            'soa_item.UNIT_NAME',
-            'soa_item.RATE',
-            'soa_item.ACTUAL_BASE',
-            'soa_item.GROUP_ID',
-            'soa_item.FIX_QTY'
-        ])
-        ->join('soa_item_type', 'soa_item_type.ID', '=', 'TYPE')
-        ->where('LOCATION_ID', '=', $LOCATION_ID)
-        ->where('INACTIVE', '=', false)
-        ->orderBy('TYPE', 'asc')
-        ->orderBy('LINE', 'asc')
-        ->get();
-
-
-    // Duplicate rows based on $LOOP
-    $result = $result->flatMap(function ($item) use ($LOOP) {
-        return collect(array_fill(0, $LOOP, $item));
-    });
-
-    return $result->values();
-}
-
-    public function GetListViaType(int $LOCATION_ID,int $TYPE)
+    public function GetListLoop(int $LOCATION_ID, int $LOOP, array $breakDownDate = [])
     {
         $result = ItemSoa::query()
             ->select([
@@ -199,7 +168,51 @@ public function GetListLoop(int $LOCATION_ID, int $LOOP)
                 'soa_item.UNIT_NAME',
                 'soa_item.RATE',
                 'soa_item.ACTUAL_BASE',
-                'soa_item.GROUP_ID'
+                'soa_item.GROUP_ID',
+                'soa_item.FIX_QTY',
+            ])
+            ->join('soa_item_type', 'soa_item_type.ID', '=', 'TYPE')
+            ->where('LOCATION_ID', '=', $LOCATION_ID)
+            ->where('INACTIVE', '=', false)
+            ->orderBy('TYPE', 'asc')
+            ->orderBy('LINE', 'asc')
+            ->get();
+
+        $dataList = [];
+
+        foreach ($breakDownDate as $dateList) {
+            foreach ($result as $item) {
+                $dataList[] = [
+                    'DATE'        => $dateList,
+                    'ID'          => $item->ID,
+                    'TYPE'        => $item->TYPE,
+                    'TYPE_NAME'   => $item->TYPE_NAME,
+                    'ITEM_NAME'   => $item->ITEM_NAME,
+                    'UNIT_NAME'   => $item->UNIT_NAME,
+                    'RATE'        => $item->RATE,
+                    'ACTUAL_BASE' => $item->ACTUAL_BASE,
+                    'GROUP_ID'    => $item->GROUP_ID,
+                    'FIX_QTY'     => $item->FIX_QTY,
+                ];
+            }
+        }
+        // Repeat each entry based on $LOOP
+
+        return $dataList;
+    }
+
+    public function GetListViaType(int $LOCATION_ID, int $TYPE)
+    {
+        $result = ItemSoa::query()
+            ->select([
+                'soa_item.ID',
+                'soa_item.TYPE',
+                'soa_item_type.DESCRIPTION as TYPE_NAME',
+                'soa_item.ITEM_NAME',
+                'soa_item.UNIT_NAME',
+                'soa_item.RATE',
+                'soa_item.ACTUAL_BASE',
+                'soa_item.GROUP_ID',
             ])
             ->join('soa_item_type', 'soa_item_type.ID', '=', 'TYPE')
             ->where('LOCATION_ID', '=', $LOCATION_ID)
@@ -211,41 +224,41 @@ public function GetListLoop(int $LOCATION_ID, int $LOOP)
 
         return $result;
     }
-   public function GetListTypeFixedQty(int $LOCATION_ID, int $TYPE, int $LOOP = 1)
-{
-    $QTY = 1;
+    public function GetListTypeFixedQty(int $LOCATION_ID, int $TYPE, int $LOOP = 1)
+    {
+        $QTY = 1;
 
-    $result = ItemSoa::query()
-        ->select([
-            'soa_item.ID',
-            'soa_item.TYPE',
-            'soa_item_type.DESCRIPTION as TYPE_NAME',
-            'soa_item.ITEM_NAME',
-            'soa_item.UNIT_NAME',
-            'soa_item.ACTUAL_BASE',
-            'soa_item.DOSAGE',
-            'soa_item.ROUTE',
-            'soa_item.FREQUENCY',
-            'soa_item.BRAND',
-            'soa_item.SC_BASE',
-            DB::raw("($QTY * soa_item.RATE) as RATE")
-        ])
-        ->join('soa_item_type', 'soa_item_type.ID', '=', 'TYPE')
-        ->where('LOCATION_ID', '=', $LOCATION_ID)
-        ->where('INACTIVE', '=', false)
-        ->where('TYPE', '=', $TYPE)
-        ->where('SOA_BASE', '=', true)
-        ->orderBy('TYPE', 'asc')
-        ->orderBy('LINE', 'asc')
-        ->get();
+        $result = ItemSoa::query()
+            ->select([
+                'soa_item.ID',
+                'soa_item.TYPE',
+                'soa_item_type.DESCRIPTION as TYPE_NAME',
+                'soa_item.ITEM_NAME',
+                'soa_item.UNIT_NAME',
+                'soa_item.ACTUAL_BASE',
+                'soa_item.DOSAGE',
+                'soa_item.ROUTE',
+                'soa_item.FREQUENCY',
+                'soa_item.BRAND',
+                'soa_item.SC_BASE',
+                DB::raw("($QTY * soa_item.RATE) as RATE"),
+            ])
+            ->join('soa_item_type', 'soa_item_type.ID', '=', 'TYPE')
+            ->where('LOCATION_ID', '=', $LOCATION_ID)
+            ->where('INACTIVE', '=', false)
+            ->where('TYPE', '=', $TYPE)
+            ->where('SOA_BASE', '=', true)
+            ->orderBy('TYPE', 'asc')
+            ->orderBy('LINE', 'asc')
+            ->get();
 
-    // Repeat each entry based on $LOOP
-    $result = $result->flatMap(function ($item) use ($LOOP) {
-        return collect(array_fill(0, $LOOP, $item));
-    });
+        // Repeat each entry based on $LOOP
+        $result = $result->flatMap(function ($item) use ($LOOP) {
+            return collect(array_fill(0, $LOOP, $item));
+        });
 
-    return $result->values(); // Reindex the collection
-}
+        return $result->values(); // Reindex the collection
+    }
     public static function getTotal(int $GROUP_ID, int $LOCATION_ID): float
     {
         return (float) ItemSoa::where('soa_item.GROUP_ID', '=', $GROUP_ID)
@@ -285,7 +298,7 @@ public function GetListLoop(int $LOCATION_ID, int $LOOP)
                 'soa_item.FREQUENCY',
                 'soa_item.BRAND',
                 'soa_item.SC_BASE',
-                'soa_item.GENERIC_NAME'
+                'soa_item.GENERIC_NAME',
 
             ])
             ->join('soa_item_type', 'soa_item_type.ID', '=', 'TYPE')
@@ -315,7 +328,7 @@ public function GetListLoop(int $LOCATION_ID, int $LOOP)
                 'soa_item.ROUTE',
                 'soa_item.FREQUENCY',
                 'soa_item.BRAND',
-                'soa_item.SC_BASE'
+                'soa_item.SC_BASE',
             ])
             ->join('soa_item_type', 'soa_item_type.ID', '=', 'TYPE')
             ->where('LOCATION_ID', '=', $LOCATION_ID)
@@ -344,7 +357,7 @@ public function GetListLoop(int $LOCATION_ID, int $LOOP)
                 'soa_item.ROUTE',
                 'soa_item.FREQUENCY',
                 'soa_item.BRAND',
-                'soa_item.SC_BASE'
+                'soa_item.SC_BASE',
 
             ])
             ->join('soa_item_type', 'soa_item_type.ID', '=', 'TYPE')
@@ -363,7 +376,6 @@ public function GetListLoop(int $LOCATION_ID, int $LOOP)
         $result = ItemSoa::where('TYPE', '=', $TYPE)
             ->where('LOCATION_ID', '=', $LOCATION_ID)
             ->get();
-
 
         return $result;
     }
@@ -427,8 +439,6 @@ public function GetListLoop(int $LOCATION_ID, int $LOOP)
             }
         }
 
-
     }
-
 
 }

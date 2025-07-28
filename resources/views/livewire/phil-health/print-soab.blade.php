@@ -132,7 +132,7 @@
                                         <div class="col-7 text-center"
                                             @if (!$OUTPUT_SIGN) style="opacity: 0.0" @endif>PHIC
                                             IN-Charge</div>
-                                        <div class="col-12 mt-2">
+                                        <div class="col-12 mt-2 text-left">
                                             <span @if (!$OUTPUT_SIGN) style="opacity: 0.0" @endif>
                                                 Date Signed:
                                             </span>
@@ -140,7 +140,7 @@
                                                 {{ $DATE_DISCHARGED ? \Carbon\Carbon::parse($DATE_DISCHARGED)->format('m/d/Y') : ' ' }}
                                             </span>
                                         </div>
-                                        <div class="col-12"
+                                        <div class="col-12 text-left"
                                             @if (!$OUTPUT_SIGN) style="opacity: 0.0" @endif>
                                             CONTACT No. {{ $USER_CONTACT }}</div>
                                     </div>
@@ -169,7 +169,7 @@
                                         <div class="col-12 mt-1 bottom-line2"
                                             @if (!$OUTPUT_SIGN) style="opacity: 0.0" @endif>&nbsp;</div>
 
-                                        <div class="col-6 ">
+                                        <div class="col-12 text-left">
                                             <div @if (!$OUTPUT_SIGN) style="opacity: 0.0" @endif>
                                                 Date Signed:
                                                 </span>
@@ -177,8 +177,9 @@
                                             </div>
 
                                         </div>
-                                        <div class="col-6"
+                                        <div class="col-12 text-left"
                                             @if (!$OUTPUT_SIGN) style="opacity: 0.0" @endif>
+
                                             CONTACT No. {{ $PATIENT_CONTACT }}
                                         </div>
                                     </div>

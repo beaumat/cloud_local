@@ -263,7 +263,7 @@
         </div>
     </div>
     <div class="row bottom-line2 right-line2 left-line2 top-line2 text-sm">
-        <div id="p-particular" class="col-3 text-center ">
+        <div id="p-particular" class="col-3 text-center font-weight-bold">
             Physician Accreditation Number
         </div>
         <div id="p-charge" class="col-3 text-center  left-line2 font-weight-bold">
@@ -299,26 +299,26 @@
             <div id="p-particular" class="col-3 text-center ">
                 {{ $list->PIN }}
             </div>
-            <div id="p-charge" class="col-3 text-center  left-line2 font-weight-bold">
+            <div id="p-charge" class="col-3 text-center  left-line2">
                 <span class="text-sm">{{ $list->NAME }}</span>
             </div>
-            <div id="p-vat" class="col-1 text-center left-line2 font-weight-bold">
+            <div id="p-vat" class="col-1 text-center left-line2 ">
                 @if ($list->AMOUNT > 0)
                     <i> {{ number_format($list->AMOUNT, 2) }}</i>
                 @endif
             </div>
-            <div id="p-sp" class="col-1 text-center left-line2 font-weight-bold">
+            <div id="p-sp" class="col-1 text-center left-line2 ">
                 @if ($list->DISCOUNT > 0)
                     <i>{{ number_format($list->DISCOUNT, 2) }}</i>
                 @endif
             </div>
-            <div id="p-after-disc" class="col-1 text-center  left-line2 font-weight-bold">
-             -
-            </div>
-            <div id="p-first" class="col-2  left-line2 text-center font-weight-bold">
+            <div id="p-after-disc" class="col-1 text-center  left-line2">
                 -
             </div>
-            <div id="p-pocket" class="col-1 text-center  font-weight-bold left-line2">
+            <div id="p-first" class="col-2  left-line2 text-center ">
+                -
+            </div>
+            <div id="p-pocket" class="col-1 text-center  left-line2">
                 -
             </div>
         </div>
@@ -326,7 +326,7 @@
 
 
     <div class="row bottom-line2 right-line2 left-line2 text-sm">
-        <div id="p-particular" class="col-6 text-left ">
+        <div id="p-particular" class="col-6 text-left font-weight-bold">
             <b>TOTAL</b>
         </div>
         <div id="p-sp" class="col-1 text-center   left-line2 font-weight-bold">
@@ -336,13 +336,13 @@
             (<i>{{ number_format($DISCOUNT, 2) }}</i>)
         </div>
         <div id="p-first" class="col-1 left-line2 text-center font-weight-bold">
-            <i>{{ number_format($TOTAL, 2) }}</i>
+            (<i>{{ number_format($TOTAL, 2) }}</i>)
         </div>
         <div id="p-second" class="col-2 left-line2 text-center  font-weight-bold">
-            -
+            (0.00)
         </div>
         <div id="p-pocket" class="col-1 text-center text-xs left-line2 font-weight-bold">
-            -
+            0.00
         </div>
     </div>
 </div>

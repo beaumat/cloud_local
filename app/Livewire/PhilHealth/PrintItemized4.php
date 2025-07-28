@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Livewire\PhilHealth;
 
 use App\Services\ItemSoaServices;
@@ -18,24 +17,24 @@ class PrintItemized4 extends Component
     public int $LOCATION_ID = 0;
     public int $PATIENT_ID = 0;
     private $itemSoaServices;
-
+    public int $defult_Qty = 1;
     public function boot(ItemSoaServices $itemSoaServices)
     {
         $this->itemSoaServices = $itemSoaServices;
     }
     public $dateList = [];
-    public function mount( $num = null, int $locationid, $date = null,  $patientId = null)
+    public function mount($num = null, int $locationid, $date = null, $patientId = null)
     {
         $this->LOCATION_ID = $locationid;
-        $this->PATIENT_ID = $patientId ?? 0;
+        $this->PATIENT_ID  = $patientId ?? 0;
 
         foreach ($this->breakDownDate as $list) {
             $this->dateList[] = $list->DATE;
         }
 
-        $this->date = $date;
-        $this->qty = $num ?? 0;
-        $this->dataList = $this->itemSoaServices->GetListLoop($locationid,$this->qty);
+        $this->date     = $date;
+        $this->qty      = $num ?? 0;
+        $this->dataList = $this->itemSoaServices->GetListLoop($locationid, $this->qty, $this->dateList );
     }
     public function render()
     {
