@@ -157,7 +157,7 @@ class ItemSoaServices
 
         return $result;
     }
-    public function GetListLoop(int $LOCATION_ID, int $LOOP, array $breakDownDate = [])
+    public function GetListLoop(int $LOCATION_ID, array $breakDownDate = [], int $contactId)
     {
         $result = ItemSoa::query()
             ->select([
@@ -170,6 +170,7 @@ class ItemSoaServices
                 'soa_item.ACTUAL_BASE',
                 'soa_item.GROUP_ID',
                 'soa_item.FIX_QTY',
+                'soa_item.SC_BASE',
             ])
             ->join('soa_item_type', 'soa_item_type.ID', '=', 'TYPE')
             ->where('LOCATION_ID', '=', $LOCATION_ID)
@@ -180,23 +181,49 @@ class ItemSoaServices
 
         $dataList = [];
 
-        foreach ($breakDownDate as $dateList) {
+        // If no breakDownDate is provided, use the current date
+        foreach ($breakDownDate as $myDate) {
+            $TMP_ADD = 0;
+            // If no date is provided, use the current date
+            $TMP_RATE = 0;
             foreach ($result as $item) {
+                $gotQty   = 1;
+                $TMP_RATE = $item->RATE;
+                // If the item has a fixed quantity, repeat it for the specified number of times
+                if ($item->SC_BASE == true) {
+                    if ($this->itemSoaItemizedServices->isExistThatDay($myDate, $LOCATION_ID, $contactId, $item->ID)) {
+                        $gotQty  = 1;
+                        $TMP_ADD = 0;
+                    } else {
+                        $gotQty  = 0;
+                        $TMP_ADD = $item->RATE;
+                    }
+                }
+
+                if ($item->ACTUAL_BASE == true) {
+                    if ($this->itemSoaItemizedServices->isExistThatDay($myDate, $LOCATION_ID, $contactId, $item->ID)) {
+                        $TMP_RATE = $item->RATE;
+                    } else {
+                        $TMP_RATE = $item->RATE + $TMP_ADD;
+                    }
+
+                }
+
                 $dataList[] = [
-                    'DATE'        => $dateList,
+                    'DATE'        => $myDate,
                     'ID'          => $item->ID,
                     'TYPE'        => $item->TYPE,
                     'TYPE_NAME'   => $item->TYPE_NAME,
                     'ITEM_NAME'   => $item->ITEM_NAME,
                     'UNIT_NAME'   => $item->UNIT_NAME,
-                    'RATE'        => $item->RATE,
+                    'RATE'        => $TMP_RATE,
                     'ACTUAL_BASE' => $item->ACTUAL_BASE,
                     'GROUP_ID'    => $item->GROUP_ID,
                     'FIX_QTY'     => $item->FIX_QTY,
+                    'QTY'         => $gotQty,
                 ];
             }
         }
-        // Repeat each entry based on $LOOP
 
         return $dataList;
     }

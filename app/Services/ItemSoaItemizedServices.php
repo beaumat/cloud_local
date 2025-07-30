@@ -1,10 +1,8 @@
 <?php
-
 namespace App\Services;
 
 use App\Models\ItemSoa;
 use App\Models\ItemSoaItemized;
-use App\Models\PhilHealth;
 use App\Models\ServiceChargesItems;
 use Illuminate\Support\Facades\DB;
 
@@ -27,10 +25,10 @@ class ItemSoaItemizedServices
 
         ItemSoaItemized::create(
             [
-                'ID' => $ID,
-                'ITEM_ID' => $ITEM_ID,
+                'ID'          => $ID,
+                'ITEM_ID'     => $ITEM_ID,
                 'SOA_ITEM_ID' => $SOA_ITEM_ID,
-                'INACTIVE' => false
+                'INACTIVE'    => false,
             ]
         );
 
@@ -41,9 +39,9 @@ class ItemSoaItemizedServices
 
         ItemSoaItemized::where('ID', '=', $ID)->update(
             [
-                'ITEM_ID' => $ITEM_ID,
+                'ITEM_ID'     => $ITEM_ID,
                 'SOA_ITEM_ID' => $SOA_ITEM_ID,
-                'INACTIVE' => $INACTIVE
+                'INACTIVE'    => $INACTIVE,
             ]
         );
     }
@@ -59,7 +57,7 @@ class ItemSoaItemizedServices
         }
         return null;
     }
-    public function List(int $SOA_ITEM_ID)
+    public function list(int $SOA_ITEM_ID)
     {
 
         $result = ItemSoaItemized::query()
@@ -67,7 +65,7 @@ class ItemSoaItemizedServices
                 'item_soa_itemized.ID',
                 'item.CODE',
                 'item.DESCRIPTION',
-                'item_soa_itemized.INACTIVE'
+                'item_soa_itemized.INACTIVE',
             ])->join('item', 'item.ID', '=', 'item_soa_itemized.ITEM_ID')
             ->where('item_soa_itemized.SOA_ITEM_ID', '=', $SOA_ITEM_ID)
             ->get();
@@ -89,6 +87,19 @@ class ItemSoaItemizedServices
             ->where('sc.LOCATION_ID', '=', $locationid)
             ->where('sc.PATIENT_ID', '=', $patientid)
             ->sum('service_charges_items.QUANTITY') ?? 0;
+
+        return $result;
+    }
+    public function isExistThatDay($date, int $locationid, int $patientid, int $SOA_ITEM_ID): bool
+    {
+
+        $result = (bool) ServiceChargesItems::join('item_soa_itemized as i', 'i.ITEM_ID', '=', 'service_charges_items.ITEM_ID')
+            ->join('service_charges as sc', 'sc.ID', '=', 'service_charges_items.SERVICE_CHARGES_ID')
+            ->where('i.SOA_ITEM_ID', '=', $SOA_ITEM_ID)
+            ->where('sc.DATE', '=', $date)
+            ->where('sc.LOCATION_ID', '=', $locationid)
+            ->where('sc.PATIENT_ID', '=', $patientid)
+            ->exists();
 
         return $result;
     }
@@ -117,7 +128,6 @@ class ItemSoaItemizedServices
             return null;
         }
 
-
     }
     private function getQty(string $DATE_ADMITTED, string $DATE_DISCHARGED, int $locationid, int $patientid, int $SOA_ITEM_ID)
     {
@@ -143,11 +153,10 @@ class ItemSoaItemizedServices
 
         foreach ($dataList as $list) {
 
-            $QTY = $this->getQty($DATE_ADMITTED, $DATE_DISCHARGED, $locationid, $patientid, $list->ID);
+            $QTY    = $this->getQty($DATE_ADMITTED, $DATE_DISCHARGED, $locationid, $patientid, $list->ID);
             $AMOUNT = $QTY * $list->RATE ?? 0;
-            $TOTAL = $TOTAL + $AMOUNT;
+            $TOTAL  = $TOTAL + $AMOUNT;
         }
-
 
         return $TOTAL;
     }
