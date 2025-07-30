@@ -30,6 +30,8 @@ class ItemSoa extends Model
         'SC_BASE',
         'SOA_BASE',
         'GENERIC_NAME',
-        'FIX_QTY'
+        'FIX_QTY',
+        'ITEM_CONTROL_A',
+        'ITEM_CONTROL_B'
     ];
 }

@@ -171,6 +171,8 @@ class ItemSoaServices
                 'soa_item.GROUP_ID',
                 'soa_item.FIX_QTY',
                 'soa_item.SC_BASE',
+                'soa_item.ITEM_CONTROL_A',
+                'soa_item.ITEM_CONTROL_B',
             ])
             ->join('soa_item_type', 'soa_item_type.ID', '=', 'TYPE')
             ->where('LOCATION_ID', '=', $LOCATION_ID)
@@ -190,7 +192,7 @@ class ItemSoaServices
                 $gotQty   = 1;
                 $TMP_RATE = $item->RATE;
                 // If the item has a fixed quantity, repeat it for the specified number of times
-                if ($item->SC_BASE == true) {
+                if ($item->ITEM_CONTROL_A == true) {
                     if ($this->itemSoaItemizedServices->isExistThatDay($myDate, $LOCATION_ID, $contactId, $item->ID)) {
                         $gotQty  = 1;
                         $TMP_ADD = 0;
@@ -200,7 +202,7 @@ class ItemSoaServices
                     }
                 }
 
-                if ($item->ACTUAL_BASE == true) {
+                if ($item->ITEM_CONTROL_B == true) {
                     if ($this->itemSoaItemizedServices->isExistThatDay($myDate, $LOCATION_ID, $contactId, $item->ID)) {
                         $TMP_RATE = $item->RATE;
                     } else {

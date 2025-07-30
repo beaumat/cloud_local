@@ -26,14 +26,14 @@ class PrintItemized4 extends Component
     public function mount($num = null, int $locationid, $date = null, $patientId = null)
     {
         $this->LOCATION_ID = $locationid;
-        $this->PATIENT_ID  = $patientId ?? 0;
+        $this->PATIENT_ID = $patientId ?? 0;
 
         foreach ($this->breakDownDate as $list) {
             $this->dateList[] = $list->DATE;
         }
 
-        $this->date     = $date;
-        $this->qty      = $num ?? 0;
+        $this->date = $date;
+        $this->qty = $num ?? 0;
         $this->dataList = $this->itemSoaServices->GetListLoop($locationid, $this->dateList, $this->PATIENT_ID);
     }
     public function render()
