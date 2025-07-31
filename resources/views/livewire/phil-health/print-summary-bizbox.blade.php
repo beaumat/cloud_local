@@ -49,7 +49,7 @@
             <div id="p-particular" class="col-3 text-left ">
                 Drug and Medicine
             </div>
-            <div id="p-charge" class="col-1 text-center  left-line2 font-italic">
+            <div id="p-charge" class="col-1 text-center  left-line2">
                 @if ($CHARGES_DRUG_N_MEDICINE > 0)
                     {{ number_format($CHARGES_DRUG_N_MEDICINE, 2) }}
                 @endif
@@ -80,7 +80,7 @@
         <div id="p-particular" class="col-3 text-left ">
             Laboratory & Diagnostic
         </div>
-        <div id="p-charge" class="col-1 text-center  left-line2 font-italic">
+        <div id="p-charge" class="col-1 text-center  left-line2 ">
             @if ($CHARGES_LAB_N_DIAGNOSTICS > 0)
                 {{ number_format($CHARGES_LAB_N_DIAGNOSTICS, 2) }}
             @else
@@ -111,7 +111,7 @@
         <div id="p-particular" class="col-3 text-left ">
             Operating Room Fees
         </div>
-        <div id="p-charge" class="col-1 text-center  left-line2 font-italic">
+        <div id="p-charge" class="col-1 text-center  left-line2">
             {{-- @if ($CHARGES_OPERATING_ROOM_FEE > 0)
                 {{ number_format($CHARGES_OPERATING_ROOM_FEE, 2) }}
             @else
@@ -148,7 +148,7 @@
             <div id="p-particular" class="col-3 text-left ">
                 Medical Supplies
             </div>
-            <div id="p-charge" class="col-1 text-center  left-line2 font-italic">
+            <div id="p-charge" class="col-1 text-center  left-line2 ">
                 @if ($CHARGES_SUPPLIES > 0)
                     {{ number_format($CHARGES_SUPPLIES, 2) }}
                 @endif
@@ -179,7 +179,7 @@
         <div id="p-particular" class="col-3 text-left ">
             Others
         </div>
-        <div id="p-charge" class="col-1 text-center  left-line2 font-italic">
+        <div id="p-charge" class="col-1 text-center  left-line2 ">
             @if ($CHARGES_OTHERS > 0)
                 {{ number_format($CHARGES_OTHERS, 2) }}
             @else
@@ -187,7 +187,7 @@
             @endif
         </div>
 
-        <div id="p-sp" class="col-2 text-center   left-line2">
+        <div id="p-sp" class="col-2 text-center   left-line2 ">
             @if ($SP_OTHERS > 0)
                 {{ number_format($SP_OTHERS, 2) }}
             @else
@@ -196,7 +196,7 @@
         </div>
 
 
-        <div id="p-first" class="col-2  left-line2 text-center ">
+        <div id="p-first" class="col-2  left-line2 text-center font-weight-bold">
             {{-- @if ($P1_OTHERS > 0)
                 {{ number_format($P1_OTHERS, 2) }}
             @else
@@ -204,10 +204,10 @@
             @endif --}}
             -
         </div>
-        <div id="p-after-disc" class="col-2 text-center  left-line2 text-xs">
+        <div id="p-after-disc" class="col-2 text-center  left-line2  font-weight-bold">
             -
         </div>
-        <div id="p-pocket" class="col-2 text-center left-line2">
+        <div id="p-pocket" class="col-2 text-center left-line2 font-weight-bold">
             -
         </div>
     </div>
@@ -346,7 +346,7 @@
         <div id="p-second" class="col-2 left-line2 text-center  font-weight-bold">
             (0.00)
         </div>
-        <div id="p-pocket" class="col-1 text-center text-xs left-line2 font-weight-bold">
+        <div id="p-pocket" class="col-1 text-center left-line2 font-weight-bold">
             0.00
         </div>
     </div>
