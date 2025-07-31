@@ -179,18 +179,18 @@ class ItemSoaServices
                 'soa_item.SC_BASE',
                 'soa_item.ITEM_CONTROL_A',
                 'soa_item.ITEM_CONTROL_B',
-                'soa_item.ITEM_HIDE'          
+                'soa_item.ITEM_HIDE'
             ])
             ->join('soa_item_type', 'soa_item_type.ID', '=', 'TYPE')
             ->where('soa_item.LOCATION_ID', '=', $LOCATION_ID)
             ->where('soa_item.INACTIVE', '=', false)
-            ->where('soa_item.ITEM_HIDE','=',false)
+            ->where('soa_item.ITEM_HIDE', '=', false)
             ->orderBy('soa_item.TYPE', 'asc')
             ->orderBy('soa_item.LINE', 'asc')
             ->get();
-          
-           
-         
+
+
+
         $dataList = [];
 
         // If no breakDownDate is provided, use the current date
@@ -213,10 +213,12 @@ class ItemSoaServices
                 }
 
                 if ($item->ITEM_CONTROL_B == true) {
-                    if ($this->itemSoaItemizedServices->isExistThatDay($myDate, $LOCATION_ID, $contactId, $item->ID)) {
-                        $TMP_RATE = $item->RATE;
-                    } else {
+                    if ($TMP_ADD > 0) {
                         $TMP_RATE = $item->RATE + $TMP_ADD;
+                        $TMP_ADD = 0;
+                    } else {
+
+                        $TMP_RATE = $item->RATE;
                     }
 
                 }
