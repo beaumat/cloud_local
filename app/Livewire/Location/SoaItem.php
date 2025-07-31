@@ -30,7 +30,6 @@ class SoaItem extends Component
     public int $GROUP_ID = 0;
     public bool $SC_BASE = false;
     public bool $SOA_BASE = false;
-
     public string $GENERIC_NAME = '';
 
 
@@ -55,6 +54,10 @@ class SoaItem extends Component
     public string $editGENERIC_NAME;
 
     public int $editFIX_QTY;
+
+    public bool $editITEM_CONTROL_A;
+    public bool $editITEM_CONTROL_B;
+    public bool $editITEM_HIDE;
 
     public $dataList = [];
     public $search;
@@ -165,7 +168,10 @@ class SoaItem extends Component
             $this->editSC_BASE = $data->SC_BASE ?? false;
             $this->editSOA_BASE = $data->SOA_BASE ?? false;
             $this->editGENERIC_NAME = $data->GENERIC_NAME ?? '';
-            $this->editFIX_QTY = $data->FIX_QTY;
+            $this->editFIX_QTY = $data->FIX_QTY ?? 0;
+            $this->editITEM_CONTROL_A = $data->ITEM_CONTROL_A ?? false;
+            $this->editITEM_CONTROL_B = $data->ITEM_CONTROL_B ?? false;
+            $this->editITEM_HIDE = $data->ITEM_HIDE ?? false;
         }
     }
     public function Update()
@@ -207,8 +213,12 @@ class SoaItem extends Component
                 $this->editSC_BASE,
                 $this->editSOA_BASE,
                 $this->editGENERIC_NAME,
-                $this->editFIX_QTY
+                $this->editFIX_QTY,
+                $this->editITEM_CONTROL_A,
+                $this->editITEM_CONTROL_B,
+                $this->editITEM_HIDE
             );
+            
             $this->Canceled();
         } catch (\Exception $e) {
             session()->flash('error', $e->getMessage());
@@ -243,6 +253,9 @@ class SoaItem extends Component
         $this->editUNIT_NAME = '';
         $this->editRATE = 0;
         $this->editLINE = 0;
+        $this->editITEM_CONTROL_A = false;
+        $this->editITEM_CONTROL_B = false;
+        $this->editITEM_HIDE = false;
 
     }
     private function refreshList()

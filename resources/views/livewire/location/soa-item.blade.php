@@ -59,7 +59,10 @@
                                         <th class=" text-center">SOA Base</th>
                                         <th class="col-1 text-center">Group</th>
                                         <th class=" text-left">Generic Name</th>
-                                        <th class="col-1 text-center">Fix Qty</th>
+                                        <th class="text-center">Fix Qty</th>
+                                        <th class="text-center">Ctrl A</th>
+                                        <th class="text-center">Ctrl B</th>
+                                        <th class="text-center">Hide</th>
                                         <th class="col-2 text-center">Action</th>
                                     </tr>
                                 </thead>
@@ -212,12 +215,48 @@
                                                     {{ $list->GENERIC_NAME }}
                                                 @endif
                                             </td>
-                                            <td class="col-1 text-center">
+                                            <td class="text-center">
                                                 @if ($list->ID == $editid)
                                                     <input name="editFIX_QTY" type="number" class="w-100"
                                                         wire:model='editFIX_QTY' />
                                                 @else
                                                     {{ $list->FIX_QTY }}
+                                                @endif
+                                            </td>
+                                            <td class="text-center">
+                                                @if ($list->ID == $editid)
+                                                    <input name="editITEM_CONTROL_A" type="checkbox" class="w-100"
+                                                        wire:model='editITEM_CONTROL_A' />
+                                                @else
+                                                    @if ($list->ITEM_CONTROL_A)
+                                                        <i class="fa fa-check text-success" aria-hidden="true"></i>
+                                                    @else
+                                                        <i class="fa fa-times text-danger" aria-hidden="true"></i>
+                                                    @endif
+                                                @endif
+                                            </td>
+                                            <td class="text-center">
+                                                @if ($list->ID == $editid)
+                                                    <input name="editITEM_CONTROL_B" type="checkbox" class="w-100"
+                                                        wire:model='editITEM_CONTROL_B' />
+                                                @else
+                                                    @if ($list->ITEM_CONTROL_B)
+                                                        <i class="fa fa-check text-success" aria-hidden="true"></i>
+                                                    @else
+                                                        <i class="fa fa-times text-danger" aria-hidden="true"></i>
+                                                    @endif
+                                                @endif
+                                            </td>
+                                            <td class="text-center">
+                                                @if ($list->ID == $editid)
+                                                    <input name="editITEM_HIDE" type="checkbox" class="w-100"
+                                                        wire:model='editITEM_HIDE' />
+                                                @else
+                                                    @if ($list->ITEM_HIDE)
+                                                        <i class="fa fa-check text-success" aria-hidden="true"></i>
+                                                    @else
+                                                        <i class="fa fa-times text-danger" aria-hidden="true"></i>
+                                                    @endif
                                                 @endif
                                             </td>
                                             <td class="text-center">
@@ -339,6 +378,9 @@
                                                 <input name="GENERIC_NAME" type="text" class="w-100"
                                                     wire:model='GENERIC_NAME' />
                                             </td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
                                             <td></td>
                                             <td>
                                                 <button type="submit" class="btn btn-xs btn-success w-100">

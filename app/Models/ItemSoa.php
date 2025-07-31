@@ -32,6 +32,7 @@ class ItemSoa extends Model
         'GENERIC_NAME',
         'FIX_QTY',
         'ITEM_CONTROL_A',
-        'ITEM_CONTROL_B'
+        'ITEM_CONTROL_B',
+        'ITEM_HIDE'
     ];
 }

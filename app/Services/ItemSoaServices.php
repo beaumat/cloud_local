@@ -12,7 +12,7 @@ class ItemSoaServices
     private $itemSoaItemizedServices;
     public function __construct(ObjectServices $objectServices, ItemSoaItemizedServices $itemSoaItemizedServices)
     {
-        $this->object                  = $objectServices;
+        $this->object = $objectServices;
         $this->itemSoaItemizedServices = $itemSoaItemizedServices;
     }
 
@@ -39,48 +39,51 @@ class ItemSoaServices
 
         ItemSoa::create(
             [
-                'ID'           => $ID,
-                'LOCATION_ID'  => $LOCATION_ID,
-                'LINE'         => $LINE > 0 ? $LINE : $this->NextLine($TYPE, $LOCATION_ID),
-                'TYPE'         => $TYPE,
-                'ITEM_NAME'    => $ITEM_NAME,
-                'UNIT_NAME'    => $UNIT_NAME,
-                'RATE'         => $RATE,
-                'ACTUAL_BASE'  => $ACTUAL_BASE,
-                'DOSAGE'       => $DOSAGE,
-                'ROUTE'        => $ROUTE,
-                'FREQUENCY'    => $FREQUENCY,
-                'BRAND'        => $BRAND,
-                'GROUP_ID'     => $GROUP_ID > 0 ? $GROUP_ID : null,
-                'SC_BASE'      => $SC_BASE,
-                'SOA_BASE'     => $SOA_BASE,
+                'ID' => $ID,
+                'LOCATION_ID' => $LOCATION_ID,
+                'LINE' => $LINE > 0 ? $LINE : $this->NextLine($TYPE, $LOCATION_ID),
+                'TYPE' => $TYPE,
+                'ITEM_NAME' => $ITEM_NAME,
+                'UNIT_NAME' => $UNIT_NAME,
+                'RATE' => $RATE,
+                'ACTUAL_BASE' => $ACTUAL_BASE,
+                'DOSAGE' => $DOSAGE,
+                'ROUTE' => $ROUTE,
+                'FREQUENCY' => $FREQUENCY,
+                'BRAND' => $BRAND,
+                'GROUP_ID' => $GROUP_ID > 0 ? $GROUP_ID : null,
+                'SC_BASE' => $SC_BASE,
+                'SOA_BASE' => $SOA_BASE,
                 'GENERIC_NAME' => $GENERIC_NAME,
             ]
         );
 
         return $ID;
     }
-    public function Update(int $ID, int $TYPE, int $LINE, string $ITEM_NAME, string $UNIT_NAME, float $RATE, bool $ACTUAL_BASE = false, string $DOSAGE, string $ROUTE, string $FREQUENCY, string $BRAND, int $GROUP_ID, bool $SC_BASE, bool $SOA_BASE, string $GENERIC_NAME, int $FIX_QTY = 0)
+    public function Update(int $ID, int $TYPE, int $LINE, string $ITEM_NAME, string $UNIT_NAME, float $RATE, bool $ACTUAL_BASE = false, string $DOSAGE, string $ROUTE, string $FREQUENCY, string $BRAND, int $GROUP_ID, bool $SC_BASE, bool $SOA_BASE, string $GENERIC_NAME, int $FIX_QTY = 0, bool $ITEM_CONTROL_A, bool $ITEM_CONTROL_B, bool $ITEM_HIDE)
     {
         ItemSoa::where('ID', '=', $ID)
             ->update(
                 [
-                    'ID'           => $ID,
-                    'TYPE'         => $TYPE,
-                    'LINE'         => $LINE,
-                    'ITEM_NAME'    => $ITEM_NAME,
-                    'UNIT_NAME'    => $UNIT_NAME,
-                    'RATE'         => $RATE,
-                    'ACTUAL_BASE'  => $ACTUAL_BASE,
-                    'DOSAGE'       => $DOSAGE,
-                    'ROUTE'        => $ROUTE,
-                    'FREQUENCY'    => $FREQUENCY,
-                    'BRAND'        => $BRAND,
-                    'GROUP_ID'     => $GROUP_ID > 0 ? $GROUP_ID : null,
-                    'SC_BASE'      => $SC_BASE,
-                    'SOA_BASE'     => $SOA_BASE,
+                    'ID' => $ID,
+                    'TYPE' => $TYPE,
+                    'LINE' => $LINE,
+                    'ITEM_NAME' => $ITEM_NAME,
+                    'UNIT_NAME' => $UNIT_NAME,
+                    'RATE' => $RATE,
+                    'ACTUAL_BASE' => $ACTUAL_BASE,
+                    'DOSAGE' => $DOSAGE,
+                    'ROUTE' => $ROUTE,
+                    'FREQUENCY' => $FREQUENCY,
+                    'BRAND' => $BRAND,
+                    'GROUP_ID' => $GROUP_ID > 0 ? $GROUP_ID : null,
+                    'SC_BASE' => $SC_BASE,
+                    'SOA_BASE' => $SOA_BASE,
                     'GENERIC_NAME' => $GENERIC_NAME,
-                    'FIX_QTY'      => $FIX_QTY,
+                    'FIX_QTY' => $FIX_QTY,
+                    'ITEM_CONTROL_A' => $ITEM_CONTROL_A,
+                    'ITEM_CONTROL_B' => $ITEM_CONTROL_B,
+                    'ITEM_HIDE' => $ITEM_HIDE
                 ]
             );
     }
@@ -117,6 +120,9 @@ class ItemSoaServices
                 'soa_item.SOA_BASE',
                 'soa_item.GENERIC_NAME',
                 'soa_item.FIX_QTY',
+                'soa_item.ITEM_CONTROL_A',
+                'soa_item.ITEM_CONTROL_B',
+                'soa_item.ITEM_HIDE'
             ])
             ->join('soa_item_type', 'soa_item_type.ID', '=', 'TYPE')
             ->where('LOCATION_ID', '=', $LOCATION_ID)
@@ -173,14 +179,18 @@ class ItemSoaServices
                 'soa_item.SC_BASE',
                 'soa_item.ITEM_CONTROL_A',
                 'soa_item.ITEM_CONTROL_B',
+                'soa_item.ITEM_HIDE'          
             ])
             ->join('soa_item_type', 'soa_item_type.ID', '=', 'TYPE')
-            ->where('LOCATION_ID', '=', $LOCATION_ID)
-            ->where('INACTIVE', '=', false)
-            ->orderBy('TYPE', 'asc')
-            ->orderBy('LINE', 'asc')
+            ->where('soa_item.LOCATION_ID', '=', $LOCATION_ID)
+            ->where('soa_item.INACTIVE', '=', false)
+            ->where('soa_item.ITEM_HIDE','=',false)
+            ->orderBy('soa_item.TYPE', 'asc')
+            ->orderBy('soa_item.LINE', 'asc')
             ->get();
-
+          
+           
+         
         $dataList = [];
 
         // If no breakDownDate is provided, use the current date
@@ -189,15 +199,15 @@ class ItemSoaServices
             // If no date is provided, use the current date
             $TMP_RATE = 0;
             foreach ($result as $item) {
-                $gotQty   = 1;
+                $gotQty = 1;
                 $TMP_RATE = $item->RATE;
                 // If the item has a fixed quantity, repeat it for the specified number of times
                 if ($item->ITEM_CONTROL_A == true) {
                     if ($this->itemSoaItemizedServices->isExistThatDay($myDate, $LOCATION_ID, $contactId, $item->ID)) {
-                        $gotQty  = 1;
+                        $gotQty = 1;
                         $TMP_ADD = 0;
                     } else {
-                        $gotQty  = 0;
+                        $gotQty = 0;
                         $TMP_ADD = $item->RATE;
                     }
                 }
@@ -212,17 +222,17 @@ class ItemSoaServices
                 }
 
                 $dataList[] = [
-                    'DATE'        => $myDate,
-                    'ID'          => $item->ID,
-                    'TYPE'        => $item->TYPE,
-                    'TYPE_NAME'   => $item->TYPE_NAME,
-                    'ITEM_NAME'   => $item->ITEM_NAME,
-                    'UNIT_NAME'   => $item->UNIT_NAME,
-                    'RATE'        => $TMP_RATE,
+                    'DATE' => $myDate,
+                    'ID' => $item->ID,
+                    'TYPE' => $item->TYPE,
+                    'TYPE_NAME' => $item->TYPE_NAME,
+                    'ITEM_NAME' => $item->ITEM_NAME,
+                    'UNIT_NAME' => $item->UNIT_NAME,
+                    'RATE' => $TMP_RATE,
                     'ACTUAL_BASE' => $item->ACTUAL_BASE,
-                    'GROUP_ID'    => $item->GROUP_ID,
-                    'FIX_QTY'     => $item->FIX_QTY,
-                    'QTY'         => $gotQty,
+                    'GROUP_ID' => $item->GROUP_ID,
+                    'FIX_QTY' => $item->FIX_QTY,
+                    'QTY' => $gotQty,
                 ];
             }
         }

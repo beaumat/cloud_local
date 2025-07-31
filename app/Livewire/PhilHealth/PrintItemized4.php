@@ -35,6 +35,7 @@ class PrintItemized4 extends Component
         $this->date = $date;
         $this->qty = $num ?? 0;
         $this->dataList = $this->itemSoaServices->GetListLoop($locationid, $this->dateList, $this->PATIENT_ID);
+   
     }
     public function render()
     {
