@@ -335,6 +335,7 @@ class PhilHealthServices
             $A_OPERATING_ROOM_FEE_AMOUNT = 0;
 
             if ($this->ITEMIZED_BASE) {
+
                 $this->DRUG_N_MEDINE_AMOUNT = $this->ItemizedBaseTotalNonActual($data->LOCATION_ID, 1);
 
                 $this->SUPPLIES                  = $this->ItemizedBaseTotalNonActual($data->LOCATION_ID, 2);
