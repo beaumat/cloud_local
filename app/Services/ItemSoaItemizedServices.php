@@ -25,10 +25,10 @@ class ItemSoaItemizedServices
 
         ItemSoaItemized::create(
             [
-                'ID'          => $ID,
-                'ITEM_ID'     => $ITEM_ID,
+                'ID' => $ID,
+                'ITEM_ID' => $ITEM_ID,
                 'SOA_ITEM_ID' => $SOA_ITEM_ID,
-                'INACTIVE'    => false,
+                'INACTIVE' => false,
             ]
         );
 
@@ -39,9 +39,9 @@ class ItemSoaItemizedServices
 
         ItemSoaItemized::where('ID', '=', $ID)->update(
             [
-                'ITEM_ID'     => $ITEM_ID,
+                'ITEM_ID' => $ITEM_ID,
                 'SOA_ITEM_ID' => $SOA_ITEM_ID,
-                'INACTIVE'    => $INACTIVE,
+                'INACTIVE' => $INACTIVE,
             ]
         );
     }
@@ -153,11 +153,61 @@ class ItemSoaItemizedServices
 
         foreach ($dataList as $list) {
 
-            $QTY    = $this->getQty($DATE_ADMITTED, $DATE_DISCHARGED, $locationid, $patientid, $list->ID);
+            $QTY = $this->getQty($DATE_ADMITTED, $DATE_DISCHARGED, $locationid, $patientid, $list->ID);
             $AMOUNT = $QTY * $list->RATE ?? 0;
-            $TOTAL  = $TOTAL + $AMOUNT;
+            $TOTAL = $TOTAL + $AMOUNT;
         }
 
         return $TOTAL;
+    }
+
+    public function getSumByOnActualQtyA(int $locationid, int $patientid, int $SOA_TYPE, string $DATE_ADMITTED, string $DATE_DISCHARGED, int $QTY_SET)
+    {
+        $TOTAL = 0;
+
+        $dataList = ItemSoa::where('TYPE', '=', $SOA_TYPE)
+            ->where('LOCATION_ID', '=', $locationid)
+            ->where('ITEM_CONTROL_A', '=', true)
+            ->where('INACTIVE', '=', false)
+            ->get();
+
+        $QTY = 0;
+
+        foreach ($dataList as $list) {
+
+            $QTY = $this->getQty($DATE_ADMITTED, $DATE_DISCHARGED, $locationid, $patientid, $list->ID);
+            $AMOUNT = $QTY * $list->RATE ?? 0;
+            $TOTAL = $TOTAL + $AMOUNT;
+            for ($i = 1; $i <= $QTY_SET; $i++) {
+                if ($i <= $QTY) {
+                    // nothing
+                } else {
+                    $AMOUNT = 1 * $list->RATE ?? 0;
+                    $TOTAL = $TOTAL - $AMOUNT;
+                }
+            }
+        }
+
+        return $TOTAL;
+    }
+    public function getIsHaveItemControlB(int $locationid, int $SOA_TYPE, float $A_AMOUNT)
+    {
+
+
+        $result = (bool) ItemSoa::where('TYPE', '=', $SOA_TYPE)
+            ->where('LOCATION_ID', '=', $locationid)
+            ->where('ITEM_CONTROL_B', '=', true)
+            ->where('INACTIVE', '=', false)
+            ->exists();
+
+        if ($result) {
+
+            if ($A_AMOUNT < 0) {
+                return $A_AMOUNT * -1;
+            }
+        } else {
+            0;
+        }
+
     }
 }
