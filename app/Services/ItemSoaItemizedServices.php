@@ -176,8 +176,7 @@ class ItemSoaItemizedServices
         foreach ($dataList as $list) {
 
             $QTY = $this->getQty($DATE_ADMITTED, $DATE_DISCHARGED, $locationid, $patientid, $list->ID);
-            $AMOUNT = $QTY * $list->RATE ?? 0;
-            $TOTAL = $TOTAL + $AMOUNT;
+           
             for ($i = 1; $i <= $QTY_SET; $i++) {
                 if ($i <= $QTY) {
                     // nothing
