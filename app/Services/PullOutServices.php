@@ -1,7 +1,7 @@
 <?php
-
 namespace App\Services;
 
+use App\Models\HemoJournal;
 use App\Models\PullOut;
 use App\Models\PullOutItems;
 use Illuminate\Support\Facades\DB;
@@ -9,18 +9,24 @@ use Illuminate\Support\Facades\DB;
 class PullOutServices
 {
 
-    public int $object_type_map_pull_out = 113;
+    public int $object_type_map_pull_out       = 113;
     public int $object_type_map_pull_out_items = 114;
-    public int $document_type_id = 31;
-
+    public int $document_type_id               = 31;
+    public int $default_debit_account_id       = 245; // Default Debit Account ID, set to 0 if not applicable
     private $object;
     private $dateServices;
     private $systemSettingServices;
-    public function __construct(ObjectServices $objectService, SystemSettingServices $systemSettingServices, DateServices $dateServices)
+    private $accountJournalServices;
+    private $accountServices;
+
+    public function __construct(ObjectServices $objectService, SystemSettingServices $systemSettingServices, DateServices $dateServices, AccountJournalServices $accountJournalServices, AccountServices $accountServices)
     {
-        $this->object = $objectService;
-        $this->dateServices = $dateServices;
-        $this->systemSettingServices = $systemSettingServices;
+        $this->object                 = $objectService;
+        $this->dateServices           = $dateServices;
+        $this->systemSettingServices  = $systemSettingServices;
+        $this->accountJournalServices = $accountJournalServices;
+        $this->accountServices        = $accountServices;
+
     }
     public function Get(int $ID)
     {
@@ -28,23 +34,23 @@ class PullOutServices
     }
     public function Store(string $CODE, string $DATE, int $LOCATION_ID, string $NOTES, int $PREPARED_BY_ID, int $ACCOUNT_ID): int
     {
-        $ID = (int) $this->object->ObjectNextID('PULL_OUT');
+        $ID          = (int) $this->object->ObjectNextID('PULL_OUT');
         $OBJECT_TYPE = (int) $this->object->ObjectTypeID('PULL_OUT');
-        $isLocRef = boolval($this->systemSettingServices->GetValue('IncRefNoByLocation'));
+        $isLocRef    = boolval($this->systemSettingServices->GetValue('IncRefNoByLocation'));
 
         PullOut::create(
             [
-                'ID' => $ID,
-                'RECORDED_ON' => $this->dateServices->Now(),
-                'CODE' => $CODE !== '' ? $CODE : $this->object->GetSequence($OBJECT_TYPE, $isLocRef ? $LOCATION_ID : null),
-                'DATE' => $DATE,
-                'LOCATION_ID' => $LOCATION_ID,
-                'AMOUNT' => 0,
-                'NOTES' => $NOTES,
+                'ID'             => $ID,
+                'RECORDED_ON'    => $this->dateServices->Now(),
+                'CODE'           => $CODE !== '' ? $CODE : $this->object->GetSequence($OBJECT_TYPE, $isLocRef ? $LOCATION_ID : null),
+                'DATE'           => $DATE,
+                'LOCATION_ID'    => $LOCATION_ID,
+                'AMOUNT'         => 0,
+                'NOTES'          => $NOTES,
                 'PREPARED_BY_ID' => $PREPARED_BY_ID > 0 ? $PREPARED_BY_ID : null,
-                'STATUS' => 0,
-                'STATUS_DATE' => $this->dateServices->NowDate(),
-                'ACCOUNT_ID' => $ACCOUNT_ID
+                'STATUS'         => 0,
+                'STATUS_DATE'    => $this->dateServices->NowDate(),
+                'ACCOUNT_ID'     => $ACCOUNT_ID,
             ]
         );
 
@@ -54,18 +60,18 @@ class PullOutServices
     {
         PullOut::where('ID', $ID)
             ->update([
-                'CODE'              => $CODE,
-                'NOTES'             => $NOTES,
-                'PREPARED_BY_ID'    => $PREPARED_BY_ID > 0 ? $PREPARED_BY_ID : null,
-                'ACCOUNT_ID'        => $ACCOUNT_ID
+                'CODE'           => $CODE,
+                'NOTES'          => $NOTES,
+                'PREPARED_BY_ID' => $PREPARED_BY_ID > 0 ? $PREPARED_BY_ID : null,
+                'ACCOUNT_ID'     => $ACCOUNT_ID,
             ]);
     }
     public function StatusUpdate(int $ID, int $STATUS)
     {
         PullOut::where('ID', $ID)
             ->update([
-                'STATUS'            => $STATUS,
-                'STATUS_DATE'       => $this->dateServices->NowDate()
+                'STATUS'      => $STATUS,
+                'STATUS_DATE' => $this->dateServices->NowDate(),
             ]);
     }
     public function Delete(int $ID)
@@ -75,9 +81,9 @@ class PullOutServices
     }
     public function PostedToCanceld(int $ID)
     {
-        $data =  PullOut::where('ID', $ID)->first();
+        $data = PullOut::where('ID', $ID)->first();
         if ($data) {
-            if ($data->STATUS_ID ==  15) {
+            if ($data->STATUS_ID == 15) {
                 // Canceled
                 PullOut::where("ID", $ID)->update(['STATUS', 6]);
             } else {
@@ -99,7 +105,7 @@ class PullOutServices
                 'l.NAME as LOCATION_NAME',
                 's.DESCRIPTION as STATUS',
                 'c.NAME as PREPARED_BY',
-                'pull_out.STATUS as STATUS_ID'
+                'pull_out.STATUS as STATUS_ID',
             ])
             ->leftJoin('contact as c', 'c.ID', '=', 'pull_out.PREPARED_BY_ID')
             ->join('document_status_map as s', 's.ID', '=', 'pull_out.STATUS')
@@ -132,21 +138,21 @@ class PullOutServices
     }
     public function ItemStore(int $PULL_OUT_ID, int $ITEM_ID, float $QUANTITY, int $UNIT_ID, float $UNIT_BASE_QUANTITY, float $RATE, int $BATCH_ID, int $ASSET_ACCOUNT_ID)
     {
-        $ID = $this->object->ObjectNextID('PULL_OUT');
+        $ID      = $this->object->ObjectNextID('PULL_OUT');
         $LINE_NO = $this->getLine($PULL_OUT_ID) + 1;
         PullOutItems::create([
-            'ID'                    => $ID,
-            'PULL_OUT_ID'           => $PULL_OUT_ID,
-            'LINE_NO'               => $LINE_NO,
-            'ITEM_ID'               => $ITEM_ID,
-            'DESCRIPTION'           => null,
-            'QUANTITY'              => $QUANTITY,
-            'UNIT_ID'               => $UNIT_ID > 0 ? $UNIT_ID : null,
-            'UNIT_BASE_QUANTITY'    => $UNIT_BASE_QUANTITY,
-            'RATE'                  => $RATE,
-            'AMOUNT'                => $RATE * $QUANTITY,
-            'BATCH_ID'              => $BATCH_ID > 0 ? $BATCH_ID : null,
-            'ASSET_ACCOUNT_ID'      => $ASSET_ACCOUNT_ID > 0 ? $ASSET_ACCOUNT_ID : null
+            'ID'                 => $ID,
+            'PULL_OUT_ID'        => $PULL_OUT_ID,
+            'LINE_NO'            => $LINE_NO,
+            'ITEM_ID'            => $ITEM_ID,
+            'DESCRIPTION'        => null,
+            'QUANTITY'           => $QUANTITY,
+            'UNIT_ID'            => $UNIT_ID > 0 ? $UNIT_ID : null,
+            'UNIT_BASE_QUANTITY' => $UNIT_BASE_QUANTITY,
+            'RATE'               => $RATE,
+            'AMOUNT'             => $RATE * $QUANTITY,
+            'BATCH_ID'           => $BATCH_ID > 0 ? $BATCH_ID : null,
+            'ASSET_ACCOUNT_ID'   => $ASSET_ACCOUNT_ID > 0 ? $ASSET_ACCOUNT_ID : null,
         ]);
 
         $this->UpdateTotal($PULL_OUT_ID);
@@ -163,19 +169,19 @@ class PullOutServices
             ->where('PULL_OUT_ID', $PULL_OUT_ID)
             ->where('ITEM_ID', $ITEM_ID)
             ->update([
-                'ID'                    => $ID,
-                'ITEM_ID'               => $ITEM_ID,
-                'QUANTITY'              => $QUANTITY,
-                'UNIT_ID'               => $UNIT_ID > 0 ? $UNIT_ID : null,
-                'UNIT_BASE_QUANTITY'    => $UNIT_BASE_QUANTITY,
-                'RATE'                  => $RATE,
-                'AMOUNT'                => $RATE * $QUANTITY,
-                'BATCH_ID'              => $BATCH_ID > 0 ? $BATCH_ID : null
+                'ID'                 => $ID,
+                'ITEM_ID'            => $ITEM_ID,
+                'QUANTITY'           => $QUANTITY,
+                'UNIT_ID'            => $UNIT_ID > 0 ? $UNIT_ID : null,
+                'UNIT_BASE_QUANTITY' => $UNIT_BASE_QUANTITY,
+                'RATE'               => $RATE,
+                'AMOUNT'             => $RATE * $QUANTITY,
+                'BATCH_ID'           => $BATCH_ID > 0 ? $BATCH_ID : null,
             ]);
 
         $this->UpdateTotal($PULL_OUT_ID);
     }
-    public function ItemDelete(int $ID, int $PULL_OUT_ID,)
+    public function ItemDelete(int $ID, int $PULL_OUT_ID, )
     {
         PullOutItems::where('ID', $ID)
             ->where('PULL_OUT_ID', $PULL_OUT_ID)
@@ -190,7 +196,7 @@ class PullOutServices
         PullOut::where('ID', $PULL_OUT_ID)
             ->update(
                 [
-                    'AMOUNT' => $result['AMOUNT']
+                    'AMOUNT' => $result['AMOUNT'],
                 ]
             );
     }
@@ -202,12 +208,12 @@ class PullOutServices
             ->select([
                 DB::raw(' ifnull(sum(AMOUNT),2) as AMOUNT'),
             ])
-            ->where('PULL_OUT_ID', $PULL_OUT_ID)
+            ->where('PULL_OUT_ID', '=', $PULL_OUT_ID)
             ->first();
 
         if ($result) {
             return [
-                'AMOUNT' => $result->AMOUNT
+                'AMOUNT' => $result->AMOUNT,
             ];
         }
 
@@ -228,7 +234,7 @@ class PullOutServices
                 'item.CODE',
                 'item.DESCRIPTION',
                 'u.NAME as UNIT_NAME',
-                'u.SYMBOL'
+                'u.SYMBOL',
             ])
             ->leftJoin('item', 'item.ID', '=', 'pull_out_items.ITEM_ID')
             ->leftJoin('unit_of_measure as u', 'u.ID', '=', 'pull_out_items.UNIT_ID')
@@ -246,7 +252,7 @@ class PullOutServices
                 'pull_out_items.ITEM_ID',
                 'pull_out_items.QUANTITY',
                 'pull_out_items.UNIT_BASE_QUANTITY',
-                DB::raw(" (select IFNULL(price_level_lines.CUSTOM_COST,0) from price_level_lines where price_level_lines.ITEM_ID = pull_out_items.ITEM_ID and price_level_lines.PRICE_LEVEL_ID = (select location.ID from location where location.ID = p.LOCATION_ID ) ) as COST ")
+                DB::raw(" (select IFNULL(price_level_lines.CUSTOM_COST,0) from price_level_lines where price_level_lines.ITEM_ID = pull_out_items.ITEM_ID and price_level_lines.PRICE_LEVEL_ID = (select location.ID from location where location.ID = p.LOCATION_ID ) ) as COST "),
             ])
             ->join('pull_out as p', 'p.ID', '=', 'pull_out_items.PULL_OUT_ID')
             ->where('pull_out_items.PULL_OUT_ID', $PULL_OUT_ID)
@@ -265,7 +271,7 @@ class PullOutServices
                 'AMOUNT',
                 DB::raw(" 0 as ENTRY_TYPE"),
                 DB::raw("'SOURCEACCOUNT' as EXTENDED_OPTIONS"),
-                DB::raw("YEAR(DATE) as SEQUENCE_GROUP")
+                DB::raw("YEAR(DATE) as SEQUENCE_GROUP"),
             ])
             ->where('ID', $PULL_OUT_ID)->get();
 
@@ -280,12 +286,156 @@ class PullOutServices
                 'ITEM_ID as SUBSIDIARY_ID',
                 'AMOUNT',
                 DB::raw('1 as ENTRY_TYPE'),
-                DB::raw("'DESTACCOUNT' as EXTENDED_OPTIONS")
+                DB::raw("'DESTACCOUNT' as EXTENDED_OPTIONS"),
             ])
             ->where('PULL_OUT_ID', $PULL_OUT_ID)
             ->orderBy('LINE_NO', 'asc')
             ->get();
 
         return $result;
+    }
+    public function getFixedAccounts(int $ID)
+    {
+
+    }
+
+    public function getMakeJournal(int $PULLOUT_ID)
+    {
+        $gotUpdate = false;
+        try {
+            $dataHemo = $this->get($PULLOUT_ID);
+            if ($dataHemo) {
+                $JOURNAL_NO = $this->accountJournalServices->getRecord($this->object_type_map_pull_out, $PULLOUT_ID);
+                if ($JOURNAL_NO == 0) {
+                    $JOURNAL_NO = $this->accountJournalServices->getJournalNo($this->object_type_map_pull_out, $PULLOUT_ID) + 1;
+                } else {
+                    // make adjustment
+                    $gotUpdate = true;
+                }
+                $resultDebit = $this->getJournalByItemDebit($PULLOUT_ID);
+
+                if ($gotUpdate) {
+
+                    foreach ($resultDebit as $list) {
+                        $acctID = $this->accountServices->EXPENSE_ACCOUNT_ID; //
+                        $this->accountJournalServices->DeleteJournal($acctID, $dataHemo->LOCATION_ID, $JOURNAL_NO, 0, $PULLOUT_ID, $this->object_type_map_pull_out, $dataHemo->DATE, 0);
+                        // if ($acctID != $list->ACCOUNT_ID) {
+                        //     $this->accountJournalServices->updateAccount(
+                        //         $list->ID,
+                        //         $this->object_type_map_pull_out,
+                        //         $dataHemo->DATE,
+                        //         $dataHemo->LOCATION_ID,
+                        //         $acctID,
+                        //         $list->ACCOUNT_ID,
+                        //     );
+
+                        // }
+
+                    }
+                }
+
+                $this->accountJournalServices->JournalExecute(
+                    $JOURNAL_NO,
+                    $resultDebit,
+                    $dataHemo->LOCATION_ID,
+                    $this->object_type_map_pull_out,
+                    $dataHemo->DATE
+                );
+
+                $resultCredit = $this->getJournalByItemCredit($PULLOUT_ID);
+
+                if ($gotUpdate) {
+                    foreach ($resultCredit as $list) {
+                        $acctID = 6; // inventory asset
+
+                        if ($list->ACCOUNT_ID != $acctID) {
+                            $this->accountJournalServices->updateAccount(
+                                $list->ID,
+                                $this->object_type_map_pull_out_items,
+                                $dataHemo->DATE,
+                                $dataHemo->LOCATION_ID,
+                                $acctID,
+                                $list->ACCOUNT_ID,
+                            );
+                        }
+                    }
+                }
+
+                $this->accountJournalServices->JournalExecute(
+                    $JOURNAL_NO,
+                    $resultCredit,
+                    $dataHemo->LOCATION_ID,
+                    $this->object_type_map_pull_out_items,
+                    $dataHemo->DATE
+                );
+
+                $data       = $this->accountJournalServices->getSumDebitCredit($JOURNAL_NO);
+                $debit_sum  = (float) $data['DEBIT'];
+                $credit_sum = (float) $data['CREDIT'];
+
+                if ($debit_sum == $credit_sum) {
+                    return true;
+                }
+
+                return false;
+
+            }
+        } catch (\Throwable $th) {
+            dd($th->getMessage());
+            return false;
+        }
+    }
+
+    private function getJournalByItemCredit(int $PULL_OUT_ID)
+    {
+        $exSQL  = "select IFNULL(pll.CUSTOM_COST,0) from price_level_lines as pll inner join location as l on l.PRICE_LEVEL_ID =  pll.PRICE_LEVEL_ID where pll.ITEM_ID = hi.ITEM_ID and l.ID = h.LOCATION_ID limit 1";
+        $result = HemoJournal::query()
+            ->select([
+                'hi.ID',
+                'hemo_journal.CREDIT_ACCOUNT_ID as ACCOUNT_ID',
+                'hi.ITEM_ID as SUBSIDIARY_ID',
+                DB::raw("((($exSQL) * hi.UNIT_BASE_QUANTITY ) *  hi.QUANTITY ) as AMOUNT"),
+                DB::raw('1 as ENTRY_TYPE'),
+            ])
+            ->join('item_sub_class as s', 's.CLASS_ID', '=', 'hemo_journal.ITEM_CLASS_ID')
+            ->join('item as i', 'i.SUB_CLASS_ID', '=', 's.ID')
+            ->join('pull_out_items as hi', 'hi.ITEM_ID', '=', 'i.ID')
+            ->join('pull_out as h', 'h.ID', '=', 'hi.PULL_OUT_ID')
+            ->where('hi.PULL_OUT_ID', '=', $PULL_OUT_ID)
+            ->whereIn('i.TYPE', ['0', '1'])
+            ->orderBy('hi.ID', 'asc')
+            ->get();
+
+        return $result;
+
+    }
+
+    private function getJournalByItemDebit(int $PULL_OUT_ID)
+    {
+        $exSQL  = "select IFNULL(pll.CUSTOM_COST,0) from price_level_lines as pll inner join location as l on l.PRICE_LEVEL_ID =  pll.PRICE_LEVEL_ID where pll.ITEM_ID = hi.ITEM_ID and l.ID = h.LOCATION_ID Limit 1";
+        $result = HemoJournal::query()
+            ->select([
+                'h.ID',
+                'hemo_journal.DEBIT_ACCOUNT_ID as ACCOUNT_ID',
+                DB::raw("SUM(((($exSQL) * hi.UNIT_BASE_QUANTITY ) *  hi.QUANTITY )) as AMOUNT"),
+                'h.PREPARED_BY_ID as SUBSIDIARY_ID',
+                DB::raw('0 as ENTRY_TYPE'),
+            ])
+            ->join('item_sub_class as s', 's.CLASS_ID', '=', 'hemo_journal.ITEM_CLASS_ID')
+            ->join('item as i', 'i.SUB_CLASS_ID', '=', 's.ID')
+            ->join('pull_out_items as hi', 'hi.ITEM_ID', '=', 'i.ID')
+            ->join('pull_out as h', 'h.ID', '=', 'hi.PULL_OUT_ID')
+            ->where('hi.PULL_OUT_ID', '=', $PULL_OUT_ID)
+            ->whereIn('i.TYPE', ['0', '1'])
+            ->orderBy('hemo_journal.DEBIT_ACCOUNT_ID', 'asc')
+            ->groupBy([
+                'h.ID',
+                'hemo_journal.DEBIT_ACCOUNT_ID',
+                'h.PREPARED_BY_ID',
+            ])
+            ->get();
+
+        return $result;
+
     }
 }

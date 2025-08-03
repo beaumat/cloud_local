@@ -1,7 +1,5 @@
 <?php
-
 namespace App\Livewire\PullOut;
-
 
 use App\Services\AccountJournalServices;
 use App\Services\AccountServices;
@@ -12,10 +10,10 @@ use App\Services\LocationServices;
 use App\Services\PullOutServices;
 use App\Services\UserServices;
 use Illuminate\Support\Facades\DB;
-use Livewire\Component;
 use Illuminate\Support\Facades\Redirect;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
+use Livewire\Component;
 
 #[Title('Pull Out')]
 
@@ -23,7 +21,7 @@ class PullOutForm extends Component
 {
     public int $ID;
     public int $openStatus = 0;
-    public $accountList = [];
+    public $accountList    = [];
     public string $DATE;
     public string $CODE;
     public int $LOCATION_ID;
@@ -32,7 +30,7 @@ class PullOutForm extends Component
     public string $NOTES;
     public int $ACCOUNT_ID;
     public $locationList = [];
-    public $contactList = [];
+    public $contactList  = [];
     public bool $Modify;
     public bool $transferReset = false;
     private $pullOutServices;
@@ -52,30 +50,31 @@ class PullOutForm extends Component
         DocumentStatusServices $documentStatusServices,
         ItemInventoryServices $itemInventoryServices,
         ContactServices $contactServices,
-        UserServices  $userServices,
+        UserServices $userServices,
         AccountJournalServices $accountJournalServices,
     ) {
-        $this->pullOutServices = $pullOutServices;
-        $this->locationServices = $locationServices;
+        $this->pullOutServices        = $pullOutServices;
+        $this->locationServices       = $locationServices;
         $this->documentStatusServices = $documentStatusServices;
-        $this->itemInventoryServices = $itemInventoryServices;
-        $this->contactServices = $contactServices;
-        $this->userServices = $userServices;
+        $this->itemInventoryServices  = $itemInventoryServices;
+        $this->contactServices        = $contactServices;
+        $this->userServices           = $userServices;
         $this->accountJournalServices = $accountJournalServices;
-        $this->accountServices = $accountServices;
+        $this->accountServices        = $accountServices;
     }
     public function LoadDropdown()
     {
-        $this->accountList = $this->accountServices->getExpenses();
+        $this->accountList = $this->accountServices->getCost();
+
         $this->locationList = $this->locationServices->getList();
-        $this->contactList = $this->contactServices->getList(2);
+        $this->contactList  = $this->contactServices->getList(2);
     }
 
     private function ItemInventory(): bool
     {
         try {
             $SOURCE_REF_TYPE = (int) $this->pullOutServices->document_type_id;
-            $data = $this->pullOutServices->ItemInventory($this->ID);
+            $data            = $this->pullOutServices->ItemInventory($this->ID);
 
             if ($data) {
                 $this->itemInventoryServices->InventoryExecute(
@@ -94,53 +93,52 @@ class PullOutForm extends Component
             return false;
         }
     }
-    private function AccountJournal(): bool
-    {
+    // private function AccountJournal(): bool
+    // {
 
+    //     try {
+    //         $pullOut = $this->pullOutServices->object_type_map_pull_out;
+    //         $pullOutItems = $this->pullOutServices->object_type_map_pull_out_items;
+    //         $JOURNAL_NO = $this->accountJournalServices->getRecord($pullOut, $this->ID);
+    //         if ($JOURNAL_NO == 0) {
+    //             $JOURNAL_NO = $this->accountJournalServices->getJournalNo($pullOut, $this->ID) + 1;
+    //         }
+    //         //Main
+    //         $mainData = $this->pullOutServices->getPullOutJournal($this->ID);
 
-        try {
-            $pullOut = $this->pullOutServices->object_type_map_pull_out;
-            $pullOutItems = $this->pullOutServices->object_type_map_pull_out_items;
-            $JOURNAL_NO = $this->accountJournalServices->getRecord($pullOut, $this->ID);
-            if ($JOURNAL_NO == 0) {
-                $JOURNAL_NO = $this->accountJournalServices->getJournalNo($pullOut, $this->ID) + 1;
-            }
-            //Main
-            $mainData = $this->pullOutServices->getPullOutJournal($this->ID);
+    //         $this->accountJournalServices->JournalExecute(
+    //             $JOURNAL_NO,
+    //             $mainData,
+    //             $this->LOCATION_ID,
+    //             $pullOut,
+    //             $this->DATE
+    //         );
+    //         //Item
+    //         $itemData = $this->pullOutServices->getPullOutItemsJournal($this->ID);
+    //         $this->accountJournalServices->JournalExecute(
+    //             $JOURNAL_NO,
+    //             $itemData,
+    //             $this->LOCATION_ID,
+    //             $pullOutItems,
+    //             $this->DATE
+    //         );
 
-            $this->accountJournalServices->JournalExecute(
-                $JOURNAL_NO,
-                $mainData,
-                $this->LOCATION_ID,
-                $pullOut,
-                $this->DATE
-            );
-            //Item
-            $itemData = $this->pullOutServices->getPullOutItemsJournal($this->ID);
-            $this->accountJournalServices->JournalExecute(
-                $JOURNAL_NO,
-                $itemData,
-                $this->LOCATION_ID,
-                $pullOutItems,
-                $this->DATE
-            );
+    //         $data = $this->accountJournalServices->getSumDebitCredit($JOURNAL_NO);
 
-            $data = $this->accountJournalServices->getSumDebitCredit($JOURNAL_NO);
+    //         $debit_sum = (float) $data['DEBIT'];
+    //         $credit_sum = (float) $data['CREDIT'];
 
-            $debit_sum = (float) $data['DEBIT'];
-            $credit_sum = (float) $data['CREDIT'];
-
-            if ($debit_sum == $credit_sum) {
-                return true;
-            }
-            session()->flash('error', 'debit:' . $debit_sum . ' and credit:' . $credit_sum . ' is not balance');
-            return false;
-        } catch (\Exception $e) {
-            $errorMessage = 'Error occurred: ' . $e->getMessage();
-            session()->flash('error', $errorMessage);
-            return false;
-        }
-    }
+    //         if ($debit_sum == $credit_sum) {
+    //             return true;
+    //         }
+    //         session()->flash('error', 'debit:' . $debit_sum . ' and credit:' . $credit_sum . ' is not balance');
+    //         return false;
+    //     } catch (\Exception $e) {
+    //         $errorMessage = 'Error occurred: ' . $e->getMessage();
+    //         session()->flash('error', $errorMessage);
+    //         return false;
+    //     }
+    // }
     public function posted()
     {
         try {
@@ -151,12 +149,13 @@ class PullOutForm extends Component
             }
 
             DB::beginTransaction();
-            if (!$this->ItemInventory()) {
+            if (! $this->ItemInventory()) {
                 DB::rollBack();
                 return;
             }
 
-            if (!$this->AccountJournal()) {
+            if (! $this->pullOutServices->getMakeJournal($this->ID)) {
+                Session()->flash('error', 'Something wrong with journal entry');
                 DB::rollBack();
                 return;
             }
@@ -173,15 +172,15 @@ class PullOutForm extends Component
     }
     private function getInfo($data)
     {
-        $this->ID = $data->ID;
-        $this->CODE = $data->CODE;
-        $this->DATE = $data->DATE;
-        $this->LOCATION_ID = $data->LOCATION_ID;
-        $this->NOTES = $data->NOTES ?? '';
-        $this->AMOUNT = $data->AMOUNT ?? 0;
-        $this->PREPARED_BY_ID = $data->PREPARED_BY_ID ?? 0;
-        $this->ACCOUNT_ID = $data->ACCOUNT_ID ?? 0;
-        $this->STATUS = $data->STATUS ?? 0;
+        $this->ID                 = $data->ID;
+        $this->CODE               = $data->CODE;
+        $this->DATE               = $data->DATE;
+        $this->LOCATION_ID        = $data->LOCATION_ID;
+        $this->NOTES              = $data->NOTES ?? '';
+        $this->AMOUNT             = $data->AMOUNT ?? 0;
+        $this->PREPARED_BY_ID     = $data->PREPARED_BY_ID ?? 0;
+        $this->ACCOUNT_ID         = $data->ACCOUNT_ID ?? 0;
+        $this->STATUS             = $data->STATUS ?? 0;
         $this->STATUS_DESCRIPTION = $this->documentStatusServices->getDesc($this->STATUS);
     }
     public function mount($id = null)
@@ -198,18 +197,18 @@ class PullOutForm extends Component
             $errorMessage = 'Error occurred: Record not found. ';
             return Redirect::route('companypull_out')->with('error', $errorMessage);
         }
-        
+
         $this->LoadDropdown();
-        $this->Modify = true;
-        $this->ID = 0;
-        $this->CODE = '';
-        $this->DATE = $this->userServices->getTransactionDateDefault();
-        $this->LOCATION_ID = $this->userServices->getLocationDefault();
-        $this->AMOUNT = 0;
-        $this->PREPARED_BY_ID = 0;
-        $this->NOTES = '';
-        $this->ACCOUNT_ID = $this->accountServices->EXPENSE_ACCOUNT_ID; // office supply expenses
-        $this->STATUS = 0;
+        $this->Modify             = true;
+        $this->ID                 = 0;
+        $this->CODE               = '';
+        $this->DATE               = $this->userServices->getTransactionDateDefault();
+        $this->LOCATION_ID        = $this->userServices->getLocationDefault();
+        $this->AMOUNT             = 0;
+        $this->PREPARED_BY_ID     = 0;
+        $this->NOTES              = '';
+        $this->ACCOUNT_ID         = $this->pullOutServices->default_debit_account_id; // office supply expenses
+        $this->STATUS             = 0;
         $this->STATUS_DESCRIPTION = '';
     }
     public function getModify()
@@ -223,32 +222,32 @@ class PullOutForm extends Component
 
             $this->validate(
                 [
-                    'DATE'              => 'required',
-                    'LOCATION_ID'       => 'required',
-                    'PREPARED_BY_ID'    => 'required|not_in:0'
+                    'DATE'           => 'required',
+                    'LOCATION_ID'    => 'required',
+                    'PREPARED_BY_ID' => 'required|not_in:0',
 
                 ],
                 [],
                 [
-                    'DATE'              => 'Date',
-                    'LOCATION_ID'       => 'Location',
-                    'PREPARED_BY_ID'    => 'Prepared by'
+                    'DATE'           => 'Date',
+                    'LOCATION_ID'    => 'Location',
+                    'PREPARED_BY_ID' => 'Prepared by',
                 ]
             );
         } else {
             $this->validate(
                 [
-                    'CODE'          => 'required|max:20|unique:pull_out,code,' . $this->ID,
-                    'DATE'          => 'required',
-                    'LOCATION_ID'   => 'required',
-                    'PREPARED_BY_ID' => 'required|not_in:0'
+                    'CODE'           => 'required|max:20|unique:pull_out,code,' . $this->ID,
+                    'DATE'           => 'required',
+                    'LOCATION_ID'    => 'required',
+                    'PREPARED_BY_ID' => 'required|not_in:0',
                 ],
                 [],
                 [
-                    'CODE' => 'Reference No.',
-                    'DATE' => 'Date',
-                    'LOCATION_ID' => 'Location',
-                    'PREPARED_BY_ID' => 'Prepared by'
+                    'CODE'           => 'Reference No.',
+                    'DATE'           => 'Date',
+                    'LOCATION_ID'    => 'Location',
+                    'PREPARED_BY_ID' => 'Prepared by',
                 ]
             );
         }
@@ -269,7 +268,7 @@ class PullOutForm extends Component
                 return Redirect::route('companypull_out_edit', ['id' => $this->ID])->with('message', 'Successfully created');
             } else {
 
-                $data =  $this->pullOutServices->Get($this->ID);
+                $data = $this->pullOutServices->Get($this->ID);
                 if ($data) {
                     if ($this->STATUS == 16) {
                         $JNO = $this->accountJournalServices->getRecord($this->pullOutServices->object_type_map_pull_out, $this->ID);
@@ -359,7 +358,6 @@ class PullOutForm extends Component
             session()->flash('error', $errorMessage);
         }
     }
-
 
     public function render()
     {

@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Services;
 
 use App\Models\AccountJournal;
@@ -17,7 +16,6 @@ class AccountJournalServices
         union
         (select `check_type_map`.`NAME` from `check` inner join check_type_map on check_type_map.ID = check.TYPE inner join check_expenses on check_expenses.CHECK_ID = check.ID where  check_expenses.ID = aj.OBJECT_ID limit 1 )
     )";
-
 
     public string $CHECK_TYPE_ID = "(
         (select `check_type_map`.`ID` from `check` inner join check_type_map on check_type_map.ID = check.TYPE where  check.ID = aj.OBJECT_ID limit 1 )
@@ -161,8 +159,6 @@ class AccountJournalServices
 
         END as TX_NOTES';
 
-
-
     public string $TX_NAME = '
     CASE
         WHEN o.`ID` = 2     THEN ( select contact.PRINT_NAME_AS from bill join contact on contact.ID = bill.VENDOR_ID where bill.ID = aj.OBJECT_ID and bill.DATE = aj.OBJECT_DATE  and bill.LOCATION_ID = aj.LOCATION_ID  )
@@ -206,7 +202,6 @@ class AccountJournalServices
 
 
     END as TX_NAME';
-
 
     public string $TX_ROUTE_ID = '
     CASE
@@ -307,7 +302,7 @@ class AccountJournalServices
                 ->where('OBJECT_DATE', $OBJECT_DATE)
                 ->where('SUBSIDIARY_ID', $SUBSIDIARY_ID)
                 ->update([
-                    'AMOUNT' => $AMOUNT
+                    'AMOUNT' => $AMOUNT,
                 ]);
         } else {
             AccountJournal::where('LOCATION_ID', $LOCATION_ID)
@@ -317,8 +312,8 @@ class AccountJournalServices
                 ->where('SUBSIDIARY_ID', $SUBSIDIARY_ID)
                 ->update([
                     'SEQUENCE_GROUP' => $SEQUENCE_GROUP,
-                    'ENTRY_TYPE' => $ENTRY_TYPE,
-                    'AMOUNT' => $AMOUNT
+                    'ENTRY_TYPE'     => $ENTRY_TYPE,
+                    'AMOUNT'         => $AMOUNT,
                 ]);
         }
     }
@@ -341,21 +336,21 @@ class AccountJournalServices
 
         $ID = (int) $this->object->ObjectNextID('ACCOUNT_JOURNAL');
         AccountJournal::create([
-            'ID' => $ID,
-            'PREVIOUS_ID' => $PREVIOUS_ID > 0 ? $PREVIOUS_ID : null,
-            'SEQUENCE_NO' => $SEQUENCE_NO,
-            'JOURNAL_NO' => $JOURNAL_NO,
-            'ACCOUNT_ID' => $ACCOUNT_ID,
-            'LOCATION_ID' => $LOCATION_ID,
-            'SUBSIDIARY_ID' => $SUBSIDIARY_ID,
-            'SEQUENCE_GROUP' => $SEQUENCE_GROUP,
-            'OBJECT_TYPE' => $OBJECT_TYPE,
-            'OBJECT_ID' => $OBJECT_ID,
-            'OBJECT_DATE' => $OBJECT_DATE,
-            'ENTRY_TYPE' => $ENTRY_TYPE,
-            'AMOUNT' => $AMOUNT,
-            'ENDING_BALANCE' => $ENDING_BALANCE,
-            'EXTENDED_OPTIONS' => $EXTENDED_OPTIONS
+            'ID'               => $ID,
+            'PREVIOUS_ID'      => $PREVIOUS_ID > 0 ? $PREVIOUS_ID : null,
+            'SEQUENCE_NO'      => $SEQUENCE_NO,
+            'JOURNAL_NO'       => $JOURNAL_NO,
+            'ACCOUNT_ID'       => $ACCOUNT_ID,
+            'LOCATION_ID'      => $LOCATION_ID,
+            'SUBSIDIARY_ID'    => $SUBSIDIARY_ID,
+            'SEQUENCE_GROUP'   => $SEQUENCE_GROUP,
+            'OBJECT_TYPE'      => $OBJECT_TYPE,
+            'OBJECT_ID'        => $OBJECT_ID,
+            'OBJECT_DATE'      => $OBJECT_DATE,
+            'ENTRY_TYPE'       => $ENTRY_TYPE,
+            'AMOUNT'           => $AMOUNT,
+            'ENDING_BALANCE'   => $ENDING_BALANCE,
+            'EXTENDED_OPTIONS' => $EXTENDED_OPTIONS,
         ]);
     }
     public function getJournalNo(int $OBJECT_TYPE, int $OBJECT_ID): int
@@ -417,14 +412,14 @@ class AccountJournalServices
 
         if ($result) {
             return [
-                'SEQUENCE_NO' => $result->SEQUENCE_NO,
-                'ENDING_BALANCE' => $result->ENDING_BALANCE
+                'SEQUENCE_NO'    => $result->SEQUENCE_NO,
+                'ENDING_BALANCE' => $result->ENDING_BALANCE,
             ];
         }
 
         return [
-            'SEQUENCE_NO' => -1,
-            'ENDING_BALANCE' => 0
+            'SEQUENCE_NO'    => -1,
+            'ENDING_BALANCE' => 0,
         ];
     }
 
@@ -433,23 +428,22 @@ class AccountJournalServices
         $result = AccountJournal::query()
             ->select([
                 DB::raw('IFNULL(SUM(IF(ENTRY_TYPE=0, AMOUNT, 0)),0) as DEBIT'),
-                DB::raw('IFNULL(SUM(IF(ENTRY_TYPE=1, AMOUNT, 0)),0) as CREDIT')
+                DB::raw('IFNULL(SUM(IF(ENTRY_TYPE=1, AMOUNT, 0)),0) as CREDIT'),
             ])
             ->where('ACCOUNT_JOURNAL.JOURNAL_NO', $JOURNAL_NO)
             ->first();
 
-
         if ($result) {
 
             return [
-                'DEBIT' => $result->DEBIT ?? 0,
-                'CREDIT' => $result->CREDIT ?? 0
+                'DEBIT'  => $result->DEBIT ?? 0,
+                'CREDIT' => $result->CREDIT ?? 0,
             ];
         }
 
         return [
-            'DEBIT' => 0,
-            'CREDIT' => 0
+            'DEBIT'  => 0,
+            'CREDIT' => 0,
         ];
     }
     private function JournalExists(int $ACCOUNT_ID, int $ENTRY_TYPE, int $OBJECT_ID, int $OBJECT_TYPE, string $OBJECT_DATE, int $LOCATION_ID, int $SUBSIDIARY_ID): bool
@@ -489,7 +483,7 @@ class AccountJournalServices
                 ->where('OBJECT_DATE', $OBJECT_DATE)
                 ->where('SUBSIDIARY_ID', $SUBSIDIARY_ID)
                 ->update([
-                    'ACCOUNT_ID' => $NEW_ACCOUNT_ID
+                    'ACCOUNT_ID' => $NEW_ACCOUNT_ID,
                 ]);
         }
     }
@@ -508,7 +502,7 @@ class AccountJournalServices
     ) {
 
         if (
-            !$this->JournalExists(
+            ! $this->JournalExists(
                 $ACCOUNT_ID,
                 $ENTRY_TYPE,
                 $OBJECT_ID,
@@ -523,9 +517,9 @@ class AccountJournalServices
                 return;
             }
 
-            $PREV_ID = (int) $this->getPreviousID($ACCOUNT_ID, $LOCATION_ID);
-            $ENDING = $this->getEndingLastOutPut($ACCOUNT_ID, $LOCATION_ID, $OBJECT_DATE);
-            $SEQUENCE_NO = (int) $ENDING['SEQUENCE_NO'];
+            $PREV_ID        = (int) $this->getPreviousID($ACCOUNT_ID, $LOCATION_ID);
+            $ENDING         = $this->getEndingLastOutPut($ACCOUNT_ID, $LOCATION_ID, $OBJECT_DATE);
+            $SEQUENCE_NO    = (int) $ENDING['SEQUENCE_NO'];
             $ENDING_BALANCE = 0;
 
             if ($ENTRY_TYPE == 0) {
@@ -571,12 +565,12 @@ class AccountJournalServices
     public function JournalExecute(int $JOURNAL_NO, $data, int $LOCATION_ID, int $OBJECT_TYPE, string $OBJECT_DATE, string $EXTENDED = '')
     {
         foreach ($data as $list) {
-            $OBJECT_ID = (int) $list->ID;
-            $ACCOUNT_ID = (int) $list->ACCOUNT_ID;
-            $SUBSIDIARY_ID = (int) $list->SUBSIDIARY_ID;
-            $ENTRY_TYPE = (int) $list->ENTRY_TYPE;
-            $AMOUNT = (float) $list->AMOUNT;
-            $SEQUENCE_GROUP = 0;
+            $OBJECT_ID        = (int) $list->ID;
+            $ACCOUNT_ID       = (int) $list->ACCOUNT_ID;
+            $SUBSIDIARY_ID    = (int) $list->SUBSIDIARY_ID;
+            $ENTRY_TYPE       = (int) $list->ENTRY_TYPE;
+            $AMOUNT           = (float) $list->AMOUNT;
+            $SEQUENCE_GROUP   = 0;
             $EXTENDED_OPTIONS = $EXTENDED;
 
             if (isset($list->SEQUENCE_GROUP)) {
@@ -598,7 +592,6 @@ class AccountJournalServices
             );
         }
     }
-
 
     public function getJournalList(int $JOURNAL_NO): object
     {
@@ -685,7 +678,7 @@ class AccountJournalServices
                         WHEN t.`ACCOUNT_ORDER` = 4 THEN (sum( if(aj.ENTRY_TYPE = 0, aj.AMOUNT,0) - if(aj.ENTRY_TYPE = 1, aj.AMOUNT, 0)))
                     END as TX_CREDIT
                     "),
-                    't.ACCOUNT_ORDER'
+                    't.ACCOUNT_ORDER',
                 ]
             )
             ->leftJoin('account_journal as aj', 'aj.ACCOUNT_ID', '=', 'a.ID')
@@ -704,7 +697,6 @@ class AccountJournalServices
             ->orderBy('t.ACCOUNT_ORDER')
 
             ->get();
-
 
         return $result;
     }
@@ -748,7 +740,7 @@ class AccountJournalServices
     public function getUndepositedActiveList(int $LOCATION_ID)
     {
         $undeposited_account_id = 0;
-        $result = DB::table('account_journal as aj')
+        $result                 = DB::table('account_journal as aj')
             ->select([
                 'aj.OBJECT_DATE as DATE',
                 DB::raw("if(d.ID = 21, $this->CHECK_TYPE, d.DESCRIPTION) as TYPE"),
@@ -767,8 +759,6 @@ class AccountJournalServices
             ->where('aj.ACCOUNT_ID', '=', $undeposited_account_id)
             ->get();
 
-
-
         return $result;
     }
 
@@ -786,7 +776,7 @@ class AccountJournalServices
                 DB::raw("'' as TX_CODE"),
                 DB::raw("0 as DEBIT"),
                 DB::raw("0 as CREDIT"),
-                DB::raw("SUM(if(aj.ENTRY_TYPE = 0,AMOUNT,0)) - SUM(if(aj.ENTRY_TYPE = 1,AMOUNT,0))  as BALANCE")
+                DB::raw("SUM(if(aj.ENTRY_TYPE = 0,AMOUNT,0)) - SUM(if(aj.ENTRY_TYPE = 1,AMOUNT,0))  as BALANCE"),
 
             ])
             ->leftJoin('account as a', 'a.ID', '=', 'aj.ACCOUNT_ID')
@@ -817,7 +807,7 @@ class AccountJournalServices
                 DB::raw($this->TX_CODE),
                 DB::raw(" if(aj.ENTRY_TYPE = 0, aj.AMOUNT, '' ) as DEBIT "),
                 DB::raw(" if(aj.ENTRY_TYPE = 1, aj.AMOUNT, '' ) as CREDIT "),
-                DB::raw(" 0  as BALANCE")
+                DB::raw(" 0  as BALANCE"),
             ])->leftJoin('account as a', 'a.ID', '=', 'aj.ACCOUNT_ID')
             ->leftJoin('object_type_map as o', 'o.ID', '=', 'aj.OBJECT_TYPE')
             ->leftJoin('document_type_map as d', 'd.ID', '=', 'o.DOCUMENT_TYPE')
@@ -833,8 +823,6 @@ class AccountJournalServices
             ->when($accountType, function ($query) use (&$accountType) {
                 $query->whereIn('a.TYPE', $accountType);
             });
-
-
 
         $final_result = DB::query()
             ->fromSub(
@@ -893,9 +881,8 @@ class AccountJournalServices
             ->where('LOCATION_ID', '=', $LOCATION_ID)
             ->where('ACCOUNT_ID', '=', $OLD_ACCOUNT_ID)
             ->update([
-                'ACCOUNT_ID' => $NEW_ACCOUNT_ID
+                'ACCOUNT_ID' => $NEW_ACCOUNT_ID,
             ]);
-
 
     }
     public function parameterUpdate($where = [], $update = [])
@@ -905,7 +892,7 @@ class AccountJournalServices
     }
     public function getUrlBy(int $Journal_no): string
     {
-        $URL = "";
+        $URL    = "";
         $result = AccountJournal::select(['d.ID as DOC_ID', 'account_journal.OBJECT_ID'])
             ->join('object_type_map as o', 'o.ID', '=', 'account_journal.OBJECT_TYPE')
             ->join('document_type_map as d', 'd.ID', '=', 'o.DOCUMENT_TYPE')
@@ -913,101 +900,95 @@ class AccountJournalServices
             ->whereIn('account_journal.OBJECT_TYPE', ['2', '12', '16', '19', '23', '38', '41', '52', '59', '57', '67', '70', '72', '81', '83', '84', '93', '95', '113', '121', '127', '135'])
             ->first();
 
-
         if ($result) {
 
             $DOC_ID = (int) $result->DOC_ID;
-
 
             switch ($DOC_ID) {
                 case 1:
                     $URL = route('vendorsbills_edit', ['id' => $result->OBJECT_ID]); // bill
                     break;
                 case 2:
-                    $URL = route('vendorsbill_payment_edit', ['id' => $result->OBJECT_ID]);  // bill payment
+                    $URL = route('vendorsbill_payment_edit', ['id' => $result->OBJECT_ID]); // bill payment
                     break;
                 case 3:
-                    $URL = route('vendorsbill_credit_edit', ['id' => $result->OBJECT_ID]);  // bill credit
+                    $URL = route('vendorsbill_credit_edit', ['id' => $result->OBJECT_ID]); // bill credit
                     break;
                 case 6:
-                    $URL = route('companyinventory_adjustment_edit', ['id' => $result->OBJECT_ID]);  // inventory adjustment
+                    $URL = route('companyinventory_adjustment_edit', ['id' => $result->OBJECT_ID]); // inventory adjustment
                     break;
                 case 7:
-                    $URL = route('companystock_transfer_edit', ['id' => $result->OBJECT_ID]);  // stock transfer
+                    $URL = route('companystock_transfer_edit', ['id' => $result->OBJECT_ID]); // stock transfer
                     break;
                 case 10:
-                    $URL = route('customersinvoice_edit', ['id' => $result->OBJECT_ID]);  // invoice
+                    $URL = route('customersinvoice_edit', ['id' => $result->OBJECT_ID]); // invoice
                     break;
                 case 11:
-                    $URL = route('customerspayment_edit', ['id' => $result->OBJECT_ID]);  // payment
+                    $URL = route('customerspayment_edit', ['id' => $result->OBJECT_ID]); // payment
                     break;
                 case 12:
-                    $URL = route('customerscredit_memo_edit', ['id' => $result->OBJECT_ID]);  // credit_memo
+                    $URL = route('customerscredit_memo_edit', ['id' => $result->OBJECT_ID]); // credit_memo
                     break;
                 case 13:
-                    $URL = route('customerssales_receipt_edit', ['id' => $result->OBJECT_ID]);  // sales receipt
+                    $URL = route('customerssales_receipt_edit', ['id' => $result->OBJECT_ID]); // sales receipt
                     break;
                 case 18:
-                    $URL = route('vendorswithholding_tax_edit', ['id' => $result->OBJECT_ID]);  // withholding tax
+                    $URL = route('vendorswithholding_tax_edit', ['id' => $result->OBJECT_ID]); // withholding tax
                     break;
                 case 19:
-                    $URL = route('companybuild_assembly_edit', ['id' => $result->OBJECT_ID]);  // build assembply
+                    $URL = route('companybuild_assembly_edit', ['id' => $result->OBJECT_ID]); // build assembply
                     break;
                 case 20:
-                    $URL = route('customerstax_credit_edit', ['id' => $result->OBJECT_ID]);  // tax credit
+                    $URL = route('customerstax_credit_edit', ['id' => $result->OBJECT_ID]); // tax credit
                     break;
                 case 21:
 
                     $dataResult = DB::table('check')->select(['TYPE'])->where('ID', '=', $result->OBJECT_ID)->first();
                     if ($dataResult) {
                         if ($dataResult->TYPE == 0) {
-                            $URL = route('bankingmake_cheque_edit', ['id' => $result->OBJECT_ID]);  // write check
+                            $URL = route('bankingmake_cheque_edit', ['id' => $result->OBJECT_ID]); // write check
                         } else {
-                            $URL = route('vendorsbill_payment_edit', ['id' => $result->OBJECT_ID]);  // bill payment
+                            $URL = route('vendorsbill_payment_edit', ['id' => $result->OBJECT_ID]); // bill payment
                         }
                     }
                     break;
                 case 22:
-                    $URL = route('bankingdeposit_edit', ['id' => $result->OBJECT_ID]);  // deposit
+                    $URL = route('bankingdeposit_edit', ['id' => $result->OBJECT_ID]); // deposit
                     break;
                 case 23:
 
                     $dataRes = DB::table("general_journal_details")->select(['GENERAL_JOURNAL_ID'])->where('ID', '=', $result->OBJECT_ID)->first();
                     if ($dataRes) {
-                        $URL = route('companygeneral_journal_edit', ['id' => $dataRes->GENERAL_JOURNAL_ID]);  // general journal
+                        $URL = route('companygeneral_journal_edit', ['id' => $dataRes->GENERAL_JOURNAL_ID]); // general journal
                     }
                     break;
                 case 26:
-                    $URL = route('bankingfund_transfer_edit', ['id' => $result->OBJECT_ID]);  // fund transfer
+                    $URL = route('bankingfund_transfer_edit', ['id' => $result->OBJECT_ID]); // fund transfer
                     break;
                 case 27:
-                    $URL = route('patientshemo_edit', ['id' => $result->OBJECT_ID]);  // fund transfer
+                    $URL = route('patientshemo_edit', ['id' => $result->OBJECT_ID]); // fund transfer
                     break;
                 case 31:
-                    $URL = route('companypull_out_edit', ['id' => $result->OBJECT_ID]);  // pull out
+                    $URL = route('companypull_out_edit', ['id' => $result->OBJECT_ID]); // pull out
                     break;
                 case 32:
-                    $URL = route('bankingbank_recon_edit', ['id' => $result->OBJECT_ID]);  // bank recon
+                    $URL = route('bankingbank_recon_edit', ['id' => $result->OBJECT_ID]); // bank recon
                     break;
                 case 33:
-                    $URL = route('companydepreciation_edit', ['id' => $result->OBJECT_ID]);  // depreciation
+                    $URL = route('companydepreciation_edit', ['id' => $result->OBJECT_ID]); // depreciation
                     break;
                 case 34:
 
-
-                    $URL = route('bankingbank_transfer_credit', ['id' => $result->OBJECT_ID]);  // bank transfer
+                    $URL = route('bankingbank_transfer_credit', ['id' => $result->OBJECT_ID]); // bank transfer
                     break;
                 default:
                     # code...
                     break;
             }
 
-
-
         }
 
         return $URL;
     }
-
 
 }

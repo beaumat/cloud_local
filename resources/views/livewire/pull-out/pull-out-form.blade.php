@@ -41,7 +41,7 @@
 
                                                 </div>
                                                 <div class="col-md-12">
-                                                    @if ($Modify)
+                                                    {{-- @if ($Modify)
                                                         <livewire:select-option name="ACCOUNT_ID1"
                                                             titleName="Account Expenses" :options="$accountList"
                                                             :zero="true" :isDisabled="false"
@@ -51,7 +51,7 @@
                                                             titleName="Account Expenses" :options="$accountList"
                                                             :zero="true" :isDisabled="true"
                                                             wire:model='ACCOUNT_ID' />
-                                                    @endif
+                                                    @endif --}}
                                                 </div>
                                             </div>
                                         </div>

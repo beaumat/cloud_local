@@ -201,7 +201,7 @@ class HemoForm extends Component
         if (is_numeric($id)) {
             $data = $this->hemoServices->Get($id);
             if ($data) {
-                // checking if 
+                // checking if
                 if ($data->STATUS_ID <> 4) {
                     $isRestrik = (bool) $this->hemoServices->IsRestrictedFromUnposted($data->DATE, $data->LOCATION_ID);
                     if ($isRestrik) {

@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Services;
 
 use App\Models\Accounts;
@@ -9,7 +8,7 @@ class AccountServices
 {
     public int $ACCOUNTS_RECEIVABLE_ID = 4;
     public int $UNDEPOSITED_ACCOUNT_ID = 5;
-    public int $EXPENSE_ACCOUNT_ID = 284;
+    public int $EXPENSE_ACCOUNT_ID     = 284;
     private $object;
     public function __construct(ObjectServices $objectService)
     {
@@ -59,13 +58,19 @@ class AccountServices
             ->orderBy('NAME', 'asc')
             ->get();
     }
+    public function getCost()
+    {
+        return Accounts::where('TYPE','=', '11')
+            ->where('INACTIVE', '=', '0')
+            ->orderBy('NAME', 'asc')
+            ->get();
+    }
     public function getReceivable()
     {
         $result = Accounts::whereIn('TYPE', ['0', '1', '2', '3', '4'])
             ->where('INACTIVE', '=', '0')
             ->orderBy('NAME', 'asc')
             ->get();
-
 
         return $result;
     }
@@ -114,7 +119,7 @@ class AccountServices
             ->select([
                 'account.ID',
                 'account.NAME as DESCRIPTION',
-                't.DESCRIPTION as TYPE'
+                't.DESCRIPTION as TYPE',
             ])
             ->join('account_type_map as t', 't.ID', '=', 'account.TYPE')
             ->where('INACTIVE', '=', '0')
@@ -129,14 +134,14 @@ class AccountServices
         $ID = $this->object->ObjectNextID('ACCOUNT');
 
         Accounts::create([
-            'ID' => $ID,
-            'NAME' => $NAME,
+            'ID'               => $ID,
+            'NAME'             => $NAME,
             'GROUP_ACCOUNT_ID' => $GROUP_ACCOUNT_ID > 0 ? $GROUP_ACCOUNT_ID : null,
-            'TYPE' => $TYPE,
-            'BANK_ACCOUNT_NO' => $BANK_ACCOUNT_NO,
-            'INACTIVE' => $INACTIVE,
-            'TAG' => $TAG,
-            'LINE_NO' => $LINE_NO
+            'TYPE'             => $TYPE,
+            'BANK_ACCOUNT_NO'  => $BANK_ACCOUNT_NO,
+            'INACTIVE'         => $INACTIVE,
+            'TAG'              => $TAG,
+            'LINE_NO'          => $LINE_NO,
 
         ]);
 
@@ -148,13 +153,13 @@ class AccountServices
 
         Accounts::where('ID', '=', $ID)
             ->update([
-                'NAME' => $NAME,
+                'NAME'             => $NAME,
                 'GROUP_ACCOUNT_ID' => $GROUP_ACCOUNT_ID > 0 ? $GROUP_ACCOUNT_ID : null,
-                'TYPE' => $TYPE,
-                'BANK_ACCOUNT_NO' => $BANK_ACCOUNT_NO,
-                'INACTIVE' => $INACTIVE,
-                'TAG' => $TAG,
-                'LINE_NO' => $LINE_NO
+                'TYPE'             => $TYPE,
+                'BANK_ACCOUNT_NO'  => $BANK_ACCOUNT_NO,
+                'INACTIVE'         => $INACTIVE,
+                'TAG'              => $TAG,
+                'LINE_NO'          => $LINE_NO,
             ]);
     }
 
@@ -180,7 +185,7 @@ class AccountServices
                     'account.TAG',
                     'account.LINE_NO',
                     'account_type_map.DESCRIPTION as ACCOUNT_TYPE',
-                    'g.NAME as GROUP_ACCOUNT'
+                    'g.NAME as GROUP_ACCOUNT',
                 ]
             )
             ->join('account_type_map', 'account_type_map.ID', '=', 'account.TYPE')
@@ -199,7 +204,7 @@ class AccountServices
             ->select([
                 'account.ID',
                 'account.NAME',
-                'account.TYPE'
+                'account.TYPE',
             ])
             ->join('account_type_map', 'account_type_map.ID', '=', 'account.TYPE')
             ->where('account.INACTIVE', '=', 0)
@@ -215,7 +220,7 @@ class AccountServices
             ->select([
                 'account.ID',
                 'account.NAME',
-                'account.TYPE'
+                'account.TYPE',
             ])
             ->join('account_type_map', 'account_type_map.ID', '=', 'account.TYPE')
             ->where('account.INACTIVE', '=', 0)
@@ -235,11 +240,9 @@ class AccountServices
         return 0;
 
     }
-    public static  function getAccountNameExist(string $Name): bool
+    public static function getAccountNameExist(string $Name): bool
     {
         return (bool) Accounts::where('NAME', '=', $Name)->exists();
-
-
 
     }
 }
