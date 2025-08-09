@@ -18,6 +18,9 @@
         <div class="container-fluid">
             <div class="row">
                 @livewire('alert-layout', ['errors' => $errors->any() ? $errors->all() : '', 'message' => session('message'), 'error' => session('error')])
+                <div class="col-12">
+                    COUNT: {{ $COUNT }}
+                </div>
             </div>
         </div>
     </section>

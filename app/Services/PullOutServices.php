@@ -438,4 +438,37 @@ class PullOutServices
         return $result;
 
     }
+
+    public function getPullOutPreviousAccount()
+    {
+        $OLD_ACCOUNT_ID = 100;
+
+        return PullOut::where('ACCOUNT_ID', '=', $OLD_ACCOUNT_ID)->first();
+    }
+    public function getCountPrevousAccount(): int
+    {
+        $OLD_ACCOUNT_ID = 100;
+
+        return (int) PullOut::where('ACCOUNT_ID', '=', $OLD_ACCOUNT_ID)->count();
+    }
+    public function setUpdateParameter(int $ID)
+    {
+        DB::beginTransaction();
+
+        try {
+
+            PullOut::where('ID', $ID)
+                ->update([
+                    'ACCOUNT_ID' => $this->default_debit_account_id,
+                ]);
+
+            $this->getMakeJournal($ID);
+            DB::commit();
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            session()->flash('error', $th->getMessage() . ' - ID: ' . $ID);
+            return;
+        }
+
+    }
 }

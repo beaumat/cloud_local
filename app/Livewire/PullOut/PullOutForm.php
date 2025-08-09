@@ -322,12 +322,6 @@ class PullOutForm extends Component
         session()->forget('message');
         session()->forget('error');
     }
-    #[On('update-amount')]
-    public function updateAmount()
-    {
-        // $data = $this->pullOutServices->GetSum($this->ID);
-        // $this->AMOUNT = $data['AMOUNT'];
-    }
 
     public function OpenJournal()
     {
