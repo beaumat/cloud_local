@@ -214,6 +214,7 @@ class PrintSoa7 extends Component
                     $this->USER_CONTACT = $conUser->MOBILE_NO ?? '';
                     $this->USER_NAME = $conUser->PRINT_NAME_AS ?? '';
                     $this->USER_POSITION = $conUser->NICKNAME ?? '';
+
                 }
             }
         }
@@ -276,6 +277,8 @@ class PrintSoa7 extends Component
                     if ($conUser) {
                         $this->USER_CONTACT = $conUser->MOBILE_NO ?? '';
                         $this->USER_NAME = $conUser->PRINT_NAME_AS ?? '';
+                        $this->USER_POSITION = $conUser->NICKNAME ?? '';
+
                     }
                 }
                 $this->NO_OF_TREATMENT = (int) $this->philHealthServices->getNumberOfTreatment($this->CONTACT_ID, $this->LOCATION_ID, $this->DATE_ADMITTED ?? '', $this->DATE_DISCHARGED ?? '');

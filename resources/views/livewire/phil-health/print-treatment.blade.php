@@ -113,7 +113,13 @@
                                     <div class="col-7 text-center"><strong class="bottom-line">
                                             {{ $USER_NAME }}</strong>
                                     </div>
-                                    <div class="col-7 text-center"><i>PHIC IN-Charge</i></div>
+                                    <div class="col-7 text-center">
+                                        @if ($USER_POSITION == '')
+                                            <i>PHIC IN-Charge</i>
+                                        @else
+                                            <i>{{ $USER_POSITION }}</i>
+                                        @endif
+                                    </div>
                                 </div>
                                 <div class="form-group row  mt-4">
                                     <div class="col-12">Noted by:</div>
@@ -121,7 +127,13 @@
                                             {{ $ADMINISTRATOR_NAME }}
                                         </strong>
                                     </div>
-                                    <div class="col-7 text-center"><i>Administrator</i></div>
+                                    <div class="col-7 text-center">
+                                        @if ($ADMINISTRATOR_POSITION == '')
+                                            <i>Administrator</i>
+                                        @else
+                                            <i>{{ $ADMINISTRATOR_POSITION }}</i>
+                                        @endif
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-4">

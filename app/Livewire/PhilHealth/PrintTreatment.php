@@ -23,6 +23,7 @@ class PrintTreatment extends Component
     public string $PATIENT_CONTACT;
     public string $USER_CONTACT;
     public string $USER_NAME;
+    public string $USER_POSITION;
     public string $CODE;
     public $DATE;
     public $DATE_ADMITTED;
@@ -94,6 +95,8 @@ class PrintTreatment extends Component
     public string $ADDRESS;
     public string $PHYSICIAN;
     public string $ADMINISTRATOR_NAME;
+    public string $ADMINISTRATOR_POSITION;
+    
     private $philHealthServices;
     private $contactServices;
     private $hemoServices;
@@ -129,7 +132,9 @@ class PrintTreatment extends Component
         $this->hemoList = $this->hemoServices->GetSummary($this->CONTACT_ID, $this->LOCATION_ID, $this->DATE_ADMITTED ?? '', $this->DATE_DISCHARGED ?? '');
     }
     public function mount(int $PRINT_ID, int $PATIENT_ID = 0, bool $OUTPUT = true)
-    {
+    {   
+
+   
 
         $this->OUTPUT_SIGN = $OUTPUT;
 
@@ -179,8 +184,11 @@ class PrintTreatment extends Component
 
                 $conPHIC = $this->contactServices->get($locData->PHIC_INCHARGE_ID ?? Auth()->user()->contact_id, 2); // Employee
                 if ($conPHIC) {
+                    dd("ok");
                     $this->USER_CONTACT = $conPHIC->MOBILE_NO ?? '';
                     $this->USER_NAME = strtoupper($conPHIC->PRINT_NAME_AS) ?? '';
+                    $this->USER_POSITION = $conUser->NICKNAME ?? '';
+
                 }
 
                 // $HCI_MANAGER_ID
@@ -301,8 +309,10 @@ class PrintTreatment extends Component
                     $this->LOGO_FILE = $locData->LOGO_FILE ?? '';
                     $conPHIC = $this->contactServices->get($locData->PREPARED_BY_ID ?? Auth()->user()->contact_id, 2); // Employee
                     if ($conPHIC) {
+                       
                         $this->USER_CONTACT = $conPHIC->MOBILE_NO ?? '';
                         $this->USER_NAME = strtoupper($conPHIC->PRINT_NAME_AS) ?? '';
+                        $this->USER_POSITION = $conPHIC->NICKNAME ?? '';
                     }
 
                     // $HCI_MANAGER_ID
@@ -312,6 +322,7 @@ class PrintTreatment extends Component
                     if ($conMgr) {
 
                         $this->ADMINISTRATOR_NAME = strtoupper($conMgr->PRINT_NAME_AS) ?? '';
+                        $this->ADMINISTRATOR_POSITION = $conMgr->NICKNAME ?? '';
                     }
                 }
 
