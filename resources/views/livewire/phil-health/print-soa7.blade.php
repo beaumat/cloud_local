@@ -133,7 +133,13 @@
                                         {{ $USER_NAME }}</strong>
                                 </div>
                                 <div class="col-7 text-center"
-                                    @if (!$OUTPUT_SIGN) style="opacity: 0.0" @endif>PHIC IN-Charge</div>
+                                    @if (!$OUTPUT_SIGN) style="opacity: 0.0" @endif>
+                                    @if ($USER_POSITION == '')
+                                        PHIC IN-Charge
+                                    @else
+                                        {{ $USER_POSITION }}
+                                    @endif
+                                </div>
                                 <div class="col-12 mt-2">
                                     <span @if (!$OUTPUT_SIGN) style="opacity: 0.0" @endif>
                                         Date Signed:

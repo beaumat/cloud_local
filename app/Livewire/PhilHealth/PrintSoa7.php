@@ -27,6 +27,7 @@ class PrintSoa7 extends Component
     public string $USER_CONTACT;
     public string $PIN;
     public string $USER_NAME;
+    public string $USER_POSITION;
     public string $CODE;
     public $DATE;
     public $DATE_ADMITTED;
@@ -212,6 +213,7 @@ class PrintSoa7 extends Component
                 if ($conUser) {
                     $this->USER_CONTACT = $conUser->MOBILE_NO ?? '';
                     $this->USER_NAME = $conUser->PRINT_NAME_AS ?? '';
+                    $this->USER_POSITION = $conUser->NICKNAME ?? '';
                 }
             }
         }
