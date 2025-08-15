@@ -161,7 +161,7 @@ use App\Services\UserServices;
                                                 <a title="View Details"
                                                     href="{{ route('patientsphic_edit', ['id' => $list->ID]) }}"
                                                     class="btn btn-xs btn-info">
-                                                    <i class="fas fa-eye" aria-hidden="true"></i> View
+                                                    <i class="fas fa-eye" aria-hidden="true"></i>
                                                 </a>
                                                 {{-- @if ($list->PAYMENT_AMOUNT == 0 && $list->IN_PROGRESS == false && UserServices::GetUserRightAccess('patient.philhealth.print'))
                                                     <span class="btn btn-xs btn-primary" type="button"
@@ -180,20 +180,20 @@ use App\Services\UserServices;
                                                             wire:click='delete({{ $list->ID }})'
                                                             wire:confirm="Are you sure you want to delete this?"
                                                             class="btn btn-xs btn-danger">
-                                                            <i class="fas fa-trash" aria-hidden="true"></i> Delete
+                                                            <i class="fas fa-trash" aria-hidden="true"></i>
                                                         </span>
                                                     @else
                                                         <span title="Disabled delete button" type="button"
                                                             class="btn btn-xs btn-secondary">
-                                                            <i class="fas fa-trash" aria-hidden="true"></i> Delete
+                                                            <i class="fas fa-trash" aria-hidden="true"></i>
                                                         </span>
                                                     @endif
                                                 @endcan
-                                                {{-- <button type="button" title="LHIO Form"
+                                                <button type="button" title="LHIO Form"
                                                     class="btn btn-success active btn-xs"
                                                     wire:click='getARForm({{ $list->ID }})'>
                                                     <i class="fa fa-registered" aria-hidden="true"></i>
-                                                </button> --}}
+                                                </button>
 
                                             </td>
                                         </tr>
