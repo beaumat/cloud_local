@@ -96,8 +96,8 @@ class TimerServices
     }
     public function getExecute()
     {
-        //$transDate = $this->dateServices->NowDate();
-         $transDate = $this->dateServices->BackDate();
+        $transDate = $this->dateServices->NowDate();
+        //$transDate = $this->dateServices->BackDate();
 
         $this->generateUnposted();
         $this->generateWaitingList($transDate);
