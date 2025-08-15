@@ -108,9 +108,9 @@ use App\Services\UserServices;
                                             <td> {{ date('m/d/Y', strtotime($list->DATE)) }}</td>
                                             <td> {{ Carbon::parse($list->RECORDED_ON)->diffForHumans() }} </td>
                                             <td class="text-left">
-                                                @if ($list->CLAIM_NO)
+                                                {{-- @if ($list->CLAIM_NO) --}}
                                                     {{ $list->CLAIM_NO }}
-                                                @else
+                                                {{-- @else
                                                     @if ($editID == $list->ID)
                                                         <input type="input" wire:model='editClaimNo'
                                                             class="text-xs w-50" maxlength="10" />
@@ -129,7 +129,7 @@ use App\Services\UserServices;
                                                             <i class="fa fa-wrench" aria-hidden="true"></i>
                                                         </button>
                                                     @endif
-                                                @endif
+                                                @endif --}}
 
                                             </td>
                                             <td class="text-left">
@@ -161,12 +161,9 @@ use App\Services\UserServices;
                                                 <a title="View Details"
                                                     href="{{ route('patientsphic_edit', ['id' => $list->ID]) }}"
                                                     class="btn btn-xs btn-info">
-                                                    <i class="fas fa-eye" aria-hidden="true"></i>
+                                                    <i class="fas fa-eye" aria-hidden="true"></i> View
                                                 </a>
-                                                @if (
-                                                    $list->PAYMENT_AMOUNT == 0 &&
-                                                        $list->IN_PROGRESS == false &&
-                                                        UserServices::GetUserRightAccess('patient.philhealth.print'))
+                                                {{-- @if ($list->PAYMENT_AMOUNT == 0 && $list->IN_PROGRESS == false && UserServices::GetUserRightAccess('patient.philhealth.print'))
                                                     <span class="btn btn-xs btn-primary" type="button"
                                                         title="Active Print" wire:click='print({{ $list->ID }})'>
                                                         <i class="fa fa-print" aria-hidden="true"></i>
@@ -176,27 +173,27 @@ use App\Services\UserServices;
                                                         title="Active Print">
                                                         <i class="fa fa-print" aria-hidden="true"></i>
                                                     </span>
-                                                @endif
+                                                @endif --}}
                                                 @can('patient.philhealth.delete')
                                                     @if ($list->PAYMENT_AMOUNT == 0 && $list->IN_PROGRESS == false)
                                                         <span title="Active delete button" type="button"
                                                             wire:click='delete({{ $list->ID }})'
                                                             wire:confirm="Are you sure you want to delete this?"
                                                             class="btn btn-xs btn-danger">
-                                                            <i class="fas fa-trash" aria-hidden="true"></i>
+                                                            <i class="fas fa-trash" aria-hidden="true"></i> Delete
                                                         </span>
                                                     @else
                                                         <span title="Disabled delete button" type="button"
                                                             class="btn btn-xs btn-secondary">
-                                                            <i class="fas fa-trash" aria-hidden="true"></i>
+                                                            <i class="fas fa-trash" aria-hidden="true"></i> Delete
                                                         </span>
                                                     @endif
                                                 @endcan
-                                                <button type="button" title="LHIO Form"
+                                                {{-- <button type="button" title="LHIO Form"
                                                     class="btn btn-success active btn-xs"
                                                     wire:click='getARForm({{ $list->ID }})'>
                                                     <i class="fa fa-registered" aria-hidden="true"></i>
-                                                </button>
+                                                </button> --}}
 
                                             </td>
                                         </tr>
@@ -219,5 +216,5 @@ use App\Services\UserServices;
         </div>
     </section>
     @livewire('PhilHealth.ArForm')
-    @livewire('PhilHealth.PrintModal')
+    {{-- @livewire('PhilHealth.PrintModal') --}}
 </div>
