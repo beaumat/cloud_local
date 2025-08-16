@@ -163,7 +163,7 @@ use App\Services\UserServices;
                                                     class="btn btn-xs btn-info">
                                                     <i class="fas fa-eye" aria-hidden="true"></i>
                                                 </a>
-                                                {{-- @if ($list->PAYMENT_AMOUNT == 0 && $list->IN_PROGRESS == false && UserServices::GetUserRightAccess('patient.philhealth.print'))
+                                                @if ($list->PAYMENT_AMOUNT == 0 && $list->IN_PROGRESS == false && UserServices::GetUserRightAccess('patient.philhealth.print'))
                                                     <span class="btn btn-xs btn-primary" type="button"
                                                         title="Active Print" wire:click='print({{ $list->ID }})'>
                                                         <i class="fa fa-print" aria-hidden="true"></i>
@@ -173,7 +173,7 @@ use App\Services\UserServices;
                                                         title="Active Print">
                                                         <i class="fa fa-print" aria-hidden="true"></i>
                                                     </span>
-                                                @endif --}}
+                                                @endif
                                                 @can('patient.philhealth.delete')
                                                     @if ($list->PAYMENT_AMOUNT == 0 && $list->IN_PROGRESS == false)
                                                         <span title="Active delete button" type="button"
@@ -216,5 +216,5 @@ use App\Services\UserServices;
         </div>
     </section>
     @livewire('PhilHealth.ArForm')
-    {{-- @livewire('PhilHealth.PrintModal') --}}
+    @livewire('PhilHealth.PrintModal')
 </div>
