@@ -37,7 +37,7 @@
                         @endif
                     </u>
                 </div>
-                <div class="col-12 top-line left-line right-line">
+                <div class="col-12 top-line2 left-line2 right-line2">
                     <div class="row font-weight-bold" id="firstfloor">
                         <div class="col-4">NAME:
                             <label
@@ -62,7 +62,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-12 left-line bottom-line top-line">
+                <div class="col-12 left-line2 bottom-line2 top-line2">
                     <div class="row">
                         <div class="col-2" id="empty">
                             <div class="row text-center font-weight-bold">
@@ -73,39 +73,39 @@
                                             <div class="col-7">
                                                 DRY WEIGHT:
                                             </div>
-                                            <div class="col-5 bottom-line">
+                                            <div class="col-5 bottom-line2">
                                                 &nbsp;{{ $DRY_WEIGHT_VALUE }}
                                             </div>
                                         @endif
                                     </div>
 
                                 </div>
-                                <div class="col-12 bottom-line up-space">
+                                <div class="col-12 bottom-line2 up-space">
                                     <div style="padding-bottom: 14px;"></div>
                                 </div>
-                                <div class="col-12 bottom-line up-space">
+                                <div class="col-12 bottom-line2 up-space">
                                     WEIGHT
                                 </div>
-                                <div class="col-12 bottom-line">
+                                <div class="col-12 bottom-line2">
                                     BLOOD PRESSURE
                                 </div>
-                                <div class="col-12 bottom-line">
+                                <div class="col-12 bottom-line2">
                                     HEART RATE
                                 </div>
-                                <div class="col-12 bottom-line">
+                                <div class="col-12 bottom-line2">
                                     O2 SATURATION
                                 </div>
-                                <div class="col-12 bottom-line">
+                                <div class="col-12 bottom-line2">
                                     TEMPERATURE
                                 </div>
                             </div>
                         </div>
-                        <div class="col-2 left-line">
+                        <div class="col-2 left-line2">
                             <div class="row">
-                                <div class="col-12 bottom-line text-center">
+                                <div class="col-12 bottom-line2 text-center">
                                     <p class="up-space down-space font-weight-bold"> LAST TREATMENT</p>
                                 </div>
-                                <div class="col-12 bottom-line">
+                                <div class="col-12 bottom-line2">
                                     <div class="row text-center up-space font-weight-bold">
                                         <div class="col-6">
                                             PRE
@@ -171,12 +171,12 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-2 left-line">
+                        <div class="col-2 left-line2">
                             <div class="row">
-                                <div class="col-12 bottom-line text-center">
+                                <div class="col-12 bottom-line2 text-center">
                                     <p class="up-space down-space font-weight-bold"> TODAYS TREATMENT </p>
                                 </div>
-                                <div class="col-12 bottom-line">
+                                <div class="col-12 bottom-line2">
                                     <div class="row text-center up-space font-weight-bold">
                                         <div class="col-6">
                                             PRE
@@ -241,9 +241,9 @@
                             </div>
 
                         </div>
-                        <div class="col-6 left-line right-line ">
+                        <div class="col-6 left-line2 right-line2 ">
                             <div class="row">
-                                <div class="col-12 bottom-line">
+                                <div class="col-12 bottom-line2">
                                     <p class="up-space down-space"> <b>UF GOAL :</b><span
                                             class="text-sm font-weight-bold text-purple font-weight-bold">&nbsp;{{ $UF_GOAL }}</span>
                                     </p>
@@ -320,7 +320,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-4 left-line">
+                                <div class="col-4 left-line2">
                                     <div class="row">
                                         <div class="col-12 text-center">
                                             <label class="up-space">SAFETY CHECK</label>
@@ -378,7 +378,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-4 left-line">
+                                <div class="col-4 left-line2">
                                     <div class="row">
                                         <div class="col-12 text-center">
                                             <label class="up-space">DIALYSATE BATH</label>
@@ -430,7 +430,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-12 left-line bottom-line ">
+                <div class="col-12 left-line2 bottom-line2 ">
                     <div class="row">
                         <div class="col-4 ">
                             <label class="text-sm">NEPHROLOGIST:</label>
@@ -462,7 +462,7 @@
 
                             </div>
                         </div>
-                        <div class="col-4 left-line">
+                        <div class="col-4 left-line2">
                             <label class="text-sm">DIAGNOSIS:</label>
                             <div class="form-group px-3">
                                 <div class="row">
@@ -493,8 +493,8 @@
 
                             </div>
                         </div>
-                        <div class="col-4 text-center left-line right-line">
-                            <div class="row bottom-line">
+                        <div class="col-4 text-center left-line2 right-line2">
+                            <div class="row bottom-line2">
                                 <div class="col-12">
                                     <label>FISTULA / GRAFT ACCESS</label>
                                 </div>
@@ -677,11 +677,11 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-12 left-line right-line bottom-line">
+                <div class="col-12 left-line2 right-line2 bottom-line2">
                     <div class="row">
                         <div class="col-6">
                             <div class="row">
-                                <div class="col-12 bottom-line text-center">
+                                <div class="col-12 bottom-line2 text-center">
                                     <b>PRE-HEMODIALYSIS ASSESSMENT</b>
                                 </div>
                                 <div class="col-4">
@@ -841,9 +841,9 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-6 left-line">
+                        <div class="col-6 left-line2">
                             <div class="row">
-                                <div class="col-12 bottom-line text-center">
+                                <div class="col-12 bottom-line2 text-center">
                                     <b>POST-HEMODIALYSIS ASSESSMENT</b>
                                 </div>
                                 <div class="col-4">
@@ -1005,71 +1005,115 @@
                         </div>
                     </div>
                 </div>
-                <table width="100%" class="col-12 left-line right-line bottom-line">
-                    <thead>
-                        <tr class="text-center">
-                            <th class="col-1">TIME</th>
-                            <th class="col-1 left-line">BP</th>
-                            <th class="col-1 left-line">HR</th>
-                            <th class="col-1 left-line">BFR</th>
-                            <th class="col-1 left-line">AP | VP</th>
-                            <th class="col-1 left-line">TFR</th>
-                            <th class="col-1 left-line">TMP</th>
-                            <th class="col-1 left-line">HEPARIN | <br /> FLUSHING</th>
-                            <th class="col-4 left-line">NURSES NOTES</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($noteList as $list)
-                            <tr class="text-center top-line text-purple font-weight-bold">
-                                <td>{{ date('h:i:s A', strtotime($list->TIME)) }}</td>
-                                <td class="left-line">
-                                    <div class="row">
-                                        <div class="col-5 text-right">{{ $list->BP_1 }}</div>
-                                        <div class="col-2">|</div>
-                                        <div class="col-5 text-left">{{ $list->BP_2 }}</div>
-                                    </div>
-                                </td>
-                                <td class="left-line">{{ $list->HR }}</td>
-                                <td class="left-line">{{ $list->BFR }}</td>
-                                <td class="left-line">
-                                    <div class="row">
-                                        <div class="col-5 text-right">{{ $list->AP }}</div>
-                                        <div class="col-2">|</div>
-                                        <div class="col-5 text-left">{{ $list->VP }}</div>
-                                    </div>
-                                </td>
-                                <td class="left-line">{{ $list->TFP }}</td>
-                                <td class="left-line">{{ $list->TMP }}</td>
-                                <td class="left-line">
-                                    <div class="row">
-                                        <div class="col-5 text-right">{{ $list->HEPARIN }}</div>
-                                        <div class="col-2">|</div>
-                                        <div class="col-5 text-left">{{ $list->FLUSHING }}</div>
-                                    </div>
-                                </td>
-                                <td class="left-line">{{ $list->NOTES }}</td>
+
+                @if (!$VITAL_SIGN_GRAPH)
+                    <table width="100%" class="col-12 left-line2 right-line2 bottom-line2">
+                        <thead>
+                            <tr class="text-center">
+                                <th class="col-1">TIME</th>
+                                <th class="col-1 left-line2">BP</th>
+                                <th class="col-1 left-line2">HR</th>
+                                <th class="col-1 left-line2">BFR</th>
+                                <th class="col-1 left-line2">AP | VP</th>
+                                <th class="col-1 left-line2">TFR</th>
+                                <th class="col-1 left-line2">TMP</th>
+                                <th class="col-1 left-line2">HEPARIN | <br /> FLUSHING</th>
+                                <th class="col-4 left-line2">NURSES NOTES</th>
                             </tr>
-                            @php
-                                $r++;
-                            @endphp
-                        @endforeach
-                        @for ($i = $r; $i < $e; $i++)
-                            <tr class="text-center top-line">
-                                <td></td>
-                                <td class="left-line"></td>
-                                <td class="left-line"></td>
-                                <td class="left-line"></td>
-                                <td class="left-line">|</td>
-                                <td class="left-line"></td>
-                                <td class="left-line"></td>
-                                <td class="left-line">|</td>
-                                <td class="left-line"></td>
-                            </tr>
-                        @endfor
-                    </tbody>
-                </table>
-                <div class="col-12 left-line right-line bottom-line">
+                        </thead>
+                        <tbody>
+                            @foreach ($noteList as $list)
+                                <tr class="text-center top-line2 text-purple font-weight-bold">
+                                    <td>{{ date('h:i:s A', strtotime($list->TIME)) }}</td>
+                                    <td class="left-line2">
+                                        <div class="row">
+                                            <div class="col-5 text-right">{{ $list->BP_1 }}</div>
+                                            <div class="col-2">|</div>
+                                            <div class="col-5 text-left">{{ $list->BP_2 }}</div>
+                                        </div>
+                                    </td>
+                                    <td class="left-line2">{{ $list->HR }}</td>
+                                    <td class="left-line2">{{ $list->BFR }}</td>
+                                    <td class="left-line2">
+                                        <div class="row">
+                                            <div class="col-5 text-right">{{ $list->AP }}</div>
+                                            <div class="col-2">|</div>
+                                            <div class="col-5 text-left">{{ $list->VP }}</div>
+                                        </div>
+                                    </td>
+                                    <td class="left-line2">{{ $list->TFP }}</td>
+                                    <td class="left-line2">{{ $list->TMP }}</td>
+                                    <td class="left-line2">
+                                        <div class="row">
+                                            <div class="col-5 text-right">{{ $list->HEPARIN }}</div>
+                                            <div class="col-2">|</div>
+                                            <div class="col-5 text-left">{{ $list->FLUSHING }}</div>
+                                        </div>
+                                    </td>
+                                    <td class="left-line2">{{ $list->NOTES }}</td>
+                                </tr>
+                                @php
+                                    $r++;
+                                @endphp
+                            @endforeach
+                            @for ($i = $r; $i < $e; $i++)
+                                <tr class="text-center top-line2">
+                                    <td></td>
+                                    <td class="left-line2"></td>
+                                    <td class="left-line2"></td>
+                                    <td class="left-line2"></td>
+                                    <td class="left-line2">|</td>
+                                    <td class="left-line2"></td>
+                                    <td class="left-line2"></td>
+                                    <td class="left-line2">|</td>
+                                    <td class="left-line2"></td>
+                                </tr>
+                            @endfor
+                        </tbody>
+                    </table>
+                @else
+                    <div class="col-12">
+                        <div class="row">
+                            <div class="col-6 p-0 m-0">
+                                <table width="100%" class="col-12 left-line2 right-line2 bottom-line2">
+                                    <thead>
+                                        <tr class="text-center">
+                                            <th class="col-1">TIME</th>
+                                            <th class="col-1 left-line2">O2 SAT</th>
+                                            <th class="col-1 left-line2">A.P</th>
+                                            <th class="col-1 left-line2">V.P</th>
+                                            <th class="col-1 left-line2">TMP</th>
+                                            <th class="col-1 left-line2">UFR VOL</th>
+                                            <th class="col-1 left-line2">UFR</th>
+                                            <th class="col-1 left-line2">DFR</th>
+                                            <th class="col-4 left-line2">REMARKS</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+
+                                        @for ($i = $r; $i < 17; $i++)
+                                            <tr class="text-center top-line2">
+                                                <td>&nbsp;</td>
+                                                <td class="left-line2"></td>
+                                                <td class="left-line2"></td>
+                                                <td class="left-line2"></td>
+                                                <td class="left-line2"></td>
+                                                <td class="left-line2"></td>
+                                                <td class="left-line2"></td>
+                                                <td class="left-line2"></td>
+                                                <td class="left-line2"></td>
+                                            </tr>
+                                        @endfor
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="col-6 p-0 m-0">
+                                @livewire('Hemodialysis.VitalGraph')
+                            </div>
+                        </div>
+                    </div>
+                @endif
+                <div class="col-12 left-line2 right-line2 bottom-line2">
                     <div class="row mt-2 px-2">
                         <div class="col-4">
                             <div class="row">
