@@ -184,10 +184,10 @@ class PrintTreatment extends Component
 
                 $conPHIC = $this->contactServices->get($locData->PHIC_INCHARGE_ID ?? Auth()->user()->contact_id, 2); // Employee
                 if ($conPHIC) {
-            
+        
                     $this->USER_CONTACT = $conPHIC->MOBILE_NO ?? '';
                     $this->USER_NAME = strtoupper($conPHIC->PRINT_NAME_AS) ?? '';
-                    $this->USER_POSITION = $conUser->NICKNAME ?? '';
+                    $this->USER_POSITION = $conPHIC->NICKNAME ?? '';
 
                 }
 
