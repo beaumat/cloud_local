@@ -191,13 +191,12 @@ class PrintTreatment extends Component
 
                 }
 
-                // $HCI_MANAGER_ID
 
                 $conMgr = $this->contactServices->get($locData->HCI_MANAGER_ID ?? 0, 2); // Employee
-
                 if ($conMgr) {
 
                     $this->ADMINISTRATOR_NAME = strtoupper($conMgr->PRINT_NAME_AS) ?? '';
+                    $this->ADMINISTRATOR_POSITION = $conMgr->NICKNAME ?? '';
                 }
             }
         }
