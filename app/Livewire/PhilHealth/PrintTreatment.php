@@ -184,7 +184,7 @@ class PrintTreatment extends Component
 
                 $conPHIC = $this->contactServices->get($locData->PHIC_INCHARGE_ID ?? Auth()->user()->contact_id, 2); // Employee
                 if ($conPHIC) {
-                    dd("ok");
+            
                     $this->USER_CONTACT = $conPHIC->MOBILE_NO ?? '';
                     $this->USER_NAME = strtoupper($conPHIC->PRINT_NAME_AS) ?? '';
                     $this->USER_POSITION = $conUser->NICKNAME ?? '';
@@ -315,10 +315,7 @@ class PrintTreatment extends Component
                         $this->USER_POSITION = $conPHIC->NICKNAME ?? '';
                     }
 
-                    // $HCI_MANAGER_ID
-
                     $conMgr = $this->contactServices->get($locData->HCI_MANAGER_TREATMENT_ID ?? Auth()->user()->contact_id, 2); // Employee
-
                     if ($conMgr) {
 
                         $this->ADMINISTRATOR_NAME = strtoupper($conMgr->PRINT_NAME_AS) ?? '';
