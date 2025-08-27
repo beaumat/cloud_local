@@ -78,7 +78,7 @@ class DepositForm extends Component
             return Redirect::route('bankingdeposit')->with('Record not found');
         }
         // New
-        $this->ID =  0;
+        $this->ID = 0;
         $this->CODE = '';
         $this->DATE = $this->userServices->getTransactionDateDefault();
         $this->LOCATION_ID = $this->userServices->getLocationDefault();
@@ -88,7 +88,7 @@ class DepositForm extends Component
         $this->NOTES = '';
 
         $this->CASH_BACK_ACCOUNT_ID = 0;
-        $this->CASH_BACK_AMOUNT  =  0;
+        $this->CASH_BACK_AMOUNT = 0;
         $this->CASH_BACK_NOTES = '';
         $this->Modify = true;
     }
@@ -97,18 +97,18 @@ class DepositForm extends Component
 
         $this->validate(
             [
-                'DATE'              => 'required|date',
-                'LOCATION_ID'       => 'required|numeric|exists:location,id',
-                'BANK_ACCOUNT_ID'   => 'required|numeric|exists:account,id',
-                'CODE'              =>  $this->ID > 0 ? 'required|max:20|unique:deposit,code,' . $this->ID : 'nullable',
+                'DATE' => 'required|date',
+                'LOCATION_ID' => 'required|numeric|exists:location,id',
+                'BANK_ACCOUNT_ID' => 'required|numeric|exists:account,id',
+                'CODE' => $this->ID > 0 ? 'required|max:20|unique:deposit,code,' . $this->ID : 'nullable',
 
             ],
             [],
             [
-                'DATE'              => 'Date',
-                'LOCATION_ID'       => 'Location',
-                'BANK_ACCOUNT_ID'   => 'Bank Account',
-                'CODE'              => 'Reference No.',
+                'DATE' => 'Date',
+                'LOCATION_ID' => 'Location',
+                'BANK_ACCOUNT_ID' => 'Bank Account',
+                'CODE' => 'Reference No.',
             ]
         );
 
@@ -117,7 +117,7 @@ class DepositForm extends Component
         try {
             if ($this->ID == 0) {
 
-                $this->ID =  $this->depositServices->Store(
+                $this->ID = $this->depositServices->Store(
                     $this->CODE,
                     $this->DATE,
                     $this->BANK_ACCOUNT_ID,
@@ -131,6 +131,34 @@ class DepositForm extends Component
                 return Redirect::route('bankingdeposit_edit', ['id' => $this->ID]);
             } else {
 
+
+
+                $data = $this->depositServices->Get($this->ID);
+                if ($data) {
+
+                    if ($this->STATUS == 16) {
+                        // possible having change date
+                        $JNO = (int) $this->accountJournalServices->getRecord($this->depositServices->object_type_deposit, $this->ID);
+                        if ($JNO > 0) {
+                            $this->accountJournalServices->updateObjectDate($JNO, $this->DATE);
+                            // ACCOUNTS_PAYABLE_ID
+                            $this->accountJournalServices->AccountSwitch(
+                                $this->BANK_ACCOUNT_ID,
+                                $data->BANK_ACCOUNT_ID,
+                                $this->LOCATION_ID,
+                                $JNO,
+                                0,
+                                $this->ID,
+                                $this->depositServices->object_type_deposit,
+                                $this->DATE,
+                                0
+                            );
+                        }
+
+                    }
+                }
+
+
                 $this->depositServices->Update(
                     $this->ID,
                     $this->CODE,
@@ -140,6 +168,8 @@ class DepositForm extends Component
                     $this->CASH_BACK_AMOUNT,
                     $this->CASH_BACK_NOTES
                 );
+
+
                 DB::commit();
                 session()->flash('message', 'Successfully updated');
                 $this->updateCancel();
@@ -189,13 +219,14 @@ class DepositForm extends Component
         try {
             DB::beginTransaction();
 
-            $JOURNAL_NO  = (int) $this->accountJournalServices->getRecord($this->depositServices->object_type_deposit, $this->ID);
-            if ($JOURNAL_NO  == 0) {
+            $JOURNAL_NO = (int) $this->accountJournalServices->getRecord($this->depositServices->object_type_deposit, $this->ID);
+
+            if ($JOURNAL_NO == 0) {
                 $JOURNAL_NO = (int) $this->accountJournalServices->getJournalNo($this->depositServices->object_type_deposit, $this->ID) + 1;
             }
 
             $depositData = $this->depositServices->DepositJournal($this->ID);
-            
+
             $this->accountJournalServices->JournalExecute(
                 $JOURNAL_NO,
                 $depositData,
@@ -206,6 +237,7 @@ class DepositForm extends Component
             );
 
             $depositFundData = $this->depositServices->DepositFundJournal($this->ID);
+
             $this->accountJournalServices->JournalExecute(
                 $JOURNAL_NO,
                 $depositFundData,
@@ -216,6 +248,7 @@ class DepositForm extends Component
             );
 
             $data = $this->accountJournalServices->getSumDebitCredit($JOURNAL_NO);
+           
             $debit_sum = (float) $data['DEBIT'];
             $credit_sum = (float) $data['CREDIT'];
 
@@ -250,8 +283,8 @@ class DepositForm extends Component
         $this->AMOUNT = $data->AMOUNT ?? 0;
         $this->NOTES = $data->NOTES ?? '';
         $this->CASH_BACK_ACCOUNT_ID = $data->CASH_BACK_ACCOUNT_ID ?? 0;
-        $this->CASH_BACK_AMOUNT  =  $data->CASH_BACK_AMOUNT ?? 0;
-        $this->CASH_BACK_NOTES =  $data->CASH_BACK_NOTES ?? '';
+        $this->CASH_BACK_AMOUNT = $data->CASH_BACK_AMOUNT ?? 0;
+        $this->CASH_BACK_NOTES = $data->CASH_BACK_NOTES ?? '';
         $this->STATUS = $data->STATUS ?? 0;
         $this->STATUS_DESCRIPTION = $this->documentStatusServices->getDesc($this->STATUS);
     }
