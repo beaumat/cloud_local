@@ -1236,7 +1236,7 @@
 
                         </div>
                     </div>
-                    <div class="col-3 text-right">
+                    <div class="col-3 text-center">
                         <div class="row">
                             <div class="col-12 row">
                                 <div class="col-3"></div>
@@ -1244,8 +1244,8 @@
                                     <div class="pt-3 bottom-line2"> &nbsp;</div>
                                 </div>
                                 <div class="col-12 text-sm">
-                                  DATE SIGNED :
-                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DATE SIGNED
+
                                 </div>
                             </div>
 
