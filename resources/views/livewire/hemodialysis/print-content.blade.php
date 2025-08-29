@@ -1086,7 +1086,8 @@
                                             <th class="col-1 left-line2">UFR VOL</th>
                                             <th class="col-1 left-line2">UFR</th>
                                             <th class="col-1 left-line2">DFR</th>
-                                            <th class="col-4 left-line2">REMARKS</th>
+                                            <th class="col-1 left-line2">HEPARIN/ <br /> FLUSHING</th>
+                                            <th class="col-2 left-line2">REMARKS</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -1094,6 +1095,7 @@
                                         @for ($i = $r; $i < 17; $i++)
                                             <tr class="text-center top-line2">
                                                 <td>&nbsp;</td>
+                                                <td class="left-line2"></td>
                                                 <td class="left-line2"></td>
                                                 <td class="left-line2"></td>
                                                 <td class="left-line2"></td>

@@ -383,10 +383,10 @@ class PrintContent extends Component
             }
             $this->noteList = $this->hemoServices->ListNotes($this->HEMO_ID);
 
-            // if (in_array((int) $this->LOCATION_ID, [33])) {
+            if (in_array((int) $this->LOCATION_ID, [33])) {
              
-            //     $this->VITAL_SIGN_GRAPH = true;
-            // }
+                $this->VITAL_SIGN_GRAPH = true;
+            }
         }
     }
 
