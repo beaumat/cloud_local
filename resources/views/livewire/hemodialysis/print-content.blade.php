@@ -1219,25 +1219,36 @@
             </div>
             @if ($OTHER_SIGN)
                 <div class="row">
-                    <div class="col-6">
+                    <div class="col-3">
                     </div>
-                    <div class=" col-6 form-group text-right">
+                    <div class=" col-6 text-right">
                         <div class="row">
                             <div class="col-12 row">
                                 <div class="col-3"></div>
                                 <div class="col-9 ">
-                                    <div class="pt-4 bottom-line2"> &nbsp;</div>
+                                    <div class="pt-3 bottom-line2"> &nbsp;</div>
                                 </div>
                                 <div class="col-12 text-sm">
                                     PATIENT/PT. WATCHER PRINTED NAME & SIGNATURE
                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 </div>
                             </div>
-                            <div class="col-12 row">
-                                <div class="col-6 text-sm"> DATE SIGNED :</div>
-                                <div class='col-6 bottom-line2'> &nbsp;</div>
 
+                        </div>
+                    </div>
+                    <div class="col-3 text-right">
+                        <div class="row">
+                            <div class="col-12 row">
+                                <div class="col-3"></div>
+                                <div class="col-9 ">
+                                    <div class="pt-3 bottom-line2"> &nbsp;</div>
+                                </div>
+                                <div class="col-12 text-sm">
+                                  DATE SIGNED :
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                </div>
                             </div>
+
                         </div>
                     </div>
 
