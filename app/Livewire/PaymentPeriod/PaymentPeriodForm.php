@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Livewire\PaymentPeriod;
 
 use App\Exports\PaymentPeriodExport;
@@ -29,11 +28,9 @@ class PaymentPeriodForm extends Component
     public int $BANK_ACCOUNT_ID;
     public string $DATE;
 
-
-
-    public bool $Modify = false;
+    public bool $Modify  = false;
     public $locationList = [];
-    public $accountList = [];
+    public $accountList  = [];
     private $paymentPeriodServices;
     private $accountServices;
     private $locationServices;
@@ -50,13 +47,13 @@ class PaymentPeriodForm extends Component
         AccountJournalServices $accountJournalServices,
         BillingServices $billingServices
     ) {
-        $this->paymentPeriodServices = $paymentPeriodServices;
-        $this->accountServices = $accountServices;
-        $this->locationServices = $locationServices;
-        $this->paymentServices = $paymentServices;
-        $this->taxCreditServices = $taxCreditServices;
+        $this->paymentPeriodServices  = $paymentPeriodServices;
+        $this->accountServices        = $accountServices;
+        $this->locationServices       = $locationServices;
+        $this->paymentServices        = $paymentServices;
+        $this->taxCreditServices      = $taxCreditServices;
         $this->accountJournalServices = $accountJournalServices;
-        $this->billingServices = $billingServices;
+        $this->billingServices        = $billingServices;
     }
 
     public function mount($id = null)
@@ -65,14 +62,14 @@ class PaymentPeriodForm extends Component
             if (is_numeric($id)) {
                 $data = $this->paymentPeriodServices->get($id);
                 if ($data) {
-                    $this->ID = $data->ID;
-                    $this->DATE = $data->DATE;
-                    $this->RECEIPT_NO = $data->RECEIPT_NO;
-                    $this->DATE_FROM = $data->DATE_FROM;
-                    $this->DATE_TO = $data->DATE_TO;
-                    $this->LOCATION_ID = $data->LOCATION_ID;
-                    $this->TOTAL_PAYMENT = $data->TOTAL_PAYMENT;
-                    $this->TOTAL_WTAX = $data->TOTAL_WTAX;
+                    $this->ID              = $data->ID;
+                    $this->DATE            = $data->DATE;
+                    $this->RECEIPT_NO      = $data->RECEIPT_NO;
+                    $this->DATE_FROM       = $data->DATE_FROM;
+                    $this->DATE_TO         = $data->DATE_TO;
+                    $this->LOCATION_ID     = $data->LOCATION_ID;
+                    $this->TOTAL_PAYMENT   = $data->TOTAL_PAYMENT;
+                    $this->TOTAL_WTAX      = $data->TOTAL_WTAX;
                     $this->BANK_ACCOUNT_ID = $data->BANK_ACCOUNT_ID;
                     $this->dropdownLoad();
                     return;
@@ -96,26 +93,26 @@ class PaymentPeriodForm extends Component
     {
         $this->validate(
             [
-                'DATE' => 'required|date',
-                'DATE_FROM' => 'required|date',
-                'DATE_TO' => 'required|date',
-                'RECEIPT_NO' => 'required|numeric'
+                'DATE'       => 'required|date',
+                'DATE_FROM'  => 'required|date',
+                'DATE_TO'    => 'required|date',
+                'RECEIPT_NO' => 'required|numeric',
 
             ],
             [],
             [
 
-                'DATE' => 'OR Date',
-                'DATE_FROM' => 'Date From',
-                'DATE_TO' => 'Date To',
-                'RECEIPT_NO' => 'OR number'
+                'DATE'       => 'OR Date',
+                'DATE_FROM'  => 'Date From',
+                'DATE_TO'    => 'Date To',
+                'RECEIPT_NO' => 'OR number',
             ]
         );
 
         $isBankAccountExist = (bool) $this->paymentPeriodServices->bankAccountExists($this->ID, $this->BANK_ACCOUNT_ID);
-        $isDateExist = (bool) $this->paymentPeriodServices->dateExists($this->ID, $this->DATE);
-        $isORnumberExist = (bool) $this->paymentPeriodServices->orNumberExists($this->ID, $this->RECEIPT_NO);
-        
+        $isDateExist        = (bool) $this->paymentPeriodServices->dateExists($this->ID, $this->DATE);
+        $isORnumberExist    = (bool) $this->paymentPeriodServices->orNumberExists($this->ID, $this->RECEIPT_NO);
+
         $this->paymentPeriodServices->Update(
             $this->ID,
             $this->RECEIPT_NO,
@@ -126,20 +123,19 @@ class PaymentPeriodForm extends Component
             $this->BANK_ACCOUNT_ID
         );
 
-        if (!$isDateExist) {
+        if (! $isDateExist) {
             //DATE UPDATE
             $this->getUpdateOrderDate();
             return;
         }
-        if (!$isBankAccountExist) {
+        if (! $isBankAccountExist) {
             //BANK ACCOUNT UPDATE
             $this->getUpdateBankAccount();
         }
-        if (!$isORnumberExist) {
+        if (! $isORnumberExist) {
             //OR NUMBER UPDATE
             $this->getUpdateOrNumber();
         }
-
 
         $this->Modify = false;
         session()->flash('message', 'Successfully update');
@@ -215,7 +211,7 @@ class PaymentPeriodForm extends Component
     }
     public function dropdownLoad()
     {
-        $this->accountList = $this->accountServices->getBankAccount();
+        $this->accountList  = $this->accountServices->getBankAccount();
         $this->locationList = $this->locationServices->getList();
     }
     public function render()

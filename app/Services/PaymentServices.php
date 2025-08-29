@@ -322,7 +322,7 @@ class PaymentServices
                 'payment_method.DESCRIPTION as PAYMENT_METHOD',
                 'payment_invoices.AMOUNT_APPLIED',
                 'a.NAME as BANK_ACCOUNT'
-            
+
             ])
             ->join('payment_method', 'payment_method.ID', '=', 'payment.PAYMENT_METHOD_ID')
             ->join('payment_invoices', 'payment_invoices.PAYMENT_ID', '=', 'payment.ID')
@@ -582,7 +582,7 @@ class PaymentServices
                 'l.NAME as LOCATION_NAME',
                 's.DESCRIPTION as STATUS',
 
-            ])  
+            ])
             ->join('location as l', 'l.ID', '=', 'payment.LOCATION_ID')
             ->join('document_status_map as s', 's.ID', '=', 'payment.STATUS')
             ->where('payment.CUSTOMER_ID', '=', $CONTACT_ID)
