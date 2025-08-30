@@ -30,7 +30,6 @@ class AgingServices
             ->when($LOCATION_ID > 0, function ($query) use (&$LOCATION_ID) {
                 $query->where('i.LOCATION_ID', '=', $LOCATION_ID);
             })
-            ->where('c.INACTIVE', '=', 0)
             ->when($CONTACT_SELECT, function ($query) use (&$CONTACT_SELECT) {
                 $query->whereIn('c.ID', $CONTACT_SELECT);
             })
@@ -63,7 +62,6 @@ class AgingServices
             ->when($LOCATION_ID > 0, function ($query) use (&$LOCATION_ID) {
                 $query->where('i.LOCATION_ID', '=', $LOCATION_ID);
             })
-            ->where('c.INACTIVE', '=', 0)
             ->when($CONTACT_SELECT, function ($query) use (&$CONTACT_SELECT) {
                 $query->whereIn('c.ID', $CONTACT_SELECT);
             })
@@ -91,7 +89,6 @@ class AgingServices
             ->when($LOCATION_ID > 0, function ($query) use (&$LOCATION_ID) {
                 $query->where('i.LOCATION_ID', '=', $LOCATION_ID);
             })
-            ->where('c.INACTIVE', '=', 0)
             ->when($CONTACT_SELECT, function ($query) use (&$CONTACT_SELECT) {
                 $query->whereIn('c.ID', $CONTACT_SELECT);
             })
@@ -184,7 +181,6 @@ class AgingServices
             ->when($LOCATION_ID > 0, function ($query) use (&$LOCATION_ID) {
                 $query->where('i.LOCATION_ID', '=', $LOCATION_ID);
             })
-            ->where('c.INACTIVE', '=', 0)
             ->when($CONTACT_SELECT, function ($query) use (&$CONTACT_SELECT) {
                 $query->whereIn('c.ID', $CONTACT_SELECT);
             })

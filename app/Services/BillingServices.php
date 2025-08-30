@@ -770,6 +770,7 @@ class BillingServices
             $data = $this->get($BILL_ID);
             if ($data) {
                 $DUE_DATE = $this->paymentTermServices->getDueDate($data->PAYMENT_TERMS_ID, $NEW_DATE);
+               
                 Bill::where('ID', '=', $BILL_ID)
                     ->update(['DATE' => $NEW_DATE, 'DUE_DATE' => $DUE_DATE]);
             }
