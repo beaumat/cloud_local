@@ -24,17 +24,20 @@ class BillingServices
     private $compute;
     private $systemSettingServices;
     private $dateServices;
+    private $paymentTermServices;
     public function __construct(
         ObjectServices $objectService,
         ComputeServices $computeServices,
         SystemSettingServices $systemSettingServices,
-        DateServices $dateServices
+        DateServices $dateServices,
+        PaymentTermServices $paymentTermServices
 
     ) {
         $this->object = $objectService;
         $this->compute = $computeServices;
         $this->systemSettingServices = $systemSettingServices;
         $this->dateServices = $dateServices;
+        $this->paymentTermServices = $paymentTermServices;
     }
     public function ConfirmProccess(int $ID)
     {
@@ -764,8 +767,17 @@ class BillingServices
     public function billingUpdateDateOnly(int $BILL_ID, string $NEW_DATE)
     {
         if ($BILL_ID > 0) {
-            Bill::where('ID', '=', $BILL_ID)
-                ->update(['DATE' => $NEW_DATE]);
+            $data = $this->get($BILL_ID);
+            if ($data) {
+                $DUE_DATE = $this->paymentTermServices->getDueDate($data->PAYMENT_TERMS_ID, $NEW_DATE);
+                Bill::where('ID', '=', $BILL_ID)
+                    ->update(['DATE' => $NEW_DATE, 'DUE_DATE' => $DUE_DATE]);
+            }
+
+
+
+
+
         }
 
     }
