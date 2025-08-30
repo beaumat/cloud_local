@@ -143,8 +143,8 @@ class PatientStatusServices
             ->join('contact as c', 'c.ID', '=', 'i.CUSTOMER_ID')
             ->where('c.INACTIVE', '=', 0)
             ->whereIn('c.TYPE', [1, 3])
-            ->groupBy('l.ID', 'l.NAME')
             ->where('i.BALANCE_DUE', '>', 0)
+            ->groupBy('l.ID', 'l.NAME')
             ->get();
 
         return $result;
@@ -171,8 +171,8 @@ class PatientStatusServices
             ->join('contact as c', 'c.ID', '=', 'i.VENDOR_ID')
             ->where('c.INACTIVE', '=', 0)
             ->whereIn('c.TYPE', [0, 4])
+            ->where('i.BALANCE_DUE', '>', 0)
             ->groupBy('l.ID', 'l.NAME')
-             ->where('i.BALANCE_DUE', '>', 0)
             ->get();
 
         return $result;
