@@ -144,7 +144,7 @@ class PatientStatusServices
             ->where('c.INACTIVE', '=', 0)
             ->whereIn('c.TYPE', [1, 3])
             ->groupBy('l.ID', 'l.NAME')
-            ->having('BALANCE', '>', 0)
+            ->where('i.BALANCE_DUE', '>', 0)
             ->get();
 
         return $result;
@@ -172,7 +172,7 @@ class PatientStatusServices
             ->where('c.INACTIVE', '=', 0)
             ->whereIn('c.TYPE', [0, 4])
             ->groupBy('l.ID', 'l.NAME')
-            ->having('BALANCE', '>', 0)
+             ->where('i.BALANCE_DUE', '>', 0)
             ->get();
 
         return $result;

@@ -7,7 +7,9 @@ use Illuminate\Support\Facades\DB;
 
 class AgingServices
 {
-    public function __construct() {}
+    public function __construct()
+    {
+    }
 
     public function ARAgingSummary(string $AS_OF_DATE, int $LOCATION_ID, array $CONTACT_SELECT)
     {
@@ -34,14 +36,14 @@ class AgingServices
             })
             ->whereIn('c.TYPE', [1, 3])
             ->groupBy('c.ID', 'c.NAME')
-            ->having('BALANCE', '>', 0)
+            ->where('i.BALANCE_DUE', '>', 0)
             ->get();
 
         return $result;
     }
     public function ARAgingDetais(string $AS_OF_DATE, int $LOCATION_ID, array $CONTACT_SELECT)
     {
-        $result =  DB::table('invoice as i')
+        $result = DB::table('invoice as i')
             ->select([
                 'c.ID as CONTACT_ID',
                 'c.NAME as CONTACT_NAME',
@@ -74,7 +76,7 @@ class AgingServices
     }
     public function CustomerBalance(string $AS_OF_DATE, int $LOCATION_ID, array $CONTACT_SELECT)
     {
-        $result =  DB::table('invoice as i')
+        $result = DB::table('invoice as i')
             ->select([
                 'c.ID as CONTACT_ID',
                 'c.NAME as CONTACT_NAME',
@@ -122,20 +124,20 @@ class AgingServices
             ->when($LOCATION_ID > 0, function ($query) use (&$LOCATION_ID) {
                 $query->where('i.LOCATION_ID', '=', $LOCATION_ID);
             })
-            ->where('c.INACTIVE', '=', 0)
+
             ->when($CONTACT_SELECT, function ($query) use (&$CONTACT_SELECT) {
                 $query->whereIn('c.ID', $CONTACT_SELECT);
             })
             ->whereIn('c.TYPE', [0, 4])
             ->groupBy('c.ID', 'c.NAME')
-            ->having('BALANCE', '>', 0)
+            ->where('i.BALANCE_DUE', '>', 0)
             ->get();
 
         return $result;
     }
     public function APAgingDetais(string $AS_OF_DATE, int $LOCATION_ID, array $CONTACT_SELECT)
     {
-        $result =  DB::table('bill as i')
+        $result = DB::table('bill as i')
             ->select([
                 'c.ID as CONTACT_ID',
                 'c.NAME as CONTACT_NAME',
@@ -155,7 +157,7 @@ class AgingServices
             ->when($LOCATION_ID > 0, function ($query) use (&$LOCATION_ID) {
                 $query->where('i.LOCATION_ID', '=', $LOCATION_ID);
             })
-            ->where('c.INACTIVE', '=', 0)
+
             ->when($CONTACT_SELECT, function ($query) use (&$CONTACT_SELECT) {
                 $query->whereIn('c.ID', $CONTACT_SELECT);
             })
@@ -168,7 +170,7 @@ class AgingServices
     }
     public function VendorBalance(string $AS_OF_DATE, int $LOCATION_ID, array $CONTACT_SELECT)
     {
-        $result =  DB::table('bill as i')
+        $result = DB::table('bill as i')
             ->select([
                 'c.ID as CONTACT_ID',
                 'c.NAME as CONTACT_NAME',

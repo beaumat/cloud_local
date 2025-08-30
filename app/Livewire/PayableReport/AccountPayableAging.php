@@ -56,7 +56,7 @@ class AccountPayableAging extends Component
         $this->D_61_90 = false;
         $this->D_91_OVER = false;
         $this->isSummary = false;
-        $this->detailList =  $this->agingServices->APAgingDetais($this->DATE, $this->LOCATION_ID, []);
+        $this->detailList = $this->agingServices->APAgingDetais($this->DATE, $this->LOCATION_ID, []);
     }
 
     public function render()
