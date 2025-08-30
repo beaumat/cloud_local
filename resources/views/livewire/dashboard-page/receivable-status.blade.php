@@ -40,11 +40,11 @@
                                 @foreach ($locationList as $list)
                                     <tr>
                                         <td>{{ $list->NAME }}</td>
-                                        <td class="text-right">{{ number_format($list->CURRENT, 2) }}</td>
-                                        <td class="text-right">{{ number_format($list->TOTAL_1_30, 2) }}</td>
-                                        <td class="text-right">{{ number_format($list->TOTAL_31_60, 2) }}</td>
-                                        <td class="text-right">{{ number_format($list->TOTAL_61_90, 2) }}</td>
-                                        <td class="text-right">{{ number_format($list->OVER_90, 2) }}</td>
+                                        <td class="text-right">{{ number_format($list->DUE_CURRENT, 2) }}</td>
+                                        <td class="text-right">{{ number_format($list->DUE_1_30, 2) }}</td>
+                                        <td class="text-right">{{ number_format($list->DUE_31_60, 2) }}</td>
+                                        <td class="text-right">{{ number_format($list->DUE_61_90, 2) }}</td>
+                                        <td class="text-right">{{ number_format($list->DUE_90_OVER, 2) }}</td>
                                         <td class="text-right">{{ number_format($list->BALANCE, 2) }}</td>
                                     </tr>
                                 @endforeach
