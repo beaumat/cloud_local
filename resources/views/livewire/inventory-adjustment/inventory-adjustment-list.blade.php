@@ -95,7 +95,7 @@ use App\Services\UserServices;
                                                             <i class="fas fa-eye" aria-hidden="true"></i>
                                                         </a>
 
-                                                        @if (UserServices::GetUserRightAccess('company.inventory-adjustment.delete') && $list->STATUS_ID == 0)
+                                                        @if (UserServices::GetUserRightAccess('company.inventory-adjustment.delete') && $list->STATUS_ID == 16 || $list->STATUS_ID == 0)
                                                             <button type="button"
                                                                 wire:click='delete({{ $list->ID }})'
                                                                 wire:confirm="Are you sure you want to delete this?"

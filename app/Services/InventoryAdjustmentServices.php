@@ -223,6 +223,8 @@ class InventoryAdjustmentServices
         InventoryAdjustmentItems::where('ID', '=', $ID)
             ->where('INVENTORY_ADJUSTMENT_ID', '=', $INVENTORY_ADJUSTMENT_ID)
             ->delete();
+
+
     }
 
     public function ItemView(int $INVENTORY_ADJUSTMENT_ID)

@@ -170,31 +170,7 @@ class ItemInventoryServices
             $this->itemRecountServers->Insert($ITEM_ID, $LOCATION_ID, $SOURCE_REF_DATE);
         }
     }
-    // private function fixList(int $ITEM_ID, int $LOCATION_ID, string $SOURCE_REF_DATE, int $ID, float $ENDING_QUANTITY)
-    // {
-    //     $nextData = $this->getNextEndingUpdate($ITEM_ID, $LOCATION_ID, $SOURCE_REF_DATE, $ID);
-    //     foreach ($nextData as $list) {
 
-    //         if ($list->SOURCE_REF_TYPE == 6) {
-    //             // make it update
-    //             return;
-    //         }
-
-    //         $ENDING_QUANTITY = $ENDING_QUANTITY + (float) $list->QUANTITY ?? 0;
-    //         $NEW_ENDING_COST = $ENDING_QUANTITY + (float) $list->ENDING_UNIT_COST ?? 0;
-
-    //         $this->getNextUpdate(
-    //             $list->ID,
-    //             $ITEM_ID,
-    //             $LOCATION_ID,
-    //             $list->SOURCE_REF_TYPE,
-    //             $list->SOURCE_REF_ID,
-    //             $list->SOURCE_REF_DATE,
-    //             $ENDING_QUANTITY,
-    //             $NEW_ENDING_COST
-    //         );
-    //     }
-    // }
     public function DeleteInv(int $ITEM_ID, int $LOCATION_ID, int $SOURCE_REF_TYPE, int $SOURCE_REF_ID, string $SOURCE_REF_DATE)
     {
         $this->Update(
@@ -209,29 +185,7 @@ class ItemInventoryServices
         // make auto fix quatity
 
     }
-    // private function getNextEndingUpdate(int $ITEM_ID, int $LOCATION_ID, string $SOURCE_REF_DATE, int $ID)
-    // {
-    //     $result = DB::table('item_inventory')
-    //         ->select([
-    //             'ID',
-    //             'QUANTITY',
-    //             'COST',
-    //             'ENDING_UNIT_COST',
-    //             'ENDING_COST',
-    //             'SOURCE_REF_TYPE',
-    //             'SOURCE_REF_ID',
-    //             'SOURCE_REF_DATE',
-    //         ])
-    //         ->where('ITEM_ID', '=', $ITEM_ID)
-    //         ->where('LOCATION_ID', '=', $LOCATION_ID)
-    //         ->whereNotIn('ID', [$ID])
-    //         ->where('SOURCE_REF_DATE', '>=', $SOURCE_REF_DATE)
-    //         ->orderBy('SOURCE_REF_DATE', 'asc')
-    //         ->orderBy('ID', 'asc')
-    //         ->get();
 
-    //     return $result;
-    // }
     private function getNextEndingStore(int $ITEM_ID, int $LOCATION_ID, string $SOURCE_REF_DATE)
     {
 
@@ -661,14 +615,6 @@ class ItemInventoryServices
                     ]);
 
                     $this->itemRecountServers->Insert($ITEM_ID, $LOCATION_ID, $SOURCE_REF_DATE);
-
-                    // $this->fixList(
-                    //     $ITEM_ID,
-                    //     $LOCATION_ID,
-                    //     $SOURCE_REF_DATE,
-                    //     $PK_ID,
-                    //     $ENDING_QUANTITY
-                    // );
                 }
 
             }
