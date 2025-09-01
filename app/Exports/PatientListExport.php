@@ -31,38 +31,42 @@ class PatientListExport implements FromCollection, ShouldAutoSize
     {
         $dataList = $this->contactServices->SearchPatient($this->search, 99999, $this->locationId, $this->sortBy, $this->isDesc, $this->doctorid);
         $headers = [
-            'NO'            => 'No.',
-            'LN'            => 'Lastname',
-            'FN'            => 'Firstname',
-            'MN'            => 'Middlename',
-            'EXT'           => 'Ext.',
-            'SEX'           => 'Sex',
-            'DOB'           => 'Date of Birth',
-            'AGE'           => 'Age',
-            'PHILHEALTH'    => 'Philhealth No.',
-            'DOCTOR'        => 'Nepro/Doctor',
-            'DIAGNOSIS'     => 'Diagnosis On',
-            'Location'      => 'Location',
-            'REQ'           => 'Req. Status',
-            'INACTIVE'      => 'Inactive'
+            'NO' => 'No.',
+            'LN' => 'Lastname',
+            'FN' => 'Firstname',
+            'MN' => 'Middlename',
+            'EXT' => 'Ext.',
+            'SEX' => 'Sex',
+            'DOB' => 'Date of Birth',
+            'AGE' => 'Age',
+            'PHILHEALTH' => 'Philhealth No.',
+            'DOCTOR' => 'Nepro/Doctor',
+            'DIAGNOSIS' => 'Diagnosis On',
+            'Location' => 'Location',
+            'Classification' => 'Classification',
+            'PDP' => 'PDP',
+            'REQ' => 'Req. Status',
+            'INACTIVE' => 'Inactive'
         ];
         $finalData[] = array_values($headers);
         foreach ($dataList as $list) {
             $rowData = [
-                'NO'            =>  $list->ACCOUNT_NO,
-                'LN'            =>  $list->LAST_NAME,
-                'FN'            =>  $list->FIRST_NAME,
-                'MN'            =>  $list->MIDDLE_NAME,
-                'EXT'           =>  $list->SALUTATION,
-                'SEX'           =>  $list->GENDER,
-                'DOB'           =>  $list->DATE_OF_BIRTH,
-                'AGE'           =>  $list->AGE,
-                'PHILHEALTH'    =>  " $list->PIN",
-                'DOCTOR'        =>  $list->DOCTOR_NAME,
-                'DIAGNOSIS'     =>  $list->DATE_ADMISSION,
-                'Location'      =>  $list->LOCATION_NAME,
-                'REQ'           =>  $list->IS_COMPLETE ? 'Yes' : 'No',
-                'INACTIVE'      =>  $list->INACTIVE ? 'Yes' : 'No'
+                'NO' => $list->ACCOUNT_NO,
+                'LN' => $list->LAST_NAME,
+                'FN' => $list->FIRST_NAME,
+                'MN' => $list->MIDDLE_NAME,
+                'EXT' => $list->SALUTATION,
+                'SEX' => $list->GENDER,
+                'DOB' => $list->DATE_OF_BIRTH,
+                'AGE' => $list->AGE,
+                'PHILHEALTH' => " $list->PIN",
+                'DOCTOR' => $list->DOCTOR_NAME,
+                'DIAGNOSIS' => $list->DATE_ADMISSION,
+                'Location' => $list->LOCATION_NAME,
+                'Classification' => $list->CLASS,
+                'PDP' => $list->PDP,
+                'REQ' => $list->IS_COMPLETE ? 'Yes' : 'No',
+                'INACTIVE' => $list->INACTIVE ? 'Yes' : 'No'
             ];
 
 
