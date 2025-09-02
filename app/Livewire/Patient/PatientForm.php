@@ -541,7 +541,6 @@ class PatientForm extends Component
                 $this->validate(
                     [
                         'SECOND_CASE_RATE' => 'required|string|min:20|unique:contact,SECOND_CASE_RATE,' . $this->ID,
-
                     ],
                     [],
                     [

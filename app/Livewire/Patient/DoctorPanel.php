@@ -55,7 +55,7 @@ class DoctorPanel extends Component
             session()->flash('error', 'Please select.');
             return;
         }
-        if ($this->patientDoctorServices->AlreadyExists($this->ID)) {
+        if ($this->patientDoctorServices->AlreadyExists($this->ID , $this->LOCATION_ID)) {
             session()->flash('error', 'Nephro already added.');
             return;
         }
@@ -73,6 +73,7 @@ class DoctorPanel extends Component
     {
 
         $this->dataList = $this->patientDoctorServices->GetList($this->ID > 0 ? $this->ID : 0);
+
         return view('livewire.patient.doctor-panel');
     }
 }

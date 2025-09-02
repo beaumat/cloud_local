@@ -681,7 +681,6 @@ class ContactServices
                     'd.PRINT_NAME_AS as DOCTOR_NAME',
                     'pc.DESCRIPTION as CLASS',
                     'contact.SECOND_CASE_RATE as PDP',
-
                 ]
             )
             ->join('contact_type_map as t', function ($join) use (&$TYPE) {
@@ -692,7 +691,9 @@ class ContactServices
             ->leftJoin('location as l', 'l.ID', '=', 'contact.LOCATION_ID')
             ->leftJoin('patient_doctor as pd', 'pd.PATIENT_ID', '=', 'contact.ID')
             ->leftJoin('contact as d', 'd.ID', '=', 'pd.DOCTOR_ID')
+            ->leftJoin('doctor_location as dl','dl.DOCTOR_ID','d.ID')
             ->leftJoin('patient_class as pc', 'pc.ID', '=', 'contact.CLASS_ID')
+           
             ->when($doctorId > 0, function ($query) use (&$doctorId) {
                 $query->where('pd.DOCTOR_ID', $doctorId);
             })
@@ -713,6 +714,7 @@ class ContactServices
             })
             ->when($locationId > 0, function ($query) use (&$locationId, &$search, &$doctorId) {
                 $query->where('contact.LOCATION_ID', '=', $locationId)
+                     ->where('dl.LOCATION_ID','=', $locationId)
                     ->orWhereExists(function ($q) use (&$locationId, &$search, &$doctorId) {
                         $q->select(DB::raw(1))
                             ->from('service_charges as sc')
@@ -722,6 +724,7 @@ class ContactServices
                             ->when($doctorId > 0, function ($query) use (&$doctorId) {
                                 $query->where('pd.DOCTOR_ID', $doctorId);
                             })
+                            ->where('dl.LOCATION_ID','=', $locationId)
                             ->where(function ($sql) use ($search) {
                                 $sql->where('contact.NAME', 'like', '%' . $search . '%')
                                     ->orWhere('contact.ACCOUNT_NO', 'like', '%' . $search . '%')

@@ -138,14 +138,16 @@ class PhilHealthServices
                 'CF4_PPMH' => $CF4_PPMH == '' ? null : $CF4_PPMH,
             ]);
     }
-    public function AutoMakeProfFeeDetails(int $PHIC_ID, int $PATIENT_ID, int $COUNT)
+    public function AutoMakeProfFeeDetails(int $PHIC_ID, int $PATIENT_ID, int $COUNT, int $LOCATION_ID )
     {
         $TOTAL_FEE = 0;
         $TOTAL_DISC = 0;
         $TOTAL_FIRST_CASE = 0;
 
-        $data = PatientDoctor::query()->select(['DOCTOR_ID'])
-            ->where("PATIENT_ID", $PATIENT_ID)
+        $data = PatientDoctor::query()->select(['patient_doctor.DOCTOR_ID'])
+            ->join('DOCTOR_LOCATION as dl','dl.DOCTOR_ID','=', 'patient_doctor.DOCTOR_ID')
+            ->where("patient_doctor.PATIENT_ID",'=', $PATIENT_ID)
+            ->where('dl.LOCATION_ID','=', $LOCATION_ID)
             ->get();
 
         if ($data) {
@@ -440,7 +442,7 @@ class PhilHealthServices
                 $OP_SUB_TOTAL = $this->OP_SUB_TOTAL;
             }
 
-            $profArray = $this->AutoMakeProfFeeDetails($data->ID, $data->CONTACT_ID, $NO_OF_TREATMENT);
+            $profArray = $this->AutoMakeProfFeeDetails($data->ID, $data->CONTACT_ID, $NO_OF_TREATMENT,$data->LOCATION_ID);
 
             $PROFESSIONAL_FEE_SUB_TOTAL = (float) $profArray['TOTAL_FEE'];
             $PROFESSIONAL_DISCOUNT_SUB_TOTAL = (float) $profArray['TOTAL_DISCOUNT'];
