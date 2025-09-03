@@ -128,10 +128,10 @@ class GeneralJournalForm extends Component
             ]
         );
 
-        if ($this->systemSettingServices->IsCloseDate($this->DATE)) {
-            session()->flash('error', 'You cannot create a transaction before or on the closing date on :' . $this->DATE);
-            return;
-        }
+          if ($this->systemSettingServices->IsCloseDate($this->DATE)) {
+                    session()->flash('error', 'You cannot create a transaction before or on the closing date on :' . $this->systemSettingServices->CloseDate());
+                    return;
+                }
 
 
         try {

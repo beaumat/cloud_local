@@ -248,6 +248,13 @@ class SalesOrderForm extends Component
                     ]
                 );
 
+
+                if ($this->systemSettingServices->IsCloseDate($this->DATE)) {
+                    session()->flash('error', 'You cannot create a transaction before or on the closing date on :' . $this->systemSettingServices->CloseDate());
+                    return;
+                }
+
+
                 $this->getTax();
                 $this->ID = (int) $this->salesOrderServices->Store(
                     $this->CODE,

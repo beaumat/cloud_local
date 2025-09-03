@@ -9,6 +9,7 @@ use App\Services\DocumentStatusServices;
 use App\Services\LocationServices;
 use App\Services\PaymentMethodServices;
 use App\Services\PaymentServices;
+use App\Services\SystemSettingServices;
 use App\Services\UserServices;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\On;
@@ -61,6 +62,8 @@ class PaymentForm extends Component
     public string $TITLE_REF;
     public string $TITLE_DATE;
 
+    private $systemSettingServices;
+
     private $accountJournalServices;
     private $documentStatusServices;
     public function boot(
@@ -71,7 +74,8 @@ class PaymentForm extends Component
         PaymentMethodServices $paymentMethodServices,
         ContactServices $contactServices,
         AccountJournalServices $accountJournalServices,
-        DocumentStatusServices $documentStatusServices
+        DocumentStatusServices $documentStatusServices,
+        SystemSettingServices $systemSettingServices
     ) {
         $this->paymentServices = $paymentServices;
         $this->locationServices = $locationServices;
@@ -81,6 +85,7 @@ class PaymentForm extends Component
         $this->contactServices = $contactServices;
         $this->accountJournalServices = $accountJournalServices;
         $this->documentStatusServices = $documentStatusServices;
+        $this->systemSettingServices = $systemSettingServices;
     }
     public function getInfo($data)
     {
@@ -186,10 +191,18 @@ class PaymentForm extends Component
                 'UNDEPOSITED_FUNDS_ACCOUNT_ID' => 'Deposit to Bank Account'
             ]
         );
+        if ($this->systemSettingServices->IsCloseDate($this->DATE)) {
+            session()->flash('error', 'You cannot create a transaction before or on the closing date on :' . $this->systemSettingServices->CloseDate());
+            return;
+        }
+
         DB::beginTransaction();
         try {
 
             if ($this->ID == 0) {
+
+
+
 
                 $this->ID = $this->paymentServices->Store(
                     $this->CODE,

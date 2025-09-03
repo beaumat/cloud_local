@@ -186,21 +186,28 @@ class WriteCheckForm extends Component
 
         $this->validate(
             [
-                'BANK_ACCOUNT_ID'   => 'required|not_in:0|exists:account,id',
-                'CODE'              => $this->ID > 0 ? 'required|max:20|unique:check,code,' . $this->ID : 'nullable',
-                'PAY_TO_ID'         => 'required|not_in:0|exists:contact,id',
-                'DATE'              => 'required',
-                'LOCATION_ID'       => 'required|exists:location,id'
+                'BANK_ACCOUNT_ID' => 'required|not_in:0|exists:account,id',
+                'CODE' => $this->ID > 0 ? 'required|max:20|unique:check,code,' . $this->ID : 'nullable',
+                'PAY_TO_ID' => 'required|not_in:0|exists:contact,id',
+                'DATE' => 'required',
+                'LOCATION_ID' => 'required|exists:location,id'
             ],
             [],
             [
-                'BANK_ACCOUNT_ID'   => 'Bank Account',
-                'CODE'              => 'Reference No.',
-                'PAY_TO_ID'         => 'Pay To',
-                'DATE'              => 'Date',
-                'LOCATION_ID'       => 'Location',
+                'BANK_ACCOUNT_ID' => 'Bank Account',
+                'CODE' => 'Reference No.',
+                'PAY_TO_ID' => 'Pay To',
+                'DATE' => 'Date',
+                'LOCATION_ID' => 'Location',
             ]
         );
+
+        if ($this->systemSettingServices->IsCloseDate($this->DATE)) {
+            session()->flash('error', 'You cannot create a transaction before or on the closing date on :' . $this->systemSettingServices->CloseDate());
+            return;
+        }
+
+
         try {
             if ($this->ID == 0) {
 
@@ -225,7 +232,7 @@ class WriteCheckForm extends Component
             } else {
 
                 DB::beginTransaction();
-                $data =  $this->writeCheckServices->Get($this->ID);
+                $data = $this->writeCheckServices->Get($this->ID);
                 if ($data) {
                     if ($this->STATUS == 16) {
                         $JNO = $this->accountJournalServices->getRecord($this->writeCheckServices->object_type_check, $this->ID);
@@ -343,7 +350,7 @@ class WriteCheckForm extends Component
             $checkExpenses = (int) $this->writeCheckServices->object_type_check_expenses;
 
             $JOURNAL_NO = $this->accountJournalServices->getRecord($check, $this->ID);
-            if ($JOURNAL_NO  ==  0) {
+            if ($JOURNAL_NO == 0) {
                 $JOURNAL_NO = $this->accountJournalServices->getJournalNo($check, $this->ID) + 1;
             }
 

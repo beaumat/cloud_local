@@ -23,7 +23,7 @@ class PatientPaymentForm extends Component
 {
     use WithFileUploads;
     public bool $IS_INVOICE = false;
-    public int $REF_ID  = 0;
+    public int $REF_ID = 0;
     public string $FILE_NAME;
     public string $FILE_PATH;
     public bool $IS_CONFIRM;
@@ -118,8 +118,8 @@ class PatientPaymentForm extends Component
         $this->UNDEPOSITED_FUNDS_ACCOUNT_ID = $data->UNDEPOSITED_FUNDS_ACCOUNT_ID ?? 0;
         $this->OVERPAYMENT_ACCOUNT_ID = $data->OVERPAYMENT_ACCOUNT_ID ?? 0;
         $this->ACCOUNTS_RECEIVABLE_ID = $data->ACCOUNTS_RECEIVABLE_ID ?? 0;
-        $this->WTAX_ACCOUNT_ID =  $data->WTAX_ACCOUNT_ID ?? 0;
-        $this->WTAX_AMOUNT =  $data->WTAX_AMOUNT  ?? 0;
+        $this->WTAX_ACCOUNT_ID = $data->WTAX_ACCOUNT_ID ?? 0;
+        $this->WTAX_AMOUNT = $data->WTAX_AMOUNT ?? 0;
         $this->STATUS = $data->STATUS ?? 0;
         $this->STATUS_DATE = $data->STATUS_DATE ?? null;
         $this->DEPOSITED = $data->DEPOSITED ?? null;
@@ -214,43 +214,51 @@ class PatientPaymentForm extends Component
         $getType = $this->paymentMethodServices->get($this->PAYMENT_METHOD_ID);
         $PAYMENT_TYPE = (int) $getType->PAYMENT_TYPE;
         if ($PAYMENT_TYPE == 10 && $this->ID == 0) {
+
+            if ($this->systemSettingServices->IsCloseDate($this->DATE)) {
+                session()->flash('error', 'You cannot create a transaction before or on the closing date on :' . $this->systemSettingServices->CloseDate());
+                return;
+            }
+
+
+
             $this->validate(
                 [
-                    'PATIENT_ID'                        => 'required|not_in:0',
-                    'DATE'                              => 'required',
-                    'LOCATION_ID'                       => 'required',
-                    'AMOUNT'                            => 'required|not_in:0',
-                    'RECEIPT_REF_NO'                    => 'required',
-                    'RECEIPT_DATE'                      => 'required',
-                    'UNDEPOSITED_FUNDS_ACCOUNT_ID'      => $this->PAYMENT_METHOD_ID == 1 ? '' : 'required|exists:account,id'
+                    'PATIENT_ID' => 'required|not_in:0',
+                    'DATE' => 'required',
+                    'LOCATION_ID' => 'required',
+                    'AMOUNT' => 'required|not_in:0',
+                    'RECEIPT_REF_NO' => 'required',
+                    'RECEIPT_DATE' => 'required',
+                    'UNDEPOSITED_FUNDS_ACCOUNT_ID' => $this->PAYMENT_METHOD_ID == 1 ? '' : 'required|exists:account,id'
                 ],
                 [],
                 [
-                    'PATIENT_ID'                    => 'Patient',
-                    'DATE'                          => 'Date',
-                    'LOCATION_ID'                   => 'Location',
-                    'AMOUNT'                        => 'Amount',
-                    'RECEIPT_REF_NO'                => 'GL Reference No.',
-                    'RECEIPT_DATE'                  => 'GL Date',
-                    'UNDEPOSITED_FUNDS_ACCOUNT_ID'  => 'GL Account'
+                    'PATIENT_ID' => 'Patient',
+                    'DATE' => 'Date',
+                    'LOCATION_ID' => 'Location',
+                    'AMOUNT' => 'Amount',
+                    'RECEIPT_REF_NO' => 'GL Reference No.',
+                    'RECEIPT_DATE' => 'GL Date',
+                    'UNDEPOSITED_FUNDS_ACCOUNT_ID' => 'GL Account'
                 ]
             );
         } else {
 
             $this->validate(
                 [
-                    'PATIENT_ID'                        => 'required|not_in:0',
-                    'DATE'                              => 'required',
-                    'LOCATION_ID'                       => 'required',
-                    'AMOUNT'                            => 'required|not_in:0',
-                    'UNDEPOSITED_FUNDS_ACCOUNT_ID'      => $this->PAYMENT_METHOD_ID == 1 ? '' : 'required|exists:account,id'
+                    'PATIENT_ID' => 'required|not_in:0',
+                    'DATE' => 'required',
+                    'LOCATION_ID' => 'required',
+                    'AMOUNT' => 'required|not_in:0',
+                    'UNDEPOSITED_FUNDS_ACCOUNT_ID' => $this->PAYMENT_METHOD_ID == 1 ? '' : 'required|exists:account,id'
                 ],
                 [],
                 [
-                    'PATIENT_ID'                        => 'Patient',
-                    'DATE'                              => 'Date',
-                    'LOCATION_ID'                       => 'Location',
-                    'AMOUNT'                            => 'Amount',
+                    'PATIENT_ID' => 'Patient',
+                    'DATE' => 'Date',
+                    'LOCATION_ID' => 'Location',
+                    'AMOUNT' => 'Amount',
                 ]
             );
         }
@@ -353,7 +361,7 @@ class PatientPaymentForm extends Component
         $paymentMethod = $this->paymentMethodServices->get($this->PAYMENT_METHOD_ID);
 
         if ($paymentMethod) {
-            $data =  $this->paymentMethodServices->PaymentMethodSwitch($paymentMethod->PAYMENT_TYPE);
+            $data = $this->paymentMethodServices->PaymentMethodSwitch($paymentMethod->PAYMENT_TYPE);
             $this->showCardNo = (bool) $data['showCardNo'];
             $this->showCardDateExpire = (bool) $data['showCardDateExpire'];
             $this->showReceiptNo = (bool) $data['showReceiptNo'];
@@ -363,7 +371,7 @@ class PatientPaymentForm extends Component
             $this->TITLE_DATE = (string) $data['titleDate'];
             $this->showTax = (bool) $data['showTax'];
         }
-        $this->UNDEPOSITED_FUNDS_ACCOUNT_ID  = 0;
+        $this->UNDEPOSITED_FUNDS_ACCOUNT_ID = 0;
     }
     public function openPayment()
     {

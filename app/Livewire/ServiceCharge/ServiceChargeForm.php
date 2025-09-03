@@ -245,10 +245,11 @@ class ServiceChargeForm extends Component
                 'PAYMENT_TERMS_ID' => 'Payment Terms',
             ]
         );
-        if ($this->systemSettingServices->IsCloseDate($this->DATE)) {
-            session()->flash('error', 'You cannot create a transaction before or on the closing date on :' . $this->DATE);
+         if ($this->systemSettingServices->IsCloseDate($this->DATE)) {
+            session()->flash('error', 'You cannot create a transaction before or on the closing date on :' . $this->systemSettingServices->CloseDate());
             return;
         }
+
         try {
             if ($this->ID == 0) {
                 if ($this->serviceChargeServices->ServicesChargesExists($this->DATE, $this->PATIENT_ID, $this->LOCATION_ID)) {

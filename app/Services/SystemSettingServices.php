@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\SystemSetting;
 use Carbon\Carbon;
 use DateTime;
+use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
 
 class SystemSettingServices
@@ -57,6 +58,15 @@ class SystemSettingServices
             // \Log::error($th->getMessage());
         }
         return false;
+    }
+    public function CloseDate(): string
+    {
+        $result = SystemSetting::query()
+            ->select('VALUE')
+            ->where('NAME', '=', 'ClosingDate')
+            ->first();
+            
+        return $result->VALUE ?? '';
     }
 
 

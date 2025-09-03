@@ -5,6 +5,7 @@ namespace App\Livewire\TaxCredit;
 use App\Services\AccountJournalServices;
 use App\Services\ContactServices;
 use App\Services\LocationServices;
+use App\Services\SystemSettingServices;
 use App\Services\TaxCreditServices;
 use App\Services\TaxServices;
 use App\Services\UserServices;
@@ -43,13 +44,16 @@ class TaxCreditForm extends Component
     private $userServices;
     private $taxServices;
     private $accountJournalServices;
+    private $systemSettingServices;
     public function boot(
         TaxCreditServices $taxCreditServices,
         ContactServices $contactServices,
         LocationServices $locationServices,
         UserServices $userServices,
         TaxServices $taxServices,
-        AccountJournalServices $accountJournalServices
+        AccountJournalServices $accountJournalServices,
+        SystemSettingServices $systemSettingServices    
+
     ) {
         $this->taxCreditServices = $taxCreditServices;
         $this->contactServices = $contactServices;
@@ -57,6 +61,7 @@ class TaxCreditForm extends Component
         $this->locationServices = $locationServices;
         $this->taxServices = $taxServices;
         $this->accountJournalServices = $accountJournalServices;
+        $this->systemSettingServices = $systemSettingServices;
     }
     private function LoadDropdown()
     {
@@ -147,6 +152,11 @@ class TaxCreditForm extends Component
                 'DATE' => 'Date'
             ]
         );
+
+       if ($this->systemSettingServices->IsCloseDate($this->DATE)) {
+            session()->flash('error', 'You cannot create a transaction before or on the closing date on :' . $this->systemSettingServices->CloseDate());
+            return;
+        }
 
         DB::beginTransaction();
         try {

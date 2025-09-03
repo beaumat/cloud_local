@@ -25,7 +25,7 @@ class PurchaseOrderForm extends Component
     public bool $PO_ALREADY_BILL;
     public int $ID;
     public int $VENDOR_ID;
-    public  $DATE;
+    public $DATE;
     public string $CODE;
     public int $LOCATION_ID;
     public int $CLASS_ID;
@@ -165,7 +165,7 @@ class PurchaseOrderForm extends Component
     }
     public function makeBill()
     {
-        $this->dispatch('open-make-bill',  purchase: ['PO_ID' => $this->ID]);
+        $this->dispatch('open-make-bill', purchase: ['PO_ID' => $this->ID]);
     }
     public function save()
     {
@@ -173,27 +173,32 @@ class PurchaseOrderForm extends Component
 
         $this->validate(
             [
-                'VENDOR_ID'         => 'required|numeric|exists:contact,id',
-                'CODE'              => 'nullable|max:20|unique:purchase_order,code,' . ($this->ID > 0 ? $this->ID : 'NULL') . ',id',
-                'INPUT_TAX_ID'      => 'required|numeric|exists:tax,id',
-                'DATE'              => 'required|date',
-                'LOCATION_ID'       => 'required|numeric|exists:location,id',
-                'PAYMENT_TERMS_ID'  => 'required|numeric|exists:payment_terms,id'
+                'VENDOR_ID' => 'required|numeric|exists:contact,id',
+                'CODE' => 'nullable|max:20|unique:purchase_order,code,' . ($this->ID > 0 ? $this->ID : 'NULL') . ',id',
+                'INPUT_TAX_ID' => 'required|numeric|exists:tax,id',
+                'DATE' => 'required|date',
+                'LOCATION_ID' => 'required|numeric|exists:location,id',
+                'PAYMENT_TERMS_ID' => 'required|numeric|exists:payment_terms,id'
             ],
             [],
             [
-                'VENDOR_ID'         => 'Vendor',
-                'CODE'              => 'Reference No.',
-                'INPUT_TAX_ID'      => 'Tax',
-                'DATE'              => 'Date',
-                'LOCATION_ID'       => 'Location',
-                'PAYMENT_TERMS_ID'  => 'Payment Terms'
+                'VENDOR_ID' => 'Vendor',
+                'CODE' => 'Reference No.',
+                'INPUT_TAX_ID' => 'Tax',
+                'DATE' => 'Date',
+                'LOCATION_ID' => 'Location',
+                'PAYMENT_TERMS_ID' => 'Payment Terms'
             ]
         );
 
         try {
             $this->getTax();
             if ($this->ID == 0) {
+
+                if ($this->systemSettingServices->IsCloseDate($this->DATE)) {
+                    session()->flash('error', 'You cannot create a transaction before or on the closing date on :' . $this->systemSettingServices->CloseDate());
+                    return;
+                }
 
                 $this->ID = $this->purchaseOrderServices->Store(
                     $this->CODE,

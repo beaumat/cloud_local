@@ -7,6 +7,7 @@ use App\Services\BillingServices;
 use App\Services\ContactServices;
 use App\Services\DocumentStatusServices;
 use App\Services\LocationServices;
+use App\Services\SystemSettingServices;
 use App\Services\TaxServices;
 use App\Services\UserServices;
 use App\Services\WithholdingTaxServices;
@@ -47,6 +48,7 @@ class WithHoldingTaxForm extends Component
     private $contactServices;
     private $documentStatusServices;
     private $billingServices;
+    private $systemSettingServices;
     public function boot(
         WithholdingTaxServices $withholdingTaxService,
         UserServices $userServices,
@@ -55,7 +57,8 @@ class WithHoldingTaxForm extends Component
         AccountJournalServices $accountJournalServices,
         ContactServices $contactServices,
         DocumentStatusServices $documentStatusServices,
-        BillingServices $billingServices
+        BillingServices $billingServices,
+        SystemSettingServices $systemSettingServices
     ) {
         $this->withholdingTaxServices = $withholdingTaxService;
         $this->userServices = $userServices;
@@ -65,6 +68,7 @@ class WithHoldingTaxForm extends Component
         $this->contactServices = $contactServices;
         $this->documentStatusServices = $documentStatusServices;
         $this->billingServices = $billingServices;
+        $this->systemSettingServices = $systemSettingServices;
     }
     public function updatedEwtId()
     {
@@ -133,6 +137,12 @@ class WithHoldingTaxForm extends Component
                 'DATE' => 'Date'
             ]
         );
+
+        if ($this->systemSettingServices->IsCloseDate($this->DATE)) {
+            session()->flash('error', 'You cannot create a transaction before or on the closing date on :' . $this->systemSettingServices->CloseDate());
+            return;
+        }
+
 
         DB::beginTransaction();
         try {
