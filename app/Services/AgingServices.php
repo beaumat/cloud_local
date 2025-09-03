@@ -1,8 +1,6 @@
 <?php
-
 namespace App\Services;
 
-use App\Models\Invoice;
 use Illuminate\Support\Facades\DB;
 
 class AgingServices
@@ -53,7 +51,7 @@ class AgingServices
                 'i.AMOUNT',
                 'i.BALANCE_DUE',
                 't.DESCRIPTION as PAYMENT_TERMS',
-                'l.NAME as LOCATION_NAME'
+                'l.NAME as LOCATION_NAME',
 
             ])
             ->join('contact as c', 'c.ID', '=', 'i.CUSTOMER_ID')
@@ -81,7 +79,7 @@ class AgingServices
                 't.DESCRIPTION as TYPE',
                 'l.NAME as LOCATION_NAME',
 
-                DB::raw('SUM(i.BALANCE_DUE) as BALANCE')
+                DB::raw('SUM(i.BALANCE_DUE) as BALANCE'),
             ])
             ->join('contact as c', 'c.ID', '=', 'i.CUSTOMER_ID')
             ->join('contact_type_map as t', 't.ID', '=', 'c.TYPE')
@@ -101,7 +99,103 @@ class AgingServices
 
         return $result;
     }
+    public function CustomerBalanceDetails(string $AS_OF_DATE, int $LOCATION_ID, array $CONTACT_SELECT)
+    {
+        $result = DB::table('invoice as i')
+            ->select([
+                'c.ID as CONTACT_ID',
+                'c.NAME as CONTACT_NAME',
+                't.DESCRIPTION as TYPE',
+                'l.NAME as LOCATION_NAME',
+                'i.BALANCE_DUE as BALANCE',
+                'i.DATE',
+                'i.CODE',
+                'i.DUE_DATE',
+                'pt.DESCRIPTION as TERMS',
+                'i.ID as INVOICE_ID',
+            ])
+            ->join('contact as c', 'c.ID', '=', 'i.CUSTOMER_ID')
+            ->join('contact_type_map as t', 't.ID', '=', 'c.TYPE')
+            ->join('location as l', 'l.ID', '=', 'i.LOCATION_ID')
+            ->join('payment_terms as pt', 'pt.ID', '=', 'i.PAYMENT_TERMS_ID')
+            ->when($LOCATION_ID > 0, function ($query) use (&$LOCATION_ID) {
+                $query->where('i.LOCATION_ID', '=', $LOCATION_ID);
+            })
+            ->when($CONTACT_SELECT, function ($query) use (&$CONTACT_SELECT) {
+                $query->whereIn('c.ID', $CONTACT_SELECT);
+            })
+            ->where('i.DATE', '<=', $AS_OF_DATE)
+            ->whereIn('c.TYPE', [1, 3])
+            ->where('i.BALANCE_DUE', '>', 0)
+            ->orderBy('c.NAME', 'asc')
+            ->orderBy('i.DATE', 'asc')
+            ->get();
 
+        return $result;
+    }
+    public function CustomerBalanceByRange(string $DATE_FROM, string $DATE_TO, int $LOCATION_ID, array $CONTACT_SELECT)
+    {
+        $result = DB::table('invoice as i')
+            ->select([
+                'c.ID as CONTACT_ID',
+                'c.NAME as CONTACT_NAME',
+                't.DESCRIPTION as TYPE',
+                'l.NAME as LOCATION_NAME',
+
+                DB::raw('SUM(i.BALANCE_DUE) as BALANCE'),
+            ])
+            ->join('contact as c', 'c.ID', '=', 'i.CUSTOMER_ID')
+            ->join('contact_type_map as t', 't.ID', '=', 'c.TYPE')
+            ->join('location as l', 'l.ID', '=', 'i.LOCATION_ID')
+            ->when($LOCATION_ID > 0, function ($query) use (&$LOCATION_ID) {
+                $query->where('i.LOCATION_ID', '=', $LOCATION_ID);
+            })
+            ->when($CONTACT_SELECT, function ($query) use (&$CONTACT_SELECT) {
+                $query->whereIn('c.ID', $CONTACT_SELECT);
+            })
+            ->whereBetween('i.DATE', [$DATE_FROM, $DATE_TO])
+            ->whereIn('c.TYPE', [1, 3])
+            ->where('i.BALANCE_DUE', '>', 0)
+            ->groupBy('c.ID', 'c.NAME', 't.DESCRIPTION', 'l.NAME')
+            ->orderBy('c.NAME', 'asc')
+            ->get();
+
+        return $result;
+    }
+    public function CustomerBalanceDetailsByRange(string $DATE_FROM, string $DATE_TO,int $LOCATION_ID, array $CONTACT_SELECT)
+    {
+        $result = DB::table('invoice as i')
+            ->select([
+                'c.ID as CONTACT_ID',
+                'c.NAME as CONTACT_NAME',
+                't.DESCRIPTION as TYPE',
+                'l.NAME as LOCATION_NAME',
+                'i.BALANCE_DUE as BALANCE',
+                'i.DATE',
+                'i.CODE',
+                'i.DUE_DATE',
+                'pt.DESCRIPTION as TERMS',
+                'i.ID as INVOICE_ID',
+            ])
+            ->join('contact as c', 'c.ID', '=', 'i.CUSTOMER_ID')
+            ->join('contact_type_map as t', 't.ID', '=', 'c.TYPE')
+            ->join('location as l', 'l.ID', '=', 'i.LOCATION_ID')
+            ->join('payment_terms as pt', 'pt.ID', '=', 'i.PAYMENT_TERMS_ID')
+            ->when($LOCATION_ID > 0, function ($query) use (&$LOCATION_ID) {
+                $query->where('i.LOCATION_ID', '=', $LOCATION_ID);
+            })
+            ->when($CONTACT_SELECT, function ($query) use (&$CONTACT_SELECT) {
+                $query->whereIn('c.ID', $CONTACT_SELECT);
+            })
+            ->whereBetween('i.DATE', [$DATE_FROM, $DATE_TO])
+            ->whereIn('c.TYPE', [1, 3])
+            ->where('i.BALANCE_DUE', '>', 0)
+            ->orderBy('c.NAME', 'asc')
+            ->orderBy('i.DATE', 'asc')
+            ->get();
+
+        return $result;
+    }
     public function APAgingSummary(string $AS_OF_DATE, int $LOCATION_ID, array $CONTACT_SELECT)
     {
         $result = DB::table('contact as c')
@@ -145,7 +239,7 @@ class AgingServices
                 'i.AMOUNT',
                 'i.BALANCE_DUE',
                 't.DESCRIPTION as PAYMENT_TERMS',
-                'l.NAME as LOCATION_NAME'
+                'l.NAME as LOCATION_NAME',
 
             ])
             ->join('contact as c', 'c.ID', '=', 'i.VENDOR_ID')
@@ -173,7 +267,7 @@ class AgingServices
                 'c.NAME as CONTACT_NAME',
                 't.DESCRIPTION as TYPE',
                 'l.NAME as LOCATION_NAME',
-                DB::raw('SUM(i.BALANCE_DUE) as BALANCE')
+                DB::raw('SUM(i.BALANCE_DUE) as BALANCE'),
             ])
             ->join('contact as c', 'c.ID', '=', 'i.VENDOR_ID')
             ->join('contact_type_map as t', 't.ID', '=', 'c.TYPE')
