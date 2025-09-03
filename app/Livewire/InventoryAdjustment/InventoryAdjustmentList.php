@@ -52,7 +52,7 @@ class InventoryAdjustmentList extends Component
                 $itemList = $this->inventoryAdjustmentServices->ItemView($id);
 
                 foreach ($itemList as $item) {
-                    $this->deleteItem($item->ID,$id, $mainData->STATUS);
+                    $this->deleteItem($item->ID, $id, $mainData->STATUS);
                 }
 
                 $this->accountJournalServices->DeleteJournal($mainData->ACCOUNT_ID,
@@ -77,51 +77,48 @@ class InventoryAdjustmentList extends Component
         }
     }
 
-    public function deleteItem(int $Id,int $INVENTORY_ADJUSTMENT_ID, int $STATUS)
+    public function deleteItem(int $Id, int $INVENTORY_ADJUSTMENT_ID, int $STATUS)
     {
         // TO Fix
-            if ($STATUS == 16) {
-                $JOURNAL_NO = $this->accountJournalServices->getRecord($this->inventoryAdjustmentServices->object_type_map_inventory_adjustment, $INVENTORY_ADJUSTMENT_ID);
-                if ($JOURNAL_NO  ==  0) {
-                    session()->flash('message', 'journal not found');
-                    return;
-                }
-                $adjustmentData = $this->inventoryAdjustmentServices->Get($INVENTORY_ADJUSTMENT_ID);
-                if ($adjustmentData) {
-                    $adjustmentItemData = $this->inventoryAdjustmentServices->GetItem($Id, $INVENTORY_ADJUSTMENT_ID);
-                    if ($adjustmentItemData) {
-                        // Inventory
-                        $this->itemInventoryServices->InventoryModify(
-                            $adjustmentItemData->ITEM_ID,
-                            $adjustmentData->LOCATION_ID,
-                            $Id,
-                            $this->inventoryAdjustmentServices->documentTypeMapId,
-                            $adjustmentData->DATE,
-                            0,
-                            0,
-                            0
-                        );
-                        // Journal
-                        $this->accountJournalServices->DeleteJournal(
-                            $adjustmentItemData->ASSET_ACCOUNT_ID,
-                            $adjustmentData->LOCATION_ID,
-                            $JOURNAL_NO,
-                            $adjustmentItemData->ITEM_ID,
-                            $Id,
-                            $this->inventoryAdjustmentServices->object_type_map_inventory_adjustmentItems,
-                            $adjustmentData->DATE,
-                            1,
+        if ($STATUS == 16) {
+            $JOURNAL_NO = $this->accountJournalServices->getRecord($this->inventoryAdjustmentServices->object_type_map_inventory_adjustment, $INVENTORY_ADJUSTMENT_ID);
+            if ($JOURNAL_NO == 0) {
+                session()->flash('message', 'journal not found');
+                return;
+            }
+            $adjustmentData = $this->inventoryAdjustmentServices->Get($INVENTORY_ADJUSTMENT_ID);
+            if ($adjustmentData) {
+                $adjustmentItemData = $this->inventoryAdjustmentServices->GetItem($Id, $INVENTORY_ADJUSTMENT_ID);
+                if ($adjustmentItemData) {
+                    // Inventory
+                    $this->itemInventoryServices->InventoryModify(
+                        $adjustmentItemData->ITEM_ID,
+                        $adjustmentData->LOCATION_ID,
+                        $Id,
+                        $this->inventoryAdjustmentServices->documentTypeMapId,
+                        $adjustmentData->DATE,
+                        0,
+                        0,
+                        0
+                    );
+                    // Journal
+                    $this->accountJournalServices->DeleteJournal(
+                        $adjustmentItemData->ASSET_ACCOUNT_ID,
+                        $adjustmentData->LOCATION_ID,
+                        $JOURNAL_NO,
+                        $adjustmentItemData->ITEM_ID,
+                        $Id,
+                        $this->inventoryAdjustmentServices->object_type_map_inventory_adjustmentItems,
+                        $adjustmentData->DATE,
+                        1,
 
-                        );
+                    );
 
-                    }
                 }
             }
+        }
 
-
-            $this->inventoryAdjustmentServices->ItemDelete($Id, $INVENTORY_ADJUSTMENT_ID );
-
-
+        $this->inventoryAdjustmentServices->ItemDelete($Id, $INVENTORY_ADJUSTMENT_ID);
 
     }
     public function render()

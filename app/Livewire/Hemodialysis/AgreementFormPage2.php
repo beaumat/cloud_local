@@ -1,12 +1,10 @@
 <?php
-
 namespace App\Livewire\Hemodialysis;
 
 use App\Services\ContactServices;
 use App\Services\HemoServices;
 use App\Services\LocationServices;
 use App\Services\PhicAgreementFormServices;
-use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Reactive;
 use Livewire\Component;
 
@@ -31,48 +29,33 @@ class AgreementFormPage2 extends Component
     private $contactServices;
     public function boot(HemoServices $hemoServices, LocationServices $locationServices, PhicAgreementFormServices $phicAgreementFormServices, ContactServices $contactServices)
     {
-        $this->hemoServices = $hemoServices;
-        $this->locationServices = $locationServices;
+        $this->hemoServices              = $hemoServices;
+        $this->locationServices          = $locationServices;
         $this->phicAgreementFormServices = $phicAgreementFormServices;
-        $this->contactServices = $contactServices;
+        $this->contactServices           = $contactServices;
     }
-    public function checkLocationAllowed(): bool
-    {
 
-        switch ($this->LOCATION_ID) {
-            case 32: // San Franz
-                return false;
-            case 33: // Butuan City
-                return true;
-            default:
-                return false;
-        }
-
-
-    }
     public function mount()
     {
         $data = $this->hemoServices->Get($this->HEMO_ID);
         if ($data) {
             $this->PATIENT_NAME = $this->contactServices->getName($data->CUSTOMER_ID);
-            $this->DATE = $data->DATE;
-            $this->LOCATION_ID = $data->LOCATION_ID;
+            $this->DATE         = $data->DATE;
+            $this->LOCATION_ID  = $data->LOCATION_ID;
             $this->getWithNess($data->CUSTOMER_ID);
             $dataLoc = $this->locationServices->get($this->LOCATION_ID);
-            if ($this->checkLocationAllowed() === true) {
+            if ($this->locationServices->AgreementFormQtyAllowed($this->LOCATION_ID) == true) {
                 $this->QTY = $this->contactServices->getPatientAvailmentListDialyzerQty($data->CUSTOMER_ID, $this->LOCATION_ID, $this->DATE);
             }
             if ($dataLoc) {
                 $this->LEAVE_BLANK_AG_ADMIN_OFFICE_FEE = $dataLoc->LEAVE_BLANK_AG_ADMIN_OFFICE_FEE ?? false;
-                $hdcon = $this->contactServices->get($dataLoc->HD_FACILITY_REP_ID, 2);
+                $hdcon                                 = $this->contactServices->get($dataLoc->HD_FACILITY_REP_ID, 2);
                 if ($hdcon) {
                     $this->HD_FACILITY_REP_NAME = $hdcon->NAME ?? '';
-                    $this->HD_FACILITY_REP_POS = $hdcon->NICKNAME ?? '';
+                    $this->HD_FACILITY_REP_POS  = $hdcon->NICKNAME ?? '';
                 }
 
-
             }
-
 
             $this->TypeFive();
             $this->TypeSix();
@@ -84,7 +67,7 @@ class AgreementFormPage2 extends Component
     {
         $con = $this->contactServices->get2($CONTACT_ID);
         if ($con) {
-            $wit_ID = $con->WITNESS_ID > 0 ? $con->WITNESS_ID : 0;
+            $wit_ID             = $con->WITNESS_ID > 0 ? $con->WITNESS_ID : 0;
             $this->WITNESS_NAME = $wit_ID > 0 ? $this->contactServices->getName2($wit_ID) : $con->CONTACT_PERSON;
 
         }

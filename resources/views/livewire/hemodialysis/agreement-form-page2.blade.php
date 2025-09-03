@@ -30,10 +30,7 @@
                         @endif
                     </div>
                 @endforeach
-
-
                 <div class="col-12 top-line2  font-weight-bold">Supplies </div>
-
                 @foreach ($typeSixList as $list)
                     <div class="col-7 top-line2 right-line2"> {{ $list->DESCRIPTION }}
                     </div>

@@ -69,6 +69,19 @@ class LocationServices
 
         return [];
     }
+    public function AgreementFormQtyAllowed(int $LOCATION_ID): bool
+    {
+
+        switch ($LOCATION_ID) {
+            case 32: // San Franz
+                return false;
+            case 33: // Butuan City
+                return true;
+            default:
+                return false;
+        }
+
+    }
     public function IsExist(int $ID): bool
     {
         return (bool) Locations::where('ID', '=', $ID)->exists();

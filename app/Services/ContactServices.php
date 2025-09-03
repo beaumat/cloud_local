@@ -3,6 +3,7 @@ namespace App\Services;
 
 use App\Models\Contacts;
 use App\Models\DoctorLocation;
+use App\Models\ServiceChargesItems;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Livewire\WithPagination;
@@ -338,13 +339,48 @@ class ContactServices
 
         $result = Contacts::query()
             ->select([
-                DB::raw("(select sum(service_charges_items.QUANTITY) from service_charges join service_charges_items on service_charges_items.SERVICE_CHARGES_ID = service_charges.ID  where service_charges.PATIENT_ID = contact.ID and service_charges_items.ITEM_ID IN ($list)  and service_charges.LOCATION_ID = $LOCATION_ID  and YEAR(service_charges.DATE) = $YEAR and service_charges.DATE <= '$DATE') as TOTAL_ITEMS"),
+                DB::raw("(select sum(service_charges_items.QUANTITY) from service_charges join service_charges_items on service_charges_items.SERVICE_CHARGES_ID = service_charges.ID  where service_charges.PATIENT_ID = contact.ID and service_charges_items.ITEM_ID IN ($list)  and service_charges.LOCATION_ID = $LOCATION_ID  and YEAR(service_charges.DATE) = $YEAR and service_charges.DATE <= '$DATE' ) as TOTAL_ITEMS"),
             ])->where('TYPE', 3)
             ->where('INACTIVE', '0')
             ->where('ID', '=', $PATIENT_ID)
             ->first();
 
         return (int) $result->TOTAL_ITEMS ?? 0;
+    }
+    public function getPatientAvailmentListDialyzerQtyDetails(int $PATIENT_ID, int $LOCATION_ID, string $DATE)
+    {
+
+        $YEAR      = $this->dateServices->dateToYear($DATE);
+        $groupList = $this->itemServices->GetAllItemByGroup(1);
+        $list      = '';
+        foreach ($groupList as $item) {
+            if ($list == '') {
+                $list = "'" . $item['ID'] . "'";
+            } else {
+                $list .= ",'" . $item['ID'] . "'";
+            }
+        }
+
+        $result = ServiceChargesItems::query()
+            ->select([
+                's.DATE',
+                's.CODE',
+                'service_charges_items.SERVICE_CHARGES_ID',
+                'service_charges_items.ITEM_ID',
+                'service_charges_items.QUANTITY',
+                'i.DESCRIPTION',
+            ])
+            ->join('service_charges as s', 's.ID', '=', 'service_charges_items.SERVICE_CHARGES_ID')
+            ->join('item as i', 'i.ID', '=', 'service_charges_items.ITEM_ID')
+            ->where('s.PATIENT_ID', '=', $PATIENT_ID)
+            ->whereIn('service_charges_items.ITEM_ID', explode(',', str_replace("'", '', $list)))
+            ->where('s.LOCATION_ID', '=', $LOCATION_ID)
+            ->whereYear('s.DATE', '=', $YEAR)
+            ->whereDate('s.DATE', '<=', $DATE)
+            ->orderBy('s.DATE', 'asc')
+            ->get();
+
+        return $result;
     }
     public function getPatientListViaReport(int $LOCATION_ID, string $DATE_FROM, string $DATE_TO)
     {
@@ -691,9 +727,9 @@ class ContactServices
             ->leftJoin('location as l', 'l.ID', '=', 'contact.LOCATION_ID')
             ->leftJoin('patient_doctor as pd', 'pd.PATIENT_ID', '=', 'contact.ID')
             ->leftJoin('contact as d', 'd.ID', '=', 'pd.DOCTOR_ID')
-            ->leftJoin('doctor_location as dl','dl.DOCTOR_ID','d.ID')
+            ->leftJoin('doctor_location as dl', 'dl.DOCTOR_ID', 'd.ID')
             ->leftJoin('patient_class as pc', 'pc.ID', '=', 'contact.CLASS_ID')
-           
+
             ->when($doctorId > 0, function ($query) use (&$doctorId) {
                 $query->where('pd.DOCTOR_ID', $doctorId);
             })
@@ -714,7 +750,7 @@ class ContactServices
             })
             ->when($locationId > 0, function ($query) use (&$locationId, &$search, &$doctorId) {
                 $query->where('contact.LOCATION_ID', '=', $locationId)
-                    //  ->where('dl.LOCATION_ID','=', $locationId)
+                //  ->where('dl.LOCATION_ID','=', $locationId)
                     ->orWhereExists(function ($q) use (&$locationId, &$search, &$doctorId) {
                         $q->select(DB::raw(1))
                             ->from('service_charges as sc')
@@ -724,7 +760,7 @@ class ContactServices
                             ->when($doctorId > 0, function ($query) use (&$doctorId) {
                                 $query->where('pd.DOCTOR_ID', $doctorId);
                             })
-                            ->where('dl.LOCATION_ID','=', $locationId)
+                            ->where('dl.LOCATION_ID', '=', $locationId)
                             ->where(function ($sql) use ($search) {
                                 $sql->where('contact.NAME', 'like', '%' . $search . '%')
                                     ->orWhere('contact.ACCOUNT_NO', 'like', '%' . $search . '%')
