@@ -9,6 +9,7 @@ use App\Services\DocumentStatusServices;
 use App\Services\FundTransferServices;
 use App\Services\GeneralJournalServices;
 use App\Services\LocationServices;
+use App\Services\SystemSettingServices;
 use App\Services\UserServices;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
@@ -56,6 +57,7 @@ class FundTransferForm extends Component
     private $accountJournalServices;
     private $contactServices;
     private $accountServices;
+    private $systemSettingServices;
     public function boot(
         FundTransferServices $fundTransferServices,
         LocationServices $locationServices,
@@ -63,7 +65,8 @@ class FundTransferForm extends Component
         DocumentStatusServices $documentStatusServices,
         AccountJournalServices $accountJournalServices,
         ContactServices $contactServices,
-        AccountServices $accountServices
+        AccountServices $accountServices,
+        SystemSettingServices $systemSettingServices
     ) {
 
         $this->fundTransferServices = $fundTransferServices;
@@ -73,6 +76,8 @@ class FundTransferForm extends Component
         $this->accountJournalServices = $accountJournalServices;
         $this->contactServices = $contactServices;
         $this->accountServices = $accountServices;
+        $this->systemSettingServices = $systemSettingServices;
+
     }
     public function LoadDropdown()
     {
@@ -184,6 +189,14 @@ class FundTransferForm extends Component
                 'AMOUNT' => 'Amount Fund',
             ]
         );
+
+
+        if ($this->systemSettingServices->IsCloseDate($this->DATE)) {
+            session()->flash('error', 'You cannot create a transaction before or on the closing date on :' . $this->DATE);
+            return;
+        }
+
+
 
         DB::beginTransaction();
         try {
@@ -381,7 +394,7 @@ class FundTransferForm extends Component
     }
     public function print()
     {
-        
+
     }
     public function OpenJournal()
     {

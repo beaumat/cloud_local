@@ -7,6 +7,7 @@ use App\Services\ContactServices;
 use App\Services\DocumentStatusServices;
 use App\Services\GeneralJournalServices;
 use App\Services\LocationServices;
+use App\Services\SystemSettingServices;
 use App\Services\UserServices;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
@@ -36,13 +37,16 @@ class GeneralJournalForm extends Component
     private $documentStatusServices;
     private $accountJournalServices;
     private $contactServices;
+    private $systemSettingServices;
     public function boot(
         GeneralJournalServices $generalJournalServices,
         LocationServices $locationServices,
         UserServices $userServices,
         DocumentStatusServices $documentStatusServices,
         AccountJournalServices $accountJournalServices,
-        ContactServices $contactServices
+        ContactServices $contactServices,
+        SystemSettingServices $systemSettingServices
+
     ) {
         $this->generalJournalServices = $generalJournalServices;
         $this->locationServices = $locationServices;
@@ -50,6 +54,7 @@ class GeneralJournalForm extends Component
         $this->documentStatusServices = $documentStatusServices;
         $this->accountJournalServices = $accountJournalServices;
         $this->contactServices = $contactServices;
+        $this->systemSettingServices = $systemSettingServices;
     }
     public function LoadDropdown()
     {
@@ -122,6 +127,11 @@ class GeneralJournalForm extends Component
                 'CONTACT_ID' => 'Contact Name'
             ]
         );
+
+        if ($this->systemSettingServices->IsCloseDate($this->DATE)) {
+            session()->flash('error', 'You cannot create a transaction before or on the closing date on :' . $this->DATE);
+            return;
+        }
 
 
         try {

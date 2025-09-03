@@ -8,6 +8,7 @@ use App\Services\DocumentStatusServices;
 use App\Services\ItemInventoryServices;
 use App\Services\LocationServices;
 use App\Services\PullOutServices;
+use App\Services\SystemSettingServices;
 use App\Services\UserServices;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
@@ -21,7 +22,7 @@ class PullOutForm extends Component
 {
     public int $ID;
     public int $openStatus = 0;
-    public $accountList    = [];
+    public $accountList = [];
     public string $DATE;
     public string $CODE;
     public int $LOCATION_ID;
@@ -30,7 +31,7 @@ class PullOutForm extends Component
     public string $NOTES;
     public int $ACCOUNT_ID;
     public $locationList = [];
-    public $contactList  = [];
+    public $contactList = [];
     public bool $Modify;
     public bool $transferReset = false;
     private $pullOutServices;
@@ -43,6 +44,7 @@ class PullOutForm extends Component
     private $itemInventoryServices;
     private $accountJournalServices;
     private $accountServices;
+    private $systemSettingServices;
     public function boot(
         PullOutServices $pullOutServices,
         AccountServices $accountServices,
@@ -52,29 +54,31 @@ class PullOutForm extends Component
         ContactServices $contactServices,
         UserServices $userServices,
         AccountJournalServices $accountJournalServices,
+        SystemSettingServices $systemSettingServices
     ) {
-        $this->pullOutServices        = $pullOutServices;
-        $this->locationServices       = $locationServices;
+        $this->pullOutServices = $pullOutServices;
+        $this->locationServices = $locationServices;
         $this->documentStatusServices = $documentStatusServices;
-        $this->itemInventoryServices  = $itemInventoryServices;
-        $this->contactServices        = $contactServices;
-        $this->userServices           = $userServices;
+        $this->itemInventoryServices = $itemInventoryServices;
+        $this->contactServices = $contactServices;
+        $this->userServices = $userServices;
         $this->accountJournalServices = $accountJournalServices;
-        $this->accountServices        = $accountServices;
+        $this->accountServices = $accountServices;
+        $this->systemSettingServices = $systemSettingServices;
     }
     public function LoadDropdown()
     {
         $this->accountList = $this->accountServices->getCost();
 
         $this->locationList = $this->locationServices->getList();
-        $this->contactList  = $this->contactServices->getList(2);
+        $this->contactList = $this->contactServices->getList(2);
     }
 
     private function ItemInventory(): bool
     {
         try {
             $SOURCE_REF_TYPE = (int) $this->pullOutServices->document_type_id;
-            $data            = $this->pullOutServices->ItemInventory($this->ID);
+            $data = $this->pullOutServices->ItemInventory($this->ID);
 
             if ($data) {
                 $this->itemInventoryServices->InventoryExecute(
@@ -149,12 +153,12 @@ class PullOutForm extends Component
             }
 
             DB::beginTransaction();
-            if (! $this->ItemInventory()) {
+            if (!$this->ItemInventory()) {
                 DB::rollBack();
                 return;
             }
 
-            if (! $this->pullOutServices->getMakeJournal($this->ID)) {
+            if (!$this->pullOutServices->getMakeJournal($this->ID)) {
                 Session()->flash('error', 'Something wrong with journal entry');
                 DB::rollBack();
                 return;
@@ -172,15 +176,15 @@ class PullOutForm extends Component
     }
     private function getInfo($data)
     {
-        $this->ID                 = $data->ID;
-        $this->CODE               = $data->CODE;
-        $this->DATE               = $data->DATE;
-        $this->LOCATION_ID        = $data->LOCATION_ID;
-        $this->NOTES              = $data->NOTES ?? '';
-        $this->AMOUNT             = $data->AMOUNT ?? 0;
-        $this->PREPARED_BY_ID     = $data->PREPARED_BY_ID ?? 0;
-        $this->ACCOUNT_ID         = $data->ACCOUNT_ID ?? 0;
-        $this->STATUS             = $data->STATUS ?? 0;
+        $this->ID = $data->ID;
+        $this->CODE = $data->CODE;
+        $this->DATE = $data->DATE;
+        $this->LOCATION_ID = $data->LOCATION_ID;
+        $this->NOTES = $data->NOTES ?? '';
+        $this->AMOUNT = $data->AMOUNT ?? 0;
+        $this->PREPARED_BY_ID = $data->PREPARED_BY_ID ?? 0;
+        $this->ACCOUNT_ID = $data->ACCOUNT_ID ?? 0;
+        $this->STATUS = $data->STATUS ?? 0;
         $this->STATUS_DESCRIPTION = $this->documentStatusServices->getDesc($this->STATUS);
     }
     public function mount($id = null)
@@ -199,16 +203,16 @@ class PullOutForm extends Component
         }
 
         $this->LoadDropdown();
-        $this->Modify             = true;
-        $this->ID                 = 0;
-        $this->CODE               = '';
-        $this->DATE               = $this->userServices->getTransactionDateDefault();
-        $this->LOCATION_ID        = $this->userServices->getLocationDefault();
-        $this->AMOUNT             = 0;
-        $this->PREPARED_BY_ID     = 0;
-        $this->NOTES              = '';
-        $this->ACCOUNT_ID         = $this->pullOutServices->default_debit_account_id; // office supply expenses
-        $this->STATUS             = 0;
+        $this->Modify = true;
+        $this->ID = 0;
+        $this->CODE = '';
+        $this->DATE = $this->userServices->getTransactionDateDefault();
+        $this->LOCATION_ID = $this->userServices->getLocationDefault();
+        $this->AMOUNT = 0;
+        $this->PREPARED_BY_ID = 0;
+        $this->NOTES = '';
+        $this->ACCOUNT_ID = $this->pullOutServices->default_debit_account_id; // office supply expenses
+        $this->STATUS = 0;
         $this->STATUS_DESCRIPTION = '';
     }
     public function getModify()
@@ -222,35 +226,41 @@ class PullOutForm extends Component
 
             $this->validate(
                 [
-                    'DATE'           => 'required',
-                    'LOCATION_ID'    => 'required',
+                    'DATE' => 'required',
+                    'LOCATION_ID' => 'required',
                     'PREPARED_BY_ID' => 'required|not_in:0',
 
                 ],
                 [],
                 [
-                    'DATE'           => 'Date',
-                    'LOCATION_ID'    => 'Location',
+                    'DATE' => 'Date',
+                    'LOCATION_ID' => 'Location',
                     'PREPARED_BY_ID' => 'Prepared by',
                 ]
             );
         } else {
             $this->validate(
                 [
-                    'CODE'           => 'required|max:20|unique:pull_out,code,' . $this->ID,
-                    'DATE'           => 'required',
-                    'LOCATION_ID'    => 'required',
+                    'CODE' => 'required|max:20|unique:pull_out,code,' . $this->ID,
+                    'DATE' => 'required',
+                    'LOCATION_ID' => 'required',
                     'PREPARED_BY_ID' => 'required|not_in:0',
                 ],
                 [],
                 [
-                    'CODE'           => 'Reference No.',
-                    'DATE'           => 'Date',
-                    'LOCATION_ID'    => 'Location',
+                    'CODE' => 'Reference No.',
+                    'DATE' => 'Date',
+                    'LOCATION_ID' => 'Location',
                     'PREPARED_BY_ID' => 'Prepared by',
                 ]
             );
         }
+
+        if ($this->systemSettingServices->IsCloseDate($this->DATE)) {
+            session()->flash('error', 'You cannot create a transaction before or on the closing date on :' . $this->DATE);
+            return;
+        }
+
 
         DB::beginTransaction();
 

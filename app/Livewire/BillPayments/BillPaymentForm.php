@@ -9,6 +9,7 @@ use App\Services\ContactServices;
 use App\Services\DocumentStatusServices;
 use App\Services\LocationServices;
 use App\Services\PaymentPeriodServices;
+use App\Services\SystemSettingServices;
 use App\Services\UserServices;
 use App\Services\WithholdingTaxServices;
 use Illuminate\Support\Facades\DB;
@@ -20,7 +21,7 @@ use Livewire\Component;
 #[Title('Bill Payments')]
 class BillPaymentForm extends Component
 {
-    
+
     public bool $IS_DOCTOR = false;
     public int $ID;
     public string $CODE;
@@ -54,6 +55,7 @@ class BillPaymentForm extends Component
     private $accountJournalServices;
     private $paymentPeriodServices;
     private $withholdingTaxServices;
+    private $systemSettingServices;
     public function boot(
         BillPaymentServices $billPaymentServices,
         ContactServices $contactServices,
@@ -63,7 +65,8 @@ class BillPaymentForm extends Component
         DocumentStatusServices $documentStatusServices,
         AccountJournalServices $accountJournalServices,
         PaymentPeriodServices $paymentPeriodServices,
-        WithholdingTaxServices $withholdingTaxServices
+        WithholdingTaxServices $withholdingTaxServices,
+        SystemSettingServices $systemSettingServices
     ) {
         $this->billPaymentServices = $billPaymentServices;
         $this->contactServices = $contactServices;
@@ -74,12 +77,14 @@ class BillPaymentForm extends Component
         $this->accountJournalServices = $accountJournalServices;
         $this->paymentPeriodServices = $paymentPeriodServices;
         $this->withholdingTaxServices = $withholdingTaxServices;
+        $this->systemSettingServices = $systemSettingServices;
+
     }
     #[On('reset-payment')]
     public function ResetPaymentApplied()
     {
         $this->AMOUNT_APPLIED = (float) $this->billPaymentServices->UpdateBillPaymentApplied($this->ID);
-        $this->WTAX_APPLIED = (float) $this->withholdingTaxServices->getAmountBetweenBillPayment( $this->ID);
+        $this->WTAX_APPLIED = (float) $this->withholdingTaxServices->getAmountBetweenBillPayment($this->ID);
         $this->getNewAmount();
     }
     private function LoadDropDown()
@@ -176,6 +181,13 @@ class BillPaymentForm extends Component
                 'CODE' => 'Reference No.',
             ]
         );
+
+
+        if ($this->systemSettingServices->IsCloseDate($this->DATE)) {
+            session()->flash('error', 'You cannot create a transaction before or on the closing date on :' . $this->DATE);
+            return;
+        }
+
 
         try {
             if ($this->ID == 0) {
@@ -325,7 +337,7 @@ class BillPaymentForm extends Component
     public function DoctorPrint()
     {
 
-        
+
     }
     #[On('reload_bill_list')]
     public function getNewAmount()
@@ -346,7 +358,7 @@ class BillPaymentForm extends Component
     public function render()
     {
         $this->AMOUNT_APPLIED = (float) $this->billPaymentServices->getTotalApplied($this->ID);
-        $this->WTAX_APPLIED = (float) $this->withholdingTaxServices->getAmountBetweenBillPayment( $this->ID);
+        $this->WTAX_APPLIED = (float) $this->withholdingTaxServices->getAmountBetweenBillPayment($this->ID);
         return view('livewire.bill-payments.bill-payment-form');
     }
 }

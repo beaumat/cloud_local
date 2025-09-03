@@ -303,6 +303,10 @@ class BillingForm extends Component
             ]
         );
 
+        if ($this->systemSettingServices->IsCloseDate($this->DATE)) {
+            session()->flash('error', 'You cannot create a transaction before or on the closing date on :' . $this->DATE);
+            return;
+        }
 
         try {
             if ($this->ID == 0) {
@@ -448,13 +452,13 @@ class BillingForm extends Component
             $data = $this->billingServices->ItemInventory($this->ID);
             if ($data) {
                 $noProblem = (bool) $this->itemInventoryServices->ChangeDate($data, $this->LOCATION_ID, $SOURCE_REF_TYPE, $this->DATE);
-                
+
 
                 if ($noProblem == false) {
                     session()->flash('error', 'change date have problem');
                     return false;
                 }
-                
+
                 // execute inventory
                 $this->itemInventoryServices->InventoryExecute(
                     $data,
@@ -578,7 +582,7 @@ class BillingForm extends Component
     }
     public function getUnposted()
     {
-        
+
         try {
             DB::beginTransaction();
             $this->billingServices->StatusUpdate($this->ID, 16);
@@ -589,7 +593,7 @@ class BillingForm extends Component
             $errorMessage = 'Error occurred: ' . $th->getMessage();
             session()->flash('error', $errorMessage);
         }
-      
+
     }
     public function render()
     {

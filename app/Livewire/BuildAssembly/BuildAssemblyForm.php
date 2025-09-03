@@ -154,21 +154,27 @@ class BuildAssemblyForm extends Component
 
                 $this->validate(
                     [
-                        'ASSEMBLY_ITEM_ID'              => 'required|integer|exists:item,id',
-                        'DATE'                          => 'required|date_format:Y-m-d',
-                        'LOCATION_ID'                   => 'required|integer|exists:location,id',
-                        'QUANTITY'                      => 'required|not_in:0',
-                        'ASSET_ACCOUNT_ID'              => 'required|not_in:0|integer|exists:account,id'
+                        'ASSEMBLY_ITEM_ID' => 'required|integer|exists:item,id',
+                        'DATE' => 'required|date_format:Y-m-d',
+                        'LOCATION_ID' => 'required|integer|exists:location,id',
+                        'QUANTITY' => 'required|not_in:0',
+                        'ASSET_ACCOUNT_ID' => 'required|not_in:0|integer|exists:account,id'
                     ],
                     [],
                     [
-                        'ASSEMBLY_ITEM_ID'              => 'Aseembly Item',
-                        'DATE'                          => 'Date',
-                        'LOCATION_ID'                   => 'Location',
-                        'QUANTITY'                      => 'Quantity',
-                        'ASSET_ACCOUNT_ID'              => 'Asset Accounts'
+                        'ASSEMBLY_ITEM_ID' => 'Aseembly Item',
+                        'DATE' => 'Date',
+                        'LOCATION_ID' => 'Location',
+                        'QUANTITY' => 'Quantity',
+                        'ASSET_ACCOUNT_ID' => 'Asset Accounts'
                     ]
                 );
+
+                if ($this->systemSettingServices->IsCloseDate($this->DATE)) {
+                    session()->flash('error', 'You cannot create a transaction before or on the closing date on :' . $this->DATE);
+                    return;
+
+                }
 
                 $unitRelated = $this->unitOfMeasureServices->GetItemUnitDetails($this->ASSEMBLY_ITEM_ID, $this->UNIT_ID ?? 0);
 
@@ -191,19 +197,19 @@ class BuildAssemblyForm extends Component
 
                 $this->validate(
                     [
-                        'ASSEMBLY_ITEM_ID'  => 'required|integer|exists:item,id',
-                        'CODE'              => 'required|max:20|unique:build_assembly,code,' . $this->ID,
-                        'DATE'              => 'required|date_format:Y-m-d',
-                        'LOCATION_ID'       => 'required|integer|exists:location,id',
-                        'QUANTITY'          => 'required|not_in:0',
+                        'ASSEMBLY_ITEM_ID' => 'required|integer|exists:item,id',
+                        'CODE' => 'required|max:20|unique:build_assembly,code,' . $this->ID,
+                        'DATE' => 'required|date_format:Y-m-d',
+                        'LOCATION_ID' => 'required|integer|exists:location,id',
+                        'QUANTITY' => 'required|not_in:0',
                     ],
                     [],
                     [
-                        'ASSEMBLY_ITEM_ID'      => 'Aseembly Item',
-                        'CODE'                  => 'Reference No.',
-                        'DATE'                  => 'Date',
-                        'LOCATION_ID'           => 'Location',
-                        'QUANTITY'              => 'Quantity'
+                        'ASSEMBLY_ITEM_ID' => 'Aseembly Item',
+                        'CODE' => 'Reference No.',
+                        'DATE' => 'Date',
+                        'LOCATION_ID' => 'Location',
+                        'QUANTITY' => 'Quantity'
                     ]
                 );
                 $unitRelated = $this->unitOfMeasureServices->GetItemUnitDetails($this->ASSEMBLY_ITEM_ID, $this->UNIT_ID ?? 0);
@@ -289,7 +295,7 @@ class BuildAssemblyForm extends Component
             $buildAssembly = (int) $this->buildAssemblyServices->object_type_build_assembly;
             $buildAssemblyItems = (int) $this->buildAssemblyServices->object_type_build_assembly_items;
 
-            $JOURNAL_NO =  $this->accountJournalServices->getRecord($buildAssembly, $this->ID);
+            $JOURNAL_NO = $this->accountJournalServices->getRecord($buildAssembly, $this->ID);
             if ($JOURNAL_NO == 0) {
                 $JOURNAL_NO = $this->accountJournalServices->getJournalNo($buildAssembly, $this->ID) + 1;
             }
@@ -343,16 +349,16 @@ class BuildAssemblyForm extends Component
                 return;
             }
 
-            
+
             $checkItem = $this->buildAssemblyServices->ComponentList($this->ID, $this->LOCATION_ID);
 
-            foreach($checkItem as $list) {
-                if($list->OTY_OHAND < $list->QUANTITY) {
-                    session()->flash('error',"Invalid. The total quantity for each item must be clearly indicated." );
+            foreach ($checkItem as $list) {
+                if ($list->OTY_OHAND < $list->QUANTITY) {
+                    session()->flash('error', "Invalid. The total quantity for each item must be clearly indicated.");
                     return;
 
                 }
-            }   
+            }
 
 
 

@@ -81,7 +81,7 @@ class SalesReceiptForm extends Component
     public bool $showFileName = false;
     public string $TITLE_REF;
     public string $TITLE_DATE;
-    public int $DEPOST_ID  = 0;
+    public int $DEPOST_ID = 0;
     private $depositServices;
     public function boot(
         SalesReceiptServices $salesReceiptServices,
@@ -96,7 +96,7 @@ class SalesReceiptForm extends Component
         AccountJournalServices $accountJournalServices,
         PatientPaymentServices $patientPaymentServices,
         PaymentMethodServices $paymentMethodServices,
-        DepositServices $depositServices    
+        DepositServices $depositServices
     ) {
         $this->salesReceiptServices = $salesReceiptServices;
         $this->locationServices = $locationServices;
@@ -311,6 +311,12 @@ class SalesReceiptForm extends Component
                         'OUTPUT_TAX_ACCOUNT_ID' => 'Output Tax Accounts'
                     ]
                 );
+
+                if ($this->systemSettingServices->IsCloseDate($this->DATE)) {
+                    session()->flash('error', 'You cannot create a transaction before or on the closing date on :' . $this->DATE);
+                    return;
+                }
+
                 DB::beginTransaction();
                 $this->getTax();
                 $this->ID = (int) $this->salesReceiptServices->Store(

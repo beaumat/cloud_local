@@ -7,6 +7,7 @@ use App\Services\AccountServices;
 use App\Services\DepositServices;
 use App\Services\DocumentStatusServices;
 use App\Services\LocationServices;
+use App\Services\SystemSettingServices;
 use App\Services\UserServices;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
@@ -38,13 +39,15 @@ class DepositForm extends Component
     private $userServices;
     private $documentStatusServices;
     private $accountJournalServices;
+    private $systemSettingServices;
     public function boot(
         DepositServices $depositServices,
         AccountServices $accountServices,
         LocationServices $locationServices,
         UserServices $userServices,
         DocumentStatusServices $documentStatusServices,
-        AccountJournalServices $accountJournalServices
+        AccountJournalServices $accountJournalServices,
+        SystemSettingServices $systemSettingServices
 
     ) {
         $this->depositServices = $depositServices;
@@ -53,6 +56,8 @@ class DepositForm extends Component
         $this->userServices = $userServices;
         $this->documentStatusServices = $documentStatusServices;
         $this->accountJournalServices = $accountJournalServices;
+        $this->systemSettingServices = $systemSettingServices;
+
     }
     private function loadDropdown()
     {
@@ -111,6 +116,12 @@ class DepositForm extends Component
                 'CODE' => 'Reference No.',
             ]
         );
+
+        if ($this->systemSettingServices->IsCloseDate($this->DATE)) {
+            session()->flash('error', 'You cannot create a transaction before or on the closing date on :' . $this->DATE);
+            return;
+        }
+
 
         DB::beginTransaction();
 
@@ -248,7 +259,7 @@ class DepositForm extends Component
             );
 
             $data = $this->accountJournalServices->getSumDebitCredit($JOURNAL_NO);
-           
+
             $debit_sum = (float) $data['DEBIT'];
             $credit_sum = (float) $data['CREDIT'];
 

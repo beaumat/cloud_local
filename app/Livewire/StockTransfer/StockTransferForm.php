@@ -10,6 +10,7 @@ use App\Services\ItemInventoryServices;
 use App\Services\LocationServices;
 use App\Services\ObjectServices;
 use App\Services\StockTransferServices;
+use App\Services\SystemSettingServices;
 use App\Services\UserServices;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
@@ -51,7 +52,7 @@ class StockTransferForm extends Component
     private $documentTypeServices;
     private $itemInventoryServices;
     private $accountJournalServices;
-
+    private $systemSettingServices;
     public function boot(
         StockTransferServices $stockTransferServices,
         LocationServices $locationServices,
@@ -61,7 +62,7 @@ class StockTransferForm extends Component
         DocumentTypeServices $documentTypeServices,
         ItemInventoryServices $itemInventoryServices,
         AccountJournalServices $accountJournalServices,
-
+        SystemSettingServices $systemSettingServices
     ) {
         $this->stockTransferServices = $stockTransferServices;
         $this->locationServices = $locationServices;
@@ -71,6 +72,7 @@ class StockTransferForm extends Component
         $this->documentTypeServices = $documentTypeServices;
         $this->itemInventoryServices = $itemInventoryServices;
         $this->accountJournalServices = $accountJournalServices;
+        $this->systemSettingServices = $systemSettingServices;
     }
     public function LoadDropdown()
     {
@@ -276,22 +278,25 @@ class StockTransferForm extends Component
 
                 $this->validate(
                     [
-                        'DATE'                  => 'required',
-                        'LOCATION_ID'           => 'required|exists:location,id',
-                        'TRANSFER_TO_ID'        => 'required|not_in:0|exists:location,id',
-                        'ACCOUNT_ID'            => 'required|not_in:0|exists:account,id'
+                        'DATE' => 'required',
+                        'LOCATION_ID' => 'required|exists:location,id',
+                        'TRANSFER_TO_ID' => 'required|not_in:0|exists:location,id',
+                        'ACCOUNT_ID' => 'required|not_in:0|exists:account,id'
                     ],
                     [],
                     [
 
-                        'DATE'                  => 'Date',
-                        'LOCATION_ID'           => 'Location',
-                        'TRANSFER_TO_ID'        => 'Transfer To',
-                        'ACCOUNT_ID'            => 'Account Transfer'
+                        'DATE' => 'Date',
+                        'LOCATION_ID' => 'Location',
+                        'TRANSFER_TO_ID' => 'Transfer To',
+                        'ACCOUNT_ID' => 'Account Transfer'
 
                     ]
                 );
-
+                if ($this->systemSettingServices->IsCloseDate($this->DATE)) {
+                    session()->flash('error', 'You cannot create a transaction before or on the closing date on :' . $this->DATE);
+                    return;
+                }
                 DB::beginTransaction();
 
                 $this->ID = $this->stockTransferServices->Store(
@@ -311,18 +316,18 @@ class StockTransferForm extends Component
                 $this->validate(
                     [
 
-                        'CODE'                  => 'required|max:20|unique:stock_transfer,code,' . $this->ID,
-                        'DATE'                  => 'required',
-                        'LOCATION_ID'           => 'required',
-                        'TRANSFER_TO_ID'        => 'required|not_in:0'
+                        'CODE' => 'required|max:20|unique:stock_transfer,code,' . $this->ID,
+                        'DATE' => 'required',
+                        'LOCATION_ID' => 'required',
+                        'TRANSFER_TO_ID' => 'required|not_in:0'
 
                     ],
                     [],
                     [
-                        'CODE'                  => 'Reference No.',
-                        'DATE'                  => 'Date',
-                        'LOCATION_ID'           => 'Location',
-                        'TRANSFER_TO_ID'        => 'Transfer To'
+                        'CODE' => 'Reference No.',
+                        'DATE' => 'Date',
+                        'LOCATION_ID' => 'Location',
+                        'TRANSFER_TO_ID' => 'Transfer To'
                     ]
                 );
 

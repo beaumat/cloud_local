@@ -148,7 +148,7 @@ class BillCreditForm extends Component
         $this->Modify = true;
         $this->ID = 0;
         $this->CODE = '';
-        $this->DATE =  $this->userServices->getTransactionDateDefault();
+        $this->DATE = $this->userServices->getTransactionDateDefault();
         $this->LOCATION_ID = $this->userServices->getLocationDefault();
         $this->VENDOR_ID = 0;
         $this->NOTES = '';
@@ -190,6 +190,13 @@ class BillCreditForm extends Component
 
                     ]
                 );
+
+                if ($this->systemSettingServices->IsCloseDate($this->DATE)) {
+                    session()->flash('error', 'You cannot create a transaction before or on the closing date on :' . $this->DATE);
+                    return;
+                }
+
+
 
                 $this->getTax();
                 $this->ID = $this->billCreditServices->Store(
@@ -325,7 +332,7 @@ class BillCreditForm extends Component
             $debit_sum = (float) $data['DEBIT'];
             $credit_sum = (float) $data['CREDIT'];
 
-            if ($debit_sum == $credit_sum ) {
+            if ($debit_sum == $credit_sum) {
                 return true;
             }
             session()->flash('error', 'debit:' . $debit_sum . ' and credit:' . $credit_sum . ' is not balance');
