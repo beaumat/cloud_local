@@ -85,7 +85,7 @@
                             <tr>
                                 <th>Date</th>
                                 <th>Type</th>
-                                <th class="col-3">Name/Details</th>
+                                <th class="col-4">Name/Details - Particular</th>
                                 <th>Reference </th>
                                 <th>Location</th>
                                 <th class="text-right">Debit</th>
@@ -176,7 +176,7 @@
                                         @endif
                                     </td>
                                     <td>{{ $list->TYPE }}</td>
-                                    <td>{{ $list->TX_NAME }}</td>
+                                    <td>{{ $list->TX_NAME }} - <i class="text-primary">{{ $list->TX_NOTES }}</i></td>
                                     <td>
                                         <span class="text-primary" type="button"
                                             wire:click='openDetails({{ $list->JOURNAL_NO }})'>
