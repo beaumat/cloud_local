@@ -87,9 +87,9 @@
                                 <th >Type</th>
                                 <th>Date</th>
                                 <th class="col-1">Reference No.</th>
-                                <th class="col-4">Name/Details</th>
+                                <th class="col-3">Name/Details</th>
                                 <th>Location</th>
-                                <th class="col-1">Notes</th>
+                                <th class="col-3">Notes</th>
                                 <th class="text-right">Debit</th>
                                 <th class="text-right">Credit</th>
                                 <th class="text-right">Balance</th>
