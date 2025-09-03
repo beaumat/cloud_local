@@ -22,7 +22,7 @@
                 <div class="col-md-12">
                     <div class="form-group bg-light p-2 border border-secondary">
                         <div class="row">
-                            <div class="col-md-4">
+                            <div class="col-md-5">
                                 <div class="row">
                                     <div class="col-md-4">
                                         <div class="row">
@@ -64,7 +64,7 @@
 
                                 </div>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-3">
                             </div>
                             <div class="col-md-4">
                                 <div class="row">
