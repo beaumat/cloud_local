@@ -31,7 +31,6 @@
                                                     wire:model.live='DATE' :isDisabled="false" />
                                             </div>
                                             <div class="col-12 col-md-12 text-center mt-1">
-
                                                 <button class="btn btn-primary btn-xs" wire:click='generate()'>Summary
                                                 </button>
                                                 <button class="btn btn-primary btn-xs"
@@ -61,7 +60,6 @@
                                             </div>
                                         </div>
                                     </div>
-
                                 </div>
                             </div>
                             <div class="col-md-3">
