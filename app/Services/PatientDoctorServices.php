@@ -36,7 +36,7 @@ class PatientDoctorServices
                 'c.NAME',
             ])
             ->leftJoin('contact as c', 'c.ID', '=', 'patient_doctor.DOCTOR_ID')
-            ->join('doctor_location as d', 'd.DOCTOR_ID', '=', 'patient_doctor.ID')
+            ->join('doctor_location as d', 'd.DOCTOR_ID', '=', 'patient_doctor.DOCTOR_ID')
             ->where('patient_doctor.PATIENT_ID', $PATIENT_ID)
             ->where('d.LOCATION_ID', '=', $LOCATION_ID)
             ->get();
