@@ -361,7 +361,7 @@ class PrintContent extends Component
 
             $this->getPreviousTreatment();
 
-            $dataDoc = $this->patientDoctorServices->GetList($this->CUSTOMER_ID);
+            $dataDoc = $this->patientDoctorServices->GetList($this->CUSTOMER_ID, $this->LOCATION_ID);
             foreach ($dataDoc as $doc) {
                 $this->NEPRHO_NAME = $doc->NAME ?? '';
             }
@@ -384,7 +384,7 @@ class PrintContent extends Component
             $this->noteList = $this->hemoServices->ListNotes($this->HEMO_ID);
 
             if (in_array((int) $this->LOCATION_ID, [33])) {
-             
+
                 $this->VITAL_SIGN_GRAPH = true;
             }
         }

@@ -72,7 +72,7 @@ class DoctorPanel extends Component
     public function render()
     {
 
-        $this->dataList = $this->patientDoctorServices->GetList($this->ID > 0 ? $this->ID : 0);
+        $this->dataList = $this->patientDoctorServices->GetList($this->ID > 0 ? $this->ID : 0, $this->LOCATION_ID);
 
         return view('livewire.patient.doctor-panel');
     }

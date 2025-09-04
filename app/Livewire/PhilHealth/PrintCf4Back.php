@@ -140,7 +140,7 @@ class PrintCf4Back extends Component
         }
         if ($PATIENT_ID > 0) {
             $this->PRE_SIGN_DATA = true;
-            $fee = $this->patientDoctorServices->GetList($PATIENT_ID);
+            $fee = $this->patientDoctorServices->GetList($PATIENT_ID, $this->LOCATION_ID);
             foreach ($fee as $list) {
                 $this->DR_NAME = strtoupper($list->NAME);
                 return;

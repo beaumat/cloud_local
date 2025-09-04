@@ -246,7 +246,7 @@ class PrintCsf extends Component
                     $this->HCI_POSITION = strtoupper($locData->MANAGER_POSITION) ?? '';
                 }
 
-                $fee = $this->patientDoctorServices->GetList($PATIENT_ID);
+                $fee = $this->patientDoctorServices->GetList($PATIENT_ID, $this->LOCATION_ID);
                 $row = 1;
                 foreach ($fee as $list) {
                     switch ($row) {

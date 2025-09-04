@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Services;
 
 use App\Models\PatientDoctor;
@@ -23,21 +22,23 @@ class PatientDoctorServices
         $ID = (int) $this->object->ObjectNextID('PATIENT_DOCTOR');
 
         PatientDoctor::create([
-            'ID'            => $ID,
-            'PATIENT_ID'    => $PATIENT_ID,
-            'DOCTOR_ID'     => $DOCTOR_ID
+            'ID'         => $ID,
+            'PATIENT_ID' => $PATIENT_ID,
+            'DOCTOR_ID'  => $DOCTOR_ID,
         ]);
     }
-    public function GetList(int $PATIENT_ID)
+    public function GetList(int $PATIENT_ID, int $LOCATION_ID)
     {
         return PatientDoctor::query()
             ->select([
                 'patient_doctor.ID',
                 'c.PIN',
-                'c.NAME'
+                'c.NAME',
             ])
             ->leftJoin('contact as c', 'c.ID', '=', 'patient_doctor.DOCTOR_ID')
+            ->join('doctor_location as d', 'd.DOCTOR_ID', '=', 'patient_doctor.ID')
             ->where('patient_doctor.PATIENT_ID', $PATIENT_ID)
+            ->where('d.LOCATION_ID', '=', $LOCATION_ID)
             ->get();
     }
     public function GetbyTemp(int $id)
@@ -50,12 +51,11 @@ class PatientDoctorServices
                 DB::raw('0 as DISCOUNT'),
                 DB::raw('0 as FIRST_CASE'),
                 'c.PIN',
-                'c.NAME'
+                'c.NAME',
             ])
             ->leftJoin('contact as c', 'c.ID', '=', 'patient_doctor.DOCTOR_ID')
             ->where('patient_doctor.PATIENT_ID', $id)
             ->get();
-
 
         return $result;
     }
@@ -65,13 +65,13 @@ class PatientDoctorServices
     }
 
     public function AlreadyExists(int $CONTACT_ID, int $LOCATION_ID): bool
-    {   
+    {
 
-         return PatientDoctor::query()
+        return PatientDoctor::query()
             ->select([
                 'patient_doctor.ID',
                 'c.PIN',
-                'c.NAME'
+                'c.NAME',
             ])
             ->leftJoin('contact as c', 'c.ID', '=', 'patient_doctor.DOCTOR_ID')
             ->join('doctor_location as d', 'd.DOCTOR_ID', '=', 'patient_doctor.DOCTOR_ID')
@@ -79,7 +79,5 @@ class PatientDoctorServices
             ->where('patient_doctor.PATIENT_ID', $CONTACT_ID)
             ->exists();
 
-
-   
     }
 }
