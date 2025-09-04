@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Livewire\InventoryAdjustment;
 
 use App\Services\AccountJournalServices;
@@ -81,7 +82,6 @@ class InventoryAdjustmentForm extends Component
             );
         }
         return false;
-
     }
     private function AccountJournal(): bool
     {
@@ -223,10 +223,10 @@ class InventoryAdjustmentForm extends Component
             );
 
 
-             if ($this->systemSettingServices->IsCloseDate($this->DATE)) {
-                    session()->flash('error', 'You cannot create a transaction before or on the closing date on :' . $this->systemSettingServices->CloseDate());
-                    return;
-                }
+            if ($this->systemSettingServices->IsCloseDate($this->DATE)) {
+                session()->flash('error', 'You cannot create a transaction before or on the closing date on :' . $this->systemSettingServices->CloseDate());
+                return;
+            }
 
 
 

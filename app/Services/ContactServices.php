@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Services;
 
 use App\Models\Contacts;
@@ -294,7 +295,6 @@ class ContactServices
             } else {
                 $list .= ",'" . $item['ID'] . "'";
             }
-
         }
 
         $result = Contacts::query()
@@ -750,7 +750,7 @@ class ContactServices
             })
             ->when($locationId > 0, function ($query) use (&$locationId, &$search, &$doctorId) {
                 $query->where('contact.LOCATION_ID', '=', $locationId)
-                //  ->where('dl.LOCATION_ID','=', $locationId)
+                    //  ->where('dl.LOCATION_ID','=', $locationId)
                     ->orWhereExists(function ($q) use (&$locationId, &$search, &$doctorId) {
                         $q->select(DB::raw(1))
                             ->from('service_charges as sc')
@@ -773,10 +773,37 @@ class ContactServices
                                     ->orWhere('contact.EMAIL', 'like', '%' . $search . '%')
                                     ->orWhere('d.PRINT_NAME_AS', 'like', '%' . $search . '%');
                             });
-
                     });
             })
             ->orderBy($sortBy, $isDesc ? 'desc' : 'asc')
+            ->groupBy([
+                "contact.ID",
+                "contact.NAME",
+                "contact.COMPANY_NAME",
+                "contact.FIRST_NAME",
+                "contact.LAST_NAME",
+                "contact.MIDDLE_NAME",
+                "contact.SALUTATION",
+                "contact.PRINT_NAME_AS",
+                "contact.MOBILE_NO",
+                "contact.EMAIL",
+                "contact.ACCOUNT_NO",
+                "contact.POSTAL_ADDRESS",
+                "contact.CONTACT_PERSON",
+                "contact.INACTIVE",
+                'contact.PIN',
+                'contact.IS_COMPLETE',
+                'gender_map.DESCRIPTION',
+                'contact.DATE_OF_BIRTH',
+                'contact.DATE_EXPIRED',
+                'contact.DATE_ADMISSION',
+                'contact.DATE_OF_BIRTH',
+                'l.NAME',
+                'd.PRINT_NAME_AS',
+                'pc.DESCRIPTION',
+                'contact.SECOND_CASE_RATE',
+
+            ])
             ->paginate($perPage);
 
         return $result;
@@ -819,7 +846,5 @@ class ContactServices
         }
 
         return false;
-
     }
-
 }
