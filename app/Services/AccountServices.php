@@ -60,7 +60,7 @@ class AccountServices
     }
     public function getCost()
     {
-        return Accounts::where('TYPE','=', '11')
+        return Accounts::where('TYPE', '=', '11')
             ->where('INACTIVE', '=', '0')
             ->orderBy('NAME', 'asc')
             ->get();

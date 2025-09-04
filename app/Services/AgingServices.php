@@ -162,7 +162,7 @@ class AgingServices
 
         return $result;
     }
-    public function CustomerBalanceDetailsByRange(string $DATE_FROM, string $DATE_TO,int $LOCATION_ID, array $CONTACT_SELECT)
+    public function CustomerBalanceDetailsByRange(string $DATE_FROM, string $DATE_TO, int $LOCATION_ID, array $CONTACT_SELECT)
     {
         $result = DB::table('invoice as i')
             ->select([
