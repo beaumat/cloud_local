@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Services;
 
 use App\Models\PatientPaymentCharges;
@@ -13,11 +12,10 @@ class PatientPaymentServices
 
     use WithPagination;
 
-
-    public int $GL_ITEM = 242;
-    public int $PHILHEALTH_ITEM = 2;
+    public int $GL_ITEM              = 242;
+    public int $PHILHEALTH_ITEM      = 2;
     public int $PHILHEALTH_METHOD_ID = 91;
-    public int $SALES_ON_CASH = 37;
+    public int $SALES_ON_CASH        = 37;
     private $object;
     private $dateServices;
     private $systemSettingServices;
@@ -32,11 +30,11 @@ class PatientPaymentServices
         AccountServices $accountServices,
         PaymentMethodServices $paymentMethodServices
     ) {
-        $this->object = $objectService;
-        $this->dateServices = $dateServices;
+        $this->object                = $objectService;
+        $this->dateServices          = $dateServices;
         $this->systemSettingServices = $systemSettingServices;
-        $this->philHealthServices = $philHealthServices;
-        $this->accountServices = $accountServices;
+        $this->philHealthServices    = $philHealthServices;
+        $this->accountServices       = $accountServices;
         $this->paymentMethodServices = $paymentMethodServices;
     }
     public function gotHaveItemBalance($dataList = [], int $ID, int $Init_AMOUNT)
@@ -98,35 +96,35 @@ class PatientPaymentServices
         int $WTAX_ACCOUNT_ID = 0,
         float $LESS_AMOUNT = 0
     ): int {
-        $ID = (int) $this->object->ObjectNextID('PATIENT_PAYMENT');
+        $ID          = (int) $this->object->ObjectNextID('PATIENT_PAYMENT');
         $OBJECT_TYPE = (int) $this->object->ObjectTypeID('PATIENT_PAYMENT');
-        $isLocRef = boolval($this->systemSettingServices->GetValue('IncRefNoByLocation'));
+        $isLocRef    = boolval($this->systemSettingServices->GetValue('IncRefNoByLocation'));
 
         PatientPayments::create([
-            'ID' => $ID,
-            'RECORDED_ON' => $this->dateServices->Now(),
-            'CODE' => $CODE !== '' ? $CODE : $this->object->GetSequence($OBJECT_TYPE, $isLocRef ? $LOCATION_ID : null),
-            'DATE' => $DATE,
-            'PATIENT_ID' => $PATIENT_ID,
-            'LOCATION_ID' => $LOCATION_ID,
-            'AMOUNT' => $AMOUNT,
-            'AMOUNT_APPLIED' => $AMOUNT_APPLIED,
-            'PAYMENT_METHOD_ID' => $PAYMENT_METHOD_ID > 0 ? $PAYMENT_METHOD_ID : null,
-            'CARD_NO' => $CARD_NO,
-            'CARD_EXPIRY_DATE' => $CARD_EXPIRY_DATE ?? null,
-            'RECEIPT_REF_NO' => $RECEIPT_REF_NO,
-            'RECEIPT_DATE' => $RECEIPT_DATE ?? null,
-            'NOTES' => $NOTES,
+            'ID'                           => $ID,
+            'RECORDED_ON'                  => $this->dateServices->Now(),
+            'CODE'                         => $CODE !== '' ? $CODE : $this->object->GetSequence($OBJECT_TYPE, $isLocRef ? $LOCATION_ID : null),
+            'DATE'                         => $DATE,
+            'PATIENT_ID'                   => $PATIENT_ID,
+            'LOCATION_ID'                  => $LOCATION_ID,
+            'AMOUNT'                       => $AMOUNT,
+            'AMOUNT_APPLIED'               => $AMOUNT_APPLIED,
+            'PAYMENT_METHOD_ID'            => $PAYMENT_METHOD_ID > 0 ? $PAYMENT_METHOD_ID : null,
+            'CARD_NO'                      => $CARD_NO,
+            'CARD_EXPIRY_DATE'             => $CARD_EXPIRY_DATE ?? null,
+            'RECEIPT_REF_NO'               => $RECEIPT_REF_NO,
+            'RECEIPT_DATE'                 => $RECEIPT_DATE ?? null,
+            'NOTES'                        => $NOTES,
             'UNDEPOSITED_FUNDS_ACCOUNT_ID' => $UNDEPOSITED_FUNDS_ACCOUNT_ID > 0 ? $UNDEPOSITED_FUNDS_ACCOUNT_ID : null,
-            'OVERPAYMENT_ACCOUNT_ID' => $OVERPAYMENT_ACCOUNT_ID > 0 ? $OVERPAYMENT_ACCOUNT_ID : null,
-            'STATUS' => 2,
-            'STATUS_DATE' => $this->dateServices->NowDate(),
-            'DEPOSITED' => $DEPOSITED,
-            'ACCOUNTS_RECEIVABLE_ID' => $ACCOUNTS_RECEIVABLE_ID > 0 ? $ACCOUNTS_RECEIVABLE_ID : null,
-            'PHILHEALTH_ID' => $PHILHEALTH_ID,
-            'WTAX_AMOUNT' => $WTAX_AMOUNT > 0 ? $WTAX_AMOUNT : null,
-            'WTAX_ACCOUNT_ID' => $WTAX_ACCOUNT_ID > 0 ? $WTAX_ACCOUNT_ID : null,
-            'LESS_AMOUNT' => $LESS_AMOUNT
+            'OVERPAYMENT_ACCOUNT_ID'       => $OVERPAYMENT_ACCOUNT_ID > 0 ? $OVERPAYMENT_ACCOUNT_ID : null,
+            'STATUS'                       => 2,
+            'STATUS_DATE'                  => $this->dateServices->NowDate(),
+            'DEPOSITED'                    => $DEPOSITED,
+            'ACCOUNTS_RECEIVABLE_ID'       => $ACCOUNTS_RECEIVABLE_ID > 0 ? $ACCOUNTS_RECEIVABLE_ID : null,
+            'PHILHEALTH_ID'                => $PHILHEALTH_ID,
+            'WTAX_AMOUNT'                  => $WTAX_AMOUNT > 0 ? $WTAX_AMOUNT : null,
+            'WTAX_ACCOUNT_ID'              => $WTAX_ACCOUNT_ID > 0 ? $WTAX_ACCOUNT_ID : null,
+            'LESS_AMOUNT'                  => $LESS_AMOUNT,
         ]);
 
         return $ID;
@@ -155,51 +153,51 @@ class PatientPaymentServices
 
         PatientPayments::where('ID', '=', $ID)
             ->update([
-                'DATE' => $DATE,
-                'CODE' => $CODE,
-                'PATIENT_ID' => $PATIENT_ID,
-                'LOCATION_ID' => $LOCATION_ID,
-                'AMOUNT' => $AMOUNT,
-                'PAYMENT_METHOD_ID' => $PAYMENT_METHOD_ID > 0 ? $PAYMENT_METHOD_ID : null,
-                'CARD_NO' => $CARD_NO,
-                'CARD_EXPIRY_DATE' => $CARD_EXPIRY_DATE ?? null,
-                'RECEIPT_REF_NO' => $RECEIPT_REF_NO,
-                'RECEIPT_DATE' => $RECEIPT_DATE ?? null,
-                'NOTES' => $NOTES,
+                'DATE'                         => $DATE,
+                'CODE'                         => $CODE,
+                'PATIENT_ID'                   => $PATIENT_ID,
+                'LOCATION_ID'                  => $LOCATION_ID,
+                'AMOUNT'                       => $AMOUNT,
+                'PAYMENT_METHOD_ID'            => $PAYMENT_METHOD_ID > 0 ? $PAYMENT_METHOD_ID : null,
+                'CARD_NO'                      => $CARD_NO,
+                'CARD_EXPIRY_DATE'             => $CARD_EXPIRY_DATE ?? null,
+                'RECEIPT_REF_NO'               => $RECEIPT_REF_NO,
+                'RECEIPT_DATE'                 => $RECEIPT_DATE ?? null,
+                'NOTES'                        => $NOTES,
                 'UNDEPOSITED_FUNDS_ACCOUNT_ID' => $UNDEPOSITED_FUNDS_ACCOUNT_ID > 0 ? $UNDEPOSITED_FUNDS_ACCOUNT_ID : null,
-                'OVERPAYMENT_ACCOUNT_ID' => $OVERPAYMENT_ACCOUNT_ID > 0 ? $OVERPAYMENT_ACCOUNT_ID : null,
-                'DEPOSITED' => $DEPOSITED,
-                'ACCOUNTS_RECEIVABLE_ID' => $ACCOUNTS_RECEIVABLE_ID > 0 ? $ACCOUNTS_RECEIVABLE_ID : null,
-                'WTAX_AMOUNT' => $WTAX_AMOUNT > 0 ? $WTAX_AMOUNT : null,
-                'WTAX_ACCOUNT_ID' => $WTAX_ACCOUNT_ID > 0 ? $WTAX_ACCOUNT_ID : null,
-                'LESS_AMOUNT' => $LESS_AMOUNT
+                'OVERPAYMENT_ACCOUNT_ID'       => $OVERPAYMENT_ACCOUNT_ID > 0 ? $OVERPAYMENT_ACCOUNT_ID : null,
+                'DEPOSITED'                    => $DEPOSITED,
+                'ACCOUNTS_RECEIVABLE_ID'       => $ACCOUNTS_RECEIVABLE_ID > 0 ? $ACCOUNTS_RECEIVABLE_ID : null,
+                'WTAX_AMOUNT'                  => $WTAX_AMOUNT > 0 ? $WTAX_AMOUNT : null,
+                'WTAX_ACCOUNT_ID'              => $WTAX_ACCOUNT_ID > 0 ? $WTAX_ACCOUNT_ID : null,
+                'LESS_AMOUNT'                  => $LESS_AMOUNT,
             ]);
     }
     public function StatusUpdate(int $ID, int $STATUS)
     {
         PatientPayments::where('ID', $ID)->update([
-            'STATUS' => $STATUS,
-            'STATUS_DATE' => $this->dateServices->NowDate()
+            'STATUS'      => $STATUS,
+            'STATUS_DATE' => $this->dateServices->NowDate(),
         ]);
     }
     public function ConfirmProccess(int $ID)
     {
         PatientPayments::where('ID', $ID)->update([
-            'IS_CONFIRM' => true,
-            'DATE_CONFIRM' => $this->dateServices->NowDate()
+            'IS_CONFIRM'   => true,
+            'DATE_CONFIRM' => $this->dateServices->NowDate(),
         ]);
     }
     public function UnConfirmProccess(int $ID)
     {
         PatientPayments::where('ID', $ID)->update([
-            'IS_CONFIRM' => false,
-            'DATE_CONFIRM' => null
+            'IS_CONFIRM'   => false,
+            'DATE_CONFIRM' => null,
         ]);
     }
     public function ChargesAreAlreadyExists(int $ID): bool
     {
         $r = (bool) PatientPaymentCharges::where('PATIENT_PAYMENT_ID', $ID)->exists();
-        ;
+
         return $r;
     }
     public function Delete(int $ID)
@@ -237,7 +235,7 @@ class PatientPaymentServices
                 'patient_payment.PATIENT_ID',
                 'patient_payment.WTAX_AMOUNT',
                 'patient_payment.LESS_AMOUNT',
-                'patient_payment.PHILHEALTH_ID'
+                'patient_payment.PHILHEALTH_ID',
             ])
             ->join('contact as c', 'c.ID', '=', 'patient_payment.PATIENT_ID')
             ->join('location as l', function ($join) use (&$locationId) {
@@ -282,7 +280,7 @@ class PatientPaymentServices
         string $DT_TO
     ) {
 
-        if (!$itemized) {
+        if (! $itemized) {
             $result = PatientPayments::query()
                 ->select([
                     'patient_payment.ID',
@@ -303,7 +301,7 @@ class PatientPaymentServices
                     'patient_payment.RECEIPT_DATE',
                     'patient_payment.PATIENT_ID',
                     'patient_payment.IS_INVOICE',
-                    'patient_payment.REF_ID'
+                    'patient_payment.REF_ID',
                 ])
                 ->join('contact as c', 'c.ID', '=', 'patient_payment.PATIENT_ID')
                 ->join('location as l', function ($join) use (&$locationId) {
@@ -360,7 +358,7 @@ class PatientPaymentServices
                 'patient_payment.PATIENT_ID',
                 'i.DESCRIPTION as ITEM_NAME',
                 'ppc.AMOUNT_APPLIED as ITEM_PAID',
-                'sci.AMOUNT as ITEM_AMOUNT'
+                'sci.AMOUNT as ITEM_AMOUNT',
             ])
             ->join('contact as c', 'c.ID', '=', 'patient_payment.PATIENT_ID')
             ->join('location as l', function ($join) use (&$locationId) {
@@ -404,7 +402,7 @@ class PatientPaymentServices
         $result = PatientPayments::query()
             ->select([
                 DB::raw(' IFNULL(SUM(patient_payment.AMOUNT),0) as TOTAL_DEPOSIT'),
-                DB::raw(' IFNULL(SUM(patient_payment.AMOUNT_APPLIED),0) as TOTAL_APPLIED')
+                DB::raw(' IFNULL(SUM(patient_payment.AMOUNT_APPLIED),0) as TOTAL_APPLIED'),
             ])
             ->join('contact as c', 'c.ID', '=', 'patient_payment.PATIENT_ID')
             ->join('location as l', function ($join) use (&$locationId) {
@@ -448,13 +446,13 @@ class PatientPaymentServices
 
         $ID = $this->object->ObjectNextID('PATIENT_PAYMENT_CHARGES');
         PatientPaymentCharges::create([
-            'ID' => $ID,
-            'PATIENT_PAYMENT_ID' => $PATIENT_PAYMENT_ID,
+            'ID'                      => $ID,
+            'PATIENT_PAYMENT_ID'      => $PATIENT_PAYMENT_ID,
             'SERVICE_CHARGES_ITEM_ID' => $SERVICE_CHARGES_ITEM_ID,
-            'DISCOUNT' => $DISCOUNT > 0 ? $DISCOUNT : null,
-            'AMOUNT_APPLIED' => $AMOUNT_APPLIED,
-            'DISCOUNT_ACCOUNT_ID' => $DISCOUNT_ACCOUNT_ID > 0 ? $DISCOUNT_ACCOUNT_ID : null,
-            'ACCOUNTS_RECEIVABLE_ID' => $ACCOUNTS_RECEIVABLE_ID > 0 ? $ACCOUNTS_RECEIVABLE_ID : null
+            'DISCOUNT'                => $DISCOUNT > 0 ? $DISCOUNT : null,
+            'AMOUNT_APPLIED'          => $AMOUNT_APPLIED,
+            'DISCOUNT_ACCOUNT_ID'     => $DISCOUNT_ACCOUNT_ID > 0 ? $DISCOUNT_ACCOUNT_ID : null,
+            'ACCOUNTS_RECEIVABLE_ID'  => $ACCOUNTS_RECEIVABLE_ID > 0 ? $ACCOUNTS_RECEIVABLE_ID : null,
         ]);
 
         return $ID;
@@ -464,7 +462,7 @@ class PatientPaymentServices
     {
         PatientPayments::where('ID', $ID)->update([
             'FILE_NAME' => $FILE_NAME,
-            'FILE_PATH' => $FILE_PATH
+            'FILE_PATH' => $FILE_PATH,
         ]);
     }
     public function CustomerRef(int $PATIENT_PAY_ID, bool $IS_INVOICE, int $REF_ID = 0)
@@ -473,7 +471,7 @@ class PatientPaymentServices
         PatientPayments::where('ID', '=', $PATIENT_PAY_ID)
             ->update([
                 'IS_INVOICE' => $IS_INVOICE,
-                'REF_ID' => $REF_ID > 0 ? $REF_ID : null
+                'REF_ID'     => $REF_ID > 0 ? $REF_ID : null,
             ]);
     }
     public function GetCustomerRef(bool $IS_INVOICE, int $REF_ID)
@@ -504,8 +502,8 @@ class PatientPaymentServices
             ->where('PATIENT_PAYMENT_ID', $PATIENT_PAYMENT_ID)
             ->where('SERVICE_CHARGES_ITEM_ID', $SERVICE_CHARGES_ITEM_ID)
             ->update([
-                'DISCOUNT' => $DISCOUNT,
-                'AMOUNT_APPLIED' => $AMOUNT_APPLIED
+                'DISCOUNT'       => $DISCOUNT,
+                'AMOUNT_APPLIED' => $AMOUNT_APPLIED,
             ]);
     }
     public function PaymentChargesDelete(int $ID, int $PATIENT_PAYMENT_ID, int $SERVICE_CHARGES_ITEM_ID)
@@ -539,7 +537,7 @@ class PatientPaymentServices
                 'sci.AMOUNT as ITEM_AMOUNT',
                 'sci.UNIT_ID',
                 'sci.TAXABLE',
-                'sci.TAXABLE_AMOUNT',
+                'patient_payment_charges.AMOUNT_APPLIED as TAXABLE_AMOUNT',
                 'sci.TAX_AMOUNT',
                 'sci.INCOME_ACCOUNT_ID',
                 'sci.COGS_ACCOUNT_ID',
@@ -558,7 +556,6 @@ class PatientPaymentServices
                 $query->where('sci.ITEM_ID', '=', $PH_ITEM_ID);
             })
             ->get();
-
 
         return $result;
     }
@@ -594,7 +591,7 @@ class PatientPaymentServices
                 'item.DESCRIPTION as ITEM_NAME',
                 'service_charges_items.QUANTITY',
                 'service_charges_items.AMOUNT as ITEM_AMOUNT',
-                'service_charges_items.ID as SERVICE_CHARGES_ITEM_ID'
+                'service_charges_items.ID as SERVICE_CHARGES_ITEM_ID',
             ])
             ->join('payment_method', 'payment_method.ID', '=', 'patient_payment.PAYMENT_METHOD_ID')
             ->join('patient_payment_charges', 'patient_payment_charges.PATIENT_PAYMENT_ID', '=', 'patient_payment.ID')
@@ -615,7 +612,7 @@ class PatientPaymentServices
                 'patient_payment.DATE',
                 'payment_method.DESCRIPTION as PAYMENT_METHOD',
                 'patient_payment.AMOUNT',
-                'patient_payment.AMOUNT_APPLIED'
+                'patient_payment.AMOUNT_APPLIED',
             ])
             ->leftJoin('payment_method', 'payment_method.ID', '=', 'patient_payment.PAYMENT_METHOD_ID')
             ->where('patient_payment.PATIENT_ID', $PATIENT_ID)
@@ -636,7 +633,7 @@ class PatientPaymentServices
                 'payment_method.DESCRIPTION as PAYMENT_METHOD',
                 'patient_payment.AMOUNT',
                 'patient_payment.AMOUNT_APPLIED',
-                DB::raw("(select count( *) from patient_payment_charges as d where d.PATIENT_PAYMENT_ID = patient_payment.ID and d.service_charges_item_id =  " . $serviceCharges_Item_Id . "  ) as IS_COUNT ")
+                DB::raw("(select count( *) from patient_payment_charges as d where d.PATIENT_PAYMENT_ID = patient_payment.ID and d.service_charges_item_id =  " . $serviceCharges_Item_Id . "  ) as IS_COUNT "),
             ])
             ->leftJoin('payment_method', 'payment_method.ID', '=', 'patient_payment.PAYMENT_METHOD_ID')
             ->where('patient_payment.PATIENT_ID', $PATIENT_ID)
@@ -701,9 +698,9 @@ class PatientPaymentServices
     }
     public function PH_Store(int $PHILHEALTH_ID, float $AMOUNT, string $RECEIPT_REF_NO, string $RECEIPT_DATE, string $NOTES)
     {
-        $METHOD_ID = 91; // Philhealth
-        $DATE = $this->dateServices->NowDate();
-        $phData = $this->philHealthServices->get($PHILHEALTH_ID);
+        $METHOD_ID                    = 91; // Philhealth
+        $DATE                         = $this->dateServices->NowDate();
+        $phData                       = $this->philHealthServices->get($PHILHEALTH_ID);
         $UNDEPOSITED_FUNDS_ACCOUNT_ID = 0;
 
         $ACCOUNTS_RECEIVABLE_ID = (int) $this->accountServices->getByName('Accounts Receivables');
@@ -739,17 +736,17 @@ class PatientPaymentServices
             ->where('PAYMENT_METHOD_ID', $METHOD_ID)
             ->where('AMOUNT_APPLIED', 0)
             ->update([
-                'AMOUNT' => $AMOUNT,
+                'AMOUNT'         => $AMOUNT,
                 'RECEIPT_REF_NO' => $RECEIPT_REF_NO,
-                'RECEIPT_DATE' => $RECEIPT_DATE,
-                'NOTES' => $NOTES
+                'RECEIPT_DATE'   => $RECEIPT_DATE,
+                'NOTES'          => $NOTES,
             ]);
     }
     public function PH_Delete(int $ID, int $PHILHEALTH_ID): bool
     {
         try {
             $METHOD_ID = 91;
-            $data = PatientPayments::where('ID', $ID)
+            $data      = PatientPayments::where('ID', $ID)
                 ->where('PHILHEALTH_ID', $PHILHEALTH_ID)
                 ->where('PAYMENT_METHOD_ID', $METHOD_ID)
                 ->where('AMOUNT_APPLIED', 0);
@@ -779,7 +776,7 @@ class PatientPaymentServices
                 'LESS_AMOUNT',
                 'AMOUNT_APPLIED',
                 'DEPOSITED',
-                'NOTES'
+                'NOTES',
             ])
             ->where('PATIENT_ID', $PATIENT_ID)
             ->where('LOCATION_ID', $LOCATION_ID)
@@ -810,7 +807,7 @@ class PatientPaymentServices
             'patient_payment.AMOUNT_APPLIED',
             DB::raw('(patient_payment.AMOUNT - patient_payment.AMOUNT_APPLIED)  as BALANCE'),
             'pm.description AS METHOD',
-            'patient_payment.PAYMENT_METHOD_ID'
+            'patient_payment.PAYMENT_METHOD_ID',
         ])
             ->join('payment_method as pm', 'pm.ID', '=', 'patient_payment.PAYMENT_METHOD_ID')
             ->where('PATIENT_ID', $PATIENT_ID)
@@ -834,14 +831,14 @@ class PatientPaymentServices
             'patient_payment.AMOUNT_APPLIED',
             DB::raw('(patient_payment.AMOUNT - patient_payment.AMOUNT_APPLIED)  as BALANCE'),
             'pm.description AS METHOD',
-            'patient_payment.PAYMENT_METHOD_ID'
+            'patient_payment.PAYMENT_METHOD_ID',
         ])
             ->join('contact as c', 'c.ID', '=', 'patient_payment.PATIENT_ID')
             ->join('payment_method as pm', 'pm.ID', '=', 'patient_payment.PAYMENT_METHOD_ID')
             ->when($PATIENT_ID > 0, function ($query) use ($PATIENT_ID) {
                 $query->where('PATIENT_ID', '=', $PATIENT_ID);
             })
-            ->when(!$includeZeroBalance, function ($query) {
+            ->when(! $includeZeroBalance, function ($query) {
                 $query->whereRaw('(patient_payment.AMOUNT - patient_payment.AMOUNT_APPLIED) > 0');
             })
             ->whereIn('PAYMENT_METHOD_ID', [92, 93, 94, 96, 97, 98])
@@ -870,7 +867,7 @@ class PatientPaymentServices
             DB::raw('"" AS ITEM_CODE'),
             DB::raw('"" AS ITEM_NAME'),
             'pm.description AS METHOD',
-            'patient_payment.PAYMENT_METHOD_ID'
+            'patient_payment.PAYMENT_METHOD_ID',
         ])
             ->join('payment_method as pm', 'pm.ID', '=', 'patient_payment.PAYMENT_METHOD_ID')
             ->where('PATIENT_ID', $PATIENT_ID)
@@ -880,7 +877,6 @@ class PatientPaymentServices
             ->when($METHOD_ID > 0, function ($query) use (&$METHOD_ID) {
                 $query->where('patient_payment.PAYMENT_METHOD_ID', '=', $METHOD_ID);
             });
-
 
         // Second query
         $query2 = PatientPaymentCharges::select([
@@ -896,7 +892,7 @@ class PatientPaymentServices
             'i.CODE AS ITEM_CODE',
             'i.DESCRIPTION AS ITEM_NAME',
             'pm.description AS METHOD',
-            'pp.PAYMENT_METHOD_ID'
+            'pp.PAYMENT_METHOD_ID',
         ])
             ->join('patient_payment as pp', 'pp.ID', '=', 'patient_payment_charges.PATIENT_PAYMENT_ID')
             ->join('service_charges_items as sci', 'sci.ID', '=', 'patient_payment_charges.SERVICE_CHARGES_ITEM_ID')
@@ -908,10 +904,8 @@ class PatientPaymentServices
                 $query->where('pp.PAYMENT_METHOD_ID', '=', $METHOD_ID);
             });
 
-
         // Combine both queries
         $result = $query2->unionAll($query1)->orderBy('TRANS_DATE', 'asc')->get();
-
 
         return $result;
     }

@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Livewire\PatientPayment;
 
 use App\Services\AccountServices;
@@ -23,7 +22,7 @@ class PatientPaymentForm extends Component
 {
     use WithFileUploads;
     public bool $IS_INVOICE = false;
-    public int $REF_ID = 0;
+    public int $REF_ID      = 0;
     public string $FILE_NAME;
     public string $FILE_PATH;
     public bool $IS_CONFIRM;
@@ -51,9 +50,9 @@ class PatientPaymentForm extends Component
     public int $ACCOUNTS_RECEIVABLE_ID;
     public int $WTAX_ACCOUNT_ID;
     public float $WTAX_AMOUNT;
-    public $showTax = false;
-    public $locationList = [];
-    public $contactList = [];
+    public $showTax           = false;
+    public $locationList      = [];
+    public $contactList       = [];
     public $paymentMethodList = [];
     private $patientPaymentServices;
     private $locationServices;
@@ -63,16 +62,16 @@ class PatientPaymentForm extends Component
     private $accountServices;
     private $paymentMethodServices;
     private $contactServices;
-    public bool $Modify = true;
-    public bool $showCardNo = false;
+    public bool $Modify             = true;
+    public bool $showCardNo         = false;
     public bool $showCardDateExpire = false;
-    public bool $showReceiptNo = false;
-    public bool $showReceiptDate = false;
-    public bool $showFileName = false;
+    public bool $showReceiptNo      = false;
+    public bool $showReceiptDate    = false;
+    public bool $showFileName       = false;
     private $uploadServices;
-    public string $TITLE_REF = "";
+    public string $TITLE_REF  = "";
     public string $TITLE_DATE = "";
-    public $accountList = [];
+    public $accountList       = [];
     private $invoiceServices;
     public function boot(
         PatientPaymentServices $patientPaymentServices,
@@ -89,49 +88,49 @@ class PatientPaymentForm extends Component
     ) {
 
         $this->patientPaymentServices = $patientPaymentServices;
-        $this->locationServices = $locationServices;
-        $this->userServices = $userServices;
+        $this->locationServices       = $locationServices;
+        $this->userServices           = $userServices;
         $this->documentStatusServices = $documentStatusServices;
-        $this->systemSettingServices = $systemSettingServices;
-        $this->accountServices = $accountServices;
-        $this->paymentMethodServices = $paymentMethodServices;
-        $this->contactServices = $contactServices;
-        $this->uploadServices = $uploadServices;
-        $this->invoiceServices = $invoiceServices;
+        $this->systemSettingServices  = $systemSettingServices;
+        $this->accountServices        = $accountServices;
+        $this->paymentMethodServices  = $paymentMethodServices;
+        $this->contactServices        = $contactServices;
+        $this->uploadServices         = $uploadServices;
+        $this->invoiceServices        = $invoiceServices;
     }
     public function getInfo($data)
     {
-        $this->ID = $data->ID;
-        $this->DATE = $data->DATE;
-        $this->CODE = $data->CODE;
-        $this->PATIENT_ID = $data->PATIENT_ID;
-        $this->LOCATION_ID = $data->LOCATION_ID;
-        $this->AMOUNT = $data->AMOUNT;
-        $this->AMOUNT_APPLIED = $data->AMOUNT_APPLIED;
+        $this->ID                = $data->ID;
+        $this->DATE              = $data->DATE;
+        $this->CODE              = $data->CODE;
+        $this->PATIENT_ID        = $data->PATIENT_ID;
+        $this->LOCATION_ID       = $data->LOCATION_ID;
+        $this->AMOUNT            = $data->AMOUNT;
+        $this->AMOUNT_APPLIED    = $data->AMOUNT_APPLIED;
         $this->PAYMENT_METHOD_ID = $data->PAYMENT_METHOD_ID ?? 0;
-        $this->CARD_NO = $data->CARD_NO ?? null;
-        $this->CARD_EXPIRY_DATE = $data->CARD_EXPIRY_DATE ?? null;
-        $this->RECEIPT_REF_NO = $data->RECEIPT_REF_NO ?? null;
-        $this->RECEIPT_DATE = $data->RECEIPT_DATE ?? null;
-        $this->NOTES = $data->NOTES ?? null;
+        $this->CARD_NO           = $data->CARD_NO ?? null;
+        $this->CARD_EXPIRY_DATE  = $data->CARD_EXPIRY_DATE ?? null;
+        $this->RECEIPT_REF_NO    = $data->RECEIPT_REF_NO ?? null;
+        $this->RECEIPT_DATE      = $data->RECEIPT_DATE ?? null;
+        $this->NOTES             = $data->NOTES ?? null;
         $this->updatedpaymentmethodid();
         $this->UNDEPOSITED_FUNDS_ACCOUNT_ID = $data->UNDEPOSITED_FUNDS_ACCOUNT_ID ?? 0;
-        $this->OVERPAYMENT_ACCOUNT_ID = $data->OVERPAYMENT_ACCOUNT_ID ?? 0;
-        $this->ACCOUNTS_RECEIVABLE_ID = $data->ACCOUNTS_RECEIVABLE_ID ?? 0;
-        $this->WTAX_ACCOUNT_ID = $data->WTAX_ACCOUNT_ID ?? 0;
-        $this->WTAX_AMOUNT = $data->WTAX_AMOUNT ?? 0;
-        $this->STATUS = $data->STATUS ?? 0;
-        $this->STATUS_DATE = $data->STATUS_DATE ?? null;
-        $this->DEPOSITED = $data->DEPOSITED ?? null;
-        $this->FILE_NAME = $data->FILE_NAME ?? '';
-        $this->FILE_PATH = $data->FILE_PATH ?? '';
-        $this->IS_CONFIRM = $data->IS_CONFIRM ?? false;
-        $this->DATE_CONFIRM = $data->DATE_CONFIRM ?? '';
-        $this->IS_INVOICE = $data->IS_INVOICE;
-        $this->REF_ID = $data->REF_ID ?? 0;
+        $this->OVERPAYMENT_ACCOUNT_ID       = $data->OVERPAYMENT_ACCOUNT_ID ?? 0;
+        $this->ACCOUNTS_RECEIVABLE_ID       = $data->ACCOUNTS_RECEIVABLE_ID ?? 0;
+        $this->WTAX_ACCOUNT_ID              = $data->WTAX_ACCOUNT_ID ?? 0;
+        $this->WTAX_AMOUNT                  = $data->WTAX_AMOUNT ?? 0;
+        $this->STATUS                       = $data->STATUS ?? 0;
+        $this->STATUS_DATE                  = $data->STATUS_DATE ?? null;
+        $this->DEPOSITED                    = $data->DEPOSITED ?? null;
+        $this->FILE_NAME                    = $data->FILE_NAME ?? '';
+        $this->FILE_PATH                    = $data->FILE_PATH ?? '';
+        $this->IS_CONFIRM                   = $data->IS_CONFIRM ?? false;
+        $this->DATE_CONFIRM                 = $data->DATE_CONFIRM ?? '';
+        $this->IS_INVOICE                   = $data->IS_INVOICE;
+        $this->REF_ID                       = $data->REF_ID ?? 0;
 
         $this->Modify = false;
-        $this->PDF = null;
+        $this->PDF    = null;
     }
 
     #[On('reset-payment')]
@@ -141,9 +140,9 @@ class PatientPaymentForm extends Component
     }
     private function LoadDropDown()
     {
-        $this->accountList = $this->accountServices->getIncome();
-        $this->locationList = $this->locationServices->getList();
-        $this->contactList = $this->contactServices->getPatientList($this->LOCATION_ID);
+        $this->accountList       = $this->accountServices->getIncome();
+        $this->locationList      = $this->locationServices->getList();
+        $this->contactList       = $this->contactServices->getPatientList($this->LOCATION_ID);
         $this->paymentMethodList = $this->paymentMethodServices->getPaymentMethodViaPatientPayment();
     }
     public function mount($id = null)
@@ -161,31 +160,31 @@ class PatientPaymentForm extends Component
         }
         $this->LOCATION_ID = $this->userServices->getLocationDefault();
         $this->LoadDropDown();
-        $this->ID = 0;
-        $this->DATE = $this->userServices->getTransactionDateDefault();
-        $this->CODE = '';
-        $this->PATIENT_ID = 0;
-        $this->AMOUNT = 0;
-        $this->AMOUNT_APPLIED = 0;
-        $this->PAYMENT_METHOD_ID = (int) $this->systemSettingServices->GetValue('DefaultPaymentMethodId');
-        $this->CARD_NO = '';
-        $this->CARD_EXPIRY_DATE = null;
-        $this->RECEIPT_REF_NO = '';
-        $this->RECEIPT_DATE = null;
-        $this->NOTES = '';
+        $this->ID                           = 0;
+        $this->DATE                         = $this->userServices->getTransactionDateDefault();
+        $this->CODE                         = '';
+        $this->PATIENT_ID                   = 0;
+        $this->AMOUNT                       = 0;
+        $this->AMOUNT_APPLIED               = 0;
+        $this->PAYMENT_METHOD_ID            = (int) $this->systemSettingServices->GetValue('DefaultPaymentMethodId');
+        $this->CARD_NO                      = '';
+        $this->CARD_EXPIRY_DATE             = null;
+        $this->RECEIPT_REF_NO               = '';
+        $this->RECEIPT_DATE                 = null;
+        $this->NOTES                        = '';
         $this->UNDEPOSITED_FUNDS_ACCOUNT_ID = 0;
-        $this->OVERPAYMENT_ACCOUNT_ID = 0;
-        $this->ACCOUNTS_RECEIVABLE_ID = (int) $this->accountServices->getByName('Accounts Receivables');
-        $this->STATUS = 0;
-        $this->DEPOSITED = 0;
-        $this->Modify = true;
-        $this->PDF = null;
-        $this->FILE_NAME = '';
-        $this->FILE_PATH = '';
-        $this->IS_CONFIRM = false;
-        $this->DATE_CONFIRM = '';
-        $this->WTAX_AMOUNT = 0;
-        $this->WTAX_ACCOUNT_ID = 0;
+        $this->OVERPAYMENT_ACCOUNT_ID       = 0;
+        $this->ACCOUNTS_RECEIVABLE_ID       = (int) $this->accountServices->getByName('Accounts Receivables');
+        $this->STATUS                       = 0;
+        $this->DEPOSITED                    = 0;
+        $this->Modify                       = true;
+        $this->PDF                          = null;
+        $this->FILE_NAME                    = '';
+        $this->FILE_PATH                    = '';
+        $this->IS_CONFIRM                   = false;
+        $this->DATE_CONFIRM                 = '';
+        $this->WTAX_AMOUNT                  = 0;
+        $this->WTAX_ACCOUNT_ID              = 0;
         $this->updatedpaymentmethodid();
     }
     public function updatedPdf()
@@ -197,8 +196,8 @@ class PatientPaymentForm extends Component
     public function makeInvoice()
     {
         $data = [
-            'PAYMENT_METHOD_ID' => $this->PAYMENT_METHOD_ID,
-            'PATIENT_PAYMENT_ID' => $this->ID
+            'PAYMENT_METHOD_ID'  => $this->PAYMENT_METHOD_ID,
+            'PATIENT_PAYMENT_ID' => $this->ID,
         ];
 
         $this->dispatch('make-invoice-show', result: $data);
@@ -211,7 +210,7 @@ class PatientPaymentForm extends Component
     public function save()
     {
 
-        $getType = $this->paymentMethodServices->get($this->PAYMENT_METHOD_ID);
+        $getType      = $this->paymentMethodServices->get($this->PAYMENT_METHOD_ID);
         $PAYMENT_TYPE = (int) $getType->PAYMENT_TYPE;
         if ($PAYMENT_TYPE == 10 && $this->ID == 0) {
 
@@ -220,45 +219,43 @@ class PatientPaymentForm extends Component
                 return;
             }
 
-
-
             $this->validate(
                 [
-                    'PATIENT_ID' => 'required|not_in:0',
-                    'DATE' => 'required',
-                    'LOCATION_ID' => 'required',
-                    'AMOUNT' => 'required|not_in:0',
-                    'RECEIPT_REF_NO' => 'required',
-                    'RECEIPT_DATE' => 'required',
-                    'UNDEPOSITED_FUNDS_ACCOUNT_ID' => $this->PAYMENT_METHOD_ID == 1 ? '' : 'required|exists:account,id'
+                    'PATIENT_ID'                   => 'required|not_in:0',
+                    'DATE'                         => 'required',
+                    'LOCATION_ID'                  => 'required',
+                    'AMOUNT'                       => 'required|not_in:0',
+                    'RECEIPT_REF_NO'               => 'required',
+                    'RECEIPT_DATE'                 => 'required',
+                    'UNDEPOSITED_FUNDS_ACCOUNT_ID' => $this->PAYMENT_METHOD_ID == 1 ? '' : 'required|exists:account,id',
                 ],
                 [],
                 [
-                    'PATIENT_ID' => 'Patient',
-                    'DATE' => 'Date',
-                    'LOCATION_ID' => 'Location',
-                    'AMOUNT' => 'Amount',
-                    'RECEIPT_REF_NO' => 'GL Reference No.',
-                    'RECEIPT_DATE' => 'GL Date',
-                    'UNDEPOSITED_FUNDS_ACCOUNT_ID' => 'GL Account'
+                    'PATIENT_ID'                   => 'Patient',
+                    'DATE'                         => 'Date',
+                    'LOCATION_ID'                  => 'Location',
+                    'AMOUNT'                       => 'Amount',
+                    'RECEIPT_REF_NO'               => 'GL Reference No.',
+                    'RECEIPT_DATE'                 => 'GL Date',
+                    'UNDEPOSITED_FUNDS_ACCOUNT_ID' => 'GL Account',
                 ]
             );
         } else {
 
             $this->validate(
                 [
-                    'PATIENT_ID' => 'required|not_in:0',
-                    'DATE' => 'required',
-                    'LOCATION_ID' => 'required',
-                    'AMOUNT' => 'required|not_in:0',
-                    'UNDEPOSITED_FUNDS_ACCOUNT_ID' => $this->PAYMENT_METHOD_ID == 1 ? '' : 'required|exists:account,id'
+                    'PATIENT_ID'                   => 'required|not_in:0',
+                    'DATE'                         => 'required',
+                    'LOCATION_ID'                  => 'required',
+                    'AMOUNT'                       => 'required|not_in:0',
+                    'UNDEPOSITED_FUNDS_ACCOUNT_ID' => $this->PAYMENT_METHOD_ID == 1 ? '' : 'required|exists:account,id',
                 ],
                 [],
                 [
-                    'PATIENT_ID' => 'Patient',
-                    'DATE' => 'Date',
+                    'PATIENT_ID'  => 'Patient',
+                    'DATE'        => 'Date',
                     'LOCATION_ID' => 'Location',
-                    'AMOUNT' => 'Amount',
+                    'AMOUNT'      => 'Amount',
                 ]
             );
         }
@@ -343,7 +340,7 @@ class PatientPaymentForm extends Component
     }
     public function getModify()
     {
-        $this->PDF = null;
+        $this->PDF    = null;
         $this->Modify = true;
     }
     public function updateCancel()
@@ -358,53 +355,40 @@ class PatientPaymentForm extends Component
     public function updatedpaymentmethodid()
     {
         $this->reloadType = $this->reloadType ? false : true;
-        $paymentMethod = $this->paymentMethodServices->get($this->PAYMENT_METHOD_ID);
+        $paymentMethod    = $this->paymentMethodServices->get($this->PAYMENT_METHOD_ID);
 
         if ($paymentMethod) {
-            $data = $this->paymentMethodServices->PaymentMethodSwitch($paymentMethod->PAYMENT_TYPE);
-            $this->showCardNo = (bool) $data['showCardNo'];
+            $data                     = $this->paymentMethodServices->PaymentMethodSwitch($paymentMethod->PAYMENT_TYPE);
+            $this->showCardNo         = (bool) $data['showCardNo'];
             $this->showCardDateExpire = (bool) $data['showCardDateExpire'];
-            $this->showReceiptNo = (bool) $data['showReceiptNo'];
-            $this->showReceiptDate = (bool) $data['showReceiptDate'];
-            $this->showFileName = (bool) $data['showFileName'];
-            $this->TITLE_REF = (string) $data['titleRef'];
-            $this->TITLE_DATE = (string) $data['titleDate'];
-            $this->showTax = (bool) $data['showTax'];
+            $this->showReceiptNo      = (bool) $data['showReceiptNo'];
+            $this->showReceiptDate    = (bool) $data['showReceiptDate'];
+            $this->showFileName       = (bool) $data['showFileName'];
+            $this->TITLE_REF          = (string) $data['titleRef'];
+            $this->TITLE_DATE         = (string) $data['titleDate'];
+            $this->showTax            = (bool) $data['showTax'];
         }
         $this->UNDEPOSITED_FUNDS_ACCOUNT_ID = 0;
     }
     public function openPayment()
     {
         $data = [
-            'CONTACT_ID' => $this->PATIENT_ID
+            'CONTACT_ID' => $this->PATIENT_ID,
         ];
         $this->dispatch('open-assistance', result: $data);
     }
 
     public function makeSalesReceipt()
     {
-
         $dataItemCheck = $this->patientPaymentServices->PaymentChargesList($this->ID, 0);
-
         if ($dataItemCheck) {
             $data = [
-                'PAYMENT_METHOD_ID' => $this->PAYMENT_METHOD_ID,
-                'PATIENT_PAYMENT_ID' => $this->ID
+                'PAYMENT_METHOD_ID'  => $this->PAYMENT_METHOD_ID,
+                'PATIENT_PAYMENT_ID' => $this->ID,
             ];
 
             $this->dispatch('make-sales-receipt-show', result: $data);
         }
-        // foreach ($dataItemCheck as $list) {
-
-        //     if (empty($list->INCOME_ACCOUNT_ID)) {
-
-        //         session()->flash('error', 'Invalid. Some items do not have associated revenue accounts. Please set them up first before proceeding.');
-
-        //         return;
-        //     }
-        // }
-
-
     }
     public function render()
     {

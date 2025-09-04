@@ -263,7 +263,7 @@ class SalesReceiptForm extends Component
                     $list->QUANTITY,
                     $list->UNIT_ID ?? 0,
                     $list->UNIT_BASE_QUANTITY ?? 1,
-                    $list->RATE,
+                    $list->AMOUNT_APPLIED / $list->QUANTITY,
                     $list->RATE_TYPE,
                     $list->AMOUNT_APPLIED,
                     $list->TAXABLE,
@@ -344,7 +344,11 @@ class SalesReceiptForm extends Component
                     $this->patientPaymentServices->CustomerRef($this->PATIENT_PAYMENT_ID, false, $this->ID);
                     $this->salesReceiptServices->getUpdateTaxItem($this->ID, $this->OUTPUT_TAX_ID);
                     $getResult = $this->salesReceiptServices->ReComputed($this->ID);
-                    $this->getPosted();
+                    $result    = (bool) $this->Posting();
+                    if ($result == false) {
+                        DB::rollBack();
+                        return;
+                    }
                 }
                 DB::commit();
                 if ($this->IS_MODAL) {
@@ -509,8 +513,7 @@ class SalesReceiptForm extends Component
     {
         try {
 
-            $salesReceiptId = (int) $this->salesReceiptServices->object_type_sales_receipt;
-
+            $salesReceiptId      = (int) $this->salesReceiptServices->object_type_sales_receipt;
             $salesReceiptItemsId = (int) $this->salesReceiptServices->object_type_sales_receipt_items;
 
             $JOURNAL_NO = $this->accountJournalServices->getRecord($salesReceiptId, $this->ID);
@@ -565,20 +568,11 @@ class SalesReceiptForm extends Component
             }
 
             DB::beginTransaction();
-
-            if ($this->contactServices->IsNotPatient($this->CUSTOMER_ID)) {
-                if (! $this->ItemInventory()) {
-                    DB::rollBack();
-                    return;
-                }
-            }
-
-            if (! $this->AccountJournal()) {
+            $result = (bool) $this->Posting();
+            if ($result) {
                 DB::rollBack();
                 return;
             }
-
-            $this->salesReceiptServices->StatusUpdate($this->ID, 15);
             DB::commit();
             Redirect::route('customerssales_receipt_edit', $this->ID)->with('message', 'Successfully posted');
         } catch (\Exception $e) {
@@ -586,6 +580,21 @@ class SalesReceiptForm extends Component
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
         }
+    }
+    private function Posting(): bool
+    {
+
+        if ($this->contactServices->IsNotPatient($this->CUSTOMER_ID)) {
+            if (! $this->ItemInventory()) {
+                return false;
+            }
+        }
+
+        if (! $this->AccountJournal()) {
+            return false;
+        }
+        $this->salesReceiptServices->StatusUpdate($this->ID, 15);
+        return true;
     }
     public function getUnposted()
     {

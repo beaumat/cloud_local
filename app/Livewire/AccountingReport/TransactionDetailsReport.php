@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Livewire\AccountingReport;
 
 use App\Exports\TransactionDetailsExport;
@@ -16,24 +15,22 @@ use Maatwebsite\Excel\Facades\Excel;
 class TransactionDetailsReport extends Component
 {
 
-
     public string $TEMP_ACCOUNT = "";
-    public float $TEMP_DEBIT = 0;
-    public float $TEMP_CREDIT = 0;
+    public float $TEMP_DEBIT    = 0;
+    public float $TEMP_CREDIT   = 0;
 
-
-    public float $TOTAL_DEBIT = 0;
+    public float $TOTAL_DEBIT  = 0;
     public float $TOTAL_CREDIT = 0;
-    public float $BALANCE = 0;
+    public float $BALANCE      = 0;
     public string $DATE_FROM;
     public string $DATE_TO;
     public int $LOCATION_ID;
-    public $locationList = [];
-    public $accountList = [];
-    public $accountTypeList = [];
-    public array $selectedAccount = [];
+    public $locationList              = [];
+    public $accountList               = [];
+    public $accountTypeList           = [];
+    public array $selectedAccount     = [];
     public array $selectedAccountType = [];
-    public $dataList = [];
+    public $dataList                  = [];
     private $accountJournalServices;
     private $dateServices;
     private $locationServices;
@@ -48,10 +45,10 @@ class TransactionDetailsReport extends Component
 
     ) {
         $this->accountJournalServices = $accountJournalServices;
-        $this->locationServices = $locationServices;
-        $this->dateServices = $dateServices;
-        $this->userServices = $userServices;
-        $this->accountServices = $accountServices;
+        $this->locationServices       = $locationServices;
+        $this->dateServices           = $dateServices;
+        $this->userServices           = $userServices;
+        $this->accountServices        = $accountServices;
     }
     public function updatedlocationid()
     {
@@ -65,11 +62,11 @@ class TransactionDetailsReport extends Component
     }
     public function mount()
     {
-        $this->DATE_FROM = $this->dateServices->NowDate();
-        $this->DATE_TO = $this->dateServices->NowDate();
-        $this->LOCATION_ID = $this->userServices->getLocationDefault();
-        $this->locationList = $this->locationServices->getList();
-        $this->accountList = $this->accountServices->getAccount(false);
+        $this->DATE_FROM       = $this->dateServices->NowDate();
+        $this->DATE_TO         = $this->dateServices->NowDate();
+        $this->LOCATION_ID     = $this->userServices->getLocationDefault();
+        $this->locationList    = $this->locationServices->getList();
+        $this->accountList     = $this->accountServices->getAccount(false);
         $this->accountTypeList = $this->accountServices->GetTypeList();
     }
     public function generate()
@@ -85,7 +82,7 @@ class TransactionDetailsReport extends Component
     }
     public function export()
     {
-        if (!$this->dataList) {
+        if (! $this->dataList) {
             session()->flash('error', 'Please generate first.');
             return;
         }
@@ -97,9 +94,9 @@ class TransactionDetailsReport extends Component
     public function openDetails(int $JN)
     {
         $url = $this->accountJournalServices->getUrlBy($JN);
-        
-       $this->js("window.open('$url', '_blank')");
-        
+
+        $this->js("window.open('$url', '_blank')");
+
     }
     public function render()
     {
