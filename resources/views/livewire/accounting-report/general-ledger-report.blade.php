@@ -39,7 +39,7 @@
                                             <button class="btn btn-success btn-xs w-25" wire:loading.attr='disabled'
                                                 wire:click='export()'>Export</button>
 
-                                                 <div wire:loading.delay>
+                                            <div wire:loading.delay>
                                                 <span class='spinner'></span>
                                             </div>
                                         </div>
@@ -84,7 +84,7 @@
                         <thead class="bg-sky h1">
                             <tr>
 
-                                <th >Type</th>
+                                <th>Type</th>
                                 <th>Date</th>
                                 <th class="col-1">Reference No.</th>
                                 <th class="col-3">Name/Details</th>
@@ -153,8 +153,13 @@
                                     <td>{{ $list->TYPE }}</td>
                                     <td>{{ date('m/d/Y', strtotime($list->DATE)) }}</td>
                                     <td>
-                                        <span class="text-primary" type="button" wire:click='openDetails({{ $list->JOURNAL_NO }})'>
-                                            {{ $list->TX_CODE }}</span>
+                                        @if ($list->TX_CODE)
+                                            <span class="text-primary" type="button"
+                                                wire:click='openDetails({{ $list->JOURNAL_NO }})'>
+                                                {{ $list->TX_CODE }} </span>
+                                        @else
+                                            <b class="text-danger">{{ 'ERR_NO_ID: ' . $list->ID }}</b>
+                                        @endif
                                     </td>
                                     <td>{{ $list->TX_NAME }}</td>
                                     <td>{{ $list->LOCATION }}</td>

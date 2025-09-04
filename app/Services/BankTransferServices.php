@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Services;
 
 use App\Models\BankTransfer;
@@ -8,14 +7,14 @@ use Illuminate\Support\Facades\DB;
 class BankTransferServices
 {
 
-    public int $object_type_id = 135; // 
+    public int $object_type_id = 135; //
     private $object;
     private $dateServices;
     private $systemSettingServices;
     public function __construct(ObjectServices $objectServices, DateServices $dateServices, SystemSettingServices $systemSettingServices)
     {
-        $this->object = $objectServices;
-        $this->dateServices = $dateServices;
+        $this->object                = $objectServices;
+        $this->dateServices          = $dateServices;
         $this->systemSettingServices = $systemSettingServices;
     }
     public function Get(int $ID)
@@ -26,25 +25,25 @@ class BankTransferServices
     public function Store($DATE, string $CODE, int $FROM_BANK_ACCOUNT_ID, int $TO_BANK_ACCOUNT_ID, int $FROM_NAME_ID, int $TO_NAME_ID, int $FROM_LOCATION_ID, int $TO_LOCATION_ID, int $INTER_LOCATION_ACCOUNT_ID, string $NOTES, float $AMOUNT): int
     {
 
-        $ID = (int) $this->object->ObjectNextID('BANK_TRANSFER');
+        $ID          = (int) $this->object->ObjectNextID('BANK_TRANSFER');
         $OBJECT_TYPE = (int) $this->object->ObjectTypeID('BANK_TRANSFER');
-        $isLocRef = boolval($this->systemSettingServices->GetValue('IncRefNoByLocation'));
+        $isLocRef    = boolval($this->systemSettingServices->GetValue('IncRefNoByLocation'));
 
         BankTransfer::create([
-            'ID' => $ID,
-            'RECORDED_ON' => $this->dateServices->Now(),
-            'DATE' => $DATE,
-            'CODE' => $CODE !== '' ? $CODE : $this->object->GetSequence($OBJECT_TYPE, $isLocRef ? $FROM_LOCATION_ID : null),
-            'FROM_BANK_ACCOUNT_ID' => $FROM_BANK_ACCOUNT_ID,
-            'TO_BANK_ACCOUNT_ID' => $TO_BANK_ACCOUNT_ID,
-            'FROM_NAME_ID' => $FROM_NAME_ID,
-            'TO_NAME_ID' => $TO_NAME_ID,
-            'FROM_LOCATION_ID' => $FROM_LOCATION_ID,
-            'TO_LOCATION_ID' => $TO_LOCATION_ID,
+            'ID'                        => $ID,
+            'RECORDED_ON'               => $this->dateServices->Now(),
+            'DATE'                      => $DATE,
+            'CODE'                      => $CODE !== '' ? $CODE : $this->object->GetSequence($OBJECT_TYPE, $isLocRef ? $FROM_LOCATION_ID : null),
+            'FROM_BANK_ACCOUNT_ID'      => $FROM_BANK_ACCOUNT_ID,
+            'TO_BANK_ACCOUNT_ID'        => $TO_BANK_ACCOUNT_ID,
+            'FROM_NAME_ID'              => $FROM_NAME_ID,
+            'TO_NAME_ID'                => $TO_NAME_ID,
+            'FROM_LOCATION_ID'          => $FROM_LOCATION_ID,
+            'TO_LOCATION_ID'            => $TO_LOCATION_ID,
             'INTER_LOCATION_ACCOUNT_ID' => $INTER_LOCATION_ACCOUNT_ID > 0 ? $INTER_LOCATION_ACCOUNT_ID : null,
-            'CLASS_ID' => null,
-            'AMOUNT' => $AMOUNT,
-            'NOTES' => $NOTES
+            'CLASS_ID'                  => null,
+            'AMOUNT'                    => $AMOUNT,
+            'NOTES'                     => $NOTES,
         ]);
 
         return $ID;
@@ -54,18 +53,18 @@ class BankTransferServices
 
         BankTransfer::where('ID', '=', $ID)
             ->update([
-                'ID' => $ID,
-                'CODE' => $CODE,
-                'FROM_BANK_ACCOUNT_ID' => $FROM_BANK_ACCOUNT_ID,
-                'TO_BANK_ACCOUNT_ID' => $TO_BANK_ACCOUNT_ID,
-                'FROM_NAME_ID' => $FROM_NAME_ID > 0 ? $FROM_NAME_ID : null,
-                'TO_NAME_ID' => $TO_NAME_ID > 0 ? $TO_NAME_ID : null,
-                'FROM_LOCATION_ID' => $FROM_LOCATION_ID,
-                'TO_LOCATION_ID' => $TO_LOCATION_ID,
+                'ID'                        => $ID,
+                'CODE'                      => $CODE,
+                'FROM_BANK_ACCOUNT_ID'      => $FROM_BANK_ACCOUNT_ID,
+                'TO_BANK_ACCOUNT_ID'        => $TO_BANK_ACCOUNT_ID,
+                'FROM_NAME_ID'              => $FROM_NAME_ID > 0 ? $FROM_NAME_ID : null,
+                'TO_NAME_ID'                => $TO_NAME_ID > 0 ? $TO_NAME_ID : null,
+                'FROM_LOCATION_ID'          => $FROM_LOCATION_ID,
+                'TO_LOCATION_ID'            => $TO_LOCATION_ID,
                 'INTER_LOCATION_ACCOUNT_ID' => $INTER_LOCATION_ACCOUNT_ID > 0 ? $INTER_LOCATION_ACCOUNT_ID : null,
-                'CLASS_ID' => null,
-                'NOTES' => $NOTES,
-                'AMOUNT' => $AMOUNT
+                'CLASS_ID'                  => null,
+                'NOTES'                     => $NOTES,
+                'AMOUNT'                    => $AMOUNT,
             ]);
     }
     public function Delete(int $ID)
@@ -87,7 +86,7 @@ class BankTransferServices
                 'bank_transfer.NOTES',
                 'bank_transfer.AMOUNT',
                 'f.NAME as FROM_BANK_NAME',
-                't.NAME as TO_BANK_NAME'
+                't.NAME as TO_BANK_NAME',
             ])
             ->join('location as l', function ($join) use (&$locationId) {
                 $join->on('l.ID', '=', 'bank_transfer.FROM_LOCATION_ID');
@@ -111,10 +110,10 @@ class BankTransferServices
     }
     public function StatusUpdate(int $ID, int $STATUS)
     {
-        BankTransfer::where('ID','=', $ID)
+        BankTransfer::where('ID', '=', $ID)
             ->update([
-                'STATUS' => $STATUS,
-                'STATUS_DATE' => $this->dateServices->NowDate()
+                'STATUS'      => $STATUS,
+                'STATUS_DATE' => $this->dateServices->NowDate(),
             ]);
     }
     public function getJournalTo(int $ID, bool $isDebit, bool $useInter)
@@ -125,7 +124,7 @@ class BankTransferServices
                 ($useInter ? 'INTER_LOCATION_ACCOUNT_ID' : 'TO_BANK_ACCOUNT_ID') . ' as ACCOUNT_ID',
                 DB::raw(' IFNULL(TO_NAME_ID,0) as SUBSIDIARY_ID'),
                 'AMOUNT',
-                DB::raw(($isDebit ? '0' : '1') . ' as ENTRY_TYPE')
+                DB::raw(($isDebit ? '0' : '1') . ' as ENTRY_TYPE'),
             ])
             ->where('ID', '=', $ID)
             ->get();
@@ -140,7 +139,7 @@ class BankTransferServices
                 ($useInter ? 'INTER_LOCATION_ACCOUNT_ID' : 'FROM_BANK_ACCOUNT_ID') . ' as ACCOUNT_ID',
                 DB::raw(' IFNULL(FROM_NAME_ID,0) as SUBSIDIARY_ID'),
                 'AMOUNT',
-                DB::raw(($isDebit ? '0' : '1') . ' as ENTRY_TYPE')
+                DB::raw(($isDebit ? '0' : '1') . ' as ENTRY_TYPE'),
             ])
             ->where('ID', '=', $ID)
             ->get();

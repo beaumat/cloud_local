@@ -126,7 +126,7 @@ class AccountJournalServices
         WHEN o.`ID` = 38    THEN ( select stock_transfer.`NOTES` from stock_transfer where stock_transfer.ID = aj.OBJECT_ID and stock_transfer.DATE = aj.OBJECT_DATE )
         WHEN o.`ID` = 39    THEN ( select item.DESCRIPTION as `NOTES` from stock_transfer_items join item on item.ID = stock_transfer_items.ITEM_ID join stock_transfer on stock_transfer.ID = stock_transfer_items.STOCK_TRANSFER_ID where stock_transfer_items.ID = aj.OBJECT_ID and stock_transfer.DATE = aj.OBJECT_DATE  )
         WHEN o.`ID` = 41    THEN ( select payment.`NOTES` from payment where payment.ID = aj.OBJECT_ID and payment.DATE = aj.OBJECT_DATE and payment.LOCATION_ID = aj.LOCATION_ID )
-        WHEN o.`ID` = 42    THEN ( select payment.`NOTES` from payment_invoices join payment on payment.ID = payment_invoices.PAYMENT_ID where payment_invoices.ID = aj.OBJECT_ID and payment.DATE = aj.OBJECT_DATE  and payment.LOCATION_ID = aj.LOCATION_ID )
+        WHEN o.`ID` = 42    THEN ( select concat("Invoice Ref NO. :", invoice.`CODE`) as `NOTES` from payment_invoices inner join invoice on invoice.ID = payment_invoices.INVOICE_ID join payment on payment.ID = payment_invoices.PAYMENT_ID where payment_invoices.ID = aj.OBJECT_ID and payment.DATE = aj.OBJECT_DATE  and payment.LOCATION_ID = aj.LOCATION_ID )
         WHEN o.`ID` = 52    THEN ( select sales_receipt.`NOTES` from `sales_receipt`  where `sales_receipt`.ID = aj.OBJECT_ID and `sales_receipt`.DATE = aj.OBJECT_DATE  and `sales_receipt`.LOCATION_ID = aj.LOCATION_ID)
         WHEN o.`ID` = 53    THEN ( select item.DESCRIPTION as `NOTES` from `sales_receipt_items` inner join item on item.ID = sales_receipt_items.ITEM_ID join sales_receipt on sales_receipt.ID = sales_receipt_items.SALES_RECEIPT_ID  where `sales_receipt_items`.ID = aj.OBJECT_ID and `sales_receipt`.DATE = aj.OBJECT_DATE  and `sales_receipt`.LOCATION_ID = aj.LOCATION_ID)
         WHEN o.`ID` = 57    THEN ( select `check`.`NOTES` from `check`  where `check`.ID = aj.OBJECT_ID and `check`.DATE = aj.OBJECT_DATE  and `check`.LOCATION_ID = aj.LOCATION_ID)
@@ -143,14 +143,14 @@ class AccountJournalServices
         WHEN o.`ID` = 70    THEN ( select build_assembly.`NOTES` from build_assembly where build_assembly.ID = aj.OBJECT_ID and build_assembly.DATE = aj.OBJECT_DATE  and build_assembly.LOCATION_ID = aj.LOCATION_ID  )
         WHEN o.`ID` = 71    THEN ( select item.DESCRIPTION as `NOTES` from build_assembly_items inner join item on item.ID = build_assembly_items.ITEM_ID  join build_assembly on build_assembly.ID = build_assembly_items.BUILD_ASSEMBLY_ID  where build_assembly_items.ID = aj.OBJECT_ID and build_assembly.DATE = aj.OBJECT_DATE  and build_assembly.LOCATION_ID = aj.LOCATION_ID  )
         WHEN o.`ID` = 72    THEN ( select tax_credit.`NOTES` from tax_credit where tax_credit.ID = aj.OBJECT_ID and tax_credit.DATE = aj.OBJECT_DATE  and tax_credit.LOCATION_ID = aj.LOCATION_ID  )
-        WHEN o.`ID` = 73    THEN ( select tax_credit.`NOTES` from tax_credit_invoices join tax_credit on tax_credit.ID = tax_credit_invoices.TAX_CREDIT_ID  where tax_credit_invoices.ID = aj.OBJECT_ID and tax_credit.DATE = aj.OBJECT_DATE  and tax_credit.LOCATION_ID = aj.LOCATION_ID  )
+        WHEN o.`ID` = 73    THEN ( select concat("Invoice Ref NO. :", invoice.`CODE`) as `NOTES` from tax_credit_invoices join invoice on invoice.ID = tax_credit_invoices.INVOICE_ID join tax_credit on tax_credit.ID = tax_credit_invoices.TAX_CREDIT_ID  where tax_credit_invoices.ID = aj.OBJECT_ID and tax_credit.DATE = aj.OBJECT_DATE  and tax_credit.LOCATION_ID = aj.LOCATION_ID  )
         WHEN o.`ID` = 113   THEN ( select pull_out.`NOTES` from pull_out where pull_out.ID = aj.OBJECT_ID and pull_out.DATE = aj.OBJECT_DATE and pull_out.LOCATION_ID = aj.LOCATION_ID   )
         WHEN o.`ID` = 114   THEN ( select item.DESCRIPTION as `NOTES` from pull_out_items inner join item on item.ID = pull_out_items.ITEM_ID join pull_out on pull_out.ID = pull_out_items.PULL_OUT_ID where pull_out_items.ID = aj.OBJECT_ID and pull_out.DATE = aj.OBJECT_DATE and pull_out.LOCATION_ID = aj.LOCATION_ID )
         WHEN o.`ID` = 127   THEN ( select depreciation.`NOTES` from depreciation where depreciation.ID = aj.OBJECT_ID and depreciation.DATE = aj.OBJECT_DATE  and depreciation.LOCATION_ID = aj.LOCATION_ID  )
         WHEN o.`ID` = 128   THEN ( select depreciation.`NOTES` from depreciation_items join depreciation on depreciation.ID = depreciation_items.DEPRECIATION_ID where depreciation_items.ID = aj.OBJECT_ID and depreciation.DATE = aj.OBJECT_DATE  and depreciation.LOCATION_ID = aj.LOCATION_ID )
         WHEN o.`ID` = 135   THEN ( select bank_transfer.`NOTES` from bank_transfer where bank_transfer.ID = aj.OBJECT_ID and bank_transfer.DATE = aj.OBJECT_DATE  and (bank_transfer.TO_LOCATION_ID = aj.LOCATION_ID or bank_transfer.FROM_LOCATION_ID = aj.LOCATION_ID ))
         WHEN o.`ID` = 67   THEN ( select withholding_tax.`NOTES` from withholding_tax where withholding_tax.ID = aj.OBJECT_ID and withholding_tax.DATE = aj.OBJECT_DATE  and withholding_tax.LOCATION_ID = aj.LOCATION_ID  )
-        WHEN o.`ID` = 68   THEN ( select withholding_tax.`NOTES` from withholding_tax_bills join withholding_tax on withholding_tax.ID = withholding_tax_bills.WITHHOLDING_TAX_ID  where withholding_tax_bills.ID = aj.OBJECT_ID and withholding_tax.DATE = aj.OBJECT_DATE and withholding_tax.LOCATION_ID = aj.LOCATION_ID  )
+        WHEN o.`ID` = 68   THEN ( select concat("Billing Ref NO. :", bill.`CODE`) as `NOTES` from withholding_tax_bills inner join bill on bill.ID = withholding_tax_bills.BILL_ID join withholding_tax on withholding_tax.ID = withholding_tax_bills.WITHHOLDING_TAX_ID  where withholding_tax_bills.ID = aj.OBJECT_ID and withholding_tax.DATE = aj.OBJECT_DATE and withholding_tax.LOCATION_ID = aj.LOCATION_ID  )
 
         WHEN o.`ID` = 95    THEN ( select "" as NOTES from hemodialysis left outer join contact on contact.ID = hemodialysis.EMPLOYEE_ID where hemodialysis.ID = aj.OBJECT_ID and hemodialysis.DATE = aj.OBJECT_DATE  and hemodialysis.LOCATION_ID = aj.LOCATION_ID  )
         WHEN o.`ID` = 109   THEN ( select item.DESCRIPTION as `NOTES` from hemodialysis_items inner join item on item.ID = hemodialysis_items.ITEM_ID inner join hemodialysis on hemodialysis.ID = hemodialysis_items.HEMO_ID  where hemodialysis_items.ID = aj.OBJECT_ID and hemodialysis.DATE = aj.OBJECT_DATE  and hemodialysis.LOCATION_ID = aj.LOCATION_ID  )
@@ -621,6 +621,7 @@ class AccountJournalServices
     {
         $result = DB::table('account_journal as aj')
             ->select([
+                'aj.ID',
                 'aj.JOURNAL_NO',
                 'aj.OBJECT_DATE as DATE',
                 'a.TAG as ACCOUNT_CODE',
