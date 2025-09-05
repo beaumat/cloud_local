@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Livewire\FundTransfer;
 
 use App\Services\AccountJournalServices;
@@ -7,7 +6,6 @@ use App\Services\AccountServices;
 use App\Services\ContactServices;
 use App\Services\DocumentStatusServices;
 use App\Services\FundTransferServices;
-use App\Services\GeneralJournalServices;
 use App\Services\LocationServices;
 use App\Services\SystemSettingServices;
 use App\Services\UserServices;
@@ -38,14 +36,14 @@ class FundTransferForm extends Component
 
     public int $INTER_LOCATION_ACCOUNT_ID;
     public $interLocationAccountList = [];
-    public $fromLocationList = [];
-    public $toLocationList = [];
+    public $fromLocationList         = [];
+    public $toLocationList           = [];
 
     public $fromContactList = [];
-    public $toContactList = [];
+    public $toContactList   = [];
 
     public $fromAccountList = [];
-    public $toAccountList = [];
+    public $toAccountList   = [];
 
     public bool $Modify;
     private $fundTransferServices;
@@ -69,48 +67,47 @@ class FundTransferForm extends Component
         SystemSettingServices $systemSettingServices
     ) {
 
-        $this->fundTransferServices = $fundTransferServices;
-        $this->locationServices = $locationServices;
-        $this->userServices = $userServices;
+        $this->fundTransferServices   = $fundTransferServices;
+        $this->locationServices       = $locationServices;
+        $this->userServices           = $userServices;
         $this->documentStatusServices = $documentStatusServices;
         $this->accountJournalServices = $accountJournalServices;
-        $this->contactServices = $contactServices;
-        $this->accountServices = $accountServices;
-        $this->systemSettingServices = $systemSettingServices;
+        $this->contactServices        = $contactServices;
+        $this->accountServices        = $accountServices;
+        $this->systemSettingServices  = $systemSettingServices;
 
     }
     public function LoadDropdown()
     {
-        $dataLocationList = $this->locationServices->getList();
+        $dataLocationList       = $this->locationServices->getList();
         $this->fromLocationList = $dataLocationList;
-        $this->toLocationList = $dataLocationList;
+        $this->toLocationList   = $dataLocationList;
 
-
-        $dataContactList = $this->contactServices->getListAllType();
+        $dataContactList       = $this->contactServices->getListAllType();
         $this->fromContactList = $dataContactList;
-        $this->toContactList = $dataContactList;
+        $this->toContactList   = $dataContactList;
 
-        $acctList = $this->accountServices->getAccount(false);
-        $this->fromAccountList = $acctList;
-        $this->toAccountList = $acctList;
+        $acctList                       = $this->accountServices->getAccount(false);
+        $this->fromAccountList          = $acctList;
+        $this->toAccountList            = $acctList;
         $this->interLocationAccountList = $acctList;
     }
 
     private function getInfo($data)
     {
-        $this->ID = $data->ID;
-        $this->CODE = $data->CODE;
-        $this->DATE = $data->DATE;
-        $this->AMOUNT = $data->AMOUNT ?? 0;
-        $this->FROM_ACCOUNT_ID = $data->FROM_ACCOUNT_ID ?? 0;
-        $this->TO_ACCOUNT_ID = $data->TO_ACCOUNT_ID ?? 0;
-        $this->FROM_LOCATION_ID = $data->FROM_LOCATION_ID ?? 0;
-        $this->TO_LOCATION_ID = $data->TO_LOCATION_ID ?? 0;
+        $this->ID                        = $data->ID;
+        $this->CODE                      = $data->CODE;
+        $this->DATE                      = $data->DATE;
+        $this->AMOUNT                    = $data->AMOUNT ?? 0;
+        $this->FROM_ACCOUNT_ID           = $data->FROM_ACCOUNT_ID ?? 0;
+        $this->TO_ACCOUNT_ID             = $data->TO_ACCOUNT_ID ?? 0;
+        $this->FROM_LOCATION_ID          = $data->FROM_LOCATION_ID ?? 0;
+        $this->TO_LOCATION_ID            = $data->TO_LOCATION_ID ?? 0;
         $this->INTER_LOCATION_ACCOUNT_ID = $data->INTER_LOCATION_ACCOUNT_ID ?? 0;
-        $this->TO_NAME_ID = $data->TO_NAME_ID ?? 0;
-        $this->FROM_NAME_ID = $data->FROM_NAME_ID ?? 0;
-        $this->NOTES = $data->NOTES ?? '';
-        $this->STATUS = $data->STATUS ?? 0;
+        $this->TO_NAME_ID                = $data->TO_NAME_ID ?? 0;
+        $this->FROM_NAME_ID              = $data->FROM_NAME_ID ?? 0;
+        $this->NOTES                     = $data->NOTES ?? '';
+        $this->STATUS                    = $data->STATUS ?? 0;
 
         $this->STATUS_DESCRIPTION = $this->documentStatusServices->getDesc($this->STATUS);
     }
@@ -135,23 +132,23 @@ class FundTransferForm extends Component
         }
 
         $this->LoadDropdown();
-        $this->Modify = true;
-        $this->ID = 0;
-        $this->CODE = '';
-        $this->DATE = $this->userServices->getTransactionDateDefault();
+        $this->Modify          = true;
+        $this->ID              = 0;
+        $this->CODE            = '';
+        $this->DATE            = $this->userServices->getTransactionDateDefault();
         $this->FROM_ACCOUNT_ID = 0;
-        $this->TO_ACCOUNT_ID = 0;
+        $this->TO_ACCOUNT_ID   = 0;
 
         $this->INTER_LOCATION_ACCOUNT_ID = 0;
-        $this->FROM_LOCATION_ID = $this->userServices->getLocationDefault();
-        $this->TO_LOCATION_ID = 0;
+        $this->FROM_LOCATION_ID          = $this->userServices->getLocationDefault();
+        $this->TO_LOCATION_ID            = 0;
 
         $this->FROM_NAME_ID = 0;
-        $this->TO_NAME_ID = 0;
-        $this->AMOUNT = 0;
-        $this->NOTES = '';
+        $this->TO_NAME_ID   = 0;
+        $this->AMOUNT       = 0;
+        $this->NOTES        = '';
 
-        $this->STATUS = 0;
+        $this->STATUS             = 0;
         $this->STATUS_DESCRIPTION = '';
     }
     public function getModify()
@@ -161,32 +158,31 @@ class FundTransferForm extends Component
     public function save()
     {
 
-
         $this->validate(
             [
-                'CODE' => 'nullable|max:20|unique:fund_transfer,code,' . ($this->ID > 0 ? $this->ID : 'NULL') . ',id',
-                'DATE' => 'required|date',
-                'FROM_LOCATION_ID' => 'required|exists:location,id',
-                'TO_LOCATION_ID' => 'required|exists:location,id',
-                'FROM_ACCOUNT_ID' => 'required|exists:account,id',
-                'TO_ACCOUNT_ID' => 'required|exists:account,id',
+                'CODE'                      => 'nullable|max:20|unique:fund_transfer,code,' . ($this->ID > 0 ? $this->ID : 'NULL') . ',id',
+                'DATE'                      => 'required|date',
+                'FROM_LOCATION_ID'          => 'required|exists:location,id',
+                'TO_LOCATION_ID'            => 'required|exists:location,id',
+                'FROM_ACCOUNT_ID'           => 'required|exists:account,id',
+                'TO_ACCOUNT_ID'             => 'required|exists:account,id',
                 'INTER_LOCATION_ACCOUNT_ID' => 'required|exists:account,id',
-                'FROM_NAME_ID' => $this->FROM_NAME_ID > 0 ? 'exists:contact,id' : 'nullable',
-                'TO_NAME_ID' => $this->TO_NAME_ID > 0 ? 'exists:contact,id' : 'nullable',
-                'AMOUNT' => 'required|numeric|not_in:0'
+                'FROM_NAME_ID'              => $this->FROM_NAME_ID > 0 ? 'exists:contact,id' : 'nullable',
+                'TO_NAME_ID'                => $this->TO_NAME_ID > 0 ? 'exists:contact,id' : 'nullable',
+                'AMOUNT'                    => 'required|numeric|not_in:0',
             ],
             [],
             [
-                'CODE' => 'Reference No.',
-                'DATE' => 'Date',
-                'FROM_LOCATION_ID' => 'From Location',
-                'TO_LOCATION_ID' => 'To Location',
-                'FROM_ACCOUNT_ID' => 'From Account',
-                'TO_ACCOUNT_ID' => 'To Account',
+                'CODE'                      => 'Reference No.',
+                'DATE'                      => 'Date',
+                'FROM_LOCATION_ID'          => 'From Location',
+                'TO_LOCATION_ID'            => 'To Location',
+                'FROM_ACCOUNT_ID'           => 'From Account',
+                'TO_ACCOUNT_ID'             => 'To Account',
                 'INTER_LOCATION_ACCOUNT_ID' => 'Inter Location Account',
-                'FROM_NAME_ID' => 'From Name',
-                'TO_NAME_ID' => 'To Name',
-                'AMOUNT' => 'Amount Fund',
+                'FROM_NAME_ID'              => 'From Name',
+                'TO_NAME_ID'                => 'To Name',
+                'AMOUNT'                    => 'Amount Fund',
             ]
         );
 
@@ -194,8 +190,6 @@ class FundTransferForm extends Component
             session()->flash('error', 'You cannot create a transaction before or on the closing date on :' . $this->systemSettingServices->CloseDate());
             return;
         }
-
-
 
         DB::beginTransaction();
         try {
@@ -214,7 +208,6 @@ class FundTransferForm extends Component
                     $this->NOTES,
                     $this->AMOUNT
                 );
-
 
                 $this->fundTransferServices->StatusUpdate($this->ID, 0);
                 DB::commit();
@@ -241,7 +234,6 @@ class FundTransferForm extends Component
                 DB::commit();
                 $this->updateCancel();
             }
-
 
         } catch (\Exception $e) {
             DB::rollBack();
@@ -275,15 +267,14 @@ class FundTransferForm extends Component
                 ['ACCOUNT_ID', '=', $PREV_ACCOUNT_ID],
 
             ], [
-                'AMOUNT' => $this->AMOUNT,
-                'ACCOUNT_ID' => $ACCOUNT_ID,
-                'SUBSIDIARY_ID' => $NAME_ID
+                'AMOUNT'        => $this->AMOUNT,
+                'ACCOUNT_ID'    => $ACCOUNT_ID,
+                'SUBSIDIARY_ID' => $NAME_ID,
             ]);
         }
     }
     private function AccountJournal(): bool
     {
-
 
         try {
             $fundTransfer = $this->fundTransferServices->object_type_id;
@@ -334,7 +325,7 @@ class FundTransferForm extends Component
 
             $data = $this->accountJournalServices->getSumDebitCredit($JOURNAL_NO);
 
-            $debit_sum = (float) $data['DEBIT'];
+            $debit_sum  = (float) $data['DEBIT'];
             $credit_sum = (float) $data['CREDIT'];
 
             if ($debit_sum == $credit_sum && $debit_sum > 0 && $credit_sum > 0) {
@@ -364,13 +355,12 @@ class FundTransferForm extends Component
     {
         try {
 
-
             if ($this->AMOUNT <= 0) {
                 Session()->flash('error', 'Invalid amount fund.');
                 return;
             }
             DB::beginTransaction();
-            if (!$this->AccountJournal()) {
+            if (! $this->AccountJournal()) {
                 DB::rollBack();
                 return;
             }

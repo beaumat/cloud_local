@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Livewire\GeneralJournal;
 
 use App\Services\AccountJournalServices;
@@ -27,7 +26,7 @@ class GeneralJournalForm extends Component
     public string $NOTES;
     public int $CONTACT_ID;
     public $locationList = [];
-    public $contactList = [];
+    public $contactList  = [];
     public bool $Modify;
     private $generalJournalServices;
     private $locationServices;
@@ -49,35 +48,33 @@ class GeneralJournalForm extends Component
 
     ) {
         $this->generalJournalServices = $generalJournalServices;
-        $this->locationServices = $locationServices;
-        $this->userServices = $userServices;
+        $this->locationServices       = $locationServices;
+        $this->userServices           = $userServices;
         $this->documentStatusServices = $documentStatusServices;
         $this->accountJournalServices = $accountJournalServices;
-        $this->contactServices = $contactServices;
-        $this->systemSettingServices = $systemSettingServices;
+        $this->contactServices        = $contactServices;
+        $this->systemSettingServices  = $systemSettingServices;
     }
     public function LoadDropdown()
     {
         $this->locationList = $this->locationServices->getList();
-        $this->contactList = $this->contactServices->getListAllType();
+        $this->contactList  = $this->contactServices->getListAllType();
     }
-
 
     private function getInfo($data)
     {
-        $this->ID = $data->ID;
-        $this->CODE = $data->CODE;
-        $this->DATE = $data->DATE;
-        $this->LOCATION_ID = $data->LOCATION_ID;
-        $this->CONTACT_ID = $data->CONTACT_ID ?? 0;
-        $this->NOTES = $data->NOTES ?? '';
-        $this->ADJUSTING_ENTRY = $data->ADJUSTING_ENTRY ?? false;
-        $this->STATUS = $data->STATUS ?? 0;
+        $this->ID                 = $data->ID;
+        $this->CODE               = $data->CODE;
+        $this->DATE               = $data->DATE;
+        $this->LOCATION_ID        = $data->LOCATION_ID;
+        $this->CONTACT_ID         = $data->CONTACT_ID ?? 0;
+        $this->NOTES              = $data->NOTES ?? '';
+        $this->ADJUSTING_ENTRY    = $data->ADJUSTING_ENTRY ?? false;
+        $this->STATUS             = $data->STATUS ?? 0;
         $this->STATUS_DESCRIPTION = $this->documentStatusServices->getDesc($this->STATUS);
     }
     public function mount($id = null)
     {
-
 
         if (is_numeric($id)) {
             $data = $this->generalJournalServices->Get($id);
@@ -91,20 +88,20 @@ class GeneralJournalForm extends Component
             return Redirect::route('companygeneral_journal')->with('error', $errorMessage);
         }
         $this->LoadDropdown();
-        $this->Modify = true;
-        $this->ID = 0;
-        $this->CODE = '';
-        $this->DATE = $this->userServices->getTransactionDateDefault();
-        $this->LOCATION_ID = $this->userServices->getLocationDefault();
-        $this->ADJUSTING_ENTRY = false;
-        $this->NOTES = '';
-        $this->CONTACT_ID = 0;
-        $this->STATUS = 0;
+        $this->Modify             = true;
+        $this->ID                 = 0;
+        $this->CODE               = '';
+        $this->DATE               = $this->userServices->getTransactionDateDefault();
+        $this->LOCATION_ID        = $this->userServices->getLocationDefault();
+        $this->ADJUSTING_ENTRY    = false;
+        $this->NOTES              = '';
+        $this->CONTACT_ID         = 0;
+        $this->STATUS             = 0;
         $this->STATUS_DESCRIPTION = '';
     }
     public function getModify()
     {
-        $this->Modify = true;
+        $this->Modify      = true;
         $this->contactList = $this->contactServices->getListAllType();
     }
     public function save()
@@ -113,26 +110,25 @@ class GeneralJournalForm extends Component
         // 'CODE'          =>  $this->ID > 0 ? 'required|max:20|unique:general_journal,code,' . $this->ID : 'nullable',
         $this->validate(
             [
-                'CODE' => 'nullable|max:20|unique:general_journal,code,' . ($this->ID > 0 ? $this->ID : 'NULL') . ',id',
-                'DATE' => 'required',
+                'CODE'        => 'nullable|max:20|unique:general_journal,code,' . ($this->ID > 0 ? $this->ID : 'NULL') . ',id',
+                'DATE'        => 'required',
                 'LOCATION_ID' => 'required|exists:location,id',
-                'CONTACT_ID' => $this->CONTACT_ID > 0 ? 'exists:contact,id' : 'nullable',
+                'CONTACT_ID'  => $this->CONTACT_ID > 0 ? 'exists:contact,id' : 'nullable',
 
             ],
             [],
             [
-                'CODE' => 'Reference No.',
-                'DATE' => 'Date',
+                'CODE'        => 'Reference No.',
+                'DATE'        => 'Date',
                 'LOCATION_ID' => 'Location',
-                'CONTACT_ID' => 'Contact Name'
+                'CONTACT_ID'  => 'Contact Name',
             ]
         );
 
-          if ($this->systemSettingServices->IsCloseDate($this->DATE)) {
-                    session()->flash('error', 'You cannot create a transaction before or on the closing date on :' . $this->systemSettingServices->CloseDate());
-                    return;
-                }
-
+        if ($this->systemSettingServices->IsCloseDate($this->DATE)) {
+            session()->flash('error', 'You cannot create a transaction before or on the closing date on :' . $this->systemSettingServices->CloseDate());
+            return;
+        }
 
         try {
             if ($this->ID == 0) {
@@ -154,8 +150,8 @@ class GeneralJournalForm extends Component
                     // possible having change date
 
                     $generaljournal = $this->generalJournalServices->object_type_general_journal_details_id;
-                    $getFirstId = (int) $this->generalJournalServices->getFirstDetailsID($this->ID);
-                    $JNO = $this->accountJournalServices->getRecord($generaljournal, $getFirstId);
+                    $getFirstId     = (int) $this->generalJournalServices->getFirstDetailsID($this->ID);
+                    $JNO            = $this->accountJournalServices->getRecord($generaljournal, $getFirstId);
                     if ($JNO > 0) {
                         $this->accountJournalServices->updateObjectDate($JNO, $this->DATE);
                     }
@@ -195,8 +191,8 @@ class GeneralJournalForm extends Component
     {
         try {
             $generaljournal = $this->generalJournalServices->object_type_general_journal_details_id;
-            $getFirstId = (int) $this->generalJournalServices->getFirstDetailsID($this->ID);
-            $JOURNAL_NO = $this->accountJournalServices->getRecord($generaljournal, $getFirstId);
+            $getFirstId     = (int) $this->generalJournalServices->getFirstDetailsID($this->ID);
+            $JOURNAL_NO     = $this->accountJournalServices->getRecord($generaljournal, $getFirstId);
             if ($JOURNAL_NO == 0) {
                 $JOURNAL_NO = $this->accountJournalServices->getJournalNo($generaljournal, $getFirstId) + 1;
             }
@@ -214,7 +210,7 @@ class GeneralJournalForm extends Component
 
             $data = $this->accountJournalServices->getSumDebitCredit($JOURNAL_NO);
 
-            $debit_sum = (float) $data['DEBIT'];
+            $debit_sum  = (float) $data['DEBIT'];
             $credit_sum = (float) $data['CREDIT'];
 
             if ($debit_sum == $credit_sum && $debit_sum > 0 && $credit_sum > 0) {
@@ -233,7 +229,7 @@ class GeneralJournalForm extends Component
     {
         try {
             $total_result = $this->generalJournalServices->GetTotal($this->ID);
-            $total_debit = (float) $total_result['TOTAL_DEBIT'];
+            $total_debit  = (float) $total_result['TOTAL_DEBIT'];
             $total_credit = (float) $total_result['TOTAL_CREDIT'];
             if ($total_debit == 0) {
                 Session()->flash('error', 'No debit entry');
@@ -246,7 +242,7 @@ class GeneralJournalForm extends Component
 
             if ($total_debit == $total_credit) {
                 DB::beginTransaction();
-                if (!$this->AccountJournal()) {
+                if (! $this->AccountJournal()) {
                     DB::rollBack();
                     return;
                 }
@@ -275,7 +271,7 @@ class GeneralJournalForm extends Component
     }
     public function OpenJournal()
     {
-        $FirstID = $this->generalJournalServices->getFirstDetailsID($this->ID);
+        $FirstID    = $this->generalJournalServices->getFirstDetailsID($this->ID);
         $JOURNAL_NO = $this->accountJournalServices->getRecord(
             $this->generalJournalServices->object_type_general_journal_details_id,
             $FirstID

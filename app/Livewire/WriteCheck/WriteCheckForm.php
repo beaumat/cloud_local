@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Livewire\WriteCheck;
 
 use App\Services\AccountJournalServices;
@@ -14,9 +13,7 @@ use App\Services\UserServices;
 use App\Services\WriteCheckServices;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
-use Livewire\Attributes\Modelable;
 use Livewire\Attributes\On;
-use Livewire\Attributes\Reactive;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 
@@ -24,8 +21,7 @@ use Livewire\Component;
 class WriteCheckForm extends Component
 {
 
-
-    public float $TOTAL_ITEMS = 0;
+    public float $TOTAL_ITEMS    = 0;
     public float $TOTAL_EXPENSES = 0;
     public int $ID;
     public string $CODE;
@@ -42,12 +38,12 @@ class WriteCheckForm extends Component
     public float $AMOUNT;
     public float $AMOUNT_APPLIED;
     public string $NOTES;
-    public int $TYPE = 0;
+    public int $TYPE   = 0;
     public int $STATUS = 0;
     public string $STATUS_DESCRIPTION;
     public int $ACCOUNTS_PAYABLE_ID = 21;
-    public $locationList = [];
-    public $taxList = [];
+    public $locationList            = [];
+    public $taxList                 = [];
     public bool $Modify;
     public $contactList = [];
     public $accountList = [];
@@ -73,16 +69,16 @@ class WriteCheckForm extends Component
         SystemSettingServices $systemSettingServices,
         ItemInventoryServices $itemInventoryServices
     ) {
-        $this->writeCheckServices = $writeCheckServices;
-        $this->contactServices = $contactServices;
-        $this->locationServices = $locationServices;
-        $this->userServices = $userServices;
-        $this->accountServices = $accountServices;
+        $this->writeCheckServices     = $writeCheckServices;
+        $this->contactServices        = $contactServices;
+        $this->locationServices       = $locationServices;
+        $this->userServices           = $userServices;
+        $this->accountServices        = $accountServices;
         $this->documentStatusServices = $documentStatusServices;
         $this->accountJournalServices = $accountJournalServices;
-        $this->taxServices = $taxServices;
-        $this->systemSettingServices = $systemSettingServices;
-        $this->itemInventoryServices = $itemInventoryServices;
+        $this->taxServices            = $taxServices;
+        $this->systemSettingServices  = $systemSettingServices;
+        $this->itemInventoryServices  = $itemInventoryServices;
     }
     public string $tab = 'item';
     #[On('select-tab')]
@@ -94,17 +90,17 @@ class WriteCheckForm extends Component
     {
         $tax = $this->taxServices->get($this->INPUT_TAX_ID ?? 0);
         if ($tax) {
-            $this->INPUT_TAX_RATE = (float) $tax->INPUT_TAX_RATE;
+            $this->INPUT_TAX_RATE       = (float) $tax->INPUT_TAX_RATE;
             $this->INPUT_TAX_VAT_METHOD = (int) $tax->VAT_METHOD;
             $this->INPUT_TAX_ACCOUNT_ID = (int) $tax->TAX_ACCOUNT_ID;
         }
     }
     private function LoadDropDown()
     {
-        $this->contactList = $this->contactServices->getListAllType();
+        $this->contactList  = $this->contactServices->getListAllType();
         $this->locationList = $this->locationServices->getList();
-        $this->accountList = $this->accountServices->getBankAccount();
-        $this->taxList = $this->taxServices->getList();
+        $this->accountList  = $this->accountServices->getBankAccount();
+        $this->taxList      = $this->taxServices->getList();
     }
     public function mount($id = null)
     {
@@ -121,48 +117,46 @@ class WriteCheckForm extends Component
             return Redirect::route('bankingmake_cheque')->with('error', $errorMessage);
         }
         $this->LoadDropDown();
-        $this->ID = 0;
-        $this->CODE = '';
-        $this->DATE = $this->userServices->getTransactionDateDefault();
-        $this->LOCATION_ID = $this->userServices->getLocationDefault();
-        $this->AMOUNT = 0;
-        $this->TOTAL_EXPENSES = 0;
-        $this->TOTAL_ITEMS = 0;
-        $this->NOTES = '';
-        $this->BANK_ACCOUNT_ID = 0;
-        $this->PAY_TO_ID = 0;
-        $this->Modify = true;
-        $this->AMOUNT_APPLIED = 0;
-        $this->INPUT_TAX_ID = (int) $this->systemSettingServices->GetValue('InputTaxId');
-        $this->INPUT_TAX_RATE = 0;
-        $this->INPUT_TAX_AMOUNT = 0;
+        $this->ID                   = 0;
+        $this->CODE                 = '';
+        $this->DATE                 = $this->userServices->getTransactionDateDefault();
+        $this->LOCATION_ID          = $this->userServices->getLocationDefault();
+        $this->AMOUNT               = 0;
+        $this->TOTAL_EXPENSES       = 0;
+        $this->TOTAL_ITEMS          = 0;
+        $this->NOTES                = '';
+        $this->BANK_ACCOUNT_ID      = 0;
+        $this->PAY_TO_ID            = 0;
+        $this->Modify               = true;
+        $this->AMOUNT_APPLIED       = 0;
+        $this->INPUT_TAX_ID         = (int) $this->systemSettingServices->GetValue('InputTaxId');
+        $this->INPUT_TAX_RATE       = 0;
+        $this->INPUT_TAX_AMOUNT     = 0;
         $this->INPUT_TAX_VAT_METHOD = 0;
         $this->INPUT_TAX_ACCOUNT_ID = 0;
         $this->getTax();
     }
     public function getInfo($data)
     {
-        $this->ID = $data->ID;
-        $this->CODE = $data->CODE;
-        $this->DATE = $data->DATE;
-        $this->LOCATION_ID = $data->LOCATION_ID;
-        $this->AMOUNT = $data->AMOUNT;
-        $this->NOTES = $data->NOTES ?? '';
-        $this->BANK_ACCOUNT_ID = $data->BANK_ACCOUNT_ID;
-        $this->PAY_TO_ID = $data->PAY_TO_ID;
-        $this->INPUT_TAX_ID = $data->INPUT_TAX_ID ?? 0;
-        $this->INPUT_TAX_RATE = $data->INPUT_TAX_RATE > 0 ? $data->INPUT_TAX_RATE : 0;
-        $this->INPUT_TAX_AMOUNT = $data->INPUT_TAX_AMOUNT > 0 ? $data->INPUT_TAX_AMOUNT : 0;
+        $this->ID                   = $data->ID;
+        $this->CODE                 = $data->CODE;
+        $this->DATE                 = $data->DATE;
+        $this->LOCATION_ID          = $data->LOCATION_ID;
+        $this->AMOUNT               = $data->AMOUNT;
+        $this->NOTES                = $data->NOTES ?? '';
+        $this->BANK_ACCOUNT_ID      = $data->BANK_ACCOUNT_ID;
+        $this->PAY_TO_ID            = $data->PAY_TO_ID;
+        $this->INPUT_TAX_ID         = $data->INPUT_TAX_ID ?? 0;
+        $this->INPUT_TAX_RATE       = $data->INPUT_TAX_RATE > 0 ? $data->INPUT_TAX_RATE : 0;
+        $this->INPUT_TAX_AMOUNT     = $data->INPUT_TAX_AMOUNT > 0 ? $data->INPUT_TAX_AMOUNT : 0;
         $this->INPUT_TAX_VAT_METHOD = $data->INPUT_TAX_VAT_METHOD > 0 ? $data->INPUT_TAX_VAT_METHOD : 0;
         $this->INPUT_TAX_ACCOUNT_ID = $data->INPUT_TAX_ACCOUNT_ID > 0 ? $data->INPUT_TAX_ACCOUNT_ID : 0;
-        $this->STATUS = $data->STATUS;
-        $this->STATUS_DESCRIPTION = $this->documentStatusServices->getDesc($this->STATUS);
-        $this->Modify = false;
+        $this->STATUS               = $data->STATUS;
+        $this->STATUS_DESCRIPTION   = $this->documentStatusServices->getDesc($this->STATUS);
+        $this->Modify               = false;
         $this->getTax();
         $getResult = $this->writeCheckServices->ReComputed($this->ID);
         $this->getUpdateAmount($getResult);
-
-
 
         if ($this->writeCheckServices->isItemTab($data->ID)) {
             $this->tab = "item";
@@ -187,18 +181,18 @@ class WriteCheckForm extends Component
         $this->validate(
             [
                 'BANK_ACCOUNT_ID' => 'required|not_in:0|exists:account,id',
-                'CODE' => $this->ID > 0 ? 'required|max:20|unique:check,code,' . $this->ID : 'nullable',
-                'PAY_TO_ID' => 'required|not_in:0|exists:contact,id',
-                'DATE' => 'required',
-                'LOCATION_ID' => 'required|exists:location,id'
+                'CODE'            => $this->ID > 0 ? 'required|max:20|unique:check,code,' . $this->ID : 'nullable',
+                'PAY_TO_ID'       => 'required|not_in:0|exists:contact,id',
+                'DATE'            => 'required',
+                'LOCATION_ID'     => 'required|exists:location,id',
             ],
             [],
             [
                 'BANK_ACCOUNT_ID' => 'Bank Account',
-                'CODE' => 'Reference No.',
-                'PAY_TO_ID' => 'Pay To',
-                'DATE' => 'Date',
-                'LOCATION_ID' => 'Location',
+                'CODE'            => 'Reference No.',
+                'PAY_TO_ID'       => 'Pay To',
+                'DATE'            => 'Date',
+                'LOCATION_ID'     => 'Location',
             ]
         );
 
@@ -206,7 +200,6 @@ class WriteCheckForm extends Component
             session()->flash('error', 'You cannot create a transaction before or on the closing date on :' . $this->systemSettingServices->CloseDate());
             return;
         }
-
 
         try {
             if ($this->ID == 0) {
@@ -237,7 +230,7 @@ class WriteCheckForm extends Component
                     if ($this->STATUS == 16) {
                         $JNO = $this->accountJournalServices->getRecord($this->writeCheckServices->object_type_check, $this->ID);
                         if ($JNO > 0) {
-                            // BANK_ACCOUNT_ID on CREDIT 
+                            // BANK_ACCOUNT_ID on CREDIT
                             $this->accountJournalServices->AccountSwitch(
                                 $this->BANK_ACCOUNT_ID,
                                 $data->BANK_ACCOUNT_ID,
@@ -249,7 +242,7 @@ class WriteCheckForm extends Component
                                 $this->DATE,
                                 1
                             );
-                            // BANK_ACCOUNT_ID on DEBIT 
+                            // BANK_ACCOUNT_ID on DEBIT
                             $this->accountJournalServices->AccountSwitch(
                                 $this->BANK_ACCOUNT_ID,
                                 $data->BANK_ACCOUNT_ID,
@@ -298,9 +291,9 @@ class WriteCheckForm extends Component
     public function getUpdateAmount($result)
     {
         foreach ($result as $list) {
-            $this->AMOUNT = (float) $list['AMOUNT'];
-            $this->TOTAL_ITEMS = (float) $list['ITEM_AMOUNT'];
-            $this->TOTAL_EXPENSES = (float) $list['EXPENSES_AMOUNT'];
+            $this->AMOUNT           = (float) $list['AMOUNT'];
+            $this->TOTAL_ITEMS      = (float) $list['ITEM_AMOUNT'];
+            $this->TOTAL_EXPENSES   = (float) $list['EXPENSES_AMOUNT'];
             $this->INPUT_TAX_AMOUNT = $list['TAX_AMOUNT'];
         }
     }
@@ -321,7 +314,7 @@ class WriteCheckForm extends Component
     {
         try {
             $SOURCE_REF_TYPE = (int) $this->writeCheckServices->document_type_id;
-            $data = $this->writeCheckServices->ItemInventory($this->ID);
+            $data            = $this->writeCheckServices->ItemInventory($this->ID);
             if ($data) {
                 $this->itemInventoryServices->InventoryExecute($data, $this->LOCATION_ID, $SOURCE_REF_TYPE, $this->DATE, true);
             }
@@ -345,8 +338,8 @@ class WriteCheckForm extends Component
     {
         try {
 
-            $check = (int) $this->writeCheckServices->object_type_check;
-            $checkItems = (int) $this->writeCheckServices->object_type_check_items;
+            $check         = (int) $this->writeCheckServices->object_type_check;
+            $checkItems    = (int) $this->writeCheckServices->object_type_check_items;
             $checkExpenses = (int) $this->writeCheckServices->object_type_check_expenses;
 
             $JOURNAL_NO = $this->accountJournalServices->getRecord($check, $this->ID);
@@ -361,7 +354,6 @@ class WriteCheckForm extends Component
             $checkExpensesData = $this->writeCheckServices->getCheckExpenseJournal($this->ID);
             $this->accountJournalServices->JournalExecute($JOURNAL_NO, $checkExpensesData, $this->LOCATION_ID, $checkExpenses, $this->DATE, "EXPENSE");
 
-
             //Main
             $checkData = $this->writeCheckServices->getCheckJournal($this->ID);
             $this->accountJournalServices->JournalExecute($JOURNAL_NO, $checkData, $this->LOCATION_ID, $check, $this->DATE, "AP");
@@ -372,7 +364,7 @@ class WriteCheckForm extends Component
 
             $data = $this->accountJournalServices->getSumDebitCredit($JOURNAL_NO);
 
-            $debit_sum = (float) $data['DEBIT'];
+            $debit_sum  = (float) $data['DEBIT'];
             $credit_sum = (float) $data['CREDIT'];
 
             if ($debit_sum == $credit_sum) {
@@ -390,20 +382,20 @@ class WriteCheckForm extends Component
     {
         try {
 
-            $count_item = (int) $this->writeCheckServices->CountItems($this->ID, true);
+            $count_item    = (int) $this->writeCheckServices->CountItems($this->ID, true);
             $count_expense = (int) $this->writeCheckServices->CountItems($this->ID, false);
-            $count = $count_item + $count_expense;
+            $count         = $count_item + $count_expense;
             if ($count == 0) {
                 session()->flash('error', 'Item not found.');
                 return;
             }
             DB::beginTransaction();
-            if (!$this->ItemInventory()) {
+            if (! $this->ItemInventory()) {
                 DB::rollBack();
                 return;
             }
 
-            if (!$this->AccountJournal()) {
+            if (! $this->AccountJournal()) {
                 DB::rollBack();
                 return;
             }

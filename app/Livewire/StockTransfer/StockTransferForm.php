@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Livewire\StockTransfer;
 
 use App\Services\AccountJournalServices;
@@ -8,7 +7,6 @@ use App\Services\DocumentStatusServices;
 use App\Services\DocumentTypeServices;
 use App\Services\ItemInventoryServices;
 use App\Services\LocationServices;
-use App\Services\ObjectServices;
 use App\Services\StockTransferServices;
 use App\Services\SystemSettingServices;
 use App\Services\UserServices;
@@ -18,12 +16,9 @@ use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 
-
 #[Title('Stock Transfer')]
 class StockTransferForm extends Component
 {
-
-
 
     public int $openStatus = 0;
     public int $ID;
@@ -39,7 +34,7 @@ class StockTransferForm extends Component
     public int $ACCOUNT_ID;
     public $locationList = [];
     public $transferList = [];
-    public $contactList = [];
+    public $contactList  = [];
     public bool $Modify;
     public bool $transferReset = false;
     private $stockTransferServices;
@@ -64,20 +59,20 @@ class StockTransferForm extends Component
         AccountJournalServices $accountJournalServices,
         SystemSettingServices $systemSettingServices
     ) {
-        $this->stockTransferServices = $stockTransferServices;
-        $this->locationServices = $locationServices;
-        $this->userServices = $userServices;
+        $this->stockTransferServices  = $stockTransferServices;
+        $this->locationServices       = $locationServices;
+        $this->userServices           = $userServices;
         $this->documentStatusServices = $documentStatusServices;
-        $this->contactServices = $contactServices;
-        $this->documentTypeServices = $documentTypeServices;
-        $this->itemInventoryServices = $itemInventoryServices;
+        $this->contactServices        = $contactServices;
+        $this->documentTypeServices   = $documentTypeServices;
+        $this->itemInventoryServices  = $itemInventoryServices;
         $this->accountJournalServices = $accountJournalServices;
-        $this->systemSettingServices = $systemSettingServices;
+        $this->systemSettingServices  = $systemSettingServices;
     }
     public function LoadDropdown()
     {
         $this->locationList = $this->locationServices->getList();
-        $this->contactList = $this->contactServices->getList(2);
+        $this->contactList  = $this->contactServices->getList(2);
     }
     public function updatedLocationId()
     {
@@ -88,7 +83,7 @@ class StockTransferForm extends Component
     public function clearTransfer()
     {
         $this->TRANSFER_TO_ID = 0;
-        $this->transferReset = $this->transferReset ? false : true;
+        $this->transferReset  = $this->transferReset ? false : true;
     }
 
     private function ItemInventory(): bool
@@ -112,7 +107,7 @@ class StockTransferForm extends Component
     {
         try {
 
-            $stockTransfer = (int) $this->stockTransferServices->object_type_stock_transfer;
+            $stockTransfer      = (int) $this->stockTransferServices->object_type_stock_transfer;
             $stockTransferItems = (int) $this->stockTransferServices->object_type_stock_transfer_items;
 
             $JOURNAL_NO = $this->accountJournalServices->getRecord($stockTransfer, $this->ID);
@@ -140,7 +135,6 @@ class StockTransferForm extends Component
                 "TO"
             );
 
-
             //Item
             $stItemCredit = $this->stockTransferServices->getStockTransferItemJournal_Credit($this->ID);
             $this->accountJournalServices->JournalExecute(
@@ -164,7 +158,7 @@ class StockTransferForm extends Component
 
             $data = $this->accountJournalServices->getSumDebitCredit($JOURNAL_NO);
 
-            $debit_sum = (float) $data['DEBIT'];
+            $debit_sum  = (float) $data['DEBIT'];
             $credit_sum = (float) $data['CREDIT'];
 
             if ($debit_sum == $credit_sum) {
@@ -188,12 +182,12 @@ class StockTransferForm extends Component
             }
 
             DB::beginTransaction();
-            if (!$this->ItemInventory()) {
+            if (! $this->ItemInventory()) {
                 DB::rollBack();
                 return;
             }
 
-            if (!$this->AccountJournal()) {
+            if (! $this->AccountJournal()) {
                 DB::rollBack();
                 return;
             }
@@ -209,19 +203,19 @@ class StockTransferForm extends Component
     }
     private function getInfo($data)
     {
-        $this->ID = $data->ID;
-        $this->CODE = $data->CODE;
-        $this->DATE = $data->DATE;
-        $this->LOCATION_ID = $data->LOCATION_ID;
-        $this->transferList = $this->locationServices->getListExcept($this->LOCATION_ID);
-        $this->NOTES = $data->NOTES ?? '';
-        $this->TRANSFER_TO_ID = $data->TRANSFER_TO_ID ?? 0;
-        $this->transferReset = $this->transferReset ? false : true;
-        $this->AMOUNT = $data->AMOUNT ?? 0;
-        $this->RETAIL_VALUE = $data->RETAIL_VALUE ?? 0;
-        $this->PREPARED_BY_ID = $data->PREPARED_BY_ID ?? 0;
-        $this->ACCOUNT_ID = $data->ACCOUNT_ID ?? 0;
-        $this->STATUS = $data->STATUS ?? 0;
+        $this->ID                 = $data->ID;
+        $this->CODE               = $data->CODE;
+        $this->DATE               = $data->DATE;
+        $this->LOCATION_ID        = $data->LOCATION_ID;
+        $this->transferList       = $this->locationServices->getListExcept($this->LOCATION_ID);
+        $this->NOTES              = $data->NOTES ?? '';
+        $this->TRANSFER_TO_ID     = $data->TRANSFER_TO_ID ?? 0;
+        $this->transferReset      = $this->transferReset ? false : true;
+        $this->AMOUNT             = $data->AMOUNT ?? 0;
+        $this->RETAIL_VALUE       = $data->RETAIL_VALUE ?? 0;
+        $this->PREPARED_BY_ID     = $data->PREPARED_BY_ID ?? 0;
+        $this->ACCOUNT_ID         = $data->ACCOUNT_ID ?? 0;
+        $this->STATUS             = $data->STATUS ?? 0;
         $this->STATUS_DESCRIPTION = $this->documentStatusServices->getDesc($this->STATUS);
     }
     public function mount($id = null)
@@ -240,24 +234,23 @@ class StockTransferForm extends Component
             return Redirect::route('companystock_transfer')->with('error', $errorMessage);
         }
         $this->LoadDropdown();
-        $this->Modify = true;
-        $this->ID = 0;
-        $this->CODE = '';
-        $this->DATE = $this->userServices->getTransactionDateDefault();
-        $this->LOCATION_ID = $this->userServices->getLocationDefault();
-        $this->transferList = $this->locationServices->getListExcept($this->LOCATION_ID);
-        $this->TRANSFER_TO_ID = 0;
-        $this->AMOUNT = 0;
-        $this->RETAIL_VALUE = 0;
-        $this->PREPARED_BY_ID = 0;
-        $this->NOTES = '';
-        $this->ACCOUNT_ID = 100;
-        $this->STATUS = 0;
+        $this->Modify             = true;
+        $this->ID                 = 0;
+        $this->CODE               = '';
+        $this->DATE               = $this->userServices->getTransactionDateDefault();
+        $this->LOCATION_ID        = $this->userServices->getLocationDefault();
+        $this->transferList       = $this->locationServices->getListExcept($this->LOCATION_ID);
+        $this->TRANSFER_TO_ID     = 0;
+        $this->AMOUNT             = 0;
+        $this->RETAIL_VALUE       = 0;
+        $this->PREPARED_BY_ID     = 0;
+        $this->NOTES              = '';
+        $this->ACCOUNT_ID         = 100;
+        $this->STATUS             = 0;
         $this->STATUS_DESCRIPTION = '';
     }
     public function getModify()
     {
-
 
         $this->Modify = true;
         if ($this->STATUS == 0) {
@@ -278,18 +271,18 @@ class StockTransferForm extends Component
 
                 $this->validate(
                     [
-                        'DATE' => 'required',
-                        'LOCATION_ID' => 'required|exists:location,id',
+                        'DATE'           => 'required',
+                        'LOCATION_ID'    => 'required|exists:location,id',
                         'TRANSFER_TO_ID' => 'required|not_in:0|exists:location,id',
-                        'ACCOUNT_ID' => 'required|not_in:0|exists:account,id'
+                        'ACCOUNT_ID'     => 'required|not_in:0|exists:account,id',
                     ],
                     [],
                     [
 
-                        'DATE' => 'Date',
-                        'LOCATION_ID' => 'Location',
+                        'DATE'           => 'Date',
+                        'LOCATION_ID'    => 'Location',
                         'TRANSFER_TO_ID' => 'Transfer To',
-                        'ACCOUNT_ID' => 'Account Transfer'
+                        'ACCOUNT_ID'     => 'Account Transfer',
 
                     ]
                 );
@@ -317,18 +310,18 @@ class StockTransferForm extends Component
                 $this->validate(
                     [
 
-                        'CODE' => 'required|max:20|unique:stock_transfer,code,' . $this->ID,
-                        'DATE' => 'required',
-                        'LOCATION_ID' => 'required',
-                        'TRANSFER_TO_ID' => 'required|not_in:0'
+                        'CODE'           => 'required|max:20|unique:stock_transfer,code,' . $this->ID,
+                        'DATE'           => 'required',
+                        'LOCATION_ID'    => 'required',
+                        'TRANSFER_TO_ID' => 'required|not_in:0',
 
                     ],
                     [],
                     [
-                        'CODE' => 'Reference No.',
-                        'DATE' => 'Date',
-                        'LOCATION_ID' => 'Location',
-                        'TRANSFER_TO_ID' => 'Transfer To'
+                        'CODE'           => 'Reference No.',
+                        'DATE'           => 'Date',
+                        'LOCATION_ID'    => 'Location',
+                        'TRANSFER_TO_ID' => 'Transfer To',
                     ]
                 );
 
@@ -382,8 +375,8 @@ class StockTransferForm extends Component
     #[On('update-amount')]
     public function updateAmount()
     {
-        $data = $this->stockTransferServices->GetSum($this->ID);
-        $this->AMOUNT = $data['AMOUNT'];
+        $data               = $this->stockTransferServices->GetSum($this->ID);
+        $this->AMOUNT       = $data['AMOUNT'];
         $this->RETAIL_VALUE = $data['RETAIL_VALUE'];
     }
     public function OpenJournal()

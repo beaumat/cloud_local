@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Livewire\PurchaseOrder;
 
 use App\Services\ContactServices;
@@ -11,7 +10,6 @@ use App\Services\ShipViaServices;
 use App\Services\SystemSettingServices;
 use App\Services\TaxServices;
 use App\Services\UserServices;
-use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Livewire\Attributes\On;
@@ -43,11 +41,11 @@ class PurchaseOrderForm extends Component
     public float $AMOUNT;
     public float $TAXABLE_AMOUNT;
     public float $NONTAXABLE_AMOUNT;
-    public $vendorList = [];
-    public $locationList = [];
-    public $shipViaList = [];
+    public $vendorList      = [];
+    public $locationList    = [];
+    public $shipViaList     = [];
     public $paymentTermList = [];
-    public $taxList = [];
+    public $taxList         = [];
     public bool $Modify;
     private $purchaseOrderServices;
     private $locationServices;
@@ -70,29 +68,29 @@ class PurchaseOrderForm extends Component
         SystemSettingServices $systemSettingServices
 
     ) {
-        $this->purchaseOrderServices = $purchaseOrderServices;
-        $this->locationServices = $locationServices;
-        $this->contactServices = $contactServices;
-        $this->shipViaServices = $shipViaServices;
-        $this->paymentTermServices = $paymentTermServices;
-        $this->taxServices = $taxServices;
-        $this->userServices = $userServices;
+        $this->purchaseOrderServices  = $purchaseOrderServices;
+        $this->locationServices       = $locationServices;
+        $this->contactServices        = $contactServices;
+        $this->shipViaServices        = $shipViaServices;
+        $this->paymentTermServices    = $paymentTermServices;
+        $this->taxServices            = $taxServices;
+        $this->userServices           = $userServices;
         $this->documentStatusServices = $documentStatusServices;
-        $this->systemSettingServices = $systemSettingServices;
+        $this->systemSettingServices  = $systemSettingServices;
     }
     public function LoadDropdown()
     {
-        $this->vendorList = $this->contactServices->getList(0);
-        $this->locationList = $this->locationServices->getList();
-        $this->shipViaList = $this->shipViaServices->getList();
+        $this->vendorList      = $this->contactServices->getList(0);
+        $this->locationList    = $this->locationServices->getList();
+        $this->shipViaList     = $this->shipViaServices->getList();
         $this->paymentTermList = $this->paymentTermServices->getList();
-        $this->taxList = $this->taxServices->getList();
+        $this->taxList         = $this->taxServices->getList();
     }
     public function getTax()
     {
         $tax = $this->taxServices->get($this->INPUT_TAX_ID);
         if ($tax) {
-            $this->INPUT_TAX_RATE = (float) $tax->INPUT_TAX_RATE;
+            $this->INPUT_TAX_RATE       = (float) $tax->INPUT_TAX_RATE;
             $this->INPUT_TAX_VAT_METHOD = (int) $tax->VAT_METHOD;
             $this->INPUT_TAX_ACCOUNT_ID = (int) $tax->TAX_ACCOUNT_ID;
         }
@@ -100,27 +98,27 @@ class PurchaseOrderForm extends Component
 
     private function getInfo($PO)
     {
-        $this->ID = $PO->ID;
-        $this->CODE = $PO->CODE;
-        $this->DATE = $PO->DATE;
-        $this->DATE_EXPECTED = $PO->DATE_EXPECTED ? $PO->DATE_EXPECTED : '';
-        $this->LOCATION_ID = $PO->LOCATION_ID;
-        $this->VENDOR_ID = $PO->VENDOR_ID;
-        $this->SHIP_VIA_ID = $PO->SHIP_VIA_ID ? $PO->SHIP_VIA_ID : 0;
-        $this->PAYMENT_TERMS_ID = $PO->PAYMENT_TERMS_ID ? $PO->PAYMENT_TERMS_ID : 0;
-        $this->CLASS_ID = $PO->CLASS_ID ? $PO->CLASS_ID : 0;
-        $this->NOTES = $PO->NOTES ?? '';
-        $this->AMOUNT = $PO->AMOUNT;
-        $this->STATUS = $PO->STATUS;
-        $this->INPUT_TAX_ID = $PO->INPUT_TAX_ID ? $PO->INPUT_TAX_ID : 0;
-        $this->INPUT_TAX_RATE = $PO->INPUT_TAX_RATE ? $PO->INPUT_TAX_RATE : 0;
-        $this->INPUT_TAX_AMOUNT = $PO->INPUT_TAX_AMOUNT ? $PO->INPUT_TAX_AMOUNT : 0;
+        $this->ID                   = $PO->ID;
+        $this->CODE                 = $PO->CODE;
+        $this->DATE                 = $PO->DATE;
+        $this->DATE_EXPECTED        = $PO->DATE_EXPECTED ? $PO->DATE_EXPECTED : '';
+        $this->LOCATION_ID          = $PO->LOCATION_ID;
+        $this->VENDOR_ID            = $PO->VENDOR_ID;
+        $this->SHIP_VIA_ID          = $PO->SHIP_VIA_ID ? $PO->SHIP_VIA_ID : 0;
+        $this->PAYMENT_TERMS_ID     = $PO->PAYMENT_TERMS_ID ? $PO->PAYMENT_TERMS_ID : 0;
+        $this->CLASS_ID             = $PO->CLASS_ID ? $PO->CLASS_ID : 0;
+        $this->NOTES                = $PO->NOTES ?? '';
+        $this->AMOUNT               = $PO->AMOUNT;
+        $this->STATUS               = $PO->STATUS;
+        $this->INPUT_TAX_ID         = $PO->INPUT_TAX_ID ? $PO->INPUT_TAX_ID : 0;
+        $this->INPUT_TAX_RATE       = $PO->INPUT_TAX_RATE ? $PO->INPUT_TAX_RATE : 0;
+        $this->INPUT_TAX_AMOUNT     = $PO->INPUT_TAX_AMOUNT ? $PO->INPUT_TAX_AMOUNT : 0;
         $this->INPUT_TAX_VAT_METHOD = $PO->INPUT_TAX_VAT_METHOD ? $PO->INPUT_TAX_VAT_METHOD : 0;
         $this->INPUT_TAX_ACCOUNT_ID = $PO->INPUT_TAX_ACCOUNT_ID ? $PO->INPUT_TAX_ACCOUNT_ID : 0;
-        $this->TAXABLE_AMOUNT = $PO->TAXABLE_AMOUNT ? $PO->TAXABLE_AMOUNT : 0;
-        $this->NONTAXABLE_AMOUNT = $PO->NONTAXABLE_AMOUNT ? $PO->NONTAXABLE_AMOUNT : 0;
-        $this->STATUS_DESCRIPTION = $this->documentStatusServices->getDesc($this->STATUS);
-        $this->PO_ALREADY_BILL = $this->purchaseOrderServices->isPOAlreadyBill($this->ID);
+        $this->TAXABLE_AMOUNT       = $PO->TAXABLE_AMOUNT ? $PO->TAXABLE_AMOUNT : 0;
+        $this->NONTAXABLE_AMOUNT    = $PO->NONTAXABLE_AMOUNT ? $PO->NONTAXABLE_AMOUNT : 0;
+        $this->STATUS_DESCRIPTION   = $this->documentStatusServices->getDesc($this->STATUS);
+        $this->PO_ALREADY_BILL      = $this->purchaseOrderServices->isPOAlreadyBill($this->ID);
     }
     public function mount($id = null)
     {
@@ -136,27 +134,27 @@ class PurchaseOrderForm extends Component
             return Redirect::route('vendorspurchase_order')->with('error', $errorMessage);
         }
         $this->LoadDropdown();
-        $this->Modify = true;
-        $this->ID = 0;
-        $this->CODE = '';
-        $this->DATE = $this->userServices->getTransactionDateDefault();
-        $this->DATE_EXPECTED = '';
-        $this->LOCATION_ID = $this->userServices->getLocationDefault();
-        $this->VENDOR_ID = 0;
-        $this->SHIP_VIA_ID = $this->shipViaServices->getFirst();
-        $this->CLASS_ID = 0;
-        $this->PAYMENT_TERMS_ID = (int) $this->systemSettingServices->GetValue('DefaultPaymentTermsId');
-        $this->NOTES = '';
-        $this->AMOUNT = 0;
-        $this->STATUS = 0;
-        $this->INPUT_TAX_ID = (int) $this->systemSettingServices->GetValue('InputTaxId');
-        $this->INPUT_TAX_RATE = 0;
-        $this->INPUT_TAX_AMOUNT = 0;
+        $this->Modify               = true;
+        $this->ID                   = 0;
+        $this->CODE                 = '';
+        $this->DATE                 = $this->userServices->getTransactionDateDefault();
+        $this->DATE_EXPECTED        = '';
+        $this->LOCATION_ID          = $this->userServices->getLocationDefault();
+        $this->VENDOR_ID            = 0;
+        $this->SHIP_VIA_ID          = $this->shipViaServices->getFirst();
+        $this->CLASS_ID             = 0;
+        $this->PAYMENT_TERMS_ID     = (int) $this->systemSettingServices->GetValue('DefaultPaymentTermsId');
+        $this->NOTES                = '';
+        $this->AMOUNT               = 0;
+        $this->STATUS               = 0;
+        $this->INPUT_TAX_ID         = (int) $this->systemSettingServices->GetValue('InputTaxId');
+        $this->INPUT_TAX_RATE       = 0;
+        $this->INPUT_TAX_AMOUNT     = 0;
         $this->INPUT_TAX_VAT_METHOD = 0;
         $this->INPUT_TAX_ACCOUNT_ID = 0;
-        $this->TAXABLE_AMOUNT = 0;
-        $this->NONTAXABLE_AMOUNT = 0;
-        $this->STATUS_DESCRIPTION = "";
+        $this->TAXABLE_AMOUNT       = 0;
+        $this->NONTAXABLE_AMOUNT    = 0;
+        $this->STATUS_DESCRIPTION   = "";
         $this->getTax();
     }
     public function getModify()
@@ -170,24 +168,23 @@ class PurchaseOrderForm extends Component
     public function save()
     {
 
-
         $this->validate(
             [
-                'VENDOR_ID' => 'required|numeric|exists:contact,id',
-                'CODE' => 'nullable|max:20|unique:purchase_order,code,' . ($this->ID > 0 ? $this->ID : 'NULL') . ',id',
-                'INPUT_TAX_ID' => 'required|numeric|exists:tax,id',
-                'DATE' => 'required|date',
-                'LOCATION_ID' => 'required|numeric|exists:location,id',
-                'PAYMENT_TERMS_ID' => 'required|numeric|exists:payment_terms,id'
+                'VENDOR_ID'        => 'required|numeric|exists:contact,id',
+                'CODE'             => 'nullable|max:20|unique:purchase_order,code,' . ($this->ID > 0 ? $this->ID : 'NULL') . ',id',
+                'INPUT_TAX_ID'     => 'required|numeric|exists:tax,id',
+                'DATE'             => 'required|date',
+                'LOCATION_ID'      => 'required|numeric|exists:location,id',
+                'PAYMENT_TERMS_ID' => 'required|numeric|exists:payment_terms,id',
             ],
             [],
             [
-                'VENDOR_ID' => 'Vendor',
-                'CODE' => 'Reference No.',
-                'INPUT_TAX_ID' => 'Tax',
-                'DATE' => 'Date',
-                'LOCATION_ID' => 'Location',
-                'PAYMENT_TERMS_ID' => 'Payment Terms'
+                'VENDOR_ID'        => 'Vendor',
+                'CODE'             => 'Reference No.',
+                'INPUT_TAX_ID'     => 'Tax',
+                'DATE'             => 'Date',
+                'LOCATION_ID'      => 'Location',
+                'PAYMENT_TERMS_ID' => 'Payment Terms',
             ]
         );
 
@@ -258,9 +255,9 @@ class PurchaseOrderForm extends Component
     public function getUpdateAmount($result)
     {
         foreach ($result as $list) {
-            $this->AMOUNT = $list['AMOUNT'];
-            $this->INPUT_TAX_AMOUNT = $list['TAX_AMOUNT'];
-            $this->TAXABLE_AMOUNT = $list['TAXABLE_AMOUNT'];
+            $this->AMOUNT            = $list['AMOUNT'];
+            $this->INPUT_TAX_AMOUNT  = $list['TAX_AMOUNT'];
+            $this->TAXABLE_AMOUNT    = $list['TAXABLE_AMOUNT'];
             $this->NONTAXABLE_AMOUNT = $list['NONTAXABLE_AMOUNT'];
         }
     }

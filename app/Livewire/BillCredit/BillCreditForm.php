@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Livewire\BillCredit;
 
 use App\Services\AccountJournalServices;
@@ -18,7 +17,6 @@ use Illuminate\Support\Facades\Redirect;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
 use Livewire\Component;
-
 
 #[Title('Bill Credits')]
 class BillCreditForm extends Component
@@ -40,9 +38,9 @@ class BillCreditForm extends Component
     public float $INPUT_TAX_AMOUNT;
     public float $AMOUNT;
     public float $AMOUNT_APPLIED;
-    public $vendorList = [];
+    public $vendorList   = [];
     public $locationList = [];
-    public $taxList = [];
+    public $taxList      = [];
     public bool $Modify;
     private $billCreditServices;
     private $locationServices;
@@ -74,30 +72,30 @@ class BillCreditForm extends Component
         ItemInventoryServices $itemInventoryServices,
         AccountJournalServices $accountJournalServices
     ) {
-        $this->billCreditServices = $billCreditServices;
-        $this->locationServices = $locationServices;
-        $this->contactServices = $contactServices;
-        $this->taxServices = $taxServices;
-        $this->userServices = $userServices;
+        $this->billCreditServices     = $billCreditServices;
+        $this->locationServices       = $locationServices;
+        $this->contactServices        = $contactServices;
+        $this->taxServices            = $taxServices;
+        $this->userServices           = $userServices;
         $this->documentStatusServices = $documentStatusServices;
-        $this->systemSettingServices = $systemSettingServices;
+        $this->systemSettingServices  = $systemSettingServices;
 
-        $this->documentTypeServices = $documentTypeServices;
-        $this->itemInventoryServices = $itemInventoryServices;
+        $this->documentTypeServices   = $documentTypeServices;
+        $this->itemInventoryServices  = $itemInventoryServices;
         $this->accountJournalServices = $accountJournalServices;
-        $this->objectServices = $objectServices;
+        $this->objectServices         = $objectServices;
     }
     public function LoadDropdown()
     {
-        $this->vendorList = $this->contactServices->getVendorDoc();
+        $this->vendorList   = $this->contactServices->getVendorDoc();
         $this->locationList = $this->locationServices->getList();
-        $this->taxList = $this->taxServices->getList();
+        $this->taxList      = $this->taxServices->getList();
     }
     public function getTax()
     {
         $tax = $this->taxServices->get($this->INPUT_TAX_ID);
         if ($tax) {
-            $this->INPUT_TAX_RATE = (float) $tax->INPUT_TAX_RATE;
+            $this->INPUT_TAX_RATE       = (float) $tax->INPUT_TAX_RATE;
             $this->INPUT_TAX_VAT_METHOD = (int) $tax->VAT_METHOD;
             $this->INPUT_TAX_ACCOUNT_ID = (int) $tax->TAX_ACCOUNT_ID;
         }
@@ -105,22 +103,22 @@ class BillCreditForm extends Component
 
     private function getInfo($data)
     {
-        $this->ID = $data->ID;
-        $this->CODE = $data->CODE;
-        $this->DATE = $data->DATE;
-        $this->LOCATION_ID = $data->LOCATION_ID;
-        $this->VENDOR_ID = $data->VENDOR_ID;
-        $this->NOTES = $data->NOTES;
-        $this->AMOUNT = $data->AMOUNT;
-        $this->AMOUNT_APPLIED = $data->AMOUNT_APPLIED ?? 0;
-        $this->STATUS = $data->STATUS;
-        $this->INPUT_TAX_ID = $data->INPUT_TAX_ID > 0 ? $data->INPUT_TAX_ID : 0;
-        $this->INPUT_TAX_RATE = $data->INPUT_TAX_RATE > 0 ? $data->INPUT_TAX_RATE : 0;
-        $this->INPUT_TAX_AMOUNT = $data->INPUT_TAX_AMOUNT > 0 ? $data->INPUT_TAX_AMOUNT : 0;
+        $this->ID                   = $data->ID;
+        $this->CODE                 = $data->CODE;
+        $this->DATE                 = $data->DATE;
+        $this->LOCATION_ID          = $data->LOCATION_ID;
+        $this->VENDOR_ID            = $data->VENDOR_ID;
+        $this->NOTES                = $data->NOTES;
+        $this->AMOUNT               = $data->AMOUNT;
+        $this->AMOUNT_APPLIED       = $data->AMOUNT_APPLIED ?? 0;
+        $this->STATUS               = $data->STATUS;
+        $this->INPUT_TAX_ID         = $data->INPUT_TAX_ID > 0 ? $data->INPUT_TAX_ID : 0;
+        $this->INPUT_TAX_RATE       = $data->INPUT_TAX_RATE > 0 ? $data->INPUT_TAX_RATE : 0;
+        $this->INPUT_TAX_AMOUNT     = $data->INPUT_TAX_AMOUNT > 0 ? $data->INPUT_TAX_AMOUNT : 0;
         $this->INPUT_TAX_VAT_METHOD = $data->INPUT_TAX_VAT_METHOD > 0 ? $data->INPUT_TAX_VAT_METHOD : 0;
         $this->INPUT_TAX_ACCOUNT_ID = $data->INPUT_TAX_ACCOUNT_ID > 0 ? $data->INPUT_TAX_ACCOUNT_ID : 0;
-        $this->STATUS_DESCRIPTION = $this->documentStatusServices->getDesc($this->STATUS);
-        $this->ACCOUNTS_PAYABLE_ID = $data->ACCOUNTS_PAYABLE_ID;
+        $this->STATUS_DESCRIPTION   = $this->documentStatusServices->getDesc($this->STATUS);
+        $this->ACCOUNTS_PAYABLE_ID  = $data->ACCOUNTS_PAYABLE_ID;
 
         if ($this->billCreditServices->isItemTab($data->ID)) {
             $this->tab = "item";
@@ -144,24 +142,24 @@ class BillCreditForm extends Component
             return Redirect::route('vendorsbills')->with('error', $errorMessage);
         }
         $this->LoadDropdown();
-        $this->tab = "item";
-        $this->Modify = true;
-        $this->ID = 0;
-        $this->CODE = '';
-        $this->DATE = $this->userServices->getTransactionDateDefault();
-        $this->LOCATION_ID = $this->userServices->getLocationDefault();
-        $this->VENDOR_ID = 0;
-        $this->NOTES = '';
-        $this->AMOUNT = 0;
-        $this->AMOUNT_APPLIED = 0;
-        $this->STATUS = 0;
-        $this->INPUT_TAX_ID = (int) $this->systemSettingServices->GetValue('InputTaxId');
-        $this->INPUT_TAX_RATE = 0;
-        $this->INPUT_TAX_AMOUNT = 0;
+        $this->tab                  = "item";
+        $this->Modify               = true;
+        $this->ID                   = 0;
+        $this->CODE                 = '';
+        $this->DATE                 = $this->userServices->getTransactionDateDefault();
+        $this->LOCATION_ID          = $this->userServices->getLocationDefault();
+        $this->VENDOR_ID            = 0;
+        $this->NOTES                = '';
+        $this->AMOUNT               = 0;
+        $this->AMOUNT_APPLIED       = 0;
+        $this->STATUS               = 0;
+        $this->INPUT_TAX_ID         = (int) $this->systemSettingServices->GetValue('InputTaxId');
+        $this->INPUT_TAX_RATE       = 0;
+        $this->INPUT_TAX_AMOUNT     = 0;
         $this->INPUT_TAX_VAT_METHOD = 0;
         $this->INPUT_TAX_ACCOUNT_ID = 0;
-        $this->STATUS_DESCRIPTION = "";
-        $this->ACCOUNTS_PAYABLE_ID = 21;
+        $this->STATUS_DESCRIPTION   = "";
+        $this->ACCOUNTS_PAYABLE_ID  = 21;
         $this->getTax();
     }
     public function getModify()
@@ -175,18 +173,18 @@ class BillCreditForm extends Component
 
                 $this->validate(
                     [
-                        'VENDOR_ID' => 'required|not_in:0',
+                        'VENDOR_ID'    => 'required|not_in:0',
                         'INPUT_TAX_ID' => 'required|not_in:0',
-                        'DATE' => 'required',
-                        'LOCATION_ID' => 'required'
+                        'DATE'         => 'required',
+                        'LOCATION_ID'  => 'required',
 
                     ],
                     [],
                     [
-                        'VENDOR_ID' => 'Vendor',
+                        'VENDOR_ID'    => 'Vendor',
                         'INPUT_TAX_ID' => 'Tax',
-                        'DATE' => 'Date',
-                        'LOCATION_ID' => 'Location'
+                        'DATE'         => 'Date',
+                        'LOCATION_ID'  => 'Location',
 
                     ]
                 );
@@ -194,9 +192,6 @@ class BillCreditForm extends Component
                     session()->flash('error', 'You cannot create a transaction before or on the closing date on :' . $this->systemSettingServices->CloseDate());
                     return;
                 }
-
-
-
 
                 $this->getTax();
                 $this->ID = $this->billCreditServices->Store(
@@ -219,24 +214,23 @@ class BillCreditForm extends Component
 
                 $this->validate(
                     [
-                        'VENDOR_ID' => 'required|not_in:0',
-                        'CODE' => 'required|max:20|unique:purchase_order,code,' . $this->ID,
+                        'VENDOR_ID'    => 'required|not_in:0',
+                        'CODE'         => 'required|max:20|unique:purchase_order,code,' . $this->ID,
                         'INPUT_TAX_ID' => 'required|not_in:0',
-                        'DATE' => 'required',
-                        'LOCATION_ID' => 'required'
+                        'DATE'         => 'required',
+                        'LOCATION_ID'  => 'required',
 
                     ],
                     [],
                     [
-                        'VENDOR_ID' => 'Vendor',
-                        'CODE' => 'Reference No.',
+                        'VENDOR_ID'    => 'Vendor',
+                        'CODE'         => 'Reference No.',
                         'INPUT_TAX_ID' => 'Tax',
-                        'DATE' => 'Date',
-                        'LOCATION_ID' => 'Location'
+                        'DATE'         => 'Date',
+                        'LOCATION_ID'  => 'Location',
 
                     ]
                 );
-
 
                 $this->getTax();
                 $this->billCreditServices->Update(
@@ -268,7 +262,7 @@ class BillCreditForm extends Component
     public function getUpdateAmount($result)
     {
         foreach ($result as $list) {
-            $this->AMOUNT = $list['AMOUNT'];
+            $this->AMOUNT           = $list['AMOUNT'];
             $this->INPUT_TAX_AMOUNT = $list['TAX_AMOUNT'];
         }
         $this->AMOUNT_APPLIED = 0;
@@ -293,7 +287,7 @@ class BillCreditForm extends Component
     {
         try {
             $SOURCE_REF_TYPE = (int) $this->documentTypeServices->getId('Bill Credit');
-            $data = $this->billCreditServices->ItemInventory($this->ID);
+            $data            = $this->billCreditServices->ItemInventory($this->ID);
             if ($data) {
                 $this->itemInventoryServices->InventoryExecute($data, $this->LOCATION_ID, $SOURCE_REF_TYPE, $this->DATE, false);
             }
@@ -308,8 +302,8 @@ class BillCreditForm extends Component
     {
         try {
 
-            $billCredits = (int) $this->objectServices->ObjectTypeID('BILL_CREDIT');
-            $billCreditItems = (int) $this->objectServices->ObjectTypeID('BILL_CREDIT_ITEMS');
+            $billCredits        = (int) $this->objectServices->ObjectTypeID('BILL_CREDIT');
+            $billCreditItems    = (int) $this->objectServices->ObjectTypeID('BILL_CREDIT_ITEMS');
             $billCreditExpenses = (int) $this->objectServices->ObjectTypeID('BILL_CREDIT_EXPENSES');
 
             $JOURNAL_NO = $this->accountJournalServices->getJournalNo($billCredits, $this->ID) + 1;
@@ -329,7 +323,7 @@ class BillCreditForm extends Component
 
             $data = $this->accountJournalServices->getSumDebitCredit($JOURNAL_NO);
 
-            $debit_sum = (float) $data['DEBIT'];
+            $debit_sum  = (float) $data['DEBIT'];
             $credit_sum = (float) $data['CREDIT'];
 
             if ($debit_sum == $credit_sum) {
@@ -347,20 +341,20 @@ class BillCreditForm extends Component
     {
         try {
 
-            $count_item = (int) $this->billCreditServices->CountItems($this->ID, true);
+            $count_item    = (int) $this->billCreditServices->CountItems($this->ID, true);
             $count_expense = (int) $this->billCreditServices->CountItems($this->ID, false);
-            $count = $count_item + $count_expense;
+            $count         = $count_item + $count_expense;
             if ($count == 0) {
                 session()->flash('error', 'Item not found.');
                 return;
             }
             DB::beginTransaction();
-            if (!$this->ItemInventory()) {
+            if (! $this->ItemInventory()) {
                 DB::rollBack();
                 return;
             }
 
-            if (!$this->AccountJournal()) {
+            if (! $this->AccountJournal()) {
                 DB::rollBack();
                 return;
             }

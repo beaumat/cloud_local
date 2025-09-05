@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Livewire\BankTransfer;
 
 use App\Services\AccountJournalServices;
@@ -20,7 +19,6 @@ use Livewire\Component;
 class BankTransferForm extends Component
 {
 
-
     public int $ID;
     public string $DATE;
     public string $CODE;
@@ -38,14 +36,14 @@ class BankTransferForm extends Component
 
     public int $INTER_LOCATION_ACCOUNT_ID;
     public $interLocationAccountList = [];
-    public $fromLocationList = [];
-    public $toLocationList = [];
+    public $fromLocationList         = [];
+    public $toLocationList           = [];
 
     public $fromContactList = [];
-    public $toContactList = [];
+    public $toContactList   = [];
 
     public $fromAccountList = [];
-    public $toAccountList = [];
+    public $toAccountList   = [];
 
     public bool $Modify;
     private $bankTransferServices;
@@ -69,54 +67,52 @@ class BankTransferForm extends Component
         SystemSettingServices $systemSettingServices
     ) {
 
-        $this->bankTransferServices = $bankTransferServices;
-        $this->locationServices = $locationServices;
-        $this->userServices = $userServices;
+        $this->bankTransferServices   = $bankTransferServices;
+        $this->locationServices       = $locationServices;
+        $this->userServices           = $userServices;
         $this->documentStatusServices = $documentStatusServices;
         $this->accountJournalServices = $accountJournalServices;
-        $this->contactServices = $contactServices;
-        $this->accountServices = $accountServices;
-        $this->systemSettingServices = $systemSettingServices;
+        $this->contactServices        = $contactServices;
+        $this->accountServices        = $accountServices;
+        $this->systemSettingServices  = $systemSettingServices;
     }
     public function LoadDropdown()
     {
-        $dataLocationList = $this->locationServices->getList();
+        $dataLocationList       = $this->locationServices->getList();
         $this->fromLocationList = $dataLocationList;
-        $this->toLocationList = $dataLocationList;
+        $this->toLocationList   = $dataLocationList;
 
-
-        $dataContactList = $this->contactServices->getListAllType();
+        $dataContactList       = $this->contactServices->getListAllType();
         $this->fromContactList = $dataContactList;
-        $this->toContactList = $dataContactList;
+        $this->toContactList   = $dataContactList;
 
-        $bankList = $this->accountServices->getBankAccount();
-        $this->fromAccountList = $bankList;
-        $this->toAccountList = $bankList;
-        $acctList = $this->accountServices->getAccount(false);
+        $bankList                       = $this->accountServices->getBankAccount();
+        $this->fromAccountList          = $bankList;
+        $this->toAccountList            = $bankList;
+        $acctList                       = $this->accountServices->getAccount(false);
         $this->interLocationAccountList = $acctList;
     }
 
     private function getInfo($data)
     {
-        $this->ID = $data->ID;
-        $this->CODE = $data->CODE;
-        $this->DATE = $data->DATE;
-        $this->AMOUNT = $data->AMOUNT ?? 0;
-        $this->FROM_BANK_ACCOUNT_ID = $data->FROM_BANK_ACCOUNT_ID ?? 0;
-        $this->TO_BANK_ACCOUNT_ID = $data->TO_BANK_ACCOUNT_ID ?? 0;
-        $this->FROM_LOCATION_ID = $data->FROM_LOCATION_ID ?? 0;
-        $this->TO_LOCATION_ID = $data->TO_LOCATION_ID ?? 0;
+        $this->ID                        = $data->ID;
+        $this->CODE                      = $data->CODE;
+        $this->DATE                      = $data->DATE;
+        $this->AMOUNT                    = $data->AMOUNT ?? 0;
+        $this->FROM_BANK_ACCOUNT_ID      = $data->FROM_BANK_ACCOUNT_ID ?? 0;
+        $this->TO_BANK_ACCOUNT_ID        = $data->TO_BANK_ACCOUNT_ID ?? 0;
+        $this->FROM_LOCATION_ID          = $data->FROM_LOCATION_ID ?? 0;
+        $this->TO_LOCATION_ID            = $data->TO_LOCATION_ID ?? 0;
         $this->INTER_LOCATION_ACCOUNT_ID = $data->INTER_LOCATION_ACCOUNT_ID ?? 0;
-        $this->TO_NAME_ID = $data->TO_NAME_ID ?? 0;
-        $this->FROM_NAME_ID = $data->FROM_NAME_ID ?? 0;
-        $this->NOTES = $data->NOTES ?? '';
-        $this->STATUS = $data->STATUS ?? 0;
+        $this->TO_NAME_ID                = $data->TO_NAME_ID ?? 0;
+        $this->FROM_NAME_ID              = $data->FROM_NAME_ID ?? 0;
+        $this->NOTES                     = $data->NOTES ?? '';
+        $this->STATUS                    = $data->STATUS ?? 0;
 
         $this->STATUS_DESCRIPTION = $this->documentStatusServices->getDesc($this->STATUS);
     }
     public function mount($id = null)
     {
-
 
         if (is_numeric($id)) {
             $data = $this->bankTransferServices->Get($id);
@@ -131,26 +127,25 @@ class BankTransferForm extends Component
         }
 
         $this->LoadDropdown();
-        $this->Modify = true;
-        $this->ID = 0;
-        $this->CODE = '';
-        $this->DATE = $this->userServices->getTransactionDateDefault();
+        $this->Modify               = true;
+        $this->ID                   = 0;
+        $this->CODE                 = '';
+        $this->DATE                 = $this->userServices->getTransactionDateDefault();
         $this->FROM_BANK_ACCOUNT_ID = 0;
-        $this->TO_BANK_ACCOUNT_ID = 0;
+        $this->TO_BANK_ACCOUNT_ID   = 0;
 
         $this->INTER_LOCATION_ACCOUNT_ID = 0;
 
         $this->FROM_LOCATION_ID = $this->userServices->getLocationDefault();
-        $this->TO_LOCATION_ID = 0;
+        $this->TO_LOCATION_ID   = 0;
 
         $this->FROM_NAME_ID = 0;
-        $this->TO_NAME_ID = 0;
-        $this->AMOUNT = 0;
-
+        $this->TO_NAME_ID   = 0;
+        $this->AMOUNT       = 0;
 
         $this->NOTES = '';
 
-        $this->STATUS = 0;
+        $this->STATUS             = 0;
         $this->STATUS_DESCRIPTION = '';
     }
     public function getModify()
@@ -160,38 +155,36 @@ class BankTransferForm extends Component
     public function save()
     {
 
-
         $this->validate(
             [
-                'CODE' => 'nullable|max:20|unique:bank_transfer,code,' . ($this->ID > 0 ? $this->ID : 'NULL') . ',id',
-                'DATE' => 'required|date',
-                'FROM_LOCATION_ID' => 'required|exists:location,id',
-                'TO_LOCATION_ID' => 'required|exists:location,id',
-                'FROM_BANK_ACCOUNT_ID' => 'required|exists:account,id',
-                'TO_BANK_ACCOUNT_ID' => 'required|exists:account,id',
+                'CODE'                      => 'nullable|max:20|unique:bank_transfer,code,' . ($this->ID > 0 ? $this->ID : 'NULL') . ',id',
+                'DATE'                      => 'required|date',
+                'FROM_LOCATION_ID'          => 'required|exists:location,id',
+                'TO_LOCATION_ID'            => 'required|exists:location,id',
+                'FROM_BANK_ACCOUNT_ID'      => 'required|exists:account,id',
+                'TO_BANK_ACCOUNT_ID'        => 'required|exists:account,id',
                 'INTER_LOCATION_ACCOUNT_ID' => 'required|exists:account,id',
-                'FROM_NAME_ID' => $this->FROM_NAME_ID > 0 ? 'exists:contact,id' : 'nullable',
-                'TO_NAME_ID' => $this->TO_NAME_ID > 0 ? 'exists:contact,id' : 'nullable',
-                'AMOUNT' => 'required|numeric|not_in:0'
+                'FROM_NAME_ID'              => $this->FROM_NAME_ID > 0 ? 'exists:contact,id' : 'nullable',
+                'TO_NAME_ID'                => $this->TO_NAME_ID > 0 ? 'exists:contact,id' : 'nullable',
+                'AMOUNT'                    => 'required|numeric|not_in:0',
             ],
             [],
             [
-                'CODE' => 'Reference No.',
-                'DATE' => 'Date',
-                'FROM_LOCATION_ID' => 'From Location',
-                'TO_LOCATION_ID' => 'To Location',
-                'FROM_BANK_ACCOUNT_ID' => 'From Bank Account',
-                'TO_BANK_ACCOUNT_ID' => 'To Bank Account',
+                'CODE'                      => 'Reference No.',
+                'DATE'                      => 'Date',
+                'FROM_LOCATION_ID'          => 'From Location',
+                'TO_LOCATION_ID'            => 'To Location',
+                'FROM_BANK_ACCOUNT_ID'      => 'From Bank Account',
+                'TO_BANK_ACCOUNT_ID'        => 'To Bank Account',
                 'INTER_LOCATION_ACCOUNT_ID' => 'Inter Location Account',
-                'FROM_NAME_ID' => 'From Name',
-                'TO_NAME_ID' => 'To Name',
-                'AMOUNT' => 'Amount Fund',
+                'FROM_NAME_ID'              => 'From Name',
+                'TO_NAME_ID'                => 'To Name',
+                'AMOUNT'                    => 'Amount Fund',
             ]
         );
 
-
         if ($this->systemSettingServices->IsCloseDate($this->DATE)) {
-            session()->flash('error', 'You cannot create a transaction before or on the closing date on :' . $this->DATE);
+            session()->flash('error', 'You cannot create a transaction before or on the closing date on :' . $this->systemSettingServices->CloseDate());
             return;
         }
 
@@ -270,15 +263,14 @@ class BankTransferForm extends Component
                 ['ACCOUNT_ID', '=', $PREV_ACCOUNT_ID],
 
             ], [
-                'AMOUNT' => $this->AMOUNT,
-                'ACCOUNT_ID' => $ACCOUNT_ID,
-                'SUBSIDIARY_ID' => $NAME_ID
+                'AMOUNT'        => $this->AMOUNT,
+                'ACCOUNT_ID'    => $ACCOUNT_ID,
+                'SUBSIDIARY_ID' => $NAME_ID,
             ]);
         }
     }
     private function AccountJournal(): bool
     {
-
 
         try {
             $bankTransfer = $this->bankTransferServices->object_type_id;
@@ -329,7 +321,7 @@ class BankTransferForm extends Component
 
             $data = $this->accountJournalServices->getSumDebitCredit($JOURNAL_NO);
 
-            $debit_sum = (float) $data['DEBIT'];
+            $debit_sum  = (float) $data['DEBIT'];
             $credit_sum = (float) $data['CREDIT'];
 
             if ($debit_sum == $credit_sum && $debit_sum > 0 && $credit_sum > 0) {
@@ -359,13 +351,12 @@ class BankTransferForm extends Component
     {
         try {
 
-
             if ($this->AMOUNT <= 0) {
                 Session()->flash('error', 'Invalid amount fund.');
                 return;
             }
             DB::beginTransaction();
-            if (!$this->AccountJournal()) {
+            if (! $this->AccountJournal()) {
                 DB::rollBack();
                 return;
             }

@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Livewire\InventoryAdjustment;
 
 use App\Services\AccountJournalServices;
@@ -28,7 +27,7 @@ class InventoryAdjustmentForm extends Component
     public int $ADJUSTMENT_TYPE_ID;
     public string $NOTES;
     public int $ACCOUNT_ID;
-    public $locationList = [];
+    public $locationList       = [];
     public $adjustmentTypeList = [];
     public bool $Modify;
     public bool $transferReset = false;
@@ -52,18 +51,18 @@ class InventoryAdjustmentForm extends Component
         AccountJournalServices $accountJournalServices,
         SystemSettingServices $systemSettingServices
     ) {
-        $this->inventoryAdjustmentServices = $inventoryAdjustmentServices;
-        $this->locationServices = $locationServices;
-        $this->userServices = $userServices;
-        $this->documentStatusServices = $documentStatusServices;
+        $this->inventoryAdjustmentServices     = $inventoryAdjustmentServices;
+        $this->locationServices                = $locationServices;
+        $this->userServices                    = $userServices;
+        $this->documentStatusServices          = $documentStatusServices;
         $this->inventoryAdjustmentTypeServices = $inventoryAdjustmentTypeServices;
-        $this->itemInventoryServices = $itemInventoryServices;
-        $this->accountJournalServices = $accountJournalServices;
-        $this->systemSettingServices = $systemSettingServices;
+        $this->itemInventoryServices           = $itemInventoryServices;
+        $this->accountJournalServices          = $accountJournalServices;
+        $this->systemSettingServices           = $systemSettingServices;
     }
     public function LoadDropdown()
     {
-        $this->locationList = $this->locationServices->getList();
+        $this->locationList       = $this->locationServices->getList();
         $this->adjustmentTypeList = $this->inventoryAdjustmentTypeServices->getList();
     }
 
@@ -71,7 +70,7 @@ class InventoryAdjustmentForm extends Component
     {
 
         $SOURCE_REF_TYPE = (int) $this->inventoryAdjustmentServices->documentTypeMapId;
-        $dataItem = $this->inventoryAdjustmentServices->ItemInventory($this->ID);
+        $dataItem        = $this->inventoryAdjustmentServices->ItemInventory($this->ID);
 
         if ($dataItem) {
             return $this->itemInventoryServices->InventoryExecuteAdjustment(
@@ -86,7 +85,7 @@ class InventoryAdjustmentForm extends Component
     private function AccountJournal(): bool
     {
         try {
-            $invAdjustment = (int) $this->inventoryAdjustmentServices->object_type_map_inventory_adjustment;
+            $invAdjustment      = (int) $this->inventoryAdjustmentServices->object_type_map_inventory_adjustment;
             $invAdjustmentItems = (int) $this->inventoryAdjustmentServices->object_type_map_inventory_adjustmentItems;
 
             $JOURNAL_NO = $this->accountJournalServices->getRecord($invAdjustment, $this->ID);
@@ -104,7 +103,7 @@ class InventoryAdjustmentForm extends Component
 
             $data = $this->accountJournalServices->getSumDebitCredit($JOURNAL_NO);
 
-            $debit_sum = (float) $data['DEBIT'];
+            $debit_sum  = (float) $data['DEBIT'];
             $credit_sum = (float) $data['CREDIT'];
 
             if ($debit_sum == $credit_sum) {
@@ -128,12 +127,12 @@ class InventoryAdjustmentForm extends Component
             }
 
             DB::beginTransaction();
-            if (!$this->ItemInventory()) {
+            if (! $this->ItemInventory()) {
                 DB::rollBack();
                 return;
             }
 
-            if (!$this->AccountJournal()) {
+            if (! $this->AccountJournal()) {
                 DB::rollBack();
                 return;
             }
@@ -150,14 +149,14 @@ class InventoryAdjustmentForm extends Component
     }
     private function getInfo($data)
     {
-        $this->ID = $data->ID;
-        $this->CODE = $data->CODE;
-        $this->DATE = $data->DATE;
-        $this->LOCATION_ID = $data->LOCATION_ID;
-        $this->NOTES = $data->NOTES ?? '';
+        $this->ID                 = $data->ID;
+        $this->CODE               = $data->CODE;
+        $this->DATE               = $data->DATE;
+        $this->LOCATION_ID        = $data->LOCATION_ID;
+        $this->NOTES              = $data->NOTES ?? '';
         $this->ADJUSTMENT_TYPE_ID = $data->ADJUSTMENT_TYPE_ID ?? 0;
-        $this->ACCOUNT_ID = $data->ACCOUNT_ID ?? 0;
-        $this->STATUS = $data->STATUS ?? 0;
+        $this->ACCOUNT_ID         = $data->ACCOUNT_ID ?? 0;
+        $this->STATUS             = $data->STATUS ?? 0;
         $this->STATUS_DESCRIPTION = $this->documentStatusServices->getDesc($this->STATUS);
     }
     public function mount($id = null)
@@ -174,15 +173,15 @@ class InventoryAdjustmentForm extends Component
             return Redirect::route('companyinventory_adjustment')->with('error', $errorMessage);
         }
         $this->LoadDropdown();
-        $this->Modify = true;
-        $this->ID = 0;
-        $this->CODE = '';
-        $this->DATE = $this->userServices->getTransactionDateDefault();
-        $this->LOCATION_ID = $this->userServices->getLocationDefault();
+        $this->Modify             = true;
+        $this->ID                 = 0;
+        $this->CODE               = '';
+        $this->DATE               = $this->userServices->getTransactionDateDefault();
+        $this->LOCATION_ID        = $this->userServices->getLocationDefault();
         $this->ADJUSTMENT_TYPE_ID = 0;
-        $this->NOTES = '';
-        $this->ACCOUNT_ID = 0;
-        $this->STATUS = 0;
+        $this->NOTES              = '';
+        $this->ACCOUNT_ID         = 0;
+        $this->STATUS             = 0;
         $this->STATUS_DESCRIPTION = '';
     }
     public function getModify()
@@ -208,27 +207,24 @@ class InventoryAdjustmentForm extends Component
 
             $this->validate(
                 [
-                    'CODE' => $this->ID > 0 ? 'required|max:20|unique:inventory_adjustment,code,' . $this->ID : 'nullable',
-                    'DATE' => 'required|date_format:Y-m-d',
-                    'LOCATION_ID' => 'required|not_in:0|exists:location,id',
+                    'CODE'               => $this->ID > 0 ? 'required|max:20|unique:inventory_adjustment,code,' . $this->ID : 'nullable',
+                    'DATE'               => 'required|date_format:Y-m-d',
+                    'LOCATION_ID'        => 'required|not_in:0|exists:location,id',
                     'ADJUSTMENT_TYPE_ID' => 'required|not_in:0|exists:inventory_adjustment_type,id',
                 ],
                 [],
                 [
-                    'CODE' => 'Reference No.',
-                    'DATE' => 'Date',
-                    'LOCATION_ID' => 'Location',
+                    'CODE'               => 'Reference No.',
+                    'DATE'               => 'Date',
+                    'LOCATION_ID'        => 'Location',
                     'ADJUSTMENT_TYPE_ID' => 'Adjustment Type',
                 ]
             );
-
 
             if ($this->systemSettingServices->IsCloseDate($this->DATE)) {
                 session()->flash('error', 'You cannot create a transaction before or on the closing date on :' . $this->systemSettingServices->CloseDate());
                 return;
             }
-
-
 
             if ($this->ID == 0) {
                 $this->ACCOUNT_ID = $this->inventoryAdjustmentTypeServices->getAccountId($this->ADJUSTMENT_TYPE_ID);

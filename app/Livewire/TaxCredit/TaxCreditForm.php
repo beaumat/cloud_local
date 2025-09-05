@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Livewire\TaxCredit;
 
 use App\Services\AccountJournalServices;
@@ -35,9 +34,9 @@ class TaxCreditForm extends Component
     public int $STATUS = 0;
     public int $STATUS_DESCRIPTION;
     public int $ACCOUNTS_RECEIVABLE_ID;
-    public $contactList = [];
+    public $contactList  = [];
     public $locationList = [];
-    public $taxList = [];
+    public $taxList      = [];
     private $taxCreditServices;
     private $contactServices;
     private $locationServices;
@@ -52,48 +51,48 @@ class TaxCreditForm extends Component
         UserServices $userServices,
         TaxServices $taxServices,
         AccountJournalServices $accountJournalServices,
-        SystemSettingServices $systemSettingServices    
+        SystemSettingServices $systemSettingServices
 
     ) {
-        $this->taxCreditServices = $taxCreditServices;
-        $this->contactServices = $contactServices;
-        $this->userServices = $userServices;
-        $this->locationServices = $locationServices;
-        $this->taxServices = $taxServices;
+        $this->taxCreditServices      = $taxCreditServices;
+        $this->contactServices        = $contactServices;
+        $this->userServices           = $userServices;
+        $this->locationServices       = $locationServices;
+        $this->taxServices            = $taxServices;
         $this->accountJournalServices = $accountJournalServices;
-        $this->systemSettingServices = $systemSettingServices;
+        $this->systemSettingServices  = $systemSettingServices;
     }
     private function LoadDropdown()
     {
-        $this->contactList = $this->contactServices->getCustoPatientList();
+        $this->contactList  = $this->contactServices->getCustoPatientList();
         $this->locationList = $this->locationServices->getList();
-        $this->taxList = $this->taxServices->getWtax();
+        $this->taxList      = $this->taxServices->getWtax();
     }
     private function getInfo($data)
     {
-        $this->ID = $data->ID;
-        $this->CODE = $data->CODE ?? '';
-        $this->CUSTOMER_ID = $data->CUSTOMER_ID ?? 0;
-        $this->LOCATION_ID = $data->LOCATION_ID ?? 0;
-        $this->DATE = $data->DATE;
-        $this->EWT_ACCOUNT_ID = $data->EWT_ACCOUNT_ID ?? 0;
+        $this->ID                     = $data->ID;
+        $this->CODE                   = $data->CODE ?? '';
+        $this->CUSTOMER_ID            = $data->CUSTOMER_ID ?? 0;
+        $this->LOCATION_ID            = $data->LOCATION_ID ?? 0;
+        $this->DATE                   = $data->DATE;
+        $this->EWT_ACCOUNT_ID         = $data->EWT_ACCOUNT_ID ?? 0;
         $this->ACCOUNTS_RECEIVABLE_ID = $data->ACCOUNTS_RECEIVABLE_ID ?? 0;
-        $this->AMOUNT = $data->AMOUNT ?? 0;
-        $this->EWT_RATE = $data->EWT_RATE ?? 0;
-        $this->EWT_ID = $data->EWT_ID ?? 0;
-        $this->NOTES = $data->NOTES ?? '';
-        $this->STATUS = $data->STATUS ?? 0;
+        $this->AMOUNT                 = $data->AMOUNT ?? 0;
+        $this->EWT_RATE               = $data->EWT_RATE ?? 0;
+        $this->EWT_ID                 = $data->EWT_ID ?? 0;
+        $this->NOTES                  = $data->NOTES ?? '';
+        $this->STATUS                 = $data->STATUS ?? 0;
     }
 
     public function updatedEwtId()
     {
         $data = $this->taxServices->get($this->EWT_ID);
         if ($data) {
-            $this->EWT_RATE = $data->RATE ?? 0;
+            $this->EWT_RATE       = $data->RATE ?? 0;
             $this->EWT_ACCOUNT_ID = $data->ASSET_ACCOUNT_ID ?? 0;
             return;
         }
-        $this->EWT_RATE = 0;
+        $this->EWT_RATE       = 0;
         $this->EWT_ACCOUNT_ID = 0;
     }
     public function mount($id = null)
@@ -111,19 +110,19 @@ class TaxCreditForm extends Component
         }
 
         $this->LoadDropdown();
-        $this->DATE = $this->userServices->getTransactionDateDefault();
-        $this->LOCATION_ID = $this->userServices->getLocationDefault();
-        $this->CODE = '';
-        $this->CUSTOMER_ID = 0;
-        $this->EWT_ACCOUNT_ID = 0;
+        $this->DATE                   = $this->userServices->getTransactionDateDefault();
+        $this->LOCATION_ID            = $this->userServices->getLocationDefault();
+        $this->CODE                   = '';
+        $this->CUSTOMER_ID            = 0;
+        $this->EWT_ACCOUNT_ID         = 0;
         $this->ACCOUNTS_RECEIVABLE_ID = 12;
-        $this->AMOUNT = 0;
-        $this->EWT_RATE = 0;
-        $this->EWT_ID = 0;
-        $this->ID = 0;
-        $this->NOTES = '';
-        $this->Modify = true;
-        $this->STATUS = 0;
+        $this->AMOUNT                 = 0;
+        $this->EWT_RATE               = 0;
+        $this->EWT_ID                 = 0;
+        $this->ID                     = 0;
+        $this->NOTES                  = '';
+        $this->Modify                 = true;
+        $this->STATUS                 = 0;
     }
     #[On('reload_invoice')]
     public function updateAmount()
@@ -134,26 +133,25 @@ class TaxCreditForm extends Component
     public function save()
     {
 
-
         $this->validate(
             [
-                'EWT_ID' => 'required|integer|exists:tax,id',
-                'CODE' => 'nullable|max:20|unique:tax_credit,code,' . ($this->ID > 0 ? $this->ID : 'NULL') . ',id',
+                'EWT_ID'      => 'required|integer|exists:tax,id',
+                'CODE'        => 'nullable|max:20|unique:tax_credit,code,' . ($this->ID > 0 ? $this->ID : 'NULL') . ',id',
                 'CUSTOMER_ID' => 'required|integer|exists:contact,id',
                 'LOCATION_ID' => 'required|integer|exists:location,id',
-                'DATE' => 'required|date|string'
+                'DATE'        => 'required|date|string',
             ],
             [],
             [
-                'EWT_ID' => 'Withholding Tax Type',
-                'CODE' => 'Reference No.',
+                'EWT_ID'      => 'Withholding Tax Type',
+                'CODE'        => 'Reference No.',
                 'CUSTOMER_ID' => 'Customer',
                 'LOCATION_ID' => 'Location',
-                'DATE' => 'Date'
+                'DATE'        => 'Date',
             ]
         );
 
-       if ($this->systemSettingServices->IsCloseDate($this->DATE)) {
+        if ($this->systemSettingServices->IsCloseDate($this->DATE)) {
             session()->flash('error', 'You cannot create a transaction before or on the closing date on :' . $this->systemSettingServices->CloseDate());
             return;
         }
@@ -250,7 +248,6 @@ class TaxCreditForm extends Component
                 "TAX"
             );
 
-
             $paymentDataR = $this->taxCreditServices->TaxCreditJournalRemaining($this->ID);
 
             $this->accountJournalServices->JournalExecute(
@@ -262,7 +259,6 @@ class TaxCreditForm extends Component
                 "A/R"
             );
 
-
             $paymentInvoiceData = $this->taxCreditServices->TaxCreditInvoicejournal($this->ID);
             $this->accountJournalServices->JournalExecute(
                 $JOURNAL_NO,
@@ -273,9 +269,8 @@ class TaxCreditForm extends Component
                 "A/R"
             );
 
-
-            $data = $this->accountJournalServices->getSumDebitCredit($JOURNAL_NO);
-            $debit_sum = (float) $data['DEBIT'];
+            $data       = $this->accountJournalServices->getSumDebitCredit($JOURNAL_NO);
+            $debit_sum  = (float) $data['DEBIT'];
             $credit_sum = (float) $data['CREDIT'];
 
             if ($debit_sum == $credit_sum) {
