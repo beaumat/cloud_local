@@ -73,22 +73,7 @@ class GeneralLedgerReport extends Component
         $this->accountList     = $this->accountServices->getAccount(false);
         $this->accountTypeList = $this->accountServices->GetTypeList();
     }
-    public function generate()
-    {
 
-        $this->dataList = $this->accountJournalServices->getGeneralLedgerList(
-            $this->DATE_FROM,
-            $this->DATE_TO,
-            $this->LOCATION_ID,
-            $this->selectedAccount,
-            $this->selectedAccountType
-        );
-    }
-    public function setZero(int $JOURNAL_ID)
-    {
-        $this->accountJournalServices->setZeroUpdate($JOURNAL_ID);
-        session()->flash('message','Success update');
-    }
     public function export()
     {
         if (! $this->dataList) {
@@ -99,12 +84,7 @@ class GeneralLedgerReport extends Component
             $this->dataList
         ), 'general-ledger-export.xlsx');
     }
-    public function openDetails(int $JN)
-    {
-        $url = $this->accountJournalServices->getUrlBy($JN);
-        $this->js("window.open('$url', '_blank')");
 
-    }
     public function render()
     {
         return view('livewire.accounting-report.general-ledger-report');
