@@ -155,10 +155,14 @@
                                     <td>
                                         @if ($list->TX_CODE)
                                             <span class="text-primary" type="button"
-                                                wire:click='openDetails({{ $list->JOURNAL_NO }})'>
-                                                {{ $list->TX_CODE }} </span>
+                                                wire:click='openDetails({{ $list->JOURNAL_NO }})'> {{ $list->TX_CODE }}
+                                            </span>
                                         @else
-                                            <b class="text-danger">{{ 'ERR_NO_ID: ' . $list->ID }}</b>
+                                            @if ($list->TX_NAME)
+                                                <i class="text-secondary"> Empty Ref # </i>
+                                            @else
+                                                <b class="text-danger">{{ 'ERR_NO_ID: ' . $list->ID }}</b>
+                                            @endif
                                         @endif
                                     </td>
                                     <td>{{ $list->TX_NAME }}</td>

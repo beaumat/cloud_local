@@ -107,7 +107,6 @@ class GeneralJournalForm extends Component
     public function save()
     {
 
-        // 'CODE'          =>  $this->ID > 0 ? 'required|max:20|unique:general_journal,code,' . $this->ID : 'nullable',
         $this->validate(
             [
                 'CODE'        => 'nullable|max:20|unique:general_journal,code,' . ($this->ID > 0 ? $this->ID : 'NULL') . ',id',
