@@ -39,6 +39,9 @@
                                             <button class="btn btn-success btn-xs w-25" wire:loading.attr='disabled'
                                                 wire:click='export()'>Export</button>
 
+                                            <div wire:loading.delay>
+                                                <span class='spinner'></span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -93,7 +96,7 @@
 
                             </tr>
                         </thead>
-                        <tbody class="h1" wire:loading.attr='hidden'>
+                        <tbody class="h1">
                             @php
                                 $TEMP_ACCOUNT = '';
                                 $TEMP_DEBIT = 0;
@@ -152,14 +155,10 @@
                                     <td>
                                         @if ($list->TX_CODE)
                                             <span class="text-primary" type="button"
-                                                wire:click='openDetails({{ $list->JOURNAL_NO }})'> {{ $list->TX_CODE }}
-                                            </span>
+                                                wire:click='openDetails({{ $list->JOURNAL_NO }})'>
+                                                {{ $list->TX_CODE }} </span>
                                         @else
-                                            @if ($list->TX_NAME)
-                                                <i class="text-secondary"> Empty Ref # </i>
-                                            @else
-                                                <b class="text-danger">{{ 'ERR_NO_ID: ' . $list->ID }}</b>
-                                            @endif
+                                            <b class="text-danger">{{ 'ERR_NO_ID: ' . $list->ID }}</b>
                                         @endif
                                     </td>
                                     <td>{{ $list->TX_NAME }}</td>
@@ -221,10 +220,6 @@
                             </tr>
                         </tbody>
                     </table>
-                    <div wire:loading.delay>
-                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                        Loading...
-                    </div>
                 </div>
 
             </div>
