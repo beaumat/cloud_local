@@ -81,7 +81,7 @@ class PrintCsf extends Component
 
         if ($id > 0) {
             $this->PRE_SIGN_DATA = false;
-            $data          = $this->philHealthServices->get($id);
+            $data                = $this->philHealthServices->get($id);
 
             if ($data) {
                 $this->DATE_ADMITTED    = $data->DATE_ADMITTED ?? '';
@@ -147,7 +147,6 @@ class PrintCsf extends Component
                     } else {
                         $this->PIN_DEPENDENT = $this->PIN;
                     }
-
 
                     $this->MEMBER_IS_CHILD   = $contact->MEMBER_IS_CHILD;
                     $this->MEMBER_IS_PARENT  = $contact->MEMBER_IS_PARENT;
@@ -246,7 +245,7 @@ class PrintCsf extends Component
                     $this->HCI_POSITION = strtoupper($locData->MANAGER_POSITION) ?? '';
                 }
 
-                $fee = $this->patientDoctorServices->GetList($PATIENT_ID, $this->LOCATION_ID);
+                $fee = $this->patientDoctorServices->GetList($PATIENT_ID, $contact->LOCATION_ID);
                 $row = 1;
                 foreach ($fee as $list) {
                     switch ($row) {

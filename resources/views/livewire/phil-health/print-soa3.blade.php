@@ -126,8 +126,8 @@
                 </div>
 
                 @livewire('PhilHealth.PrintSummaryLuzon', ['ID' => $PRINT_ID, 'PRE_SIGN_DATA' => $PRE_SIGN_DATA, 'PATIENT_ID' => $PATIENT_ID])
-                <div class="col-12">
-                    @livewire('PhilHealth.PrintItemized', ['num' => $NO_OF_TREATMENT, 'locationid' => $LOCATION_ID, 'date' => $DATE_ADMITTED, 'breakDownDate' => $breakDownDate, 'patientId' => $CONTACT_ID])
+                <div @if ($breakDownDate == []) style="opacity: 0.0" @endif class="col-12">
+                    @livewire('PhilHealth.PrintItemized', ['num' => $NO_OF_TREATMENT ?? 0, 'locationid' => $LOCATION_ID, 'date' => $DATE_ADMITTED ?? '', 'breakDownDate' => $breakDownDate, 'patientId' => $CONTACT_ID ?? 0])
                 </div>
                 {{-- @if ($OUTPUT_SIGN) --}}
                 <div class="col-12  pt-1">
