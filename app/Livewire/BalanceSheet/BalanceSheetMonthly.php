@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Livewire\BalanceSheet;
 
 use App\Services\FinancialStatementServices;
@@ -10,7 +9,7 @@ use Livewire\Component;
 class BalanceSheetMonthly extends Component
 {
 
-    public $isFocus = true;
+    public $isFocus   = true;
     public $isRunning = true;
     public $YEAR;
     public $LOCATION_ID;
@@ -21,35 +20,34 @@ class BalanceSheetMonthly extends Component
     public function boot(FinancialStatementServices $financialStatementServices, NumberServices $numberServices)
     {
         $this->financialStatementServices = $financialStatementServices;
-        $this->numberServices = $numberServices;
+        $this->numberServices             = $numberServices;
     }
     #[On('balance-sheet-monthly')]
 
     public function generate($result)
     {
-        $this->dataList = [];
-        $this->YEAR = $result['YEAR'];
+        $this->dataList    = [];
+        $this->YEAR        = $result['YEAR'];
         $this->LOCATION_ID = $result['LOCATION_ID'];
 
-        $assetList = $this->financialStatementServices->getBalanceSheetAccountTypeListByMonth([0, 1, 2, 3, 4], $this->YEAR, $this->LOCATION_ID, false, $this->isRunning, $this->isFocus);
-        $a[] = $this->SetData($assetList, 'Assets');
+        $assetList     = $this->financialStatementServices->getBalanceSheetAccountTypeListByMonth([0, 1, 2, 3, 4], $this->YEAR, $this->LOCATION_ID, false, $this->isRunning, $this->isFocus);
+        $a[]           = $this->SetData($assetList, 'Assets');
         $liabilityList = $this->financialStatementServices->getBalanceSheetAccountTypeListByMonth([5, 6, 7, 8], $this->YEAR, $this->LOCATION_ID, true, $this->isRunning, $this->isFocus);
-        $l[] = $this->SetData($liabilityList, 'Liabilities');
+        $l[]           = $this->SetData($liabilityList, 'Liabilities');
 
-        $JAN = $a[0]['JAN'] - $l[0]['JAN'];
-        $FEB = $a[0]['FEB'] - $l[0]['FEB'];
-        $MAR = $a[0]['MAR'] - $l[0]['MAR'];
-        $APR = $a[0]['APR'] - $l[0]['APR'];
-        $MAY = $a[0]['MAY'] - $l[0]['MAY'];
-        $JUN = $a[0]['JUN'] - $l[0]['JUN'];
-        $JUL = $a[0]['JUL'] - $l[0]['JUL'];
-        $AUG = $a[0]['AUG'] - $l[0]['AUG'];
-        $SEP = $a[0]['SEP'] - $l[0]['SEP'];
-        $OCT = $a[0]['OCT'] - $l[0]['OCT'];
-        $NOV = $a[0]['NOV'] - $l[0]['NOV'];
-        $DEC = $a[0]['DEC'] - $l[0]['DEC'];
+        $JAN   = $a[0]['JAN'] - $l[0]['JAN'];
+        $FEB   = $a[0]['FEB'] - $l[0]['FEB'];
+        $MAR   = $a[0]['MAR'] - $l[0]['MAR'];
+        $APR   = $a[0]['APR'] - $l[0]['APR'];
+        $MAY   = $a[0]['MAY'] - $l[0]['MAY'];
+        $JUN   = $a[0]['JUN'] - $l[0]['JUN'];
+        $JUL   = $a[0]['JUL'] - $l[0]['JUL'];
+        $AUG   = $a[0]['AUG'] - $l[0]['AUG'];
+        $SEP   = $a[0]['SEP'] - $l[0]['SEP'];
+        $OCT   = $a[0]['OCT'] - $l[0]['OCT'];
+        $NOV   = $a[0]['NOV'] - $l[0]['NOV'];
+        $DEC   = $a[0]['DEC'] - $l[0]['DEC'];
         $TOTAL = $a[0]['TOTAL'] - $l[0]['TOTAL'];
-
 
         $this->dataList[] = $this->getInsert(
             0,
@@ -82,27 +80,26 @@ class BalanceSheetMonthly extends Component
             "grand"
         );
         $equityList = $this->financialStatementServices->getBalanceSheetAccountTypeListByMonth([9], $this->YEAR, $this->LOCATION_ID, true, $this->isRunning, $this->isFocus);
-        $e = $this->SetData($equityList, '', true, true);
-        $dataIS = $this->getIncomeStatement(); // Current Year Earnings 
+        $e          = $this->SetData($equityList, '', true, true);
+        $dataIS     = $this->getIncomeStatement(); // Current Year Earnings
 
         // $LASTYEAR = $this->YEAR - 1;
         // $lastdate = $this->financialStatementServices->lastDate($LASTYEAR, 12);
         // $BS_BALANCE = (float) $this->financialStatementServices->getBalanceSheetBalance($lastdate, $this->LOCATION_ID);
         // $IS_BALANCE = (float) $this->financialStatementServices->getIncomeStatementHistoryBalance($lastdate, $this->LOCATION_ID);
 
-
-        $E_JAN = (float) $dataIS['JAN'] + $e['JAN'];
-        $E_FEB = (float) $dataIS['FEB'] + $e['FEB'];
-        $E_MAR = (float) $dataIS['MAR'] + $e['MAR'];
-        $E_APR = (float) $dataIS['APR'] + $e['APR'];
-        $E_MAY = (float) $dataIS['MAY'] + $e['MAY'];
-        $E_JUN = (float) $dataIS['JUN'] + $e['JUN'];
-        $E_JUL = (float) $dataIS['JUL'] + $e['JUL'];
-        $E_AUG = (float) $dataIS['AUG'] + $e['AUG'];
-        $E_SEP = (float) $dataIS['SEP'] + $e['SEP'];
-        $E_OCT = (float) $dataIS['OCT'] + $e['OCT'];
-        $E_NOV = (float) $dataIS['NOV'] + $e['NOV'];
-        $E_DEC = (float) $dataIS['DEC'] + $e['DEC'];
+        $E_JAN   = (float) $dataIS['JAN'] + $e['JAN'];
+        $E_FEB   = (float) $dataIS['FEB'] + $e['FEB'];
+        $E_MAR   = (float) $dataIS['MAR'] + $e['MAR'];
+        $E_APR   = (float) $dataIS['APR'] + $e['APR'];
+        $E_MAY   = (float) $dataIS['MAY'] + $e['MAY'];
+        $E_JUN   = (float) $dataIS['JUN'] + $e['JUN'];
+        $E_JUL   = (float) $dataIS['JUL'] + $e['JUL'];
+        $E_AUG   = (float) $dataIS['AUG'] + $e['AUG'];
+        $E_SEP   = (float) $dataIS['SEP'] + $e['SEP'];
+        $E_OCT   = (float) $dataIS['OCT'] + $e['OCT'];
+        $E_NOV   = (float) $dataIS['NOV'] + $e['NOV'];
+        $E_DEC   = (float) $dataIS['DEC'] + $e['DEC'];
         $E_TOTAL = (float) $dataIS['TOTAL'] + $e['TOTAL'];
 
         // $this->dataList[] = $this->getInsert(
@@ -136,41 +133,39 @@ class BalanceSheetMonthly extends Component
     private function SetData($list, string $title, bool $notToDisplay = false, bool $showItem = true): array
     {
 
-
-        $JAN = 0;
-        $FEB = 0;
-        $MAR = 0;
-        $APR = 0;
-        $MAY = 0;
-        $JUN = 0;
-        $JUL = 0;
-        $AUG = 0;
-        $SEP = 0;
-        $OCT = 0;
-        $NOV = 0;
-        $DEC = 0;
+        $JAN   = 0;
+        $FEB   = 0;
+        $MAR   = 0;
+        $APR   = 0;
+        $MAY   = 0;
+        $JUN   = 0;
+        $JUL   = 0;
+        $AUG   = 0;
+        $SEP   = 0;
+        $OCT   = 0;
+        $NOV   = 0;
+        $DEC   = 0;
         $TOTAL = 0;
 
-        $T_JAN = 0;
-        $T_FEB = 0;
-        $T_MAR = 0;
-        $T_APR = 0;
-        $T_MAY = 0;
-        $T_JUN = 0;
-        $T_JUL = 0;
-        $T_AUG = 0;
-        $T_SEP = 0;
-        $T_OCT = 0;
-        $T_NOV = 0;
-        $T_DEC = 0;
+        $T_JAN   = 0;
+        $T_FEB   = 0;
+        $T_MAR   = 0;
+        $T_APR   = 0;
+        $T_MAY   = 0;
+        $T_JUN   = 0;
+        $T_JUL   = 0;
+        $T_AUG   = 0;
+        $T_SEP   = 0;
+        $T_OCT   = 0;
+        $T_NOV   = 0;
+        $T_DEC   = 0;
         $T_TOTAL = 0;
 
-        $TMP = -1;
+        $TMP      = -1;
         $TMP_NAME = "";
-        if (!$notToDisplay) {
+        if (! $notToDisplay) {
             $this->dataList[] = $this->getInsert(0, $title, 'grand');
         }
-
 
         foreach ($list as $data) {
 
@@ -189,13 +184,13 @@ class BalanceSheetMonthly extends Component
             $TOTAL += $data->TOTAL;
 
             if ($TMP == -1) {
-                if (!$notToDisplay) {
+                if (! $notToDisplay) {
                     $this->dataList[] = $this->getInsert(0, ' ' . $data->TYPE_NAME, 'total');
                 }
 
                 $TMP_NAME = $data->TYPE_NAME;
-            } elseif ($TMP <> $data->TYPE) {
-                if (!$notToDisplay) {
+            } elseif ($TMP != $data->TYPE) {
+                if (! $notToDisplay) {
                     $this->dataList[] = $this->getInsert(
                         0,
                         ' Total ' . $TMP_NAME,
@@ -217,29 +212,27 @@ class BalanceSheetMonthly extends Component
                 }
 
                 //CLEAR
-                $T_JAN = 0;
-                $T_FEB = 0;
-                $T_MAR = 0;
-                $T_APR = 0;
-                $T_MAY = 0;
-                $T_JUN = 0;
-                $T_JUL = 0;
-                $T_AUG = 0;
-                $T_SEP = 0;
-                $T_OCT = 0;
-                $T_NOV = 0;
-                $T_DEC = 0;
+                $T_JAN   = 0;
+                $T_FEB   = 0;
+                $T_MAR   = 0;
+                $T_APR   = 0;
+                $T_MAY   = 0;
+                $T_JUN   = 0;
+                $T_JUL   = 0;
+                $T_AUG   = 0;
+                $T_SEP   = 0;
+                $T_OCT   = 0;
+                $T_NOV   = 0;
+                $T_DEC   = 0;
                 $T_TOTAL = 0;
 
-
-                if (!$notToDisplay) {
+                if (! $notToDisplay) {
                     $this->dataList[] = $this->getInsert(0, ' ' . $data->TYPE_NAME, 'total');
                 }
                 $TMP_NAME = $data->TYPE_NAME;
             }
 
-
-            if (!$notToDisplay || $showItem) {
+            if (! $notToDisplay || $showItem) {
 
                 $this->dataList[] = $this->getInsert(
                     $data->ID,
@@ -278,8 +271,8 @@ class BalanceSheetMonthly extends Component
             $TMP = (int) $data->TYPE;
 
         }
-        if ($TMP_NAME <> '') {
-            if (!$notToDisplay) {
+        if ($TMP_NAME != '') {
+            if (! $notToDisplay) {
                 $this->dataList[] = $this->getInsert(
                     0,
                     ' Total ' . $TMP_NAME,
@@ -301,24 +294,23 @@ class BalanceSheetMonthly extends Component
             }
         }
 
-
         //CLEAR
-        $T_JAN = 0;
-        $T_FEB = 0;
-        $T_MAR = 0;
-        $T_APR = 0;
-        $T_MAY = 0;
-        $T_JUN = 0;
-        $T_JUL = 0;
-        $T_AUG = 0;
-        $T_SEP = 0;
-        $T_OCT = 0;
-        $T_NOV = 0;
-        $T_DEC = 0;
+        $T_JAN   = 0;
+        $T_FEB   = 0;
+        $T_MAR   = 0;
+        $T_APR   = 0;
+        $T_MAY   = 0;
+        $T_JUN   = 0;
+        $T_JUL   = 0;
+        $T_AUG   = 0;
+        $T_SEP   = 0;
+        $T_OCT   = 0;
+        $T_NOV   = 0;
+        $T_DEC   = 0;
         $T_TOTAL = 0;
 
-        if ($title <> '') {
-            if (!$notToDisplay) {
+        if ($title != '') {
+            if (! $notToDisplay) {
                 $this->dataList[] = $this->getInsert(
                     0,
                     'Total ' . $title,
@@ -341,19 +333,19 @@ class BalanceSheetMonthly extends Component
         }
         // return total
         return [
-            'JAN' => $JAN,
-            'FEB' => $FEB,
-            'MAR' => $MAR,
-            'APR' => $APR,
-            'MAY' => $MAY,
-            'JUN' => $JUN,
-            'JUL' => $JUL,
-            'AUG' => $AUG,
-            'SEP' => $SEP,
-            'OCT' => $OCT,
-            'NOV' => $NOV,
-            'DEC' => $DEC,
-            'TOTAL' => $TOTAL
+            'JAN'   => $JAN,
+            'FEB'   => $FEB,
+            'MAR'   => $MAR,
+            'APR'   => $APR,
+            'MAY'   => $MAY,
+            'JUN'   => $JUN,
+            'JUL'   => $JUL,
+            'AUG'   => $AUG,
+            'SEP'   => $SEP,
+            'OCT'   => $OCT,
+            'NOV'   => $NOV,
+            'DEC'   => $DEC,
+            'TOTAL' => $TOTAL,
         ];
     }
 
@@ -361,63 +353,62 @@ class BalanceSheetMonthly extends Component
     {
 
         $revenueList = $this->financialStatementServices->getIncomeStatementAccountTypeByMonth([10], $this->YEAR, $this->LOCATION_ID, true, $this->isRunning, $this->isFocus);
-        $r = $this->SetData($revenueList, "Trading Income", true, false);
+        $r           = $this->SetData($revenueList, "Trading Income", true, false);
 
         $costList = $this->financialStatementServices->getIncomeStatementAccountTypeByMonth([11], $this->YEAR, $this->LOCATION_ID, false, $this->isRunning, $this->isFocus);
-        $c = $this->SetData($costList, "Cost of Sales", true, false);
+        $c        = $this->SetData($costList, "Cost of Sales", true, false);
 
-        $G_JAN = $r['JAN'] - $c['JAN'];
-        $G_FEB = $r['FEB'] - $c['FEB'];
-        $G_MAR = $r['MAR'] - $c['MAR'];
-        $G_APR = $r['APR'] - $c['APR'];
-        $G_MAY = $r['MAY'] - $c['MAY'];
-        $G_JUN = $r['JUN'] - $c['JUN'];
-        $G_JUL = $r['JUL'] - $c['JUL'];
-        $G_AUG = $r['AUG'] - $c['AUG'];
-        $G_SEP = $r['SEP'] - $c['SEP'];
-        $G_OCT = $r['OCT'] - $c['OCT'];
-        $G_NOV = $r['NOV'] - $c['NOV'];
-        $G_DEC = $r['DEC'] - $c['DEC'];
+        $G_JAN   = $r['JAN'] - $c['JAN'];
+        $G_FEB   = $r['FEB'] - $c['FEB'];
+        $G_MAR   = $r['MAR'] - $c['MAR'];
+        $G_APR   = $r['APR'] - $c['APR'];
+        $G_MAY   = $r['MAY'] - $c['MAY'];
+        $G_JUN   = $r['JUN'] - $c['JUN'];
+        $G_JUL   = $r['JUL'] - $c['JUL'];
+        $G_AUG   = $r['AUG'] - $c['AUG'];
+        $G_SEP   = $r['SEP'] - $c['SEP'];
+        $G_OCT   = $r['OCT'] - $c['OCT'];
+        $G_NOV   = $r['NOV'] - $c['NOV'];
+        $G_DEC   = $r['DEC'] - $c['DEC'];
         $G_TOTAL = $r['TOTAL'] - $c['TOTAL'];
 
         $otherincome = $this->financialStatementServices->getIncomeStatementAccountTypeByMonth([13], $this->YEAR, $this->LOCATION_ID, true, $this->isRunning, $this->isFocus);
-        $i = $this->SetData($otherincome, "", true, false);
+        $i           = $this->SetData($otherincome, "", true, false);
 
         $expense = $this->financialStatementServices->getIncomeStatementAccountTypeByMonth([12], $this->YEAR, $this->LOCATION_ID, false, $this->isRunning, $this->isFocus);
-        $e = $this->SetData($expense, "Operating Expenses", true, false);
+        $e       = $this->SetData($expense, "Operating Expenses", true, false);
         // operating profit
-        $OP_JAN = $G_JAN - $e['JAN'];
-        $OP_FEB = $G_FEB - $e['FEB'];
-        $OP_MAR = $G_MAR - $e['MAR'];
-        $OP_APR = $G_APR - $e['APR'];
-        $OP_MAY = $G_MAY - $e['MAY'];
-        $OP_JUN = $G_JUN - $e['JUN'];
-        $OP_JUL = $G_JUL - $e['JUL'];
-        $OP_AUG = $G_AUG - $e['AUG'];
-        $OP_SEP = $G_SEP - $e['SEP'];
-        $OP_OCT = $G_OCT - $e['OCT'];
-        $OP_NOV = $G_NOV - $e['NOV'];
-        $OP_DEC = $G_DEC - $e['DEC'];
+        $OP_JAN   = $G_JAN - $e['JAN'];
+        $OP_FEB   = $G_FEB - $e['FEB'];
+        $OP_MAR   = $G_MAR - $e['MAR'];
+        $OP_APR   = $G_APR - $e['APR'];
+        $OP_MAY   = $G_MAY - $e['MAY'];
+        $OP_JUN   = $G_JUN - $e['JUN'];
+        $OP_JUL   = $G_JUL - $e['JUL'];
+        $OP_AUG   = $G_AUG - $e['AUG'];
+        $OP_SEP   = $G_SEP - $e['SEP'];
+        $OP_OCT   = $G_OCT - $e['OCT'];
+        $OP_NOV   = $G_NOV - $e['NOV'];
+        $OP_DEC   = $G_DEC - $e['DEC'];
         $OP_TOTAL = $G_TOTAL - $e['TOTAL'];
 
         $otherExpense = $this->financialStatementServices->getIncomeStatementAccountTypeByMonth([14], $this->YEAR, $this->LOCATION_ID, false, $this->isRunning, $this->isFocus);
-        $ex = $this->SetData($otherExpense, "", true, false);
+        $ex           = $this->SetData($otherExpense, "", true, false);
 
         // NET profit
-        $NET_JAN = $OP_JAN + $i['JAN'] - $ex['JAN'];
-        $NET_FEB = $OP_FEB + $i['FEB'] - $ex['FEB'];
-        $NET_MAR = $OP_MAR + $i['MAR'] - $ex['MAR'];
-        $NET_APR = $OP_APR + $i['APR'] - $ex['APR'];
-        $NET_MAY = $OP_MAY + $i['MAY'] - $ex['MAY'];
-        $NET_JUN = $OP_JUN + $i['JUN'] - $ex['JUN'];
-        $NET_JUL = $OP_JUL + $i['JUL'] - $ex['JUL'];
-        $NET_AUG = $OP_AUG + $i['AUG'] - $ex['AUG'];
-        $NET_SEP = $OP_SEP + $i['SEP'] - $ex['SEP'];
-        $NET_OCT = $OP_OCT + $i['OCT'] - $ex['OCT'];
-        $NET_NOV = $OP_NOV + $i['NOV'] - $ex['NOV'];
-        $NET_DEC = $OP_DEC + $i['DEC'] - $ex['DEC'];
+        $NET_JAN   = $OP_JAN + $i['JAN'] - $ex['JAN'];
+        $NET_FEB   = $OP_FEB + $i['FEB'] - $ex['FEB'];
+        $NET_MAR   = $OP_MAR + $i['MAR'] - $ex['MAR'];
+        $NET_APR   = $OP_APR + $i['APR'] - $ex['APR'];
+        $NET_MAY   = $OP_MAY + $i['MAY'] - $ex['MAY'];
+        $NET_JUN   = $OP_JUN + $i['JUN'] - $ex['JUN'];
+        $NET_JUL   = $OP_JUL + $i['JUL'] - $ex['JUL'];
+        $NET_AUG   = $OP_AUG + $i['AUG'] - $ex['AUG'];
+        $NET_SEP   = $OP_SEP + $i['SEP'] - $ex['SEP'];
+        $NET_OCT   = $OP_OCT + $i['OCT'] - $ex['OCT'];
+        $NET_NOV   = $OP_NOV + $i['NOV'] - $ex['NOV'];
+        $NET_DEC   = $OP_DEC + $i['DEC'] - $ex['DEC'];
         $NET_TOTAL = $OP_TOTAL + $i['TOTAL'] - $ex['TOTAL'];
-
 
         // MUST BE
         $this->dataList[] = $this->getInsert(
@@ -439,48 +430,43 @@ class BalanceSheetMonthly extends Component
             $NET_TOTAL != 0 ? $this->numberServices->AcctFormat($NET_TOTAL) : '-'
         );
 
-
-
-
         return [
-            'JAN' => $NET_JAN,
-            'FEB' => $NET_FEB,
-            'MAR' => $NET_MAR,
-            'APR' => $NET_APR,
-            'MAY' => $NET_MAY,
-            'JUN' => $NET_JUN,
-            'JUL' => $NET_JUL,
-            'AUG' => $NET_AUG,
-            'SEP' => $NET_SEP,
-            'OCT' => $NET_OCT,
-            'NOV' => $NET_NOV,
-            'DEC' => $NET_DEC,
-            'TOTAL' => $NET_TOTAL
+            'JAN'   => $NET_JAN,
+            'FEB'   => $NET_FEB,
+            'MAR'   => $NET_MAR,
+            'APR'   => $NET_APR,
+            'MAY'   => $NET_MAY,
+            'JUN'   => $NET_JUN,
+            'JUL'   => $NET_JUL,
+            'AUG'   => $NET_AUG,
+            'SEP'   => $NET_SEP,
+            'OCT'   => $NET_OCT,
+            'NOV'   => $NET_NOV,
+            'DEC'   => $NET_DEC,
+            'TOTAL' => $NET_TOTAL,
         ];
     }
-
 
     private function getInsert(int $ID, string $NAME, string $TYPE, string $JAN = '', string $FEB = '', string $MAR = '', string $APR = '', string $MAY = '', string $JUN = '', string $JUL = '', string $AUG = '', string $SEP = '', string $OCT = '', string $NOV = '', string $DEC = '', string $TOTAL = ''): array
     {
 
         return [
-            'ACCOUNT_ID' => $ID,
+            'ACCOUNT_ID'   => $ID,
             'ACCOUNT_NAME' => $NAME,
             'ACCOUNT_TYPE' => $TYPE,
-            'JAN' => $JAN,
-            'FEB' => $FEB,
-            'MAR' => $MAR,
-            'APR' => $APR,
-            'MAY' => $MAY,
-            'JUN' => $JUN,
-            'JUL' => $JUL,
-            'AUG' => $AUG,
-            'SEP' => $SEP,
-            'OCT' => $OCT,
-            'NOV' => $NOV,
-            'DEC' => $DEC,
-            'TOTAL' => $TOTAL
-
+            'JAN'          => $JAN,
+            'FEB'          => $FEB,
+            'MAR'          => $MAR,
+            'APR'          => $APR,
+            'MAY'          => $MAY,
+            'JUN'          => $JUN,
+            'JUL'          => $JUL,
+            'AUG'          => $AUG,
+            'SEP'          => $SEP,
+            'OCT'          => $OCT,
+            'NOV'          => $NOV,
+            'DEC'          => $DEC,
+            'TOTAL'        => $TOTAL,
 
         ];
 

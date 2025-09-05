@@ -39,9 +39,6 @@
                                             <button class="btn btn-success btn-xs w-25" wire:loading.attr='disabled'
                                                 wire:click='export()'>Export</button>
 
-                                            <div wire:loading.delay>
-                                                <span class='spinner'></span>
-                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -96,7 +93,7 @@
 
                             </tr>
                         </thead>
-                        <tbody class="h1">
+                        <tbody class="h1" wire:loading.attr='hidden'>
                             @php
                                 $TEMP_ACCOUNT = '';
                                 $TEMP_DEBIT = 0;
@@ -224,6 +221,10 @@
                             </tr>
                         </tbody>
                     </table>
+                    <div wire:loading.delay>
+                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                        Loading...
+                    </div>
                 </div>
 
             </div>

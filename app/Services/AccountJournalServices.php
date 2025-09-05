@@ -151,7 +151,6 @@ class AccountJournalServices
         WHEN o.`ID` = 135   THEN ( select bank_transfer.`NOTES` from bank_transfer where bank_transfer.ID = aj.OBJECT_ID and bank_transfer.DATE = aj.OBJECT_DATE  and (bank_transfer.TO_LOCATION_ID = aj.LOCATION_ID or bank_transfer.FROM_LOCATION_ID = aj.LOCATION_ID ))
         WHEN o.`ID` = 67   THEN ( select withholding_tax.`NOTES` from withholding_tax where withholding_tax.ID = aj.OBJECT_ID and withholding_tax.DATE = aj.OBJECT_DATE  and withholding_tax.LOCATION_ID = aj.LOCATION_ID  )
         WHEN o.`ID` = 68   THEN ( select concat("Billing Ref NO. :", bill.`CODE`) as `NOTES` from withholding_tax_bills inner join bill on bill.ID = withholding_tax_bills.BILL_ID join withholding_tax on withholding_tax.ID = withholding_tax_bills.WITHHOLDING_TAX_ID  where withholding_tax_bills.ID = aj.OBJECT_ID and withholding_tax.DATE = aj.OBJECT_DATE and withholding_tax.LOCATION_ID = aj.LOCATION_ID  )
-
         WHEN o.`ID` = 95    THEN ( select "" as NOTES from hemodialysis left outer join contact on contact.ID = hemodialysis.EMPLOYEE_ID where hemodialysis.ID = aj.OBJECT_ID and hemodialysis.DATE = aj.OBJECT_DATE  and hemodialysis.LOCATION_ID = aj.LOCATION_ID  )
         WHEN o.`ID` = 109   THEN ( select item.DESCRIPTION as `NOTES` from hemodialysis_items inner join item on item.ID = hemodialysis_items.ITEM_ID inner join hemodialysis on hemodialysis.ID = hemodialysis_items.HEMO_ID  where hemodialysis_items.ID = aj.OBJECT_ID and hemodialysis.DATE = aj.OBJECT_DATE  and hemodialysis.LOCATION_ID = aj.LOCATION_ID  )
         END as TX_NOTES';
