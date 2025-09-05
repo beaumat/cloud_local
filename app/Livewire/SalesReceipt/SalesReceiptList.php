@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Livewire\SalesReceipt;
 
 use App\Services\AccountJournalServices;
@@ -19,8 +18,8 @@ class SalesReceiptList extends Component
 {
     use WithPagination;
     protected $paginationTheme = 'bootstrap';
-    public $search = '';
-    public int $perPage = 25;
+    public $search             = '';
+    public int $perPage        = 25;
     public int $locationid;
     public $dateEntry;
 
@@ -40,25 +39,25 @@ class SalesReceiptList extends Component
         ItemInventoryServices $itemInventoryServices,
         PatientPaymentServices $patientPaymentServices
     ) {
-        $this->salesReceiptServices = $salesReceiptServices;
-        $this->locationServices = $locationServices;
-        $this->userServices = $userServices;
+        $this->salesReceiptServices   = $salesReceiptServices;
+        $this->locationServices       = $locationServices;
+        $this->userServices           = $userServices;
         $this->accountJournalServices = $accountJournalServices;
-        $this->itemInventoryServices = $itemInventoryServices;
+        $this->itemInventoryServices  = $itemInventoryServices;
         $this->patientPaymentServices = $patientPaymentServices;
     }
     public function mount()
     {
         $this->locationList = $this->locationServices->getList();
-        $this->locationid = $this->userServices->getLocationDefault();
-        $this->dateEntry = null;
+        $this->locationid   = $this->userServices->getLocationDefault();
+        $this->dateEntry    = null;
     }
     public function deleteItem(int $Id, int $SALES_RECEIPT_ID, int $JOURNAL_NO)
     {
 
         $sr = $this->salesReceiptServices->get($SALES_RECEIPT_ID);
         if ($sr) {
-            $srItem = $this->salesReceiptServices->ItemGet($Id, $SALES_RECEIPT_ID,);
+            $srItem = $this->salesReceiptServices->ItemGet($Id, $SALES_RECEIPT_ID, );
             if ($srItem) {
                 // Inventory
                 $this->itemInventoryServices->InventoryModify(
@@ -125,7 +124,7 @@ class SalesReceiptList extends Component
             DB::beginTransaction();
             $data = $this->salesReceiptServices->get($SR_ID);
             if ($data) {
-                if ($data->STATUS == 15  || $data->STATUS == 16) {
+                if ($data->STATUS == 15 || $data->STATUS == 16) {
                     $JOURNAL_NO = $this->accountJournalServices->getRecord(
                         $this->salesReceiptServices->object_type_sales_receipt,
                         $SR_ID
@@ -183,6 +182,16 @@ class SalesReceiptList extends Component
         session()->forget('message');
         session()->forget('error');
     }
+    public function updatedlocationid()
+    {
+
+        try {
+            $this->userServices->SwapLocation($this->locationid);
+        } catch (\Exception $e) {
+            $errorMessage = 'Error occurred: ' . $e->getMessage();
+            session()->flash('error', $errorMessage);
+        }
+    }
     public function render()
     {
         $dataList = $this->salesReceiptServices->Search(
@@ -190,7 +199,7 @@ class SalesReceiptList extends Component
             $this->locationid,
             $this->perPage,
             $this->dateEntry,
-   
+
         );
 
         return view('livewire.sales-receipt.sales-receipt-list', ['dataList' => $dataList]);

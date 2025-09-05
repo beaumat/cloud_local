@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Livewire\SalesOrder;
 
 use App\Services\LocationServices;
@@ -16,8 +15,8 @@ class SalesOrderList extends Component
 {
     use WithPagination;
     protected $paginationTheme = 'bootstrap';
-    public $search = '';
-    public int $perPage = 15;
+    public $search             = '';
+    public int $perPage        = 15;
     public int $locationid;
     public $locationList = [];
     private $salesOrderServices;
@@ -30,13 +29,13 @@ class SalesOrderList extends Component
         UserServices $userServices
     ) {
         $this->salesOrderServices = $salesOrderServices;
-        $this->locationServices = $locationServices;
-        $this->userServices = $userServices;
+        $this->locationServices   = $locationServices;
+        $this->userServices       = $userServices;
     }
     public function mount()
     {
         $this->locationList = $this->locationServices->getList();
-        $this->locationid = $this->userServices->getLocationDefault();
+        $this->locationid   = $this->userServices->getLocationDefault();
     }
     public function delete($id)
     {
@@ -57,6 +56,16 @@ class SalesOrderList extends Component
         $this->resetErrorBag();
         session()->forget('message');
         session()->forget('error');
+    }
+    public function updatedlocationid()
+    {
+
+        try {
+            $this->userServices->SwapLocation($this->locationid);
+        } catch (\Exception $e) {
+            $errorMessage = 'Error occurred: ' . $e->getMessage();
+            session()->flash('error', $errorMessage);
+        }
     }
     public function render()
     {
