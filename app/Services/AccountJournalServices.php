@@ -989,5 +989,11 @@ class AccountJournalServices
 
         return $URL;
     }
-
+    public function setZeroUpdate(int $id)
+    {
+        AccountJournal::where('ID', '=', $id)
+            ->update([
+                'AMOUNT' => 0,
+            ]);
+    }
 }

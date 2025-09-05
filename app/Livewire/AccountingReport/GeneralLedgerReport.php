@@ -50,6 +50,10 @@ class GeneralLedgerReport extends Component
         $this->userServices           = $userServices;
         $this->accountServices        = $accountServices;
     }
+    public function updatedDateFrom()
+    {
+        $this->DATE_TO = $this->dateServices->GetLastDay_Month($this->DATE_FROM);
+    }
     public function updatedlocationid()
     {
 
@@ -62,7 +66,7 @@ class GeneralLedgerReport extends Component
     }
     public function mount()
     {
-        $this->DATE_FROM       = $this->dateServices->NowDate();
+        $this->DATE_FROM       = $this->dateServices->GetFirstDay_Month($this->dateServices->NowDate());
         $this->DATE_TO         = $this->dateServices->NowDate();
         $this->LOCATION_ID     = $this->userServices->getLocationDefault();
         $this->locationList    = $this->locationServices->getList();
@@ -79,6 +83,11 @@ class GeneralLedgerReport extends Component
             $this->selectedAccount,
             $this->selectedAccountType
         );
+    }
+    public function setZero(int $JOURNAL_ID)
+    {
+        $this->accountJournalServices->setZeroUpdate($JOURNAL_ID);
+        session()->flash('message','Success update');
     }
     public function export()
     {

@@ -158,7 +158,9 @@
                                                 wire:click='openDetails({{ $list->JOURNAL_NO }})'>
                                                 {{ $list->TX_CODE }} </span>
                                         @else
-                                            <b class="text-danger">{{ 'ERR_NO_ID: ' . $list->ID }}</b>
+                                            <b class="text-danger" @if (Auth::user()->name == 'admin')
+                                                wire:click='setZero({{ $list->ID }})' wire:confirm='Are you sure?'
+                                                @endif>{{ 'ERR_NO_ID: ' . $list->ID }}</b>
                                         @endif
                                     </td>
                                     <td>{{ $list->TX_NAME }}</td>
