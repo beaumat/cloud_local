@@ -71,63 +71,63 @@ class AccountJournalServices
         WHEN o.`ID` = 2     THEN ( select concat(LEFT(document_status_map.DESCRIPTION,1),":",bill.`CODE`) as `CODE` from bill join document_status_map on document_status_map.ID = bill.STATUS  where bill.ID = aj.OBJECT_ID and bill.DATE = aj.OBJECT_DATE  and bill.LOCATION_ID = aj.LOCATION_ID  )
         WHEN o.`ID` = 3     THEN ( select concat(LEFT(document_status_map.DESCRIPTION,1),":",bill.`CODE`) as `CODE` from bill_items join bill on bill.ID = bill_items.BILL_ID  join document_status_map on document_status_map.ID = bill.STATUS where bill_items.ID = aj.OBJECT_ID and bill.DATE = aj.OBJECT_DATE  and bill.LOCATION_ID = aj.LOCATION_ID )
         WHEN o.`ID` = 78    THEN ( select concat(LEFT(document_status_map.DESCRIPTION,1),":",bill.`CODE`) as `CODE` from bill_expenses  join bill on bill.ID = bill_expenses.BILL_ID  join document_status_map on document_status_map.ID = bill.STATUS where bill_expenses.ID = aj.OBJECT_ID and bill.DATE = aj.OBJECT_DATE  and bill.LOCATION_ID = aj.LOCATION_ID )
-     
+
         WHEN o.`ID` = 12    THEN ( select concat(LEFT(document_status_map.DESCRIPTION,1),":",credit_memo.`CODE`) as `CODE`  from credit_memo join document_status_map on document_status_map.ID = credit_memo.STATUS  where credit_memo.ID = aj.OBJECT_ID and credit_memo.DATE = aj.OBJECT_DATE  and credit_memo.LOCATION_ID = aj.LOCATION_ID )
         WHEN o.`ID` = 13    THEN ( select concat(LEFT(document_status_map.DESCRIPTION,1),":",credit_memo.`CODE`) as `CODE`  from credit_memo_invoices join credit_memo on credit_memo.ID = credit_memo_invoices.CREDIT_MEMO_ID  join document_status_map on document_status_map.ID = credit_memo.STATUS where credit_memo_invoices.ID = aj.OBJECT_ID and credit_memo.DATE = aj.OBJECT_DATE  and credit_memo.LOCATION_ID = aj.LOCATION_ID )
         WHEN o.`ID` = 14    THEN ( select concat(LEFT(document_status_map.DESCRIPTION,1),":",credit_memo.`CODE`) as `CODE`  from credit_memo_items  join credit_memo on credit_memo.ID = credit_memo_items.CREDIT_MEMO_ID  join document_status_map on document_status_map.ID = credit_memo.STATUS where credit_memo_items.ID = aj.OBJECT_ID and credit_memo.DATE = aj.OBJECT_DATE  and credit_memo.LOCATION_ID = aj.LOCATION_ID )
-     
+
         WHEN o.`ID` = 19    THEN ( select concat(LEFT(document_status_map.DESCRIPTION,1),":",inventory_adjustment.`CODE`) as `CODE` from inventory_adjustment join document_status_map on document_status_map.ID = inventory_adjustment.STATUS  where inventory_adjustment.ID = aj.OBJECT_ID and inventory_adjustment.DATE = aj.OBJECT_DATE  and inventory_adjustment.LOCATION_ID = aj.LOCATION_ID )
         WHEN o.`ID` = 20    THEN ( select concat(LEFT(document_status_map.DESCRIPTION,1),":",inventory_adjustment.`CODE`) as `CODE` from inventory_adjustment_items join inventory_adjustment on inventory_adjustment.ID = inventory_adjustment_items.INVENTORY_ADJUSTMENT_ID join document_status_map on document_status_map.ID = inventory_adjustment.STATUS  where inventory_adjustment_items.ID = aj.OBJECT_ID and inventory_adjustment.DATE = aj.OBJECT_DATE  and inventory_adjustment.LOCATION_ID = aj.LOCATION_ID )
-        
+
         WHEN o.`ID` = 23    THEN ( select concat(LEFT(document_status_map.DESCRIPTION,1),":",invoice.`CODE`) as `CODE` from invoice join document_status_map on document_status_map.ID = invoice.STATUS  where invoice.ID = aj.OBJECT_ID and invoice.DATE = aj.OBJECT_DATE  and invoice.LOCATION_ID = aj.LOCATION_ID )
         WHEN o.`ID` = 24    THEN ( select concat(LEFT(document_status_map.DESCRIPTION,1),":",invoice.`CODE`) as `CODE` from invoice_items join invoice on invoice.ID = invoice_items.INVOICE_ID  join document_status_map on document_status_map.ID = invoice.STATUS where invoice_items.ID = aj.OBJECT_ID and invoice.DATE = aj.OBJECT_DATE  and invoice.LOCATION_ID = aj.LOCATION_ID)
-        
+
         WHEN o.`ID` = 38    THEN ( select concat(LEFT(document_status_map.DESCRIPTION,1),":",stock_transfer.`CODE`) as `CODE` from stock_transfer join document_status_map on document_status_map.ID = stock_transfer.STATUS  where stock_transfer.ID = aj.OBJECT_ID and stock_transfer.DATE = aj.OBJECT_DATE   )
         WHEN o.`ID` = 39    THEN ( select concat(LEFT(document_status_map.DESCRIPTION,1),":",stock_transfer.`CODE`) as `CODE` from stock_transfer_items join stock_transfer on stock_transfer.ID = stock_transfer_items.STOCK_TRANSFER_ID join document_status_map on document_status_map.ID = stock_transfer.STATUS where stock_transfer_items.ID = aj.OBJECT_ID and stock_transfer.DATE = aj.OBJECT_DATE )
-        
+
         WHEN o.`ID` = 41    THEN ( select concat(LEFT(document_status_map.DESCRIPTION,1),":",payment.`CODE`) as `CODE` from payment join document_status_map on document_status_map.ID = payment.STATUS  where payment.ID = aj.OBJECT_ID and payment.DATE = aj.OBJECT_DATE and payment.LOCATION_ID = aj.LOCATION_ID )
         WHEN o.`ID` = 42    THEN ( select concat(LEFT(document_status_map.DESCRIPTION,1),":",payment.`CODE`) as `CODE` from payment_invoices join payment on payment.ID = payment_invoices.PAYMENT_ID join document_status_map on document_status_map.ID = payment.STATUS where payment_invoices.ID = aj.OBJECT_ID and payment.DATE = aj.OBJECT_DATE  and payment.LOCATION_ID = aj.LOCATION_ID )
-        
+
         WHEN o.`ID` = 52    THEN ( select concat(LEFT(document_status_map.DESCRIPTION,1),":",sales_receipt.`CODE`) as `CODE` from `sales_receipt` join document_status_map on document_status_map.ID = sales_receipt.STATUS where `sales_receipt`.ID = aj.OBJECT_ID and `sales_receipt`.DATE = aj.OBJECT_DATE  and `sales_receipt`.LOCATION_ID = aj.LOCATION_ID)
         WHEN o.`ID` = 53    THEN ( select concat(LEFT(document_status_map.DESCRIPTION,1),":",sales_receipt.`CODE`) as `CODE` from `sales_receipt_items` join sales_receipt on sales_receipt.ID = sales_receipt_items.SALES_RECEIPT_ID  join document_status_map on document_status_map.ID = sales_receipt.STATUS  where `sales_receipt_items`.ID = aj.OBJECT_ID and `sales_receipt`.DATE = aj.OBJECT_DATE  and `sales_receipt`.LOCATION_ID = aj.LOCATION_ID)
-        
+
         WHEN o.`ID` = 57    THEN ( select concat(LEFT(document_status_map.DESCRIPTION,1),":",`check`.`CODE`) as `CODE` from `check` join document_status_map on document_status_map.ID = `check`.STATUS   where `check`.ID = aj.OBJECT_ID and `check`.DATE = aj.OBJECT_DATE  and `check`.LOCATION_ID = aj.LOCATION_ID)
         WHEN o.`ID` = 58    THEN ( select concat(LEFT(document_status_map.DESCRIPTION,1),":",`check`.`CODE`) as `CODE` from `check_bills` join `check` on check.ID = check_bills.CHECK_ID join document_status_map on document_status_map.ID = `check`.STATUS where `check_bills`.ID = aj.OBJECT_ID and `check`.DATE = aj.OBJECT_DATE  and `check`.LOCATION_ID = aj.LOCATION_ID)
         WHEN o.`ID` = 75    THEN ( select concat(LEFT(document_status_map.DESCRIPTION,1),":",`check`.`CODE`) as `CODE` from `check_items` join `check` on check.ID = check_items.CHECK_ID join document_status_map on document_status_map.ID = `check`.STATUS  where `check_items`.ID = aj.OBJECT_ID and `check`.DATE = aj.OBJECT_DATE  and `check`.LOCATION_ID = aj.LOCATION_ID)
         WHEN o.`ID` = 79    THEN ( select concat(LEFT(document_status_map.DESCRIPTION,1),":",`check`.`CODE`) as `CODE` from `check_expenses` join `check` on check.ID = check_expenses.CHECK_ID  join document_status_map on document_status_map.ID = `check`.STATUS where `check_expenses`.ID = aj.OBJECT_ID and `check`.DATE = aj.OBJECT_DATE  and `check`.LOCATION_ID = aj.LOCATION_ID)
-        
+
         WHEN o.`ID` = 59   THEN ( select concat(LEFT(document_status_map.DESCRIPTION,1),":",`bill_credit`.`CODE`) as `CODE` from bill_credit join document_status_map on document_status_map.ID = bill_credit.STATUS   where bill_credit.ID = aj.OBJECT_ID and bill_credit.DATE = aj.OBJECT_DATE  and bill_credit.LOCATION_ID = aj.LOCATION_ID )
         WHEN o.`ID` = 60   THEN ( select concat(LEFT(document_status_map.DESCRIPTION,1),":",`bill_credit`.`CODE`) as `CODE` from bill_credit_items join bill_credit on bill_credit.ID = bill_credit_items.BILL_CREDIT_ID join document_status_map on document_status_map.ID = bill_credit.STATUS where bill_credit_items.ID = aj.OBJECT_ID and bill_credit.DATE = aj.OBJECT_DATE  and bill_credit.LOCATION_ID = aj.LOCATION_ID )
         WHEN o.`ID` = 80   THEN ( select concat(LEFT(document_status_map.DESCRIPTION,1),":",`bill_credit`.`CODE`) as `CODE` from bill_credit_expenses join bill_credit on bill_credit.ID = bill_credit_expenses.BILL_CREDIT_ID  join document_status_map on document_status_map.ID = bill_credit.STATUS where bill_credit_expenses.ID = aj.OBJECT_ID and bill_credit.DATE = aj.OBJECT_DATE  and bill_credit.LOCATION_ID = aj.LOCATION_ID)
-       
+
         WHEN o.`ID` = 81   THEN ( select concat(LEFT(document_status_map.DESCRIPTION,1),":",`deposit`.`CODE`) as `CODE` from deposit join document_status_map on document_status_map.ID = deposit.STATUS where deposit.ID = aj.OBJECT_ID and deposit.DATE = aj.OBJECT_DATE  and deposit.LOCATION_ID = aj.LOCATION_ID  )
         WHEN o.`ID` = 82   THEN ( select concat(LEFT(document_status_map.DESCRIPTION,1),":",`deposit`.`CODE`) as `CODE` from deposit_funds join deposit on deposit.ID = deposit_funds.DEPOSIT_ID join document_status_map on document_status_map.ID = deposit.STATUS where deposit_funds.ID = aj.OBJECT_ID and deposit.DATE = aj.OBJECT_DATE  and deposit.LOCATION_ID = aj.LOCATION_ID )
-        
+
         WHEN o.`ID` = 84   THEN ( select concat(LEFT(document_status_map.DESCRIPTION,1),":",`general_journal`.`CODE`) as `CODE` from general_journal_details join general_journal on general_journal.ID = general_journal_details.GENERAL_JOURNAL_ID join document_status_map on document_status_map.ID = general_journal.STATUS  where general_journal_details.ID = aj.OBJECT_ID and general_journal.DATE = aj.OBJECT_DATE  and general_journal.LOCATION_ID = aj.LOCATION_ID  )
-        
+
         WHEN o.`ID` = 93   THEN ( select concat(LEFT(document_status_map.DESCRIPTION,1),":",`fund_transfer`.`CODE`) as `CODE` from fund_transfer join document_status_map on document_status_map.ID = fund_transfer.STATUS  where  fund_transfer.ID = aj.OBJECT_ID and fund_transfer.DATE = aj.OBJECT_DATE  and (fund_transfer.TO_LOCATION_ID = aj.LOCATION_ID or fund_transfer.FROM_LOCATION_ID = aj.LOCATION_ID ))
-        
+
         WHEN o.`ID` = 70   THEN ( select concat(LEFT(document_status_map.DESCRIPTION,1),":",`build_assembly`.`CODE`) as `CODE` from build_assembly join document_status_map on document_status_map.ID = build_assembly.STATUS  where build_assembly.ID = aj.OBJECT_ID and build_assembly.DATE = aj.OBJECT_DATE  and build_assembly.LOCATION_ID = aj.LOCATION_ID  )
         WHEN o.`ID` = 71   THEN ( select concat(LEFT(document_status_map.DESCRIPTION,1),":",`build_assembly`.`CODE`) as `CODE` from build_assembly_items join build_assembly on build_assembly.ID = build_assembly_items.BUILD_ASSEMBLY_ID join document_status_map on document_status_map.ID = build_assembly.STATUS  where build_assembly_items.ID = aj.OBJECT_ID and build_assembly.DATE = aj.OBJECT_DATE  and build_assembly.LOCATION_ID = aj.LOCATION_ID  )
-        
+
         WHEN o.`ID` = 72   THEN ( select concat(LEFT(document_status_map.DESCRIPTION,1),":",`tax_credit`.`CODE`) as `CODE` from tax_credit join document_status_map on document_status_map.ID = tax_credit.STATUS  where tax_credit.ID = aj.OBJECT_ID and tax_credit.DATE = aj.OBJECT_DATE  and tax_credit.LOCATION_ID = aj.LOCATION_ID  )
         WHEN o.`ID` = 73   THEN ( select concat(LEFT(document_status_map.DESCRIPTION,1),":",`tax_credit`.`CODE`) as `CODE` from tax_credit_invoices join tax_credit on tax_credit.ID = tax_credit_invoices.TAX_CREDIT_ID  join document_status_map on document_status_map.ID = tax_credit.STATUS where tax_credit_invoices.ID = aj.OBJECT_ID and tax_credit.DATE = aj.OBJECT_DATE  and tax_credit.LOCATION_ID = aj.LOCATION_ID  )
-        
+
         WHEN o.`ID` = 113  THEN ( select concat(LEFT(document_status_map.DESCRIPTION,1),":",`pull_out`.`CODE`) as `CODE` from pull_out join document_status_map on document_status_map.ID = pull_out.STATUS  where pull_out.ID = aj.OBJECT_ID and pull_out.DATE = aj.OBJECT_DATE and pull_out.LOCATION_ID = aj.LOCATION_ID   )
         WHEN o.`ID` = 114  THEN ( select concat(LEFT(document_status_map.DESCRIPTION,1),":",`pull_out`.`CODE`) as `CODE` from pull_out_items join pull_out on pull_out.ID = pull_out_items.PULL_OUT_ID join document_status_map on document_status_map.ID = pull_out.STATUS  where pull_out_items.ID = aj.OBJECT_ID and pull_out.DATE = aj.OBJECT_DATE and pull_out.LOCATION_ID = aj.LOCATION_ID )
 
         WHEN o.`ID` = 127  THEN ( select concat(LEFT(document_status_map.DESCRIPTION,1),":",`depreciation`.`CODE`) as `CODE` from depreciation join document_status_map on document_status_map.ID = depreciation.STATUS  where depreciation.ID = aj.OBJECT_ID and depreciation.DATE = aj.OBJECT_DATE  and depreciation.LOCATION_ID = aj.LOCATION_ID  )
         WHEN o.`ID` = 128  THEN ( select concat(LEFT(document_status_map.DESCRIPTION,1),":",`depreciation`.`CODE`) as `CODE` from depreciation_items join depreciation on depreciation.ID = depreciation_items.DEPRECIATION_ID join document_status_map on document_status_map.ID = depreciation.STATUS where depreciation_items.ID = aj.OBJECT_ID and depreciation.DATE = aj.OBJECT_DATE  and depreciation.LOCATION_ID = aj.LOCATION_ID )
-      
+
         WHEN o.`ID` = 135  THEN ( select concat(LEFT(document_status_map.DESCRIPTION,1),":",`bank_transfer`.`CODE`) as `CODE` from bank_transfer join document_status_map on document_status_map.ID = bank_transfer.STATUS  where bank_transfer.ID = aj.OBJECT_ID and bank_transfer.DATE = aj.OBJECT_DATE  and (bank_transfer.TO_LOCATION_ID = aj.LOCATION_ID or bank_transfer.FROM_LOCATION_ID = aj.LOCATION_ID ))
-        
+
         WHEN o.`ID` = 67   THEN ( select concat(LEFT(document_status_map.DESCRIPTION,1),":",`withholding_tax`.`CODE`) as `CODE` from withholding_tax join document_status_map on document_status_map.ID = withholding_tax.STATUS  where withholding_tax.ID = aj.OBJECT_ID and withholding_tax.DATE = aj.OBJECT_DATE  and withholding_tax.LOCATION_ID = aj.LOCATION_ID  )
         WHEN o.`ID` = 68   THEN ( select concat(LEFT(document_status_map.DESCRIPTION,1),":",`withholding_tax`.`CODE`) as `CODE` from withholding_tax_bills join withholding_tax on withholding_tax.ID = withholding_tax_bills.WITHHOLDING_TAX_ID join document_status_map on document_status_map.ID = withholding_tax.STATUS where withholding_tax_bills.ID = aj.OBJECT_ID and withholding_tax.DATE = aj.OBJECT_DATE and withholding_tax.LOCATION_ID = aj.LOCATION_ID  )
-       
+
         WHEN o.`ID` = 95   THEN ( select concat(LEFT(hemo_status.DESCRIPTION,1),":",`hemodialysis`.`CODE`) as `CODE` from hemodialysis join hemo_status on hemo_status.ID = hemodialysis.STATUS_ID  where hemodialysis.ID = aj.OBJECT_ID and hemodialysis.DATE = aj.OBJECT_DATE  and hemodialysis.LOCATION_ID = aj.LOCATION_ID  )
         WHEN o.`ID` = 109  THEN ( select concat(LEFT(hemo_status.DESCRIPTION,1),":",`hemodialysis`.`CODE`) as `CODE` from hemodialysis inner join hemodialysis_items on hemodialysis.ID = hemodialysis_items.HEMO_ID join hemo_status on hemo_status.ID = hemodialysis.STATUS_ID where hemodialysis_items.ID = aj.OBJECT_ID and hemodialysis.DATE = aj.OBJECT_DATE  and hemodialysis.LOCATION_ID = aj.LOCATION_ID  )
-       
-    
+
+
         END as TX_CODE';
 
     public string $TX_NOTES = '
@@ -974,7 +974,6 @@ class AccountJournalServices
                     $URL = route('bankingdeposit_edit', ['id' => $result->OBJECT_ID]); // deposit
                     break;
                 case 23:
-
                     $dataRes = DB::table("general_journal_details")->select(['GENERAL_JOURNAL_ID'])->where('ID', '=', $result->OBJECT_ID)->first();
                     if ($dataRes) {
                         $URL = route('companygeneral_journal_edit', ['id' => $dataRes->GENERAL_JOURNAL_ID]); // general journal
@@ -996,7 +995,6 @@ class AccountJournalServices
                     $URL = route('companydepreciation_edit', ['id' => $result->OBJECT_ID]); // depreciation
                     break;
                 case 34:
-
                     $URL = route('bankingbank_transfer_credit', ['id' => $result->OBJECT_ID]); // bank transfer
                     break;
                 default:
@@ -1011,6 +1009,16 @@ class AccountJournalServices
     public function setZeroUpdate(int $id)
     {
         AccountJournal::where('ID', '=', $id)
+            ->update([
+                'AMOUNT' => 0,
+            ]);
+    }
+
+    public function DeleteRecordJournal(int $JOURNAL_NO, string $OBJECT_DATE, int $LOCATION_ID)
+    {
+        AccountJournal::where('JOURNAL_NO', '=', $JOURNAL_NO)
+            ->where('OBJECT_DATE', '=', $OBJECT_DATE)
+            ->where('LOCATION_ID', '=', $LOCATION_ID)
             ->update([
                 'AMOUNT' => 0,
             ]);

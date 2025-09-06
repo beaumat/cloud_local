@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Livewire\Bills;
 
 use App\Services\AccountJournalServices;
@@ -7,7 +6,6 @@ use App\Services\AccountServices;
 use App\Services\BillingServices;
 use App\Services\ClassServices;
 use App\Services\ComputeServices;
-use App\Services\ObjectServices;
 use App\Services\TaxServices;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\On;
@@ -37,9 +35,7 @@ class BillingFormAccounts extends Component
     public float $TAX_AMOUNT;
     public string $PARTICULARS;
     public int $CLASS_ID;
-
     public int $openStatus = 0;
-
     public $expenses = [];
     public bool $codeBase = false;
     public $acctDescList = [];
@@ -67,13 +63,13 @@ class BillingFormAccounts extends Component
         ClassServices $classServices,
         TaxServices $taxServices,
         ComputeServices $computeServices,
-        AccountJournalServices   $accountJournalServices
+        AccountJournalServices $accountJournalServices
     ) {
-        $this->billingServices = $billingServices;
-        $this->accountServices = $accountServices;
-        $this->classServices = $classServices;
-        $this->taxServices = $taxServices;
-        $this->computeServices = $computeServices;
+        $this->billingServices        = $billingServices;
+        $this->accountServices        = $accountServices;
+        $this->classServices          = $classServices;
+        $this->taxServices            = $taxServices;
+        $this->computeServices        = $computeServices;
         $this->accountJournalServices = $accountJournalServices;
     }
     public function updatedaccountid()
@@ -81,10 +77,10 @@ class BillingFormAccounts extends Component
         $acct = $this->accountServices->get($this->ACCOUNT_ID);
 
         if ($acct) {
-            $this->ACCOUNT_CODE = $acct->TAG ? $acct->TAG : '';
+            $this->ACCOUNT_CODE        = $acct->TAG ? $acct->TAG : '';
             $this->ACCOUNT_DESCRIPTION = $acct->NAME;
-            $this->TAXABLE = false;
-            $this->PARTICULARS = '';
+            $this->TAXABLE             = false;
+            $this->PARTICULARS         = '';
         }
     }
     public function updatedcodebase()
@@ -98,15 +94,14 @@ class BillingFormAccounts extends Component
     public function mount()
     {
 
-        $this->ACCOUNT_ID = 0;
-        $this->AMOUNT = 0;
+        $this->ACCOUNT_ID  = 0;
+        $this->AMOUNT      = 0;
         $this->PARTICULARS = '';
-        $this->TAXABLE = false;
+        $this->TAXABLE     = false;
         $this->updatedcodeBase();
-        $this->CLASS_ID = 0;
+        $this->CLASS_ID  = 0;
         $this->classList = $this->classServices->GetList();
     }
-
 
     public function saveExpenses()
     {
@@ -114,12 +109,12 @@ class BillingFormAccounts extends Component
         $this->validate(
             [
                 'ACCOUNT_ID' => 'required|numeric|exists:account,id',
-                'AMOUNT'      => 'required|numeric|not_in:0'
+                'AMOUNT'     => 'required|numeric|not_in:0',
             ],
             [],
             [
-                'ACCOUNT_ID'    => 'Account',
-                'AMOUNT'        => 'Amount'
+                'ACCOUNT_ID' => 'Account',
+                'AMOUNT'     => 'Amount',
             ]
         );
 
@@ -135,7 +130,7 @@ class BillingFormAccounts extends Component
 
             if ($tax_result) {
                 $this->TAXABLE_AMOUNT = $tax_result['TAXABLE_AMOUNT'];
-                $this->TAX_AMOUNT = $tax_result['TAX_AMOUNT'];
+                $this->TAX_AMOUNT     = $tax_result['TAX_AMOUNT'];
             }
 
             $this->billingServices->ExpenseStore(
@@ -160,25 +155,25 @@ class BillingFormAccounts extends Component
     }
     private function resetAccountEntry()
     {
-        $this->ACCOUNT_ID = 0;
-        $this->AMOUNT = 0;
-        $this->TAXABLE = true;
-        $this->TAXABLE_AMOUNT = 0;
-        $this->TAX_AMOUNT = 0;
-        $this->PARTICULARS = '';
-        $this->CLASS_ID = 0;
-        $this->ACCOUNT_CODE = '';
+        $this->ACCOUNT_ID          = 0;
+        $this->AMOUNT              = 0;
+        $this->TAXABLE             = true;
+        $this->TAXABLE_AMOUNT      = 0;
+        $this->TAX_AMOUNT          = 0;
+        $this->PARTICULARS         = '';
+        $this->CLASS_ID            = 0;
+        $this->ACCOUNT_CODE        = '';
         $this->ACCOUNT_DESCRIPTION = '';
     }
     public function editExpenses(int $lineId)
     {
         $data = $this->billingServices->ExpenseGet($lineId, $this->BILL_ID);
         if ($data) {
-            $this->lineAmount = $data->AMOUNT;
-            $this->lineTaxable = $data->TAXABLE;
+            $this->lineAmount      = $data->AMOUNT;
+            $this->lineTaxable     = $data->TAXABLE;
             $this->lineParticulars = $data->PARTICULARS;
-            $this->lineClassId = $data->CLASS_ID ?? 0;
-            $this->editExpensesId = $data->ID;
+            $this->lineClassId     = $data->CLASS_ID ?? 0;
+            $this->editExpensesId  = $data->ID;
         }
     }
     public function cancelExpenses()
@@ -189,21 +184,21 @@ class BillingFormAccounts extends Component
     {
         $this->validate(
             [
-                'lineAmount' => 'required|not_in:0'
+                'lineAmount' => 'required|not_in:0',
             ],
             [],
             [
 
-                'lineAmount' => 'Amount'
+                'lineAmount' => 'Amount',
             ]
         );
         DB::beginTransaction();
         try {
-            $taxRate = $this->taxServices->getRate($this->TAX_ID);
+            $taxRate    = $this->taxServices->getRate($this->TAX_ID);
             $tax_result = $this->computeServices->ItemComputeTax($this->lineAmount, $this->lineTaxable, $this->TAX_ID, $taxRate);
             if ($tax_result) {
                 $this->lineTaxableAmt = $tax_result['TAXABLE_AMOUNT'];
-                $this->lineTaxAmount = $tax_result['TAX_AMOUNT'];
+                $this->lineTaxAmount  = $tax_result['TAX_AMOUNT'];
             }
 
             $this->billingServices->ExpenseUpdate(
@@ -237,7 +232,7 @@ class BillingFormAccounts extends Component
                     $this->BILL_ID
                 );
 
-                if ($JOURNAL_NO  ==  0) {
+                if ($JOURNAL_NO == 0) {
                     session()->flash('error', 'journal not found');
                     return;
                 }
@@ -245,7 +240,7 @@ class BillingFormAccounts extends Component
                 $billData = $this->billingServices->get($this->BILL_ID);
 
                 if ($billData) {
-                    $billDataExpenses = $this->billingServices->ExpenseGet($Id, $this->BILL_ID,);
+                    $billDataExpenses = $this->billingServices->ExpenseGet($Id, $this->BILL_ID, );
                     if ($billDataExpenses) {
                         // ACCOUNT_ID
                         $this->accountJournalServices->DeleteJournal(

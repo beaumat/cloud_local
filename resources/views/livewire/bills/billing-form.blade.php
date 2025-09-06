@@ -151,13 +151,19 @@
                                                     class="btn btn-sm btn-info">
                                                     <i class="fa fa-wrench" aria-hidden="true"></i> Modify
                                                 </button>
-
-
                                                 <button type="button" wire:click='getPosted()'
                                                     class="btn btn-sm btn-warning"
                                                     wire:confirm='Are you sure you want to post?'>
                                                     <i class="fa fa-cloud-upload" aria-hidden="true"></i> Posted
                                                 </button>
+                                                @can('vendor.bill.delete')
+                                                    <button type="button" wire:click='delete()'
+                                                        class="btn btn-sm btn-danger"
+                                                        wire:confirm='Are you sure you want to delete?'>
+                                                        <i class="fa fa-trash" aria-hidden="true"></i> Delete
+                                                    </button>
+                                                @endcan
+
                                             @endif
                                         @endif
                                         @if ($STATUS == 15)

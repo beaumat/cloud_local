@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Livewire\Bills;
 
 use App\Services\AccountJournalServices;
@@ -17,26 +16,25 @@ use App\Services\SystemSettingServices;
 use App\Services\TaxServices;
 use App\Services\UploadServices;
 use App\Services\UserServices;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Redirect;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
 use Livewire\Component;
-use Illuminate\Support\Facades\Redirect;
-use Illuminate\Support\Facades\DB;
 use Livewire\WithFileUploads;
 
 #[Title('Billing')]
 class BillingForm extends Component
 {
 
-
     use WithFileUploads;
-    public $PDF = null;
+    public $PDF               = null;
     public bool $showFileName = true;
     public string $FILE_NAME;
     public string $FILE_PATH;
     public bool $IS_CONFIRM;
     public string $DATE_CONFIRM = '';
-    public int $openStatus = 0;
+    public int $openStatus      = 0;
     public int $ID;
     public int $VENDOR_ID;
     public bool $UNPOSTED = true;
@@ -60,10 +58,10 @@ class BillingForm extends Component
     public float $BALANCE_DUE;
     public float $PAYMENT;
     public bool $useAccount = true;
-    public $vendorList = [];
-    public $locationList = [];
+    public $vendorList      = [];
+    public $locationList    = [];
     public $paymentTermList = [];
-    public $taxList = [];
+    public $taxList         = [];
     public bool $Modify;
     private $billingServices;
     public $accountList = [];
@@ -98,21 +96,21 @@ class BillingForm extends Component
         UploadServices $uploadServices,
         DateServices $dateServices
     ) {
-        $this->billingServices = $billingServices;
-        $this->locationServices = $locationServices;
-        $this->contactServices = $contactServices;
-        $this->paymentTermServices = $paymentTermServices;
-        $this->taxServices = $taxServices;
-        $this->userServices = $userServices;
+        $this->billingServices        = $billingServices;
+        $this->locationServices       = $locationServices;
+        $this->contactServices        = $contactServices;
+        $this->paymentTermServices    = $paymentTermServices;
+        $this->taxServices            = $taxServices;
+        $this->userServices           = $userServices;
         $this->documentStatusServices = $documentStatusServices;
-        $this->systemSettingServices = $systemSettingServices;
-        $this->objectServices = $objectServices;
+        $this->systemSettingServices  = $systemSettingServices;
+        $this->objectServices         = $objectServices;
         $this->accountJournalServices = $accountJournalServices;
-        $this->accountServices = $accountServices;
-        $this->documentTypeServices = $documentTypeServices;
-        $this->itemInventoryServices = $itemInventoryServices;
-        $this->uploadServices = $uploadServices;
-        $this->dateServices = $dateServices;
+        $this->accountServices        = $accountServices;
+        $this->documentTypeServices   = $documentTypeServices;
+        $this->itemInventoryServices  = $itemInventoryServices;
+        $this->uploadServices         = $uploadServices;
+        $this->dateServices           = $dateServices;
     }
 
     public function updatedCUSTOMFIELD1()
@@ -120,7 +118,7 @@ class BillingForm extends Component
         $this->validate([
             'CUSTOM_FIELD1' => 'file|mimes:pdf|max:10240', // PDF file, max 10MB
         ], [], [
-            'CUSTOM_FIELD1' => 'Files'
+            'CUSTOM_FIELD1' => 'Files',
         ]);
     }
     public function updatedInputTaxId()
@@ -150,17 +148,17 @@ class BillingForm extends Component
     }
     public function LoadDropdown()
     {
-        $this->accountList = $this->accountServices->getPayable();
-        $this->vendorList = $this->contactServices->getVendorDoc();
-        $this->locationList = $this->locationServices->getList();
+        $this->accountList     = $this->accountServices->getPayable();
+        $this->vendorList      = $this->contactServices->getVendorDoc();
+        $this->locationList    = $this->locationServices->getList();
         $this->paymentTermList = $this->paymentTermServices->getList();
-        $this->taxList = $this->taxServices->getList();
+        $this->taxList         = $this->taxServices->getList();
     }
     public function getTax()
     {
         $tax = $this->taxServices->get($this->INPUT_TAX_ID);
         if ($tax) {
-            $this->INPUT_TAX_RATE = (float) $tax->INPUT_TAX_RATE;
+            $this->INPUT_TAX_RATE       = (float) $tax->INPUT_TAX_RATE;
             $this->INPUT_TAX_VAT_METHOD = (int) $tax->VAT_METHOD;
             $this->INPUT_TAX_ACCOUNT_ID = (int) $tax->TAX_ACCOUNT_ID;
         }
@@ -177,30 +175,29 @@ class BillingForm extends Component
     private function getInfo($data)
     {
 
-
-        $this->ID = $data->ID;
-        $this->CODE = $data->CODE;
-        $this->DATE = $data->DATE;
-        $this->DUE_DATE = $data->DUE_DATE ? $data->DUE_DATE : '';
-        $this->DISCOUNT_DATE = $data->DISCOUNT_DATE ? $data->DISCOUNT_DATE : '';
-        $this->DISCOUNT_PCT = $data->DISCOUNT_PCT ? $data->DISCOUNT_PCT : 0;
-        $this->LOCATION_ID = $data->LOCATION_ID;
-        $this->VENDOR_ID = $data->VENDOR_ID;
-        $this->PAYMENT_TERMS_ID = $data->PAYMENT_TERMS_ID ? $data->PAYMENT_TERMS_ID : 0;
-        $this->NOTES = $data->NOTES;
-        $this->AMOUNT = $data->AMOUNT ?? 0;
-        $this->BALANCE_DUE = $data->BALANCE_DUE ?? 0;
-        $this->PAYMENT = $this->AMOUNT - $this->BALANCE_DUE;
-        $this->STATUS = $data->STATUS;
-        $this->INPUT_TAX_ID = $data->INPUT_TAX_ID > 0 ? $data->INPUT_TAX_ID : 0;
-        $this->INPUT_TAX_RATE = $data->INPUT_TAX_RATE > 0 ? $data->INPUT_TAX_RATE : 0;
-        $this->INPUT_TAX_AMOUNT = $data->INPUT_TAX_AMOUNT > 0 ? $data->INPUT_TAX_AMOUNT : 0;
+        $this->ID                   = $data->ID;
+        $this->CODE                 = $data->CODE;
+        $this->DATE                 = $data->DATE;
+        $this->DUE_DATE             = $data->DUE_DATE ? $data->DUE_DATE : '';
+        $this->DISCOUNT_DATE        = $data->DISCOUNT_DATE ? $data->DISCOUNT_DATE : '';
+        $this->DISCOUNT_PCT         = $data->DISCOUNT_PCT ? $data->DISCOUNT_PCT : 0;
+        $this->LOCATION_ID          = $data->LOCATION_ID;
+        $this->VENDOR_ID            = $data->VENDOR_ID;
+        $this->PAYMENT_TERMS_ID     = $data->PAYMENT_TERMS_ID ? $data->PAYMENT_TERMS_ID : 0;
+        $this->NOTES                = $data->NOTES;
+        $this->AMOUNT               = $data->AMOUNT ?? 0;
+        $this->BALANCE_DUE          = $data->BALANCE_DUE ?? 0;
+        $this->PAYMENT              = $this->AMOUNT - $this->BALANCE_DUE;
+        $this->STATUS               = $data->STATUS;
+        $this->INPUT_TAX_ID         = $data->INPUT_TAX_ID > 0 ? $data->INPUT_TAX_ID : 0;
+        $this->INPUT_TAX_RATE       = $data->INPUT_TAX_RATE > 0 ? $data->INPUT_TAX_RATE : 0;
+        $this->INPUT_TAX_AMOUNT     = $data->INPUT_TAX_AMOUNT > 0 ? $data->INPUT_TAX_AMOUNT : 0;
         $this->INPUT_TAX_VAT_METHOD = $data->INPUT_TAX_VAT_METHOD > 0 ? $data->INPUT_TAX_VAT_METHOD : 0;
         $this->INPUT_TAX_ACCOUNT_ID = $data->INPUT_TAX_ACCOUNT_ID > 0 ? $data->INPUT_TAX_ACCOUNT_ID : 0;
-        $this->STATUS_DESCRIPTION = $this->documentStatusServices->getDesc($this->STATUS);
-        $this->ACCOUNTS_PAYABLE_ID = $data->ACCOUNTS_PAYABLE_ID;
-        $this->FILE_NAME = $data->FILE_NAME ?? '';
-        $this->FILE_PATH = $data->FILE_PATH ?? '';
+        $this->STATUS_DESCRIPTION   = $this->documentStatusServices->getDesc($this->STATUS);
+        $this->ACCOUNTS_PAYABLE_ID  = $data->ACCOUNTS_PAYABLE_ID;
+        $this->FILE_NAME            = $data->FILE_NAME ?? '';
+        $this->FILE_PATH            = $data->FILE_PATH ?? '';
 
         if (empty($this->FILE_NAME)) {
             $this->showFileName = false;
@@ -239,67 +236,109 @@ class BillingForm extends Component
         }
 
         $this->LoadDropdown();
-        $this->tab = "item";
-        $this->Modify = true;
-        $this->ID = 0;
-        $this->CODE = '';
-        $this->DATE = $this->userServices->getTransactionDateDefault();
-        $this->DUE_DATE = '';
-        $this->DISCOUNT_DATE = '';
-        $this->DISCOUNT_PCT = 0;
-        $this->LOCATION_ID = $this->userServices->getLocationDefault();
-        $this->VENDOR_ID = 0; //$this->contactServices->getFirstFromListByID(0);
+        $this->tab              = "item";
+        $this->Modify           = true;
+        $this->ID               = 0;
+        $this->CODE             = '';
+        $this->DATE             = $this->userServices->getTransactionDateDefault();
+        $this->DUE_DATE         = '';
+        $this->DISCOUNT_DATE    = '';
+        $this->DISCOUNT_PCT     = 0;
+        $this->LOCATION_ID      = $this->userServices->getLocationDefault();
+        $this->VENDOR_ID        = 0; //$this->contactServices->getFirstFromListByID(0);
         $this->PAYMENT_TERMS_ID = (int) $this->systemSettingServices->GetValue('DefaultPaymentTermsId');
         $this->updatedPAYMENTTERMSID();
-        $this->NOTES = '';
-        $this->AMOUNT = 0;
-        $this->BALANCE_DUE = 0;
-        $this->PAYMENT = $this->AMOUNT - $this->BALANCE_DUE;
-        $this->STATUS = 0;
-        $this->INPUT_TAX_ID = (int) $this->systemSettingServices->GetValue('InputTaxId');
-        $this->INPUT_TAX_RATE = 0;
-        $this->INPUT_TAX_AMOUNT = 0;
+        $this->NOTES                = '';
+        $this->AMOUNT               = 0;
+        $this->BALANCE_DUE          = 0;
+        $this->PAYMENT              = $this->AMOUNT - $this->BALANCE_DUE;
+        $this->STATUS               = 0;
+        $this->INPUT_TAX_ID         = (int) $this->systemSettingServices->GetValue('InputTaxId');
+        $this->INPUT_TAX_RATE       = 0;
+        $this->INPUT_TAX_AMOUNT     = 0;
         $this->INPUT_TAX_VAT_METHOD = 0;
         $this->INPUT_TAX_ACCOUNT_ID = 0;
-        $this->STATUS_DESCRIPTION = "";
-        $this->ACCOUNTS_PAYABLE_ID = $this->accountServices->getByName('Accounts Payable');
+        $this->STATUS_DESCRIPTION   = "";
+        $this->ACCOUNTS_PAYABLE_ID  = $this->accountServices->getByName('Accounts Payable');
         $this->getTax();
 
-        $this->FILE_NAME = '';
-        $this->FILE_PATH = '';
+        $this->FILE_NAME    = '';
+        $this->FILE_PATH    = '';
         $this->DATE_CONFIRM = '';
-        $this->IS_CONFIRM = false;
+        $this->IS_CONFIRM   = false;
     }
     public function getModify()
     {
         $this->Modify = true;
     }
+    public function delete()
+    {
 
+        try {
+
+            if ($this->ID > 0) {
+                DB::beginTransaction();
+                if ($this->STATUS == 16) {
+
+                    $JN = $this->accountJournalServices->getJournalNo($this->billingServices->object_type_map_bill, $this->ID);
+                    if ($JN > 0) {
+                        $this->accountJournalServices->DeleteRecordJournal($JN, $this->DATE, $this->LOCATION_ID);
+                    }
+
+                    $itemList = $this->billingServices->ItemView($this->ID);
+                    foreach ($itemList as $list) {
+                        $this->itemInventoryServices->InventoryModify(
+                            $list->ITEM_ID,
+                            $this->LOCATION_ID,
+                            $list->ID,
+                            $this->billingServices->document_type_id,
+                            $this->DATE,
+                            0,
+                            0,
+                            0
+                        );
+                    }
+                }
+                $result = $this->billingServices->Delete($this->ID);
+                if ($result) {
+                    DB::commit();
+                    return Redirect::route('vendorsbills')->with('message', 'Successfully deleted');
+                } else {
+                    DB::rollBack();
+                }
+
+            }
+        } catch (\Throwable $th) {
+            //throw $th;
+            session()->flash('error', $th->getMessage());
+            DB::rollBack();
+        }
+
+    }
     public function save()
     {
 
-
         $this->validate(
             [
-                'VENDOR_ID' => 'required|integer|exists:contact,id',
-                'CODE' => 'nullable|max:20|unique:bill,code,' . ($this->ID > 0 ? $this->ID : 'NULL') . ',id',
-                'INPUT_TAX_ID' => 'required|not_in:0|exists:tax,id',
-                'DATE' => 'required|string|date_format:Y-m-d',
-                'LOCATION_ID' => 'required|integer|exists:location,id',
-                'PAYMENT_TERMS_ID' => 'required|integer|exists:payment_terms,id',
-                'ACCOUNTS_PAYABLE_ID' => 'required|integer|exists:account,id',
-                'INPUT_TAX_ACCOUNT_ID' => 'required|integer|exists:account,id'
+                'VENDOR_ID'            => 'required|integer|exists:contact,id',
+                'CODE'                 => 'nullable|max:20|unique:bill,code,' . ($this->ID > 0 ? $this->ID : 'NULL') . ',id',
+                'INPUT_TAX_ID'         => 'required|not_in:0|exists:tax,id',
+                'DATE'                 => 'required|string|date_format:Y-m-d',
+                'LOCATION_ID'          => 'required|integer|exists:location,id',
+                'PAYMENT_TERMS_ID'     => 'required|integer|exists:payment_terms,id',
+                'ACCOUNTS_PAYABLE_ID'  => 'required|integer|exists:account,id',
+                'INPUT_TAX_ACCOUNT_ID' => 'required|integer|exists:account,id',
             ],
             [],
             [
-                'VENDOR_ID' => 'Vendor',
-                'CODE' => 'Reference No.',
-                'INPUT_TAX_ID' => 'Tax',
-                'DATE' => 'Date',
-                'LOCATION_ID' => 'Location',
-                'PAYMENT_TERMS_ID' => 'Payment Terms',
-                'ACCOUNTS_PAYABLE_ID' => 'Account Payables',
-                'INPUT_TAX_ACCOUNT_ID' => 'Account Tax'
+                'VENDOR_ID'            => 'Vendor',
+                'CODE'                 => 'Reference No.',
+                'INPUT_TAX_ID'         => 'Tax',
+                'DATE'                 => 'Date',
+                'LOCATION_ID'          => 'Location',
+                'PAYMENT_TERMS_ID'     => 'Payment Terms',
+                'ACCOUNTS_PAYABLE_ID'  => 'Account Payables',
+                'INPUT_TAX_ACCOUNT_ID' => 'Account Tax',
             ]
         );
 
@@ -395,7 +434,6 @@ class BillingForm extends Component
                     $this->DATE
                 );
 
-
                 if ($this->PDF) {
                     $this->uploadServices->RemoveIfExists($this->FILE_PATH);
                     $this->getDocumentProccess();
@@ -423,10 +461,10 @@ class BillingForm extends Component
     public function getUpdateAmount($result)
     {
         foreach ($result as $list) {
-            $this->AMOUNT = $list['AMOUNT'];
-            $this->BALANCE_DUE = $list['BALANCE_DUE'];
+            $this->AMOUNT           = $list['AMOUNT'];
+            $this->BALANCE_DUE      = $list['BALANCE_DUE'];
             $this->INPUT_TAX_AMOUNT = $list['TAX_AMOUNT'];
-            $this->PAYMENT = $this->AMOUNT - $this->BALANCE_DUE;
+            $this->PAYMENT          = $this->AMOUNT - $this->BALANCE_DUE;
         }
     }
     public function updateCancel()
@@ -449,10 +487,9 @@ class BillingForm extends Component
     {
         try {
             $SOURCE_REF_TYPE = (int) $this->documentTypeServices->getId('Bill');
-            $data = $this->billingServices->ItemInventory($this->ID);
+            $data            = $this->billingServices->ItemInventory($this->ID);
             if ($data) {
                 $noProblem = (bool) $this->itemInventoryServices->ChangeDate($data, $this->LOCATION_ID, $SOURCE_REF_TYPE, $this->DATE);
-
 
                 if ($noProblem == false) {
                     session()->flash('error', 'change date have problem');
@@ -480,7 +517,6 @@ class BillingForm extends Component
                     }
                 }
 
-
             }
             return true;
         } catch (\Exception $e) {
@@ -491,7 +527,7 @@ class BillingForm extends Component
     }
     public function OpenJournal()
     {
-        $bills = (int) $this->objectServices->ObjectTypeID('BILL');
+        $bills      = (int) $this->objectServices->ObjectTypeID('BILL');
         $JOURNAL_NO = $this->accountJournalServices->getRecord($bills, $this->ID);
         if ($JOURNAL_NO > 0) {
             $data = ['JOURNAL_NO' => $JOURNAL_NO];
@@ -502,8 +538,8 @@ class BillingForm extends Component
     {
         try {
 
-            $bills = (int) $this->billingServices->object_type_map_bill;
-            $billItems = (int) $this->billingServices->object_type_map_bill_item;
+            $bills        = (int) $this->billingServices->object_type_map_bill;
+            $billItems    = (int) $this->billingServices->object_type_map_bill_item;
             $billExpenses = (int) $this->billingServices->object_type_map_bill_expenses;
 
             $JOURNAL_NO = $this->accountJournalServices->getRecord($this->billingServices->object_type_map_bill, $this->ID);
@@ -518,7 +554,6 @@ class BillingForm extends Component
             $billCreditExpensesData = $this->billingServices->getBillExpenseJournal($this->ID);
             $this->accountJournalServices->JournalExecute($JOURNAL_NO, $billCreditExpensesData, $this->LOCATION_ID, $billExpenses, $this->DATE, "EXPENSE");
 
-
             //Main
             $billData = $this->billingServices->getBillJournal($this->ID);
             $this->accountJournalServices->JournalExecute($JOURNAL_NO, $billData, $this->LOCATION_ID, $bills, $this->DATE, "AP");
@@ -529,7 +564,7 @@ class BillingForm extends Component
 
             $data = $this->accountJournalServices->getSumDebitCredit($JOURNAL_NO);
 
-            $debit_sum = (float) $data['DEBIT'];
+            $debit_sum  = (float) $data['DEBIT'];
             $credit_sum = (float) $data['CREDIT'];
 
             if ($debit_sum == $credit_sum) {
@@ -547,20 +582,20 @@ class BillingForm extends Component
     {
         try {
 
-            $count_item = (int) $this->billingServices->CountItems($this->ID, true);
+            $count_item    = (int) $this->billingServices->CountItems($this->ID, true);
             $count_expense = (int) $this->billingServices->CountItems($this->ID, false);
-            $count = $count_item + $count_expense;
+            $count         = $count_item + $count_expense;
             if ($count == 0) {
                 session()->flash('error', 'Item not found.');
                 return;
             }
             DB::beginTransaction();
-            if (!$this->ItemInventory()) {
+            if (! $this->ItemInventory()) {
                 DB::rollBack();
                 return;
             }
 
-            if (!$this->AccountJournal()) {
+            if (! $this->AccountJournal()) {
                 DB::rollBack();
                 return;
             }
