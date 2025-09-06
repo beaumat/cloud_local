@@ -94,14 +94,15 @@
                                                     class="btn btn-sm btn-warning">
                                                     <i class="fa fa-cloud-upload" aria-hidden="true"></i> Posted
                                                 </button>
-
-                                                @can('company.inventory-adjustment.delete')
-                                                    <button type="button" wire:click='delete()'
-                                                        class="btn btn-sm btn-danger"
-                                                        wire:confirm="Are you sure you want to delete?">
-                                                        <i class="fa fa-trash" aria-hidden="true"></i> Delete
-                                                    </button>
-                                                @endcan
+                                                @if ($STATUS == 16 || $STATUS == 0)
+                                                    @can('company.inventory-adjustment.delete')
+                                                        <button type="button" wire:click='delete()'
+                                                            class="btn btn-sm btn-danger"
+                                                            wire:confirm="Are you sure you want to delete?">
+                                                            <i class="fa fa-trash" aria-hidden="true"></i> Delete
+                                                        </button>
+                                                    @endcan
+                                                @endif
                                             @endif
                                         @endif
 
