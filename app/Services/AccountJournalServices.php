@@ -673,7 +673,7 @@ class AccountJournalServices
         return $result;
     }
 
-    public function getTrialBalance(string $dateAs, int $LOCATION_ID, array $account = [], array $accountType = [])
+    public function getTrialBalance(string $dateAs, string $dateTo, int $LOCATION_ID, array $account = [], array $accountType = [])
     {
         $result = DB::table('account as a')
             ->select(
@@ -699,7 +699,12 @@ class AccountJournalServices
             )
             ->leftJoin('account_journal as aj', 'aj.ACCOUNT_ID', '=', 'a.ID')
             ->leftJoin('account_type_map as t', 't.ID', '=', 'a.TYPE')
-            ->where('aj.OBJECT_DATE', '<=', $dateAs)
+            ->when($dateTo != "none", function ($query) use (&$dateAs, &$dateTo) {
+                $query->whereBetween('aj.OBJECT_DATE', [$dateAs, $dateTo]);
+            })
+            ->when($dateTo == "none", function ($query) use (&$dateAs) {
+                $query->where('aj.OBJECT_DATE', '<=', $dateAs);
+            })
             ->when($account, function ($query) use (&$account) {
                 $query->whereIn('aj.ACCOUNT_ID', $account);
             })
