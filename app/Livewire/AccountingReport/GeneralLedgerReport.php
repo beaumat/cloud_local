@@ -56,7 +56,6 @@ class GeneralLedgerReport extends Component
     }
     public function updatedlocationid()
     {
-
         try {
             $this->userServices->SwapLocation($this->LOCATION_ID);
         } catch (\Exception $e) {

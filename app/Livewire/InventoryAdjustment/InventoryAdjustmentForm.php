@@ -226,14 +226,14 @@ class InventoryAdjustmentForm extends Component
                 return;
             }
 
+            $this->ACCOUNT_ID = $this->inventoryAdjustmentTypeServices->getAccountId($this->ADJUSTMENT_TYPE_ID);
+            if ($this->ACCOUNT_ID == 0) {
+                session()->flash('error', 'Adjustment type account not found.');
+                return;
+            }
+            DB::beginTransaction();
             if ($this->ID == 0) {
-                $this->ACCOUNT_ID = $this->inventoryAdjustmentTypeServices->getAccountId($this->ADJUSTMENT_TYPE_ID);
-                if ($this->ACCOUNT_ID == 0) {
-                    session()->flash('error', 'Adjustment type account not found.');
-                    return;
-                }
 
-                DB::beginTransaction();
                 $this->ID = $this->inventoryAdjustmentServices->Store(
                     $this->CODE,
                     $this->DATE,
@@ -245,14 +245,9 @@ class InventoryAdjustmentForm extends Component
 
                 DB::commit();
                 return Redirect::route('companyinventory_adjustment_edit', ['id' => $this->ID])->with('message', 'Successfully created');
-            } else {
-                $this->ACCOUNT_ID = $this->inventoryAdjustmentTypeServices->getAccountId($this->ADJUSTMENT_TYPE_ID);
-                if ($this->ACCOUNT_ID == 0) {
-                    session()->flash('error', 'Adjustment type account not found.');
-                    return;
-                }
 
-                DB::beginTransaction();
+            } else {
+
                 $this->inventoryAdjustmentServices->Update(
                     $this->ID,
                     $this->CODE,
@@ -272,6 +267,41 @@ class InventoryAdjustmentForm extends Component
             session()->flash('error', $errorMessage);
         }
     }
+    public function delete()
+    {
+        if ($this->ID > 0) {
+            DB::beginTransaction();
+            try {
+             $JOURNAL_NO = (int) $this->accountJournalServices->getJournalNo($this->inventoryAdjustmentServices->object_type_map_inventory_adjustment, $this->ID);
+            if ($JOURNAL_NO > 0) {
+                $this->accountJournalServices->DeleteRecordJournal($JOURNAL_NO, $this->DATE, $this->LOCATION_ID);
+            }
+            $ItemList = $this->inventoryAdjustmentServices->ItemView($this->ID);
+            foreach ($ItemList as $list) {
+                $this->itemInventoryServices->InventoryModify(
+                    $list->ITEM_ID,
+                    $this->LOCATION_ID,
+                    $list->ID,
+                    $this->inventoryAdjustmentServices->documentTypeMapId,
+                    $this->DATE,
+                    0,
+                    0,
+                    0
+                );
+            }
+
+            $this->inventoryAdjustmentServices->Delete($this->ID);
+            DB::commit();
+            return Redirect::route('companyinventory_adjustment')->with('message', 'Successfully deleted');
+            } catch (\Throwable $th) {
+                DB::rollBack();
+                session()->flash('error', $th->getMessage());
+
+            }
+
+        }
+
+    }
     public function updateCancel()
     {
         $BA = $this->inventoryAdjustmentServices->get($this->ID);
@@ -288,7 +318,6 @@ class InventoryAdjustmentForm extends Component
             $this->inventoryAdjustmentServices->object_type_map_inventory_adjustment,
             $this->ID
         );
-
         if ($JOURNAL_NO > 0) {
             $data = ['JOURNAL_NO' => $JOURNAL_NO];
             $this->dispatch('open-journal', result: $data);
