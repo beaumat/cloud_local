@@ -273,7 +273,6 @@ class BillingForm extends Component
     }
     public function delete()
     {
-
         try {
 
             if ($this->ID > 0) {
