@@ -90,14 +90,14 @@
                         @endif
                     @endif
 
-                    <tr>
+                    <tr @if (substr($list->TX_CODE, 0, 1) != 'P') class="text-danger" @endif>
                         <td>{{ $list->TYPE }}</td>
                         <td>{{ date('m/d/Y', strtotime($list->DATE)) }}</td>
                         <td>
                             @if ($list->TX_CODE)
                                 <span class="text-primary" type="button"
                                     wire:click='openDetails({{ $list->JOURNAL_NO }})'>
-                                    {{ $list->TX_CODE }} </span>
+                                    {{  $list->TX_CODE }} </span>
                             @else
                                 <b class="text-danger"
                                     @if (Auth::user()->name == 'admin') wire:click='setZero({{ $list->ID }})' wire:confirm='Are you sure?' @endif>{{ 'ERR_NO_ID: ' . $list->ID }}</b>

@@ -38,7 +38,6 @@ class TimerServices
     }
     private function generateWaitingList($transDate)
     {
-
         $schedlist = $this->scheduleServices->getWaitingList($transDate);
         foreach ($schedlist as $sched) {
             $this->getPosted($sched->CONTACT_ID, $sched->SCHED_DATE, $sched->LOCATION_ID);
