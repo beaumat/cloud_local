@@ -721,7 +721,6 @@ class AccountJournalServices
             })
             ->groupBy(['a.NAME', 't.ACCOUNT_ORDER'])
             ->orderBy('t.ACCOUNT_ORDER')
-
             ->get();
 
         return $result;
