@@ -98,7 +98,6 @@
                             </tr>
                         </thead>
                         <tbody class="h1">
-
                             @foreach ($dataList as $list)
                                 <tr>
                                     @if ($list['name'] == '')
