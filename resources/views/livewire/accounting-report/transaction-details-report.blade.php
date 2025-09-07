@@ -58,14 +58,14 @@
                             </div>
                             <div class="col-md-4">
                                 <livewire:select-checkbox name="ACCOUNT_ID" titleName="Filter Account" :options="$accountList"
-                                    :zero="true" :isDisabled=false wire:model='selectedAccount' />
+                                    :zero="true" :isDisabled=false wire:model.live='selectedAccount' />
                             </div>
                             <div class="col-md-4">
                                 <div class="row">
                                     <div class="col-md-8">
                                         <livewire:select-checkbox name="ACCOUNT_TYPE_ID" titleName="Filter Account Type"
                                             :options="$accountTypeList" :zero="true" :isDisabled=false
-                                            wire:model='selectedAccountType' />
+                                            wire:model.live='selectedAccountType' />
                                     </div>
                                     <div class="col-md-4">
                                         <div class="mt-0">
