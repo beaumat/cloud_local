@@ -3,6 +3,7 @@
 use App\Livewire\AccountingReport\GeneralLedgerGenerate;
 use App\Livewire\AccountingReport\GeneralLedgerReport;
 use App\Livewire\AccountingReport\TransactionDetailsReport;
+use App\Livewire\AccountingReport\TransactionJournalGenerate;
 use App\Livewire\AccountingReport\TransactionJournalReport;
 use App\Livewire\AccountingReport\TrialBalanceGenerate;
 use App\Livewire\AccountingReport\TrialBalanceReport;
@@ -724,6 +725,7 @@ Route::middleware(['auth'])->group(function () {
 
             Route::prefix('/transaction-journal')->middleware(['permission:report.accounting.transaction-details'])->group(function () {
                 Route::get('/', TransactionJournalReport::class)->name('transaction_journal_report');
+                Route::get('/view/{from}/{to?}/{location}/{account?}/{accounttype?}', TransactionJournalGenerate::class)->name('transaction_journal_view');
             });
         });
 

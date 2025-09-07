@@ -88,9 +88,9 @@ class TransactionJournalReport extends Component
     public function openDetails(int $JN)
     {
         $url = $this->accountJournalServices->getUrlBy($JN);
-        
+
        $this->js("window.open('$url', '_blank')");
-        
+
     }
 
     public function render()
