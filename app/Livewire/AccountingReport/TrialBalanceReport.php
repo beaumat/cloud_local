@@ -15,7 +15,7 @@ use Maatwebsite\Excel\Facades\Excel;
 class TrialBalanceReport extends Component
 {
 
-    public bool $IS_RANGE;
+    public bool $IS_RANGE = true;
     public float $TOTAL_DEBIT  = 0;
     public float $TOTAL_CREDIT = 0;
     public $DATE_FROM;
@@ -50,8 +50,7 @@ class TrialBalanceReport extends Component
     {
         $this->TOTAL_DEBIT     = 0;
         $this->TOTAL_CREDIT    = 0;
-        $this->DATE_FROM       = $this->dateServices->NowDate();
-        $this->DATE_TO         = "";
+        $this->updatedIsRange();
         $this->LOCATION_ID     = $this->userServices->getLocationDefault();
         $this->locationList    = $this->locationServices->getList();
         $this->accountList     = $this->accountServices->getAccount(false);
@@ -61,7 +60,7 @@ class TrialBalanceReport extends Component
     {
         if ($this->IS_RANGE) {
             $this->DATE_FROM = $this->dateServices->GetFirstDay_Month($this->dateServices->NowDate());
-            $this->DATE_TO   = $this->dateServices->GetLastDay_Month($this->DATE_FROM);
+            $this->DATE_TO   = $this->dateServices->NowDate();
         } else {
             $this->DATE_FROM = $this->dateServices->NowDate();
             $this->DATE_TO   = "";

@@ -5,7 +5,7 @@ use App\Services\AccountJournalServices;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 
-#[Title('General Ledger - Generate')]
+#[Title('General Ledger - Preview')]
 class GeneralLedgerGenerate extends Component
 {
     private $selectedAccountType;

@@ -15,13 +15,7 @@ use Maatwebsite\Excel\Facades\Excel;
 class GeneralLedgerReport extends Component
 {
 
-    public string $TEMP_ACCOUNT = "";
-    public float $TEMP_DEBIT    = 0;
-    public float $TEMP_CREDIT   = 0;
-
-    public float $TOTAL_DEBIT  = 0;
-    public float $TOTAL_CREDIT = 0;
-    public float $BALANCE      = 0;
+    public bool $IS_RANGE = true;
     public string $DATE_FROM;
     public string $DATE_TO;
     public int $LOCATION_ID;
@@ -50,6 +44,16 @@ class GeneralLedgerReport extends Component
         $this->userServices           = $userServices;
         $this->accountServices        = $accountServices;
     }
+    public function updatedIsRange()
+    {
+        if ($this->IS_RANGE) {
+            $this->DATE_FROM = $this->dateServices->GetFirstDay_Month($this->dateServices->NowDate());
+            $this->DATE_TO   = $this->dateServices->NowDate();
+        } else {
+            $this->DATE_FROM = $this->dateServices->NowDate();
+            $this->DATE_TO   = "";
+        }
+    }
     public function updatedDateFrom()
     {
         $this->DATE_TO = $this->dateServices->GetLastDay_Month($this->DATE_FROM);
@@ -65,8 +69,7 @@ class GeneralLedgerReport extends Component
     }
     public function mount()
     {
-        $this->DATE_FROM       = $this->dateServices->GetFirstDay_Month($this->dateServices->NowDate());
-        $this->DATE_TO         = $this->dateServices->NowDate();
+        $this->updatedIsRange();
         $this->LOCATION_ID     = $this->userServices->getLocationDefault();
         $this->locationList    = $this->locationServices->getList();
         $this->accountList     = $this->accountServices->getAccount(false);
