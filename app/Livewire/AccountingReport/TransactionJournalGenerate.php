@@ -5,7 +5,7 @@ use App\Services\AccountJournalServices;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 
-#[Title('Transaction Journal - View')]
+#[Title('Transaction Journal - Preview')]
 class TransactionJournalGenerate extends Component
 {
 
@@ -16,6 +16,7 @@ class TransactionJournalGenerate extends Component
     public $DATE_TO;
     public $LOCATION_ID;
     public $dataList = [];
+
     public function boot(AccountJournalServices $accountJournalServices)
     {
         $this->accountJournalServices = $accountJournalServices;
@@ -41,6 +42,7 @@ class TransactionJournalGenerate extends Component
                 $this->selectedAccount,
                 $this->selectedAccountType
             );
+
         } catch (\Throwable $th) {
             //throw $th;
         }

@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Livewire\AccountingReport;
 
 use App\Exports\TransactionJournalReportExport;
@@ -16,16 +15,15 @@ use Maatwebsite\Excel\Facades\Excel;
 class TransactionJournalReport extends Component
 {
 
-
-    public $TOTAL_DEBIT = 0;
+    public $TOTAL_DEBIT  = 0;
     public $TOTAL_CREDIT = 0;
     public string $DATE_FROM;
     public string $DATE_TO;
     public int $LOCATION_ID;
-    public $locationList = [];
-    public $accountList = [];
-    public array $selectedAccount = [];
-    public $accountTypeList = [];
+    public $locationList              = [];
+    public $accountList               = [];
+    public array $selectedAccount     = [];
+    public $accountTypeList           = [];
     public array $selectedAccountType = [];
     public string $url;
     public $dataList = [];
@@ -43,25 +41,25 @@ class TransactionJournalReport extends Component
         AccountServices $accountServices
     ) {
         $this->accountJournalServices = $accountJournalServices;
-        $this->locationServices = $locationServices;
-        $this->dateServices = $dateServices;
-        $this->userServices = $userServices;
-        $this->accountServices = $accountServices;
+        $this->locationServices       = $locationServices;
+        $this->dateServices           = $dateServices;
+        $this->userServices           = $userServices;
+        $this->accountServices        = $accountServices;
     }
     public function mount()
     {
-        $this->DATE_TO = $this->dateServices->NowDate();
-        $this->DATE_FROM = $this->dateServices->GetFirstDay_Month($this->DATE_TO);
-        $this->LOCATION_ID = $this->userServices->getLocationDefault();
-        $this->locationList = $this->locationServices->getList();
-        $this->accountList = $this->accountServices->getAccount(false);
+        $this->DATE_TO         = $this->dateServices->NowDate();
+        $this->DATE_FROM       = $this->dateServices->GetFirstDay_Month($this->DATE_TO);
+        $this->LOCATION_ID     = $this->userServices->getLocationDefault();
+        $this->locationList    = $this->locationServices->getList();
+        $this->accountList     = $this->accountServices->getAccount(false);
         $this->accountTypeList = $this->accountServices->GetTypeList();
     }
     public function generate()
     {
-        $this->TOTAL_DEBIT = 0;
+        $this->TOTAL_DEBIT  = 0;
         $this->TOTAL_CREDIT = 0;
-        $this->dataList = $this->accountJournalServices->getTransactionJournal($this->DATE_FROM, $this->DATE_TO, $this->LOCATION_ID, $this->selectedAccount, $this->selectedAccountType);
+        $this->dataList     = $this->accountJournalServices->getTransactionJournal($this->DATE_FROM, $this->DATE_TO, $this->LOCATION_ID, $this->selectedAccount, $this->selectedAccountType);
     }
     public function updatedlocationid()
     {
@@ -75,7 +73,7 @@ class TransactionJournalReport extends Component
     }
     public function export()
     {
-        if (!$this->dataList) {
+        if (! $this->dataList) {
 
             session()->flash('error', 'Please generate first.');
             return;
@@ -88,8 +86,7 @@ class TransactionJournalReport extends Component
     public function openDetails(int $JN)
     {
         $url = $this->accountJournalServices->getUrlBy($JN);
-
-       $this->js("window.open('$url', '_blank')");
+        $this->js("window.open('$url', '_blank')");
 
     }
 

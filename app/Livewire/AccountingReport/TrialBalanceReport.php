@@ -78,7 +78,6 @@ class TrialBalanceReport extends Component
     }
     public function generate()
     {
-
         $this->dataList = $this->accountJournalServices->getTrialBalance(
             $this->DATE_FROM,
             $this->DATE_TO,
