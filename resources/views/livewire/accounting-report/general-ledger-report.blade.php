@@ -24,20 +24,31 @@
                         <div class="row">
                             <div class="col-md-4">
                                 <div class="row">
-                                    <div class="col-md-5">
-                                        <livewire:date-input name="DATE_FROM" titleName="Date From"
-                                            wire:model.live='DATE_FROM' :isDisabled="false" />
+                                    <div class="col-md-12">
+
+                                        <livewire:checkbox-input name="IS_RANGE" titleName="Use Date Covered"
+                                            wire:model.live='IS_RANGE' :isDisabled="false" />
                                     </div>
                                     <div class="col-md-5">
-                                        <livewire:date-input name="DATE_TO" titleName="Date To"
-                                            wire:model.live='DATE_TO' :isDisabled="false" />
+                                        @if ($IS_RANGE)
+                                            <livewire:date-input name="DATE_FROM1" titleName="Date From"
+                                                wire:model.live='DATE_FROM' :isDisabled="false" />
+                                            <livewire:date-input name="DATE_TO" titleName="Date To"
+                                                wire:model.live='DATE_TO' :isDisabled="false" />
+                                        @else
+                                            <livewire:date-input name="DATE_FROM2" titleName="Date as of"
+                                                wire:model.live='DATE_FROM' :isDisabled="false" />
+                                        @endif
+                                    </div>
+                                    <div class="col-md-5">
+
                                     </div>
                                     <div class='col-md-12 mt-1'>
                                         <div class="form-group">
                                             <a target="_blank"
                                                 href="{{ route('reportsaccountinggeneral_ledeger_view', [
                                                     'from' => $DATE_FROM,
-                                                    'to' => $DATE_TO,
+                                                    'to' => !empty($DATE_TO) ? $DATE_TO : 'none',
                                                     'location' => $LOCATION_ID,
                                                     'account' => !empty($selectedAccount) ? implode(',', $selectedAccount) : 'none',
                                                     'accounttype' => !empty($selectedAccountType) ? implode(',', $selectedAccountType) : 'none',

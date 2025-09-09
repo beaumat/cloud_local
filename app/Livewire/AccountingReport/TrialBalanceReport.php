@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Livewire\AccountingReport;
 
 use App\Exports\TrialBalanceExport;
@@ -16,16 +15,19 @@ use Maatwebsite\Excel\Facades\Excel;
 class TrialBalanceReport extends Component
 {
 
-    public float $TOTAL_DEBIT = 0;
+    public bool $IS_RANGE = true;
+    public float $TOTAL_DEBIT  = 0;
     public float $TOTAL_CREDIT = 0;
-    public $DATE;
+    public $DATE_FROM;
+    public $DATE_TO;
+
     public int $LOCATION_ID;
-    public $locationList = [];
-    public $accountList = [];
-    public array $selectedAccount = [];
-    public $accountTypeList = [];
+    public $locationList              = [];
+    public $accountList               = [];
+    public array $selectedAccount     = [];
+    public $accountTypeList           = [];
     public array $selectedAccountType = [];
-    public $dataList = [];
+    public $dataList                  = [];
     private $accountJournalServices;
     private $dateServices;
     private $locationServices;
@@ -39,20 +41,30 @@ class TrialBalanceReport extends Component
         AccountServices $accountServices
     ) {
         $this->accountJournalServices = $accountJournalServices;
-        $this->dateServices = $dateServices;
-        $this->locationServices = $locationServices;
-        $this->userServices = $userServices;
-        $this->accountServices = $accountServices;
+        $this->dateServices           = $dateServices;
+        $this->locationServices       = $locationServices;
+        $this->userServices           = $userServices;
+        $this->accountServices        = $accountServices;
     }
     public function mount()
     {
-        $this->TOTAL_DEBIT = 0;
-        $this->TOTAL_CREDIT = 0;
-        $this->DATE = $this->dateServices->NowDate();
-        $this->LOCATION_ID =  $this->userServices->getLocationDefault();
-        $this->locationList = $this->locationServices->getList();
-        $this->accountList = $this->accountServices->getAccount(false);
+        $this->TOTAL_DEBIT     = 0;
+        $this->TOTAL_CREDIT    = 0;
+        $this->updatedIsRange();
+        $this->LOCATION_ID     = $this->userServices->getLocationDefault();
+        $this->locationList    = $this->locationServices->getList();
+        $this->accountList     = $this->accountServices->getAccount(false);
         $this->accountTypeList = $this->accountServices->GetTypeList();
+    }
+    public function updatedIsRange()
+    {
+        if ($this->IS_RANGE) {
+            $this->DATE_FROM = $this->dateServices->GetFirstDay_Month($this->dateServices->NowDate());
+            $this->DATE_TO   = $this->dateServices->NowDate();
+        } else {
+            $this->DATE_FROM = $this->dateServices->NowDate();
+            $this->DATE_TO   = "";
+        }
     }
     public function updatedlocationid()
     {
@@ -66,9 +78,9 @@ class TrialBalanceReport extends Component
     }
     public function generate()
     {
-
         $this->dataList = $this->accountJournalServices->getTrialBalance(
-            $this->DATE,
+            $this->DATE_FROM,
+            $this->DATE_TO,
             $this->LOCATION_ID,
             $this->selectedAccount,
             $this->selectedAccountType
@@ -77,7 +89,7 @@ class TrialBalanceReport extends Component
     public function export()
     {
 
-        if (!$this->dataList) {
+        if (! $this->dataList) {
             session()->flash('error', 'Please generate first');
             return;
         }

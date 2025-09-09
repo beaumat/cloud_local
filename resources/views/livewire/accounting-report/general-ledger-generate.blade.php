@@ -18,7 +18,7 @@
     </div>
     <div class="col-md-12" style="max-height: 80vh; overflow-y: auto;">
         @livewire('alert-layout', ['errors' => $errors->any() ? $errors->all() : '', 'message' => session('message'), 'error' => session('error')])
-        <table class="table table-sm table-bordered table-hover">
+        <table class="table table-bordered table-hover" >
             <thead class="bg-sky h1">
                 <tr>
 
@@ -34,7 +34,7 @@
 
                 </tr>
             </thead>
-            <tbody class="h1">
+            <tbody >
                 @php
                     $TEMP_ACCOUNT = '';
                     $TEMP_DEBIT = 0;
@@ -156,8 +156,8 @@
                     <td></td>
                     <td></td>
                     <td></td>
-                    <td class="text-sm text-primary text-right">{{ number_format($TOTAL_DEBIT, 2) }}</td>
-                    <td class="text-sm text-primary text-right">{{ number_format($TOTAL_CREDIT, 2) }}</td>
+                    <td class="text-sm text-primary text-right font-weight-bold">{{ number_format($TOTAL_DEBIT, 2) }}</td>
+                    <td class="text-sm text-primary text-right font-weight-bold">{{ number_format($TOTAL_CREDIT, 2) }}</td>
                     <td></td>
                 </tr>
             </tbody>

@@ -367,8 +367,10 @@ class PatientPaymentForm extends Component
             $this->TITLE_REF          = (string) $data['titleRef'];
             $this->TITLE_DATE         = (string) $data['titleDate'];
             $this->showTax            = (bool) $data['showTax'];
+
+            $this->UNDEPOSITED_FUNDS_ACCOUNT_ID = $paymentMethod->GL_ACCOUNT_ID ?? 0;
         }
-        $this->UNDEPOSITED_FUNDS_ACCOUNT_ID = 0;
+       // $this->UNDEPOSITED_FUNDS_ACCOUNT_ID = 0;
     }
     public function openPayment()
     {
@@ -382,6 +384,7 @@ class PatientPaymentForm extends Component
     {
         $dataItemCheck = $this->patientPaymentServices->PaymentChargesList($this->ID, 0);
         if ($dataItemCheck) {
+
             $data = [
                 'PAYMENT_METHOD_ID'  => $this->PAYMENT_METHOD_ID,
                 'PATIENT_PAYMENT_ID' => $this->ID,

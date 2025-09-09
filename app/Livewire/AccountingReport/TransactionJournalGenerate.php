@@ -5,9 +5,10 @@ use App\Services\AccountJournalServices;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 
-#[Title('General Ledger - Preview')]
-class GeneralLedgerGenerate extends Component
+#[Title('Transaction Journal - Preview')]
+class TransactionJournalGenerate extends Component
 {
+
     private $selectedAccountType;
     private $selectedAccount;
     private $accountJournalServices;
@@ -15,6 +16,7 @@ class GeneralLedgerGenerate extends Component
     public $DATE_TO;
     public $LOCATION_ID;
     public $dataList = [];
+
     public function boot(AccountJournalServices $accountJournalServices)
     {
         $this->accountJournalServices = $accountJournalServices;
@@ -26,22 +28,21 @@ class GeneralLedgerGenerate extends Component
         $this->LOCATION_ID         = $location;
         $this->selectedAccount     = $account !== 'none' ? explode(',', $account) : [];
         $this->selectedAccountType = $accounttype !== 'none' ? explode(',', $accounttype) : [];
-
         $this->Generete();
-
     }
 
     public function Generete()
     {
 
         try {
-            $this->dataList = $this->accountJournalServices->getGeneralLedgerList(
+            $this->dataList = $this->accountJournalServices->getTransactionJournal(
                 $this->DATE_FROM,
                 $this->DATE_TO,
                 $this->LOCATION_ID,
                 $this->selectedAccount,
                 $this->selectedAccountType
             );
+
         } catch (\Throwable $th) {
             //throw $th;
         }
@@ -59,6 +60,6 @@ class GeneralLedgerGenerate extends Component
     }
     public function render()
     {
-        return view('livewire.accounting-report.general-ledger-generate');
+        return view('livewire.accounting-report.transaction-journal-generate');
     }
 }

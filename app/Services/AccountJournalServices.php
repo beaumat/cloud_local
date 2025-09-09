@@ -656,7 +656,12 @@ class AccountJournalServices
             ->leftJoin('document_type_map as d', 'd.ID', '=', 'o.DOCUMENT_TYPE')
             ->leftJoin('location as l', 'l.ID', '=', 'aj.LOCATION_ID')
             ->where('aj.AMOUNT', '>', '0')
-            ->whereBetween('aj.OBJECT_DATE', [$dateFrom, $dateTo])
+               ->when($dateTo != "none", function ($query) use (&$dateFrom, &$dateTo) {
+                $query->whereBetween('aj.OBJECT_DATE', [$dateFrom, $dateTo]);
+            })
+            ->when($dateTo == "none", function ($query) use (&$dateFrom) {
+                $query->where('aj.OBJECT_DATE', '<=', $dateFrom);
+            })
             ->when($LOCATION_ID > 0, function ($query) use (&$LOCATION_ID) {
                 $query->where('aj.LOCATION_ID', '=', $LOCATION_ID);
             })
@@ -673,7 +678,7 @@ class AccountJournalServices
         return $result;
     }
 
-    public function getTrialBalance(string $dateAs, int $LOCATION_ID, array $account = [], array $accountType = [])
+    public function getTrialBalance(string $dateAs, string $dateTo, int $LOCATION_ID, array $account = [], array $accountType = [])
     {
         $result = DB::table('account as a')
             ->select(
@@ -699,7 +704,12 @@ class AccountJournalServices
             )
             ->leftJoin('account_journal as aj', 'aj.ACCOUNT_ID', '=', 'a.ID')
             ->leftJoin('account_type_map as t', 't.ID', '=', 'a.TYPE')
-            ->where('aj.OBJECT_DATE', '<=', $dateAs)
+            ->when($dateTo != "none", function ($query) use (&$dateAs, &$dateTo) {
+                $query->whereBetween('aj.OBJECT_DATE', [$dateAs, $dateTo]);
+            })
+            ->when($dateTo == "none", function ($query) use (&$dateAs) {
+                $query->where('aj.OBJECT_DATE', '<=', $dateAs);
+            })
             ->when($account, function ($query) use (&$account) {
                 $query->whereIn('aj.ACCOUNT_ID', $account);
             })
@@ -711,7 +721,6 @@ class AccountJournalServices
             })
             ->groupBy(['a.NAME', 't.ACCOUNT_ORDER'])
             ->orderBy('t.ACCOUNT_ORDER')
-
             ->get();
 
         return $result;
