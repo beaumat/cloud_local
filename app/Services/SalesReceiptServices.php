@@ -178,6 +178,7 @@ class SalesReceiptServices
                 'sales_receipt.AMOUNT',
                 'sales_receipt.OUTPUT_TAX_RATE',
                 'sales_receipt.NOTES',
+                'sales_receipt.PAYMENT_REF_NO',
                 'c.NAME as CONTACT_NAME',
                 'l.NAME as LOCATION_NAME',
                 't.NAME as TAX_NAME',

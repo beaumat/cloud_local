@@ -65,6 +65,7 @@ use App\Services\UserServices;
                                     <tr>
                                         <th class="col-1">Ref No.</th>
                                         <th class="col-1">Date</th>
+                                        <th class="col-1">O.R #</th>
                                         <th>Customer</th>
                                         <th class="col-2">Deposit to Bank Account</th>
                                         <th class="col-1">Location</th>
@@ -91,6 +92,7 @@ use App\Services\UserServices;
                                                 </a>
                                             </td>
                                             <td> {{ date('m/d/Y', strtotime($list->DATE)) }}</td>
+                                            <td>{{ $list->PAYMENT_REF_NO }}</td>
                                             <td> {{ $list->CONTACT_NAME }}</td>
                                             <td>{{ $list->ACCOUNT_NAME }}</td>
                                             <td> {{ $list->LOCATION_NAME }}</td>
