@@ -12,6 +12,7 @@ use App\Services\ItemInventoryServices;
 use App\Services\LocationServices;
 use App\Services\ObjectServices;
 use App\Services\PaymentTermServices;
+use App\Services\PhilHealthProfFeeServices;
 use App\Services\SystemSettingServices;
 use App\Services\TaxServices;
 use App\Services\UploadServices;
@@ -27,6 +28,7 @@ use Livewire\WithFileUploads;
 class BillingForm extends Component
 {
 
+    public int $PHILHEALTH_ID = 0;
     use WithFileUploads;
     public $PDF               = null;
     public bool $showFileName = true;
@@ -79,6 +81,7 @@ class BillingForm extends Component
     private $itemInventoryServices;
     private $uploadServices;
     private $dateServices;
+    private $philHealthProfFeeServices;
     public function boot(
         ItemInventoryServices $itemInventoryServices,
         DocumentTypeServices $documentTypeServices,
@@ -94,25 +97,33 @@ class BillingForm extends Component
         AccountJournalServices $accountJournalServices,
         AccountServices $accountServices,
         UploadServices $uploadServices,
-        DateServices $dateServices
+        DateServices $dateServices,
+        PhilHealthProfFeeServices $philHealthProfFeeServices
     ) {
-        $this->billingServices        = $billingServices;
-        $this->locationServices       = $locationServices;
-        $this->contactServices        = $contactServices;
-        $this->paymentTermServices    = $paymentTermServices;
-        $this->taxServices            = $taxServices;
-        $this->userServices           = $userServices;
-        $this->documentStatusServices = $documentStatusServices;
-        $this->systemSettingServices  = $systemSettingServices;
-        $this->objectServices         = $objectServices;
-        $this->accountJournalServices = $accountJournalServices;
-        $this->accountServices        = $accountServices;
-        $this->documentTypeServices   = $documentTypeServices;
-        $this->itemInventoryServices  = $itemInventoryServices;
-        $this->uploadServices         = $uploadServices;
-        $this->dateServices           = $dateServices;
+        $this->billingServices           = $billingServices;
+        $this->locationServices          = $locationServices;
+        $this->contactServices           = $contactServices;
+        $this->paymentTermServices       = $paymentTermServices;
+        $this->taxServices               = $taxServices;
+        $this->userServices              = $userServices;
+        $this->documentStatusServices    = $documentStatusServices;
+        $this->systemSettingServices     = $systemSettingServices;
+        $this->objectServices            = $objectServices;
+        $this->accountJournalServices    = $accountJournalServices;
+        $this->accountServices           = $accountServices;
+        $this->documentTypeServices      = $documentTypeServices;
+        $this->itemInventoryServices     = $itemInventoryServices;
+        $this->uploadServices            = $uploadServices;
+        $this->dateServices              = $dateServices;
+        $this->philHealthProfFeeServices = $philHealthProfFeeServices;
     }
-
+    private function getInfoPF()
+    {
+        $result = $this->philHealthProfFeeServices->GetBill($this->ID);
+        if ($result) {
+            $this->PHILHEALTH_ID = $result->PHIC_ID ?? 0;
+        }
+    }
     public function updatedCUSTOMFIELD1()
     {
         $this->validate([
@@ -223,6 +234,7 @@ class BillingForm extends Component
                 if ($Bill) {
                     $this->LoadDropdown();
                     $this->getInfo($Bill);
+                    $this->getInfoPF();
                     $this->Modify = false;
                     return;
                 }

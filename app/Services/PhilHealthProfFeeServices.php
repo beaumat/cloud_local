@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Services;
 
 use App\Models\PhilHealthProfFee;
@@ -14,7 +13,6 @@ class PhilHealthProfFeeServices
         $this->object = $objectServices;
     }
 
-
     public function getProfFee($ID)
     {
         $result = PhilHealthProfFee::query()
@@ -25,7 +23,7 @@ class PhilHealthProfFeeServices
                 'philhealth_prof_fee.DISCOUNT',
                 'philhealth_prof_fee.FIRST_CASE',
                 'c.PRINT_NAME_AS as NAME',
-                'c.PIN as PIN_NUM'
+                'c.PIN as PIN_NUM',
 
             ])
             ->selectRaw("CONCAT(SUBSTRING(c.PIN, 1, 4), '-', SUBSTRING(c.PIN, 5, 7), '-', SUBSTRING(c.PIN, 12, 1)) as PIN")
@@ -47,7 +45,7 @@ class PhilHealthProfFeeServices
                 'philhealth_prof_fee.FIRST_CASE',
                 'philhealth_prof_fee.BILL_ID',
                 'c.PRINT_NAME_AS as NAME',
-                'c.PIN as PIN_NUM'
+                'c.PIN as PIN_NUM',
             ])
             ->selectRaw("CONCAT(SUBSTRING(c.PIN, 1, 4), '-', SUBSTRING(c.PIN, 5, 7), '-', SUBSTRING(c.PIN, 12, 1)) as PIN")
             ->join('contact as c', 'c.ID', '=', 'philhealth_prof_fee.CONTACT_ID')
@@ -61,8 +59,12 @@ class PhilHealthProfFeeServices
     {
         PhilHealthProfFee::where('PHIC_ID', '=', $PHIC_ID)
             ->update([
-                'CONTACT_ID' => $NEW_CONTACT_ID
+                'CONTACT_ID' => $NEW_CONTACT_ID,
             ]);
+    }
+    public function GetBill(int $BILL_ID)
+    {
+        return PhilHealthProfFee::where('BILL_ID','=', $BILL_ID)->first();
     }
     private function getLine($Id): int
     {
@@ -72,26 +74,26 @@ class PhilHealthProfFeeServices
     {
         $this->CleanProfFee($PHIC_ID); // reset purspose
 
-        $ID = $this->object->ObjectNextID('PHILHEALTH_PROF_FEE');
+        $ID      = $this->object->ObjectNextID('PHILHEALTH_PROF_FEE');
         $LINE_NO = $this->getLine($PHIC_ID) + 1;
 
         PhilHealthProfFee::create([
-            'ID' => $ID,
-            'PHIC_ID' => $PHIC_ID,
+            'ID'         => $ID,
+            'PHIC_ID'    => $PHIC_ID,
             'CONTACT_ID' => $CONTACT_ID,
-            'AMOUNT' => $AMOUNT,
-            'LINE_NO' => $LINE_NO,
-            'DISCOUNT' => $DISCOUNT,
-            'FIRST_CASE' => $FIRST_CASE
+            'AMOUNT'     => $AMOUNT,
+            'LINE_NO'    => $LINE_NO,
+            'DISCOUNT'   => $DISCOUNT,
+            'FIRST_CASE' => $FIRST_CASE,
         ]);
     }
     public function UpdateProfFee(int $ID, float $AMOUNT, float $DISCOUNT, float $FIRST_CASE)
     {
         PhilHealthProfFee::where('ID', $ID)
             ->update([
-                'AMOUNT' => $AMOUNT,
-                'DISCOUNT' => $DISCOUNT,
-                'FIRST_CASE' => $FIRST_CASE
+                'AMOUNT'     => $AMOUNT,
+                'DISCOUNT'   => $DISCOUNT,
+                'FIRST_CASE' => $FIRST_CASE,
             ]);
     }
     public function DeleteProfFee(int $ID)
@@ -113,7 +115,7 @@ class PhilHealthProfFeeServices
                 'l.NAME as LOCATION_NAME',
                 DB::raw("COUNT(p.ID) as COUNT"),
             ])
-  
+
             ->join('philhealth as ph', 'ph.CONTACT_ID', '=', 'c.ID')
             ->join('philhealth_prof_fee as p', 'p.PHIC_ID', '=', 'ph.ID')
             ->join('location as l', 'l.ID', '=', 'ph.LOCATION_ID')

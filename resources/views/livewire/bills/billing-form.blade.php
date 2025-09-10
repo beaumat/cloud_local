@@ -288,13 +288,20 @@
                                 <div class="row">
                                     <div class="col-md-4 text-left">
                                         <div class="row">
-                                            <div class="col-md-6">
+                                            <div class="col-md-4">
                                                 @livewire('Bills.PurchaseOrderListPromp', ['VENDOR_ID' => $VENDOR_ID, 'BILL_ID' => $ID, 'LOCATION_ID' => $LOCATION_ID, 'STATUS' => $STATUS])
                                             </div>
-                                            <div class="col-md-6">
+                                            <div class="col-md-4">
                                                 @livewire('Bills.BillPaymentModal', ['BILL_ID' => $ID])
                                             </div>
-
+                                            <div class="col-md-4">
+                                                @if ($PHILHEALTH_ID > 0)
+                                                    <a class="btn btn-success btn-xs w-100" target="_blank"
+                                                        href="{{ route('patientsphic_edit', ['id' => $PHILHEALTH_ID]) }}">
+                                                        Philhealth/SOA
+                                                    </a>
+                                                @endif
+                                            </div>
                                         </div>
 
                                     </div>
