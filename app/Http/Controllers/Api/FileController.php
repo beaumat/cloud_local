@@ -38,12 +38,13 @@ class FileController extends Controller
 
         return response()->json(['error' => 'File not found'], 404);
     }
-    public function AppDownload($filename)
+    public function AppDownload()
     {
-       $path = 'update/' . $filename;
+         $path = 'update/HRIS.exe';
         if (Storage::disk('public')->exists($path)) {
-            return Storage::disk('public')->download($path, $filename);
+            return Storage::disk('public')->download($path, 'HRIS.exe');
         }
+
         return response()->json(['error' => 'File not found'], 404);
     }
 

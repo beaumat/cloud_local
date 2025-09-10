@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('/upload', [FileController::class, 'upload']);
 Route::get('/download/{filename}', [FileController::class, 'download']);
-Route::get('/app-download/{filename}', [FileController::class, 'AppDownload']);
+Route::get('/app-download', [FileController::class, 'AppDownload']);
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
