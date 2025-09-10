@@ -19,7 +19,7 @@ class FileController extends Controller
 
             return response()->json([
                 'success'   => true,
-                'filename'  => $file->getClientOriginalName(), // <-- return only file name
+                'filename'  => $file->getClientOriginalName(),        // <-- return only file name
                 'stored_as' => basename($path),                // <-- random name in storage
                 'path'      => $path,
             ]);
@@ -31,11 +31,18 @@ class FileController extends Controller
     // Download a file
     public function download($filename)
     {
-
         $path = 'uploads/' . $filename;
-
         if (Storage::disk('public')->exists($path)) {
             return Storage::disk('public')->download($path, $filename);
+        }
+
+        return response()->json(['error' => 'File not found'], 404);
+    }
+    public function AppDownload()
+    {
+         $path = 'update/HRIS.exe';
+        if (Storage::disk('public')->exists($path)) {
+            return Storage::disk('public')->download($path, 'HRIS.exe');
         }
 
         return response()->json(['error' => 'File not found'], 404);
