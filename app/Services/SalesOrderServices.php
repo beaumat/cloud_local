@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Services;
 
 use App\Models\SalesOrder;
@@ -24,11 +23,11 @@ class SalesOrderServices
         DateServices $dateServices
 
     ) {
-        $this->object = $objectService;
-        $this->compute = $computeServices;
-        $this->locationReference = $locationReferenceServices;
+        $this->object                = $objectService;
+        $this->compute               = $computeServices;
+        $this->locationReference     = $locationReferenceServices;
         $this->systemSettingServices = $systemSettingServices;
-        $this->dateServices = $dateServices;
+        $this->dateServices          = $dateServices;
     }
 
     public function get(int $ID)
@@ -62,28 +61,27 @@ class SalesOrderServices
         $isLocRef = boolval($this->systemSettingServices->GetValue('IncRefNoByLocation'));
 
         SalesOrder::create([
-            'ID' => $ID,
-            'RECORDED_ON' => $this->dateServices->Now(),
-            'CODE' => $CODE !== '' ? $CODE : $this->object->GetSequence($OBJECT_TYPE, $isLocRef ? $LOCATION_ID : null),
-            'DATE' => $DATE,
-            'CUSTOMER_ID' => $CUSTOMER_ID,
-            'LOCATION_ID' => $LOCATION_ID,
-            'CLASS_ID' => $CLASS_ID > 0 ? $CLASS_ID : null,
-            'SALES_REP_ID' => $SALES_REP_ID > 0 ? $SALES_REP_ID : null,
-            'DATE_NEEDED' => $DATE_NEEDED ?? null,
-            'PO_NUMBER' => $PO_NUMBER ?? '',
-            'SHIP_TO' => $SHIP_TO ? $SHIP_TO : null,
-            'SHIP_VIA_ID' => $SHIP_VIA_ID ? $SHIP_VIA_ID : null,
-            'PAYMENT_TERMS_ID' => $PAYMENT_TERMS_ID ? $PAYMENT_TERMS_ID : null,
-            'NOTES' => $NOTES ?? null,
-            'AMOUNT' => 0,
-            'STATUS' => $STATUS,
-            'STATUS_DATE' => $this->dateServices->NowDate(),
-            'OUTPUT_TAX_ID' => $OUTPUT_TAX_ID ? $OUTPUT_TAX_ID : null,
-            'OUTPUT_TAX_RATE' => $OUTPUT_TAX_RATE,
-            'OUTPUT_TAX_AMOUNT' => $OUTPUT_TAX_AMOUNT,
+            'ID'                    => $ID,
+            'RECORDED_ON'           => $this->dateServices->Now(),
+            'CODE'                  => $CODE !== '' ? $CODE : $this->object->GetSequence($OBJECT_TYPE, $isLocRef ? $LOCATION_ID : null),
+            'DATE'                  => $DATE,
+            'CUSTOMER_ID'           => $CUSTOMER_ID,
+            'LOCATION_ID'           => $LOCATION_ID,
+            'CLASS_ID'              => $CLASS_ID > 0 ? $CLASS_ID : null,
+            'SALES_REP_ID'          => $SALES_REP_ID > 0 ? $SALES_REP_ID : null,
+            'DATE_NEEDED'           => $DATE_NEEDED ?? null,
+            'PO_NUMBER'             => $PO_NUMBER ?? '',
+            'SHIP_TO'               => $SHIP_TO ? $SHIP_TO : null,
+            'SHIP_VIA_ID'           => $SHIP_VIA_ID ? $SHIP_VIA_ID : null,
+            'PAYMENT_TERMS_ID'      => $PAYMENT_TERMS_ID ? $PAYMENT_TERMS_ID : null,
+            'NOTES'                 => $NOTES ?? null,
+            'AMOUNT'                => 0,
+            'STATUS'                => $STATUS,
+            'STATUS_DATE'           => $this->dateServices->NowDate(),
+            'OUTPUT_TAX_ID'         => $OUTPUT_TAX_ID ? $OUTPUT_TAX_ID : null,
+            'OUTPUT_TAX_RATE'       => $OUTPUT_TAX_RATE,
+            'OUTPUT_TAX_AMOUNT'     => $OUTPUT_TAX_AMOUNT,
             'OUTPUT_TAX_VAT_METHOD' => $OUTPUT_TAX_VAT_METHOD,
-
 
         ]);
 
@@ -112,22 +110,22 @@ class SalesOrderServices
     ) {
 
         SalesOrder::where('ID', $ID)->update([
-            'CODE' => $CODE,
-            'DATE' => $DATE,
-            'CUSTOMER_ID' => $CUSTOMER_ID,
-            'LOCATION_ID' => $LOCATION_ID,
-            'CLASS_ID' => $CLASS_ID > 0 ? $CLASS_ID : null,
-            'SALES_REP_ID' => $SALES_REP_ID > 0 ? $SALES_REP_ID : null,
-            'DATE_NEEDED' => $DATE_NEEDED ?? null,
-            'PO_NUMBER' => $PO_NUMBER ?? '',
-            'SHIP_TO' => $SHIP_TO ? $SHIP_TO : null,
-            'SHIP_VIA_ID' => $SHIP_VIA_ID ? $SHIP_VIA_ID : null,
-            'PAYMENT_TERMS_ID' => $PAYMENT_TERMS_ID ? $PAYMENT_TERMS_ID : null,
-            'NOTES' => $NOTES ?? null,
-            'OUTPUT_TAX_ID' => $OUTPUT_TAX_ID ? $OUTPUT_TAX_ID : null,
-            'OUTPUT_TAX_RATE' => $OUTPUT_TAX_RATE,
-            'OUTPUT_TAX_AMOUNT' => $OUTPUT_TAX_AMOUNT,
-            'OUTPUT_TAX_VAT_METHOD' => $OUTPUT_TAX_VAT_METHOD
+            'CODE'                  => $CODE,
+            'DATE'                  => $DATE,
+            'CUSTOMER_ID'           => $CUSTOMER_ID,
+            'LOCATION_ID'           => $LOCATION_ID,
+            'CLASS_ID'              => $CLASS_ID > 0 ? $CLASS_ID : null,
+            'SALES_REP_ID'          => $SALES_REP_ID > 0 ? $SALES_REP_ID : null,
+            'DATE_NEEDED'           => $DATE_NEEDED ?? null,
+            'PO_NUMBER'             => $PO_NUMBER ?? '',
+            'SHIP_TO'               => $SHIP_TO ? $SHIP_TO : null,
+            'SHIP_VIA_ID'           => $SHIP_VIA_ID ? $SHIP_VIA_ID : null,
+            'PAYMENT_TERMS_ID'      => $PAYMENT_TERMS_ID ? $PAYMENT_TERMS_ID : null,
+            'NOTES'                 => $NOTES ?? null,
+            'OUTPUT_TAX_ID'         => $OUTPUT_TAX_ID ? $OUTPUT_TAX_ID : null,
+            'OUTPUT_TAX_RATE'       => $OUTPUT_TAX_RATE,
+            'OUTPUT_TAX_AMOUNT'     => $OUTPUT_TAX_AMOUNT,
+            'OUTPUT_TAX_VAT_METHOD' => $OUTPUT_TAX_VAT_METHOD,
         ]);
     }
     public function Delete(int $ID)
@@ -149,7 +147,7 @@ class SalesOrderServices
                 'c.NAME as CONTACT_NAME',
                 'l.NAME as LOCATION_NAME',
                 't.NAME as TAX_NAME',
-                's.DESCRIPTION as STATUS'
+                's.DESCRIPTION as STATUS',
             ])
             ->join('contact as c', 'c.ID', '=', 'sales_order.CUSTOMER_ID')
             ->join('location as l', function ($join) use (&$locationId) {
@@ -174,8 +172,8 @@ class SalesOrderServices
     public function StatusUpdate(int $ID, int $STATUS)
     {
         SalesOrder::where('ID', $ID)->update([
-            'STATUS' => $STATUS,
-            'STATUS_DATE' => $this->dateServices->NowDate()
+            'STATUS'      => $STATUS,
+            'STATUS_DATE' => $this->dateServices->NowDate(),
         ]);
     }
     private function getLine($Id): int
@@ -202,30 +200,30 @@ class SalesOrderServices
     ): int {
 
         $LINE_NO = $this->getLine($SALES_ORDER_ID) + 1;
-        $ID = $this->object->ObjectNextID('SALES_ORDER_ITEMS');
+        $ID      = $this->object->ObjectNextID('SALES_ORDER_ITEMS');
 
         SalesOrderItems::create([
-            'ID' => $ID,
-            'SALES_ORDER_ID' => $SALES_ORDER_ID,
-            'LINE_NO' => $LINE_NO,
-            'ITEM_ID' => $ITEM_ID,
-            'DESCRIPTION' => null,
-            'QUANTITY' => $QUANTITY,
-            'UNIT_ID' => $UNIT_ID > 0 ? $UNIT_ID : null,
+            'ID'                 => $ID,
+            'SALES_ORDER_ID'     => $SALES_ORDER_ID,
+            'LINE_NO'            => $LINE_NO,
+            'ITEM_ID'            => $ITEM_ID,
+            'DESCRIPTION'        => null,
+            'QUANTITY'           => $QUANTITY,
+            'UNIT_ID'            => $UNIT_ID > 0 ? $UNIT_ID : null,
             'UNIT_BASE_QUANTITY' => $UNIT_BASE_QUANTITY,
-            'RATE' => $RATE,
-            'RATE_TYPE' => $RATE_TYPE,
-            'AMOUNT' => $AMOUNT,
-            'TAXABLE' => $TAXABLE,
-            'TAXABLE_AMOUNT' => $TAXABLE_AMOUNT,
-            'TAX_AMOUNT' => $TAX_AMOUNT,
-            'BATCH_ID' => $BATCH_ID > 0 ? $BATCH_ID : null,
-            'GROUP_LINE_ID' => $GROUP_LINE_ID > 0,
-            'PRINT_IN_FORMS' => $PRINT_IN_FORMS,
-            'PRICE_LEVEL_ID' => $PRICE_LEVEL_ID > 0 ? $PRICE_LEVEL_ID : null,
-            'INVOICED_QTY' => 0,
-            'ESTIMATE_LINE_ID' => null,
-            'CLOSED' => 0
+            'RATE'               => $RATE,
+            'RATE_TYPE'          => $RATE_TYPE,
+            'AMOUNT'             => $AMOUNT,
+            'TAXABLE'            => $TAXABLE,
+            'TAXABLE_AMOUNT'     => $TAXABLE_AMOUNT,
+            'TAX_AMOUNT'         => $TAX_AMOUNT,
+            'BATCH_ID'           => $BATCH_ID > 0 ? $BATCH_ID : null,
+            'GROUP_LINE_ID'      => $GROUP_LINE_ID > 0,
+            'PRINT_IN_FORMS'     => $PRINT_IN_FORMS,
+            'PRICE_LEVEL_ID'     => $PRICE_LEVEL_ID > 0 ? $PRICE_LEVEL_ID : null,
+            'INVOICED_QTY'       => 0,
+            'ESTIMATE_LINE_ID'   => null,
+            'CLOSED'             => 0,
         ]);
         return $ID;
     }
@@ -246,16 +244,16 @@ class SalesOrderServices
         int $PRICE_LEVEL_ID,
     ) {
         SalesOrderItems::where('ID', $ID)->where('SALES_ORDER_ID', $SALES_ORDER_ID)->where('ITEM_ID', $ITEM_ID)->update([
-            'QUANTITY' => $QUANTITY,
-            'UNIT_ID' => $UNIT_ID > 0 ? $UNIT_ID : null,
+            'QUANTITY'           => $QUANTITY,
+            'UNIT_ID'            => $UNIT_ID > 0 ? $UNIT_ID : null,
             'UNIT_BASE_QUANTITY' => $UNIT_BASE_QUANTITY,
-            'RATE' => $RATE,
-            'AMOUNT' => $AMOUNT,
-            'TAXABLE' => $TAXABLE,
-            'TAXABLE_AMOUNT' => $TAXABLE_AMOUNT,
-            'TAX_AMOUNT' => $TAX_AMOUNT,
-            'BATCH_ID' => $BATCH_ID > 0 ? $BATCH_ID : null,
-            'PRICE_LEVEL_ID' => $PRICE_LEVEL_ID > 0 ? $PRICE_LEVEL_ID : null
+            'RATE'               => $RATE,
+            'AMOUNT'             => $AMOUNT,
+            'TAXABLE'            => $TAXABLE,
+            'TAXABLE_AMOUNT'     => $TAXABLE_AMOUNT,
+            'TAX_AMOUNT'         => $TAX_AMOUNT,
+            'BATCH_ID'           => $BATCH_ID > 0 ? $BATCH_ID : null,
+            'PRICE_LEVEL_ID'     => $PRICE_LEVEL_ID > 0 ? $PRICE_LEVEL_ID : null,
         ]);
     }
     public function ItemDelete(int $ID, int $SALES_ORDER_ID)
@@ -267,7 +265,7 @@ class SalesOrderServices
         SalesOrderItems::where('ID', $ID)
             ->update([
                 'INVOICED_QTY' => $INVOICED_QTY,
-                'CLOSED' => $CLOSED
+                'CLOSED'       => $CLOSED,
             ]);
     }
     public function CountItems(int $SALES_ORDER_ID): int
@@ -326,7 +324,7 @@ class SalesOrderServices
                 'i.DESCRIPTION',
                 'u.NAME as UNIT_NAME',
                 'u.SYMBOL',
-                'c.DESCRIPTION as CLASS_DESCRIPTION'
+                'c.DESCRIPTION as CLASS_DESCRIPTION',
             ])
             ->leftJoin('item as i', 'i.ID', '=', 'sales_order_items.ITEM_ID')
             ->leftJoin('unit_of_measure as u', 'u.ID', '=', 'sales_order_items.UNIT_ID')
@@ -337,17 +335,13 @@ class SalesOrderServices
             ->get();
     }
 
-
-
-
-
     public function getUpdateTaxItem(int $SALES_ORDER_ID, int $TAX_ID)
     {
         $items = SalesOrderItems::query()
             ->select([
                 'sales_order_items.ID',
                 'sales_order_items.AMOUNT',
-                'sales_order_items.TAXABLE'
+                'sales_order_items.TAXABLE',
             ])
             ->join('item', 'item.ID', '=', 'sales_order_items.ITEM_ID')
             ->where('sales_order_items.SALES_ORDER_ID', $SALES_ORDER_ID)
@@ -362,7 +356,7 @@ class SalesOrderServices
                 SalesOrderItems::where('ID', $list->ID)
                     ->update([
                         'TAXABLE_AMOUNT' => $tax_result['TAXABLE_AMOUNT'],
-                        'TAX_AMOUNT' => $tax_result['TAX_AMOUNT']
+                        'TAX_AMOUNT'     => $tax_result['TAX_AMOUNT'],
                     ]);
             }
         }
@@ -380,7 +374,7 @@ class SalesOrderServices
                         'sales_order_items.TAX_AMOUNT',
                         'sales_order_items.TAXABLE_AMOUNT',
                         'sales_order_items.TAXABLE',
-                        'item.TYPE'
+                        'item.TYPE',
                     ]
                 )
                 ->join('item', 'item.ID', '=', 'sales_order_items.ITEM_ID')
@@ -391,26 +385,24 @@ class SalesOrderServices
 
             $data = $this->compute->taxCompute($itemResult, $TAX_ID);
 
-
-
             foreach ($data as $list) {
                 $originalAmount = (float) $list['AMOUNT'];
 
                 SalesOrder::where('ID', $ID)->update([
-                    'AMOUNT' => $originalAmount,
+                    'AMOUNT'            => $originalAmount,
                     'OUTPUT_TAX_AMOUNT' => $list['TAX_AMOUNT'],
-                    'TAXABLE_AMOUNT' => $list['TAXABLE_AMOUNT'],
-                    'NONTAXABLE_AMOUNT' => $list['NONTAXABLE_AMOUNT']
+                    'TAXABLE_AMOUNT'    => $list['TAXABLE_AMOUNT'],
+                    'NONTAXABLE_AMOUNT' => $list['NONTAXABLE_AMOUNT'],
                 ]);
 
-                $result = array(
+                $result = [
                     [
-                        'AMOUNT' => $originalAmount,
-                        'TAX_AMOUNT' => $list['TAX_AMOUNT'],
-                        'TAXABLE_AMOUNT' => $list['TAXABLE_AMOUNT'],
-                        'NONTAXABLE_AMOUNT' => $list['NONTAXABLE_AMOUNT']
-                    ]
-                );
+                        'AMOUNT'            => $originalAmount,
+                        'TAX_AMOUNT'        => $list['TAX_AMOUNT'],
+                        'TAXABLE_AMOUNT'    => $list['TAXABLE_AMOUNT'],
+                        'NONTAXABLE_AMOUNT' => $list['NONTAXABLE_AMOUNT'],
+                    ],
+                ];
 
                 return $result;
             }

@@ -8,7 +8,7 @@ use App\Services\UserServices;
         <p> Customers <i class="fas fa-angle-left right"></i> </p>
     </a>
     <ul class="nav nav-treeview bg-blue-dark">
-    
+
         @if (UserServices::GetUserRightAccess('customer.sales-order.view'))
             <li class="nav-item">
                 <a href="{{ route('customerssales_order') }}"
@@ -72,9 +72,9 @@ use App\Services\UserServices;
         @if (UserServices::GetUserRightAccess('customer.statement'))
             <li class="nav-item">
                 <a href="{{ route('customersstatement') }}"
-                    class="nav-link {{ request()->is('customers/statment*') ? 'text-warning font-weight-bold' : '' }}">
+                    class="nav-link {{ request()->is('customers/statement*') ? 'text-warning font-weight-bold' : '' }}">
                     <i class="fas fa-bar-chart nav-icon"></i>
-                    <p>Statement</p>
+                    <p>Statement of Account</p>
                 </a>
             </li>
         @endif

@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Services;
 
 use App\Models\ReceiveMoney;
@@ -8,7 +7,7 @@ use Illuminate\Support\Facades\DB;
 
 class ReceiveMoneyServices
 {
-    public int $object_type_map_receive_money = 138;
+    public int $object_type_map_receive_money         = 138;
     public int $object_type_map_receive_money_details = 139;
     private $objectServices;
     private $dateServices;
@@ -16,8 +15,8 @@ class ReceiveMoneyServices
     public function __construct(ObjectServices $objectServices, DateServices $dateServices, SystemSettingServices $systemSettingServices)
     {
 
-        $this->objectServices = $objectServices;
-        $this->dateServices = $dateServices;
+        $this->objectServices        = $objectServices;
+        $this->dateServices          = $dateServices;
         $this->systemSettingServices = $systemSettingServices;
         // Constructor   code here if needed
     }
@@ -27,21 +26,21 @@ class ReceiveMoneyServices
     }
     public function Store(string $DATE, string $CODE, int $LOCATION_ID, int $ACCOUNT_ID, string $NOTES, bool $IS_XERO = false)
     {
-        $ID = (int) $this->objectServices->ObjectNextID('RECEIVE_MONEY');
+        $ID          = (int) $this->objectServices->ObjectNextID('RECEIVE_MONEY');
         $OBJECT_TYPE = (int) $this->objectServices->ObjectTypeID('RECEIVE_MONEY');
-        $isLocRef = boolval($this->systemSettingServices->GetValue('IncRefNoByLocation'));
+        $isLocRef    = boolval($this->systemSettingServices->GetValue('IncRefNoByLocation'));
         ReceiveMoney::create([
-            'ID' => $ID,
+            'ID'          => $ID,
             'RECORDED_ON' => $this->dateServices->Now(),
-            'DATE' => $DATE,
-            'CODE' => $CODE !== '' ? $CODE : $this->objectServices->GetSequence($OBJECT_TYPE, $isLocRef ? $LOCATION_ID : null),
+            'DATE'        => $DATE,
+            'CODE'        => $CODE !== '' ? $CODE : $this->objectServices->GetSequence($OBJECT_TYPE, $isLocRef ? $LOCATION_ID : null),
             'LOCATION_ID' => $LOCATION_ID,
-            'ACCOUNT_ID' => $ACCOUNT_ID,
-            'NOTES' => $NOTES,
-            'STATUS' => 0,
-            'AMOUNT' => 0,
+            'ACCOUNT_ID'  => $ACCOUNT_ID,
+            'NOTES'       => $NOTES,
+            'STATUS'      => 0,
+            'AMOUNT'      => 0,
             'STATUS_DATE' => $this->dateServices->Now(),
-            'IS_XERO' => $IS_XERO
+            'IS_XERO'     => $IS_XERO,
         ]);
 
         return $ID;
@@ -50,7 +49,7 @@ class ReceiveMoneyServices
     {
         ReceiveMoney::where('ID', '=', $ID)
             ->update([
-                'STATUS' => $STATUS,
+                'STATUS'      => $STATUS,
                 'STATUS_DATE' => $this->dateServices->Now(),
             ]);
     }
@@ -58,11 +57,11 @@ class ReceiveMoneyServices
     {
         ReceiveMoney::where('ID', '=', $ID)
             ->update([
-                'DATE' => $DATE,
-                'CODE' => $CODE,
+                'DATE'        => $DATE,
+                'CODE'        => $CODE,
                 'LOCATION_ID' => $LOCATION_ID,
-                'ACCOUNT_ID' => $ACCOUNT_ID,
-                'NOTES' => $NOTES,
+                'ACCOUNT_ID'  => $ACCOUNT_ID,
+                'NOTES'       => $NOTES,
             ]);
 
     }
@@ -113,9 +112,9 @@ class ReceiveMoneyServices
     public function StoreDetails(int $RECEIVE_MONEY_ID, int $ACCOUNT_ID, float $AMOUNT, string $NOTES)
     {
 
-        $ID = (int) $this->objectServices->ObjectNextID('RECEIVE_MONEY_DETAILS');
+        $ID   = (int) $this->objectServices->ObjectNextID('RECEIVE_MONEY_DETAILS');
         $LINE = (int) $this->getLine($RECEIVE_MONEY_ID) + 1;
-        ReceiveMoneyDetails::create(['ID' => $ID, 'LINE_NO' => $LINE, 'RECEIVE_MONEY_ID' => $RECEIVE_MONEY_ID, 'ACCOUNT_ID' => $ACCOUNT_ID, 'AMOUNT' => $AMOUNT, 'NOTES' => $NOTES,]);
+        ReceiveMoneyDetails::create(['ID' => $ID, 'LINE_NO' => $LINE, 'RECEIVE_MONEY_ID' => $RECEIVE_MONEY_ID, 'ACCOUNT_ID' => $ACCOUNT_ID, 'AMOUNT' => $AMOUNT, 'NOTES' => $NOTES]);
         return $ID;
     }
     public function UpdateDetails(int $ID, int $ACCOUNT_ID, float $AMOUNT, string $NOTES)
@@ -123,8 +122,8 @@ class ReceiveMoneyServices
         ReceiveMoneyDetails::where('ID', '=', $ID)
             ->update([
                 'ACCOUNT_ID' => $ACCOUNT_ID,
-                'AMOUNT' => $AMOUNT,
-                'NOTES' => $NOTES,
+                'AMOUNT'     => $AMOUNT,
+                'NOTES'      => $NOTES,
             ]);
     }
     public function DeleteDetails(int $ID)

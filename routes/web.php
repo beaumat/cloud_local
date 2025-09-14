@@ -179,6 +179,8 @@ use App\Livewire\ShipViaPage\ShipViaList;
 use App\Livewire\SpendMoney\SpendMoneyForm;
 use App\Livewire\SpendMoney\SpendMoneyList;
 use App\Livewire\Statement\Statement;
+use App\Livewire\Statement\StatementPrint;
+use App\Livewire\Statement\StatementView;
 use App\Livewire\StockBinPage\StockBinForm;
 use App\Livewire\StockBinPage\StockBinList;
 use App\Livewire\StockTransfer\StockReceived;
@@ -327,6 +329,8 @@ Route::middleware(['auth'])->group(function () {
         });
         Route::prefix('/statement')->group(function () {
             Route::get('/', Statement::class)->name('statement')->middleware(['permission:customer.statement']);
+            Route::get('/view/{id}/{datefrom}/{dateto?}', StatementView::class)->name('statement_view')->middleware(['permission:customer.statement']);
+            Route::get('/print/{id}/{datefrom}/{dateto?}', StatementPrint::class)->name('statement_print')->middleware(['permission:customer.statement']);
         });
         Route::prefix('/credit-memo')->group(function () {
             Route::get('/', CreditMemoList::class)->name('credit_memo')->middleware(['permission:customer.credit-memo.view']);
@@ -362,7 +366,6 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/{id}/print', BillPaymentPrint::class)->name('bill_payment_print')->middleware(['permission:vendor.bill-payment.print']);
             Route::get('/{id}/doctor-fee-print', DoctorFeePrint::class)->name('bill_payment_doctor')->middleware(['permission:vendor.bill-payment.print']);
             Route::get('/{id}/doctor-fee-print-tax', DoctorFeePrint2::class)->name('bill_payment_doctor_tax')->middleware(['permission:vendor.bill-payment.print']);
-
         });
 
         Route::prefix('/bill-credits')->group(function () {
@@ -407,7 +410,6 @@ Route::middleware(['auth'])->group(function () {
         });
 
         Route::get('/stock-received', StockReceived::class)->name('stock_received')->middleware(['permission:company.stock-received']);
-
         // temporary
         Route::prefix('/pull-out')->group(function () {
             Route::get('/', PullOutList::class)->name('pull_out')->middleware(['permission:company.pull-out.view']);

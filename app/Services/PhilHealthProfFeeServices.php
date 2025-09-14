@@ -64,7 +64,7 @@ class PhilHealthProfFeeServices
     }
     public function GetBill(int $BILL_ID)
     {
-        return PhilHealthProfFee::where('BILL_ID','=', $BILL_ID)->first();
+        return PhilHealthProfFee::where('BILL_ID', '=', $BILL_ID)->first();
     }
     private function getLine($Id): int
     {

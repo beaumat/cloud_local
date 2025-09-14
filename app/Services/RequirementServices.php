@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Services;
 
 use App\Models\Requirements;
@@ -20,9 +19,9 @@ class RequirementServices
     {
         $ID = (int) $this->object->ObjectNextID('REQUIREMENT');
         Requirements::create([
-            'ID' => $ID,
+            'ID'          => $ID,
             'DESCRIPTION' => $DESCRIPTION,
-            'INACTIVE' => $INACTIVE
+            'INACTIVE'    => $INACTIVE,
         ]);
 
         return $ID;
@@ -31,7 +30,7 @@ class RequirementServices
     {
         Requirements::where('ID', $ID)->update([
             'DESCRIPTION' => $DESCRIPTION,
-            'INACTIVE' => $INACTIVE
+            'INACTIVE'    => $INACTIVE,
         ]);
     }
     public function Delete(int $ID)
@@ -44,7 +43,7 @@ class RequirementServices
             ->select([
                 'ID',
                 'DESCRIPTION',
-                'INACTIVE'
+                'INACTIVE',
             ])
             ->when($search, function ($query) use (&$search) {
                 $query->where('DESCRIPTION', 'like', '%' . $search . '%');

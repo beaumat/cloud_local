@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Services;
 
 use App\Models\Contacts;
@@ -750,7 +749,7 @@ class ContactServices
             })
             ->when($locationId > 0, function ($query) use (&$locationId, &$search, &$doctorId) {
                 $query->where('contact.LOCATION_ID', '=', $locationId)
-                    //  ->where('dl.LOCATION_ID','=', $locationId)
+                //  ->where('dl.LOCATION_ID','=', $locationId)
                     ->orWhereExists(function ($q) use (&$locationId, &$search, &$doctorId) {
                         $q->select(DB::raw(1))
                             ->from('service_charges as sc')
@@ -846,5 +845,9 @@ class ContactServices
         }
 
         return false;
+    }
+    public function ContactType(int $ID)
+    {
+        return DB::table('contact_type_map')->where('ID', $ID)->first();
     }
 }
