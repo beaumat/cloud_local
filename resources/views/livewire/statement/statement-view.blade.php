@@ -24,7 +24,7 @@
                                 <div class="col-md-12 pb-1">
                                     <div class="form-group">
                                         <div class="row">
-                                            <div class="col-6 row">
+                                            <div class="col-3 row">
                                                 <div class="col-2 text-right">NAME :</div>
                                                 <div class="col-10 font-weight-bold">{{ $NAME }}</div>
                                                 <div class="col-2 text-right">TYPE :</div>
@@ -40,6 +40,10 @@
                                                 <div class="col-10">{{ number_format($TOTAL_CREDIT, 2) }}</div>
                                                 <div class="col-2 text-right">Balance Due :</div>
                                                 <div class="col-10">{{ number_format($BALANCE_DUE, 2) }}</div>
+                                            </div>
+                                            <div class="col-3 row">
+
+
                                             </div>
                                         </div>
 

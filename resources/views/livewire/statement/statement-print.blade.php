@@ -3,8 +3,30 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-12">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-4 row">
+                                <div class="col-2 text-right">NAME :</div>
+                                <div class="col-10 font-weight-bold">{{ $NAME }}</div>
+                                <div class="col-2 text-right">TYPE :</div>
+                                <div class="col-10 font-weight-bold">{{ $CONTACT_TYPE }}</div>
 
-
+                            </div>
+                            <div class="col-4 row ">
+                                <div class="col-2 text-right">Previous Balance :</div>
+                                <div class="col-10">{{ number_format($PREV_BALANCE, 2) }}</div>
+                                <div class="col-2 text-right">Total Debit :</div>
+                                <div class="col-10">{{ number_format($TOTAL_DEBIT, 2) }}</div>
+                                <div class="col-2 text-right">Total Credit :</div>
+                                <div class="col-10">{{ number_format($TOTAL_CREDIT, 2) }}</div>
+                                <div class="col-2 text-right">Balance Due :</div>
+                                <div class="col-10">{{ number_format($BALANCE_DUE, 2) }}</div>
+                            </div>
+                            <div class="col-4 ">
+                                
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="col-12 text-center mt-4 ">
                     <table class="w-100" border="1">
