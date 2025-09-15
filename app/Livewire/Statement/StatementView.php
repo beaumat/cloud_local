@@ -57,6 +57,7 @@ class StatementView extends Component
     }
     private function Reload()
     {
+        $this->PREV_BALANCE = 0;
         $this->dataList = $this->statementServices->CustomerSoaEntryList($this->CUSTOMER_ID, $this->dateFrom, $this->dateTo);
         $data           = $this->contactServices->get2($this->CUSTOMER_ID);
         if ($this->dateTo != '') {

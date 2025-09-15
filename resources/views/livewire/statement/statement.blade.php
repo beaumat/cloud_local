@@ -22,9 +22,16 @@
                     <div class="card">
                         <div class="card-body">
                             <div class="row">
-                                <div class="col-md-12 pb-1">
-                                    <input type="text" wire:model.live.debounce.150ms='search'
-                                        class="w-100 form-control form-control-sm" placeholder="Search" />
+                                <div class="col-md-12 row pb-1">
+                                    <div class="col-8">
+                                        <input type="text" wire:model.live.debounce.150ms='search'
+                                            class="w-100 form-control form-control-sm" placeholder="Search" />
+                                    </div>
+                                    <div class="col-4">
+                                               <livewire:checkbox-input name="ShowBalance"
+                                                            titleName="Show Balance Only" wire:model.live='ShowBalanceOnly'
+                                                            :isDisabled="false" />
+                                    </div>
                                 </div>
                             </div>
                             <table class="table table-sm table-bordered table-hover">

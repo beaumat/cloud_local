@@ -2,24 +2,36 @@
     <section class="content">
         <div class="container-fluid">
             <div class="row">
+                <div class="col-12 text-center">
+                    <h2>Statement of Account</h2>
+                </div>
                 <div class="col-12">
-                    <div class="form-group">
+                    <div class="form-group text-md mt-2">
                         <div class="row">
-                            <div class="col-6 row">
-                                <div class="col-3 text-right">NAME :</div>
-                                <div class="col-9 font-weight-bold">{{ $NAME }}</div>
-                                <div class="col-3 text-right">TYPE :</div>
-                                <div class="col-9 font-weight-bold">{{ $CONTACT_TYPE }}</div>
+                            <div class="col-8 row">
+                                <div class="col-2 text-right">NAME :</div>
+                                <div class="col-10 font-weight-bold h5">{{ $NAME }}</div>
+                                <div class="col-2 text-right">TYPE :</div>
+                                <div class="col-10 font-weight-bold h5">{{ $CONTACT_TYPE }}</div>
+                                @if ($dateTo == '')
+                                    <div class=" col-2 text-right"> As of Date : </div>
+                                    <div class="col-10 font-weight-bold h5"> {{ date('M d, Y', strtotime($dateFrom)) }}
+                                    </div>
+                                @else
+                                @endif
                             </div>
-                            <div class="col-6 row ">
-                                <div class="col-4 text-right">Previous Balance :</div>
-                                <div class="col-8">{{ number_format($PREV_BALANCE, 2) }}</div>
-                                <div class="col-4 text-right">Total Debit :</div>
-                                <div class="col-8">{{ number_format($TOTAL_DEBIT, 2) }}</div>
-                                <div class="col-4 text-right">Total Credit :</div>
-                                <div class="col-8">{{ number_format($TOTAL_CREDIT, 2) }}</div>
-                                <div class="col-4 text-right">Balance Due :</div>
-                                <div class="col-8">{{ number_format($BALANCE_DUE, 2) }}</div>
+
+                            <div class="col-4 text-left ">
+                                <div class="row">
+                                    <div class="col-4 text-right">Previous Bal. :</div>
+                                    <div class="col-8 font-weight-bold h5">{{ number_format($PREV_BALANCE, 2) }}</div>
+                                    <div class="col-4 text-right">Total Debit :</div>
+                                    <div class="col-8 font-weight-bold h5">{{ number_format($TOTAL_DEBIT, 2) }}</div>
+                                    <div class="col-4 text-right">Total Credit :</div>
+                                    <div class="col-8 font-weight-bold h5">{{ number_format($TOTAL_CREDIT, 2) }}</div>
+                                    <div class="col-4 text-right">Balance Due :</div>
+                                    <div class="col-8 font-weight-bold h5">{{ number_format($BALANCE_DUE, 2) }}</div>
+                                </div>
                             </div>
                         </div>
                     </div>

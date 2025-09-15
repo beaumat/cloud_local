@@ -12,8 +12,7 @@ use Livewire\Component;
 class StatementPrint extends Component
 {
 
-
-     public string $NAME         = '';
+    public string $NAME         = '';
     public string $CONTACT_TYPE = '';
     public float $PREV_BALANCE  = 0;
     public float $TOTAL_DEBIT   = 0;
@@ -22,6 +21,9 @@ class StatementPrint extends Component
     public $dataList            = [];
     private $statementServices;
     private $contactServices;
+
+    public string $dateFrom;
+    public string $dateTo;
     public function boot(StatementServices $statementServices, ContactServices $contactServices)
     {
         $this->statementServices = $statementServices;
@@ -29,6 +31,8 @@ class StatementPrint extends Component
     }
     public function mount(int $id, string $datefrom, string $dateto = "")
     {
+        $this->dateFrom = $datefrom;
+        $this->dateTo   = $dateto;
 
         $this->dataList = $this->statementServices->CustomerSoaEntryList($id, $datefrom, $dateto);
         $data           = $this->contactServices->get2($id);

@@ -172,7 +172,7 @@ class StatementServices
         return (float) $results;
     }
 
-    public function CustomerSoaList(string $AS_OF_DATE, string $search)
+    public function CustomerSoaList(string $AS_OF_DATE, string $search, bool $ShowBalanceOnly  = true)
     {
 
         $BALANCE_SQL = "(select SUM(AMT)  from (
@@ -185,14 +185,19 @@ class StatementServices
 	( select x.CUSTOMER_ID,'TAX CREDIT' as `TYPE`, 1 as  ENTRY_TYPE, x.CODE,x.ID, x.DATE, x.AMOUNT,(x.AMOUNT * -1) as AMT from TAX_CREDIT as x WHERE x.STATUS = 15)
 ) as BAL WHERE BAL.CUSTOMER_ID = contact.ID and BAL.DATE <='$AS_OF_DATE')  ";
 
-        $result = Contacts::query()
-            ->select(['contact.ID',
-                'contact.NAME',
-                't.DESCRIPTION as TYPE',
-                DB::raw($BALANCE_SQL . ' as BALANCE')])
-            ->join('contact_type_map as t', 't.ID', '=', 'contact.TYPE')
-            ->whereIn('contact.TYPE', [1, 3])
-            ->where('contact.INACTIVE', '0')
+        $result = Contacts::fromSub(function ($sub) use ($BALANCE_SQL) {
+            $sub->from('contact')
+                ->select([
+                    'contact.ID',
+                    'contact.NAME',
+                    't.DESCRIPTION as TYPE',
+                    DB::raw($BALANCE_SQL . ' as BALANCE'),
+                ])
+                ->join('contact_type_map as t', 't.ID', '=', 'contact.TYPE')
+                ->whereIn('contact.TYPE', [1, 3])
+                ->where('contact.INACTIVE', '0');
+        }, 'sub')
+            ->when($ShowBalanceOnly, fn($q) => $q->where('BALANCE', '>', 0))
             ->when($search, function ($query) use (&$search) {
                 $query->where(function ($q) use (&$search) {
                     $q->where('contact.LAST_NAME', 'like', "%" . $search . "%")
