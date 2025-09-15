@@ -656,7 +656,7 @@ class AccountJournalServices
             ->leftJoin('document_type_map as d', 'd.ID', '=', 'o.DOCUMENT_TYPE')
             ->leftJoin('location as l', 'l.ID', '=', 'aj.LOCATION_ID')
             ->where('aj.AMOUNT', '>', '0')
-               ->when($dateTo != "none", function ($query) use (&$dateFrom, &$dateTo) {
+            ->when($dateTo != "none", function ($query) use (&$dateFrom, &$dateTo) {
                 $query->whereBetween('aj.OBJECT_DATE', [$dateFrom, $dateTo]);
             })
             ->when($dateTo == "none", function ($query) use (&$dateFrom) {
@@ -1028,6 +1028,13 @@ class AccountJournalServices
         AccountJournal::where('JOURNAL_NO', '=', $JOURNAL_NO)
             ->where('OBJECT_DATE', '=', $OBJECT_DATE)
             ->where('LOCATION_ID', '=', $LOCATION_ID)
+            ->update([
+                'AMOUNT' => 0,
+            ]);
+    }
+    public function Unposted(int $JOURNAL_NO)
+    {
+        AccountJournal::where('JOURNAL_NO', '=', $JOURNAL_NO)
             ->update([
                 'AMOUNT' => 0,
             ]);
