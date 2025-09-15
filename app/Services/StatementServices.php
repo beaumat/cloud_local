@@ -81,14 +81,14 @@ class StatementServices
                 $query->where('BAL.DATE', '<=', $DATE_FROM);
             })
             ->when($DATE_TO != '', function ($query) use (&$DATE_FROM, &$DATE_TO) {
-                $query->whereIn('BAL.DATE', [$DATE_FROM, $DATE_TO]);
+                $query->whereBetween('BAL.DATE', [$DATE_FROM, $DATE_TO]);
             })
             ->orderBy('BAL.DATE', 'ASC')
             ->get();
 
         return $results;
     }
-    public function CustomerSoaBalance(int $CONTACT_ID, string $DATE_FROM, string $DATE_TO = '', $IS_ENTRY = null): float
+    public function CustomerSoaBalance(int $CONTACT_ID, string $DATE_FROM, string $DATE_TO, $IS_ENTRY = null): float
     {
 
         $invoice = DB::table('invoice as i')
@@ -158,11 +158,11 @@ class StatementServices
             ->join('location as l', 'BAL.LOCATION_ID', '=', 'l.ID')
             ->where('BAL.CUSTOMER_ID', $CONTACT_ID)
 
-            ->when($DATE_TO == '', function ($query) use (&$DATE_FROM) {
+            ->when($DATE_TO == '' , function ($query) use (&$DATE_FROM) {
                 $query->where('BAL.DATE', '<=', $DATE_FROM);
             })
-            ->when($DATE_TO != '', function ($query) use (&$DATE_FROM, &$DATE_TO) {
-                $query->whereIn('BAL.DATE', [$DATE_FROM, $DATE_TO]);
+            ->when(   $DATE_TO != '' , function ($query) use (&$DATE_FROM, &$DATE_TO) {
+                $query->whereBetween('BAL.DATE', [$DATE_FROM, $DATE_TO]);
             })
             ->when(is_numeric($IS_ENTRY) == true, function ($query) use ($IS_ENTRY) {
                 $query->WHERE('BAL.ENTRY_TYPE', '=', $IS_ENTRY);

@@ -38,7 +38,7 @@ class StatementView extends Component
 
         $this->TOTAL_DEBIT  = $this->statementServices->CustomerSoaBalance($id, $datefrom, $dateto, 0);
         $this->TOTAL_CREDIT = $this->statementServices->CustomerSoaBalance($id, $datefrom, $dateto, 1);
-        $this->BALANCE_DUE  = $this->statementServices->CustomerSoaBalance($id, $datefrom, $dateto, null);
+        $this->BALANCE_DUE  = ($this->TOTAL_DEBIT + $this->TOTAL_CREDIT) + $this->PREV_BALANCE;
         if ($data) {
             $this->NAME = $data->NAME ?? '';
             $type       = $this->contactServices->ContactType($data->TYPE);
