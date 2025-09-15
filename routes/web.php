@@ -329,7 +329,7 @@ Route::middleware(['auth'])->group(function () {
         });
         Route::prefix('/statement')->group(function () {
             Route::get('/', Statement::class)->name('statement')->middleware(['permission:customer.statement']);
-            Route::get('/view/{id}/{datefrom}/{dateto?}', StatementView::class)->name('statement_view')->middleware(['permission:customer.statement']);
+            Route::get('/view/{id}', StatementView::class)->name('statement_view')->middleware(['permission:customer.statement']);
             Route::get('/print/{id}/{datefrom}/{dateto?}', StatementPrint::class)->name('statement_print')->middleware(['permission:customer.statement']);
         });
         Route::prefix('/credit-memo')->group(function () {

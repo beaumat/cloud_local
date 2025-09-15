@@ -5,25 +5,21 @@
                 <div class="col-12">
                     <div class="form-group">
                         <div class="row">
-                            <div class="col-4 row">
-                                <div class="col-2 text-right">NAME :</div>
-                                <div class="col-10 font-weight-bold">{{ $NAME }}</div>
-                                <div class="col-2 text-right">TYPE :</div>
-                                <div class="col-10 font-weight-bold">{{ $CONTACT_TYPE }}</div>
-
+                            <div class="col-6 row">
+                                <div class="col-3 text-right">NAME :</div>
+                                <div class="col-9 font-weight-bold">{{ $NAME }}</div>
+                                <div class="col-3 text-right">TYPE :</div>
+                                <div class="col-9 font-weight-bold">{{ $CONTACT_TYPE }}</div>
                             </div>
-                            <div class="col-4 row ">
-                                <div class="col-2 text-right">Previous Balance :</div>
-                                <div class="col-10">{{ number_format($PREV_BALANCE, 2) }}</div>
-                                <div class="col-2 text-right">Total Debit :</div>
-                                <div class="col-10">{{ number_format($TOTAL_DEBIT, 2) }}</div>
-                                <div class="col-2 text-right">Total Credit :</div>
-                                <div class="col-10">{{ number_format($TOTAL_CREDIT, 2) }}</div>
-                                <div class="col-2 text-right">Balance Due :</div>
-                                <div class="col-10">{{ number_format($BALANCE_DUE, 2) }}</div>
-                            </div>
-                            <div class="col-4 ">
-                                
+                            <div class="col-6 row ">
+                                <div class="col-4 text-right">Previous Balance :</div>
+                                <div class="col-8">{{ number_format($PREV_BALANCE, 2) }}</div>
+                                <div class="col-4 text-right">Total Debit :</div>
+                                <div class="col-8">{{ number_format($TOTAL_DEBIT, 2) }}</div>
+                                <div class="col-4 text-right">Total Credit :</div>
+                                <div class="col-8">{{ number_format($TOTAL_CREDIT, 2) }}</div>
+                                <div class="col-4 text-right">Balance Due :</div>
+                                <div class="col-8">{{ number_format($BALANCE_DUE, 2) }}</div>
                             </div>
                         </div>
                     </div>
@@ -44,8 +40,26 @@
                         </thead>
                         <tbody>
                             @php
-                                $BALANCE = 0;
+                                $BALANCE = $PREV_BALANCE;
                             @endphp
+                            @if ($BALANCE > 0)
+                                <tr>
+                                    <td> </td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>Previous Balance</td>
+                                    <td class="text-right">
+
+                                    </td>
+                                    <td class="text-right">
+
+                                    </td>
+                                    <td class="text-right">{{ number_format($BALANCE, 2) }}</td>
+                                </tr>
+                            @endif
+
+
                             @foreach ($dataList as $list)
                                 @php
                                     $BALANCE = $BALANCE + $list->AMT;

@@ -31,19 +31,45 @@
                                                 <div class="col-10 font-weight-bold">{{ $CONTACT_TYPE }}</div>
 
                                             </div>
-                                            <div class="col-6 row ">
-                                                <div class="col-2 text-right">Previous Balance :</div>
+                                            <div class="col-5 row ">
+                                                <div class="col-2 text-right">Prev.Balance :</div>
                                                 <div class="col-10">{{ number_format($PREV_BALANCE, 2) }}</div>
-                                                <div class="col-2 text-right">Total Debit :</div>
+                                                <div class="col-2 text-right"> Debit :</div>
                                                 <div class="col-10">{{ number_format($TOTAL_DEBIT, 2) }}</div>
-                                                <div class="col-2 text-right">Total Credit :</div>
+                                                <div class="col-2 text-right"> Credit :</div>
                                                 <div class="col-10">{{ number_format($TOTAL_CREDIT, 2) }}</div>
                                                 <div class="col-2 text-right">Balance Due :</div>
                                                 <div class="col-10">{{ number_format($BALANCE_DUE, 2) }}</div>
                                             </div>
-                                            <div class="col-3 row">
+                                            <div class="col-4 row">
+                                                <div class="col-6 row">
+                                                    <div class="col-12">
+                                                        <livewire:checkbox-input name="USE_AS_OF"
+                                                            titleName="Use As of Date" wire:model.live='AS_OF_DATE'
+                                                            :isDisabled="false" />
+                                                    </div>
 
-
+                                                    @if ($AS_OF_DATE)
+                                                        <div class="col-12">
+                                                            <livewire:date-input name="DATE" titleName="As of "
+                                                                wire:model.live='dateFrom' :isDisabled="false"
+                                                                :vertical="true" />
+                                                        </div>
+                                                    @else
+                                                        <div class="col-12">
+                                                            <livewire:date-input name="DATE_FROM" titleName="From"
+                                                                wire:model.live='dateFrom' :isDisabled="false"
+                                                                :vertical="true" />
+                                                            <livewire:date-input name="DATE_TO" titleName=" To"
+                                                                wire:model.live='dateTo' :isDisabled="false"
+                                                                :vertical="true" />
+                                                        </div>
+                                                    @endif
+                                                </div>
+                                                <div class="col-6">
+                                                    <a target="_blank" class="btn btn-sm btn-info "
+                                                        href="{{ route('customersstatement_print', ['id' => $CUSTOMER_ID, 'datefrom' => $dateFrom, 'dateto' => $dateTo]) }}">Print</a>
+                                                </div>
                                             </div>
                                         </div>
 

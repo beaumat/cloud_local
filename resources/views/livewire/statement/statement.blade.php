@@ -44,7 +44,7 @@
                                             <td>{{ $list->TYPE }}</td>
                                             <td class="text-right">{{ number_format($list->BALANCE, 2) }}</td>
                                             <td><a target="_blank"
-                                                    href="{{ route('customersstatement_view', ['id' => $list->ID, 'datefrom' => $AS_OF_DATE, 'dateto' => '']) }}"
+                                                    href="{{ route('customersstatement_view', ['id' => $list->ID]) }}"
                                                     class="btn btn-xs btn-primary">View</a></td>
                                         </tr>
                                     @endforeach
