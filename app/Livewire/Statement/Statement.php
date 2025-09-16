@@ -13,7 +13,7 @@ class Statement extends Component
 
     use WithPagination;
     public bool $ShowBalanceOnly = false;
-    protected $paginationTheme = 'bootstrap';
+    protected $paginationTheme   = 'bootstrap';
     public $AS_OF_DATE;
 
     public string $search;
@@ -26,14 +26,14 @@ class Statement extends Component
     }
     public function mount()
     {
-        $this->AS_OF_DATE  = $this->dateServices->NowDate();
+        $this->AS_OF_DATE = $this->dateServices->NowDate();
 
-        $this->search      = "";
+        $this->search = "";
     }
 
     public function render()
     {
-        $data = $this->statementServices->CustomerSoaList( $this->AS_OF_DATE, $this->search, $this->ShowBalanceOnly);
+        $data = $this->statementServices->CustomerSoaList($this->AS_OF_DATE, $this->search, $this->ShowBalanceOnly);
 
         return view('livewire.statement.statement', ['dataList' => $data]);
     }

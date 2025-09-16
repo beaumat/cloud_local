@@ -171,10 +171,8 @@ class StatementServices
 
         return (float) $results;
     }
-
-    public function CustomerSoaList(string $AS_OF_DATE, string $search, bool $ShowBalanceOnly  = true)
+    public function CustomerSoaList(string $AS_OF_DATE, string $search, bool $ShowBalanceOnly = true)
     {
-
         $BALANCE_SQL = "(select SUM(AMT)  from (
 	(select i.`CUSTOMER_ID`,'INVOICE' as `TYPE`, 0 as  ENTRY_TYPE,i.`CODE`,i.`ID`, i.`DATE`,i.`AMOUNT`,(i.AMOUNT) as AMT from invoice as i WHERE i.STATUS = 15 )
 		UNION ALL
@@ -190,6 +188,9 @@ class StatementServices
                 ->select([
                     'contact.ID',
                     'contact.NAME',
+                    'contact.FIRST_NAME',
+                    'contact.LAST_NAME',
+                    'contact.MIDDLE_NAME',
                     't.DESCRIPTION as TYPE',
                     DB::raw($BALANCE_SQL . ' as BALANCE'),
                 ])
@@ -200,10 +201,10 @@ class StatementServices
             ->when($ShowBalanceOnly, fn($q) => $q->where('BALANCE', '>', 0))
             ->when($search, function ($query) use (&$search) {
                 $query->where(function ($q) use (&$search) {
-                    $q->where('contact.LAST_NAME', 'like', "%" . $search . "%")
-                        ->orWhere('contact.FIRST_NAME', 'like', "%" . $search . "%")
-                        ->orWhere('contact.MIDDLE_NAME', 'like', "%" . $search . "%")
-                        ->orWhere('contact.NAME', 'like', "%" . $search . "%");
+                    $q->where('LAST_NAME', 'like', "%" . $search . "%")
+                        ->orWhere('FIRST_NAME', 'like', "%" . $search . "%")
+                        ->orWhere('MIDDLE_NAME', 'like', "%" . $search . "%")
+                        ->orWhere('NAME', 'like', "%" . $search . "%");
                 });
             })
             ->paginate(100);

@@ -35,8 +35,7 @@ class StatementView extends Component
     }
     public function mount(int $id)
     {
-        $this->CUSTOMER_ID =  $id;
-
+        $this->CUSTOMER_ID = $id;
 
         $this->updatedAsOfDate();
     }
@@ -58,8 +57,8 @@ class StatementView extends Component
     private function Reload()
     {
         $this->PREV_BALANCE = 0;
-        $this->dataList = $this->statementServices->CustomerSoaEntryList($this->CUSTOMER_ID, $this->dateFrom, $this->dateTo);
-        $data           = $this->contactServices->get2($this->CUSTOMER_ID);
+        $this->dataList     = $this->statementServices->CustomerSoaEntryList($this->CUSTOMER_ID, $this->dateFrom, $this->dateTo);
+        $data               = $this->contactServices->get2($this->CUSTOMER_ID);
         if ($this->dateTo != '') {
             $dt = new DateTime($this->dateFrom);
             $dt->modify('-1 day');
@@ -70,6 +69,7 @@ class StatementView extends Component
         $this->TOTAL_DEBIT  = $this->statementServices->CustomerSoaBalance($this->CUSTOMER_ID, $this->dateFrom, $this->dateTo, 0);
         $this->TOTAL_CREDIT = $this->statementServices->CustomerSoaBalance($this->CUSTOMER_ID, $this->dateFrom, $this->dateTo, 1);
         $this->BALANCE_DUE  = ($this->TOTAL_DEBIT + $this->TOTAL_CREDIT) + $this->PREV_BALANCE;
+
         if ($data) {
             $this->NAME = $data->NAME ?? '';
             $type       = $this->contactServices->ContactType($data->TYPE);

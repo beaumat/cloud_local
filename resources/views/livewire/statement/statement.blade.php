@@ -27,10 +27,9 @@
                                         <input type="text" wire:model.live.debounce.150ms='search'
                                             class="w-100 form-control form-control-sm" placeholder="Search" />
                                     </div>
-                                    <div class="col-4">
-                                               <livewire:checkbox-input name="ShowBalance"
-                                                            titleName="Show Balance Only" wire:model.live='ShowBalanceOnly'
-                                                            :isDisabled="false" />
+                                    <div class="col-4" wire:loading.class='loading-form'>
+                                        <livewire:checkbox-input name="ShowBalance" titleName="Show Balance Only"
+                                            wire:model.live='ShowBalanceOnly' :isDisabled="false" />
                                     </div>
                                 </div>
                             </div>
@@ -44,7 +43,7 @@
                                         <th>Action</th>
                                     </tr>
                                 </thead>
-                                <tbody class="text-xs">
+                                <tbody class="text-xs" wire:loading.attr='hidden'>
                                     @foreach ($dataList as $list)
                                         <tr>
                                             <td>{{ $list->NAME }}</td>
@@ -57,6 +56,12 @@
                                     @endforeach
                                 </tbody>
                             </table>
+
+                            <div wire:loading.delay>
+                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                Loading...
+                            </div>
+
                         </div>
                     </div>
                 </div>

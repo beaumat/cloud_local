@@ -41,7 +41,7 @@
                                                 <div class="col-2 text-right">Balance Due :</div>
                                                 <div class="col-10">{{ number_format($BALANCE_DUE, 2) }}</div>
                                             </div>
-                                            <div class="col-4 row">
+                                            <div class="col-4 row" wire:loading.class='loading-form'>
                                                 <div class="col-6 row">
                                                     <div class="col-12">
                                                         <livewire:checkbox-input name="USE_AS_OF"
@@ -89,7 +89,7 @@
                                         <th class="col-1">Balance</th>
                                     </tr>
                                 </thead>
-                                <tbody class="text-xs">
+                                <tbody class="text-xs" wire:loading.attr='hidden'>
                                     @php
                                         $BALANCE = $PREV_BALANCE;
                                     @endphp
@@ -137,6 +137,10 @@
                                     @endforeach
                                 </tbody>
                             </table>
+                            <div wire:loading.delay>
+                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                Loading...
+                            </div>
                         </div>
                     </div>
                 </div>
