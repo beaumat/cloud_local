@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Livewire\Hemodialysis;
 
 use App\Services\HemoServices;
@@ -25,25 +24,25 @@ class OtherCharges extends Component
     private $hemoServices;
 
     public function boot(
-        ItemSubClassServices  $itemSubClassServices,
+        ItemSubClassServices $itemSubClassServices,
         ItemServices $itemServices,
         HemoServices $hemoServices,
 
     ) {
         $this->itemSubClassServices = $itemSubClassServices;
-        $this->itemServices = $itemServices;
-        $this->hemoServices = $hemoServices;
+        $this->itemServices         = $itemServices;
+        $this->hemoServices         = $hemoServices;
     }
     #[On('open-list-sub-item')]
     public function openModal($result)
     {
         $this->reset('qty');
         $this->SUB_CLASS_ID = $result['SUB_CLASS_ID'];
-        $data = $this->itemSubClassServices->Get($this->SUB_CLASS_ID);
+        $data               = $this->itemSubClassServices->Get($this->SUB_CLASS_ID);
         if ($data) {
-            $this->hemoData = $this->hemoServices->Get($this->HEMO_ID);
+            $this->hemoData      = $this->hemoServices->Get($this->HEMO_ID);
             $this->ITEM_SUB_NAME = $data->DESCRIPTION ?? '';
-            $this->showModal = true;
+            $this->showModal     = true;
         }
     }
     public function closeModal()
@@ -62,9 +61,9 @@ class OtherCharges extends Component
         $dataitem = $this->itemServices->get($ITEM_ID);
 
         $data = [
-            'ITEM_ID' => $dataitem->ID,
+            'ITEM_ID'   => $dataitem->ID,
             'ITEM_NAME' => $dataitem->DESCRIPTION,
-            'HEMO_ID' => $this->HEMO_ID
+            'HEMO_ID'   => $this->HEMO_ID,
         ];
 
         $this->dispatch('adding-item', result: $data);

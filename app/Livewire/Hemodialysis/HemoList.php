@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Livewire\Hemodialysis;
 
 use App\Exports\TreatmentListExport;
@@ -20,10 +19,10 @@ class HemoList extends Component
 {
     use WithPagination;
     protected $paginationTheme = 'bootstrap';
-    protected $queryString = ['search' => ['except' => '']];
-    public $search = '';
-    public $statusList = [];
-    public int $perPage = 100;
+    protected $queryString     = ['search' => ['except' => '']];
+    public $search             = '';
+    public $statusList         = [];
+    public int $perPage        = 100;
     public int $locationid;
     public int $statusid = 0;
     public $locationList = [];
@@ -41,10 +40,10 @@ class HemoList extends Component
         DateServices $dateServices,
         ScheduleServices $scheduleServices
     ) {
-        $this->hemoServices = $hemoServices;
+        $this->hemoServices     = $hemoServices;
         $this->locationServices = $locationServices;
-        $this->userServices = $userServices;
-        $this->dateServices = $dateServices;
+        $this->userServices     = $userServices;
+        $this->dateServices     = $dateServices;
         $this->scheduleServices = $scheduleServices;
     }
     #[On('upload-alert')]
@@ -78,11 +77,11 @@ class HemoList extends Component
     }
     public function mount()
     {
-        $this->DATE_FROM = $this->userServices->getTransactionDateDefault();
-        $this->DATE_TO = $this->dateServices->NowDate();
+        $this->DATE_FROM    = $this->userServices->getTransactionDateDefault();
+        $this->DATE_TO      = $this->dateServices->NowDate();
         $this->locationList = $this->locationServices->getList();
-        $this->locationid = $this->userServices->getLocationDefault();
-        $this->statusList = $this->hemoServices->HemoStatus();
+        $this->locationid   = $this->userServices->getLocationDefault();
+        $this->statusList   = $this->hemoServices->HemoStatus();
     }
     public function refreshList()
     {
@@ -130,20 +129,17 @@ class HemoList extends Component
                 session()->flash('message', 'Unpost successfully');
             }
 
-
         } catch (\Throwable $ex) {
             DB::rollBack();
             session()->flash('error', "Error :" . $ex->getMessage());
         }
-
-
 
     }
     public int $count = 0;
     #[On('refresh-list')]
     public function render()
     {
-        $this->count = 0;
+        $this->count       = 0;
         $this->pendingList = $this->hemoServices->UnpostedTratment($this->locationid, $this->search);
 
         $dataList = $this->hemoServices->Search(

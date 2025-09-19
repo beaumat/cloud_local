@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Livewire\Hemodialysis;
 
 use App\Services\HemoServices;
@@ -27,7 +26,7 @@ class DoctorsOrder extends Component
     public function mount()
     {
         $this->DOCTOR_ORDER = $this->hemoServices->GetDoctorOrder($this->HEMO_ID);
-        $this->showAlert = false;
+        $this->showAlert    = false;
     }
     public function saveIt()
     {

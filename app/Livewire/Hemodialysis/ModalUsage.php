@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Livewire\Hemodialysis;
 
 use App\Services\HemoServices;
@@ -25,12 +24,12 @@ class ModalUsage extends Component
     public function openModal($result)
     {
 
-        $CONTACT_ID = $result['CONTACT_ID'];
-        $DATE = $result['DATE'];
+        $CONTACT_ID  = $result['CONTACT_ID'];
+        $DATE        = $result['DATE'];
         $LOCATION_ID = $result['LOCATION_ID'];
-        $ITEM_ID = $result['ITEM_ID'];
- 
-        $this->dataList = $this->hemoServices->UsageHistory($ITEM_ID, $CONTACT_ID, $DATE, $LOCATION_ID);
+        $ITEM_ID     = $result['ITEM_ID'];
+
+        $this->dataList  = $this->hemoServices->UsageHistory($ITEM_ID, $CONTACT_ID, $DATE, $LOCATION_ID);
         $this->showModal = true;
     }
 

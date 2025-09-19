@@ -21,7 +21,6 @@
     <section class="content">
         <div class="container-fluid bg-light">
             <div class="row">
-
                 <div class="col-md-12" style="max-height: 80vh; overflow-y: auto;">
                     @livewire('alert-layout', ['errors' => $errors->any() ? $errors->all() : '', 'message' => session('message'), 'error' => session('error')])
                     <table class="table table-sm table-bordered table-hover">

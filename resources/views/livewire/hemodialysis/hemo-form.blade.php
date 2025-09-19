@@ -40,6 +40,7 @@ use App\Services\UserServices;
                                                     <livewire:select-option name="CUSTOMER_ID" titleName="Patient Name"
                                                         :options="$patientList" :zero="true" :isDisabled=true
                                                         wire:model='CUSTOMER_ID' />
+
                                                 </div>
                                                 <div class="col-md-12 text-left">
                                                     <label class="text-xs text-primary forn-weight-bold">Encoded by :
@@ -504,6 +505,7 @@ use App\Services\UserServices;
                         @if ($USE_OTHER_DETAILS == true)
                             <div class="form-group">
                                 @livewire('Hemodialysis.OtherDetails', ['HEMO_ID' => $ID, 'Modify' => $Modify, 'STATUS' => $STATUS])
+
                             </div>
                         @endif
                     </div>

@@ -127,7 +127,7 @@ class OtherDetails extends Component
     {
         $this->hemoServices = $hemoServices;
     }
-    
+
     public function mount()
     {
         $this->reload();
@@ -355,7 +355,7 @@ class OtherDetails extends Component
             DB::rollBack();
             session()->flash('error', $th->getMessage());
         }
-        //  session()->flash('message','Save change successfully'); 
+        //  session()->flash('message','Save change successfully');
     }
     public function detailsUseNext()
     {

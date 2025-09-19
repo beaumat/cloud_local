@@ -17,21 +17,31 @@
                                                 <div class="col-md-6">
                                                     <label class='text-sm'>SPECIAL ORDER <i
                                                             class="text-primary text-xs">Current</i></label>
-                                                    <textarea class="form-control form-control-sm text-primary" rows='6' wire:model='SE_DETAILS'
+                                                    <textarea class="form-control form-control-sm" rows='6' wire:model='SE_DETAILS'
                                                         @if ($Modify == false) disabled @endif></textarea>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <label class='text-sm'>SPECIAL ORDER : <i
                                                             class="text-info text-xs">Next</i></label>
-                                                    <textarea class="form-control form-control-sm text-info" rows='6' wire:model='SE_DETAILS_NEXT'
+                                                    <textarea class="form-control form-control-sm " rows='6' wire:model='SE_DETAILS_NEXT'
                                                         @if ($Modify == false) disabled @endif></textarea>
                                                 </div>
+                                                <div class="col-12 col-md-12">
+
+                                                    NOTE : <span class="text-xs"> use <b class="text-lg text-danger">&nbsp;[&nbsp;]&nbsp;</b> <span class="text-danger">Bracket</span> to red text
+                                                        and <b class="text-lg text-primary"> &nbsp; ; </b><span class="text-primary">Semicolon</span> to
+                                                        next line
+                                                    </span>
+                                                </div>
+
                                             </div>
+
                                         </div>
                                         <div class=col-md-4>
-                                            <label class='text-sm'>STANDING ORDER </label>
-                                            <textarea class="form-control form-control-sm text-purple" rows='6' wire:model='SO_DETAILS'
+                                            <label class='text-sm'>STANDING ORDER</label>
+                                            <textarea class="form-control form-control-sm" rows='6' wire:model='SO_DETAILS'
                                                 @if ($Modify == false) disabled @endif></textarea>
+
                                             <div class="form-group text-sm">
                                                 <label wire:click.live='orderUseNext()'>Use for next treatment
                                                     :</label>
@@ -109,7 +119,8 @@
                                                     @if ($Modify == false) disabled @endif /> </div>
                                         </div>
                                         <div class="row mt-2">
-                                            <div class="col-6 text-right"> <label class='text-xs '>REUSED NO. </label></div>
+                                            <div class="col-6 text-right"> <label class='text-xs '>REUSED NO. </label>
+                                            </div>
                                             <div class="col-6"> <input type='text' class='w-50 text-xs'
                                                     wire:model='REUSE_NO' maxlength='10'
                                                     @if ($Modify == false) disabled @endif /> </div>
@@ -193,35 +204,7 @@
 
                                         </div>
                                     </div>
-                                    {{-- <div class="row">
-                                        <div class="col-6">
-                                            <div class="form-group ">
-                                                <div class="row">
-                                                    <div class="col-6 text-right">
-                                                        <strong class="text-xs text-danger">NEXT RML :</strong>
-                                                    </div>
-                                                    <div class="col-6">
-                                                        <input type='date' class='text-xs w-100' wire:model='NEXT_RML'
-                                                            @if ($Modify == false) disabled @endif />
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-6">
-                                            <div class="form-group ">
-                                                <div class="row">
-                                                    <div class="col-6 text-right">
-                                                        <strong class="text-xs text-danger">NEXT HEPA P. :</strong>
-                                                    </div>
-                                                    <div class="col-6">
-                                                        <input type='date' class='text-xs w-100'
-                                                            wire:model='NEXT_HEPA_PROFILE'
-                                                            @if ($Modify == false) disabled @endif />
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div> --}}
+
                                 </div>
                                 <div class="row">
                                     @can('full-treatment-sheet')

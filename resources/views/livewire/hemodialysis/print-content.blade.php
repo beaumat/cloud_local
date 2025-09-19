@@ -448,7 +448,7 @@
                                             $SE_COUNT++;
                                         @endphp
                                         <div class="col-12  text-center bottom-line2 ">
-                                            &nbsp;{{ $parts }}
+                                            &nbsp; {!! preg_replace('/\[(.*?)\]/', '<span style="color:red;">$1</span>', $parts) !!}
                                         </div>
                                     @endforeach
                                     @if ($SE_COUNT < 8)
@@ -478,7 +478,9 @@
                                             $SO_COUNT++;
                                         @endphp
                                         <div class="col-12  text-center bottom-line2 ">
-                                            &nbsp;{{ $parts }}
+
+                                            &nbsp;
+                                            {!! preg_replace('/\[(.*?)\]/', '<span style="color:red;">$1</span>', $parts) !!}
                                         </div>
                                     @endforeach
                                     @if ($SO_COUNT < 8)
@@ -1244,7 +1246,8 @@
                                     <div class="pt-3 bottom-line2"> &nbsp;</div>
                                 </div>
                                 <div class="col-12 text-sm">
-                                   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DATE SIGNED
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DATE SIGNED
 
                                 </div>
                             </div>

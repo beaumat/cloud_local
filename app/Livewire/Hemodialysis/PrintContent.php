@@ -354,11 +354,11 @@ class PrintContent extends Component
             $this->HEPA_PROFILE     = $this->dateServices->isValidDateFormat($data->HEPA_PROFILE) ? date('m/d/Y', strtotime($data->HEPA_PROFILE)) : $data->HEPA_PROFILE ?? '';
             $this->CXR              = $this->dateServices->isValidDateFormat($data->CXR) ? date('m/d/Y', strtotime($data->CXR)) : $data->CXR ?? '';
             $this->SE_COUNT         = 0;
-            $this->SE_PARTS         = str_split($this->SE_DETAILS, 40);
-
+            // $this->SE_PARTS         = str_split($this->SE_DETAILS, 40);
+            $this->SE_PARTS = preg_split('/;|(.{40})/u', $this->SE_DETAILS, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
             $this->SO_COUNT = 0;
-            $this->SO_PARTS = str_split($this->SO_DETAILS, 40);
-
+            // $this->SO_PARTS = str_split($this->SO_DETAILS, 40);
+            $this->SO_PARTS = preg_split('/;|(.{40})/u', $this->SO_DETAILS, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
             $this->getPreviousTreatment();
 
             $dataDoc = $this->patientDoctorServices->GetList($this->CUSTOMER_ID, $this->LOCATION_ID);
@@ -383,7 +383,7 @@ class PrintContent extends Component
             }
             $this->noteList = $this->hemoServices->ListNotes($this->HEMO_ID);
 
-            if (in_array((int) $this->LOCATION_ID, [33,47])) {
+            if (in_array((int) $this->LOCATION_ID, [33, 47])) {
 
                 $this->VITAL_SIGN_GRAPH = true;
             }

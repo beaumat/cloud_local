@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Livewire\Hemodialysis;
 
 use App\Services\HemoServices;
@@ -38,7 +37,7 @@ class NurseNotes extends Component
     public string $EDIT_FLUSHING;
     public string $EDIT_NOTES;
 
-    public $dataList = [];
+    public $dataList       = [];
     public bool $showModal = false;
     private $hemoServices;
     public int $STATUS_ID = 0;
@@ -51,9 +50,9 @@ class NurseNotes extends Component
     public function openModal($result)
     {
         $this->ClearEntry();
-        $this->HEMO_ID = $result['HEMO_ID'];
+        $this->HEMO_ID      = $result['HEMO_ID'];
         $this->PATIENT_NAME = $result['PATIENT_NAME'] ?? '';
-        $hemoData =   $this->hemoServices->get($this->HEMO_ID);
+        $hemoData           = $this->hemoServices->get($this->HEMO_ID);
         if ($hemoData) {
             $this->STATUS_ID = $hemoData->STATUS_ID;
         }
@@ -69,19 +68,19 @@ class NurseNotes extends Component
     {
         $data = $this->hemoServices->GetNotes($ID);
         if ($data) {
-            $this->EDIT_ID = $data->ID;
-            $this->EDIT_TIME = $data->TIME;
-            $this->EDIT_BP_1 = $data->BP_1;
-            $this->EDIT_BP_2 = $data->BP_2;
-            $this->EDIT_HR = $data->HR;
-            $this->EDIT_BFR = $data->BFR;
-            $this->EDIT_AP = $data->AP;
-            $this->EDIT_VP = $data->VP;
-            $this->EDIT_TFP = $data->TFP;
-            $this->EDIT_TMP = $data->TMP;
-            $this->EDIT_HEPARIN = $data->HEPARIN;
+            $this->EDIT_ID       = $data->ID;
+            $this->EDIT_TIME     = $data->TIME;
+            $this->EDIT_BP_1     = $data->BP_1;
+            $this->EDIT_BP_2     = $data->BP_2;
+            $this->EDIT_HR       = $data->HR;
+            $this->EDIT_BFR      = $data->BFR;
+            $this->EDIT_AP       = $data->AP;
+            $this->EDIT_VP       = $data->VP;
+            $this->EDIT_TFP      = $data->TFP;
+            $this->EDIT_TMP      = $data->TMP;
+            $this->EDIT_HEPARIN  = $data->HEPARIN;
             $this->EDIT_FLUSHING = $data->FLUSHING;
-            $this->EDIT_NOTES = $data->NOTES;
+            $this->EDIT_NOTES    = $data->NOTES;
         }
     }
     public function cancel()
@@ -92,44 +91,41 @@ class NurseNotes extends Component
     public function ClearEntry()
     {
 
-        $this->TIME = '';
-        $this->BP_1 = '';
-        $this->BP_2 = '';
-        $this->HR = '';
-        $this->BFR = '';
-        $this->AP = '';
-        $this->VP = '';
-        $this->TFP = '';
-        $this->TMP = '';
-        $this->HEPARIN = '';
+        $this->TIME     = '';
+        $this->BP_1     = '';
+        $this->BP_2     = '';
+        $this->HR       = '';
+        $this->BFR      = '';
+        $this->AP       = '';
+        $this->VP       = '';
+        $this->TFP      = '';
+        $this->TMP      = '';
+        $this->HEPARIN  = '';
         $this->FLUSHING = '';
-        $this->NOTES = '';
+        $this->NOTES    = '';
     }
     public function save()
     {
 
         $this->validate([
-            'TIME'      => 'required|string',
-            'BP_1'      => 'required|string',
-            'BP_2'      => 'required|string',
-            'HR'        => 'required|string',
-            'BFR'       => 'required|string',
-            'TFP'       => 'required|string',
-            'TMP'       => 'required|string',
-
+            'TIME' => 'required|string',
+            'BP_1' => 'required|string',
+            'BP_2' => 'required|string',
+            'HR'   => 'required|string',
+            'BFR'  => 'required|string',
+            'TFP'  => 'required|string',
+            'TMP'  => 'required|string',
 
         ], [], [
-            'TIME'     => 'Time',
-            'BP_1'     => 'BP[1]',
-            'BP_2'     => 'BP[2]',
-            'HR'       => 'HR',
-            'BFR'      => 'BFR',
-            'TFP'      => 'TFR',
-            'TMP'      => 'TMP',
+            'TIME' => 'Time',
+            'BP_1' => 'BP[1]',
+            'BP_2' => 'BP[2]',
+            'HR'   => 'HR',
+            'BFR'  => 'BFR',
+            'TFP'  => 'TFR',
+            'TMP'  => 'TMP',
 
         ]);
-
-
 
         try {
 
@@ -179,7 +175,7 @@ class NurseNotes extends Component
             'EDIT_TMP'      => 'TMP',
             'EDIT_HEPARIN'  => 'HEPARIN',
             'EDIT_FLUSHING' => 'FLUSHING',
-            'EDIT_NOTES'    => 'NOTES'
+            'EDIT_NOTES'    => 'NOTES',
         ]);
 
         try {
