@@ -26,10 +26,13 @@
                                                     <textarea class="form-control form-control-sm " rows='6' wire:model='SE_DETAILS_NEXT'
                                                         @if ($Modify == false) disabled @endif></textarea>
                                                 </div>
-                                                <div class="col-12 col-md-12">
+                                                <div class="col-12 col-md-12 bg-warning m-1">
 
-                                                    NOTE : <span class="text-xs"> use <b class="text-lg text-danger">&nbsp;[&nbsp;]&nbsp;</b> <span class="text-danger">Bracket</span> to red text
-                                                        and <b class="text-lg text-primary"> &nbsp; ; </b><span class="text-primary">Semicolon</span> to
+                                                    NOTE : <span class="text-xs"> use <b
+                                                            class="text-lg text-danger">&nbsp;[&nbsp;]&nbsp;</b> <span
+                                                            class="text-danger">Bracket</span> to red text
+                                                        and <b class="text-lg text-primary"> &nbsp; ; </b><span
+                                                            class="text-primary">Semicolon</span> to
                                                         next line
                                                     </span>
                                                 </div>
