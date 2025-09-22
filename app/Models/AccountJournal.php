@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -8,10 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 class AccountJournal extends Model
 {
     use HasFactory;
-    protected $table = 'account_journal';
+    protected $table      = 'account_journal';
     protected $primaryKey = 'ID';
-    public $timestamps = false;
-    protected $fillable = [
+    public $timestamps    = false;
+    protected $fillable   = [
         'ID',
         'PREVIOUS_ID',
         'SEQUENCE_NO',
@@ -26,7 +25,7 @@ class AccountJournal extends Model
         'ENTRY_TYPE',
         'AMOUNT',
         'ENDING_BALANCE',
-        'EXTENDED_OPTIONS'
+        'EXTENDED_OPTIONS',
     ];
 
 }

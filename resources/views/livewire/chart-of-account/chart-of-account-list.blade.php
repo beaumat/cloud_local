@@ -24,9 +24,30 @@
                     <div class="card">
                         <div class="card-body">
                             <div class="row">
-                                <div class="col-md-12">
-                                    <input type="text" wire:model.live.debounce.150ms='search'
-                                        class="w-100 form-control form-control-sm" placeholder="Search" />
+                                <div class="col-md-6">
+                                    <div class="mt-0">
+                                        <label class="text-sm">Search:</label>
+                                        <input type="text" wire:model.live.debounce.150ms='search'
+                                            class="w-100 form-control form-control-sm" placeholder="Search" />
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="mt-0">
+                                        <label class="text-sm">Location:</label>
+                                        <select
+                                            @if (Auth::user()->locked_location) style="opacity: 0.5;pointer-events: none;" @endif
+                                            name="location" wire:model.live='locationid'
+                                            class="form-control form-control-sm">
+                                            <option value="0"> All Location</option>
+                                            @foreach ($locationList as $item)
+                                                <option value="{{ $item->ID }}"> {{ $item->NAME }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
                             <table class="table table-sm table-bordered table-hover">
@@ -38,9 +59,11 @@
                                         <th>Group of Account</th>
                                         <th>Back Account No.</th>
                                         <th class="col-1 text-center">Inactive</th>
+                                        <th class="text-right">Ending Balance</th>
                                         <th class="col-2 text-center">
-                                            <a href="{{ route('maintenancefinancialcoa_create') }}" class="text-white">
-                                                <i class="fas fa-plus"></i>
+                                            <a href="{{ route('maintenancefinancialcoa_create') }}"
+                                                class="text-white btn btn-xs btn-success w-100">
+                                                <i class="fas fa-plus"></i> New
                                             </a>
                                         </th>
                                     </tr>
@@ -55,6 +78,7 @@
                                             <td> {{ $list->ACCOUNT_TYPE }} </td>
                                             <td> {{ $list->GROUP_ACCOUNT }} </td>
                                             <td> {{ $list->BANK_ACCOUNT_NO }} </td>
+
                                             <td class="text-center">
 
                                                 @if ($list->INACTIVE)
@@ -66,6 +90,11 @@
                                                         wire:click='accountInactive({{ $list->ID }},1)'
                                                         class="text-primary">No</strong>
                                                 @endif
+                                            </td>
+                                            <td class="text-info text-right">
+                                                <a target="_blank"
+                                                    href="{{ route('maintenancefinancialcoa_balance', ['id' => $list->ID, 'locationid' => $locationid]) }}">
+                                                    {{ number_format($list->ENDING_BALANCE, 2) }}</a>
                                             </td>
                                             <td class="text-center">
                                                 <a href="{{ route('maintenancefinancialcoa_edit', ['id' => $list->ID]) }}"

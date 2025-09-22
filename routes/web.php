@@ -25,6 +25,7 @@ use App\Livewire\Bills\BillingList;
 use App\Livewire\Bills\BillingPrint;
 use App\Livewire\BuildAssembly\BuildAssemblyForm;
 use App\Livewire\BuildAssembly\BuildAssemblyList;
+use App\Livewire\ChartOfAccount\ChartOfAccountEndingBalance;
 use App\Livewire\ChartOfAccount\ChartOfAccountForm;
 use App\Livewire\ChartOfAccount\ChartOfAccountList;
 use App\Livewire\CostAdjustment\CostAdjustmentForm;
@@ -519,6 +520,7 @@ Route::middleware(['auth'])->group(function () {
                 Route::get('/', ChartOfAccountList::class)->name('coa')->middleware(['permission:chart-of-account.view']);
                 Route::get('/create', ChartOfAccountForm::class)->name('coa_create')->middleware(['permission:chart-of-account.create']);
                 Route::get('/{id}/edit', ChartOfAccountForm::class)->name('coa_edit')->middleware(['permission:chart-of-account.view']);
+                Route::get('/{id}/{locationid}/balance', ChartOfAccountEndingBalance::class)->name('coa_balance')->middleware(['permission:chart-of-account.view']);
             });
 
             Route::prefix('/payment-method')->group(function () {
