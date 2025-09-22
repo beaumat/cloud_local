@@ -5,7 +5,7 @@
     </div>
 
     @foreach ($HEMO_ID as $ID)
-        @livewire('Hemodialysis.PrintContentOne', ['HEMO_ID' => $ID])
+        @livewire('Hemodialysis.PrintContent', ['HEMO_ID' => $ID])
         <div class="page-break"></div>
     @endforeach
 
