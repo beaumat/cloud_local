@@ -279,8 +279,8 @@ class InventoryAdjustmentServices
                 'inventory_adjustment.ID',
                 'inventory_adjustment.ACCOUNT_ID',
                 'inventory_adjustment.ADJUSTMENT_TYPE_ID as SUBSIDIARY_ID',
-                DB::raw('(SELECT IFNULL(SUM(inventory_adjustment_items.ASSET_VALUE), 0) FROM inventory_adjustment_items  WHERE inventory_adjustment_items.INVENTORY_ADJUSTMENT_ID = inventory_adjustment.ID) as AMOUNT'),
-                DB::raw('IF((SELECT IFNULL(SUM(inventory_adjustment_items.ASSET_VALUE), 0) FROM inventory_adjustment_items  WHERE inventory_adjustment_items.INVENTORY_ADJUSTMENT_ID = inventory_adjustment.ID) >= 0, 1, 0) as ENTRY_TYPE')
+                DB::raw('IF((SELECT IFNULL(SUM(inventory_adjustment_items.VALUE_DIFFERENCE), 0) FROM inventory_adjustment_items  WHERE inventory_adjustment_items.INVENTORY_ADJUSTMENT_ID = inventory_adjustment.ID) >=0, (SELECT IFNULL(SUM(inventory_adjustment_items.VALUE_DIFFERENCE), 0) FROM inventory_adjustment_items  WHERE inventory_adjustment_items.INVENTORY_ADJUSTMENT_ID = inventory_adjustment.ID) , (SELECT IFNULL(SUM(inventory_adjustment_items.VALUE_DIFFERENCE), 0) FROM inventory_adjustment_items  WHERE inventory_adjustment_items.INVENTORY_ADJUSTMENT_ID = inventory_adjustment.ID)  * -1) as AMOUNT'),
+                DB::raw('IF((SELECT IFNULL(SUM(inventory_adjustment_items.VALUE_DIFFERENCE), 0) FROM inventory_adjustment_items  WHERE inventory_adjustment_items.INVENTORY_ADJUSTMENT_ID = inventory_adjustment.ID) >= 0, 1, 0) as ENTRY_TYPE')
             ])
             ->where('inventory_adjustment.ID', '=', $ID)
             ->get();
@@ -294,8 +294,8 @@ class InventoryAdjustmentServices
                 'inventory_adjustment_items.ID',
                 'inventory_adjustment_items.ASSET_ACCOUNT_ID as ACCOUNT_ID',
                 'inventory_adjustment_items.ITEM_ID as SUBSIDIARY_ID',
-                DB::raw('IFNULL(inventory_adjustment_items.ASSET_VALUE, 0) as AMOUNT'),
-                DB::raw('IF(IFNULL(inventory_adjustment_items.ASSET_VALUE, 0) >= 0, 0, 1) as ENTRY_TYPE')
+                DB::raw(' IF(IFNULL(inventory_adjustment_items.VALUE_DIFFERENCE, 0)>= 0 , IFNULL(inventory_adjustment_items.VALUE_DIFFERENCE, 0), IFNULL(inventory_adjustment_items.VALUE_DIFFERENCE, 0) * -1) as AMOUNT'),
+                DB::raw('IF(IFNULL(inventory_adjustment_items.VALUE_DIFFERENCE, 0) >= 0, 0, 1) as ENTRY_TYPE')
             ])
             ->where('inventory_adjustment_items.INVENTORY_ADJUSTMENT_ID', $ID)
             ->orderBy('LINE_NO', 'asc')

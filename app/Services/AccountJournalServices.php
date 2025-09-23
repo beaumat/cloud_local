@@ -265,9 +265,13 @@ class AccountJournalServices
         END as TX_ROUTE_ID';
 
     private $object;
-    public function __construct(ObjectServices $objectService)
+    private $dateServices;
+    private $accountJournalEndingServices;
+    public function __construct(ObjectServices $objectService, DateServices $dateServices, AccountJournalEndingServices $accountJournalEndingServices)
     {
-        $this->object = $objectService;
+        $this->object                       = $objectService;
+        $this->dateServices                 = $dateServices;
+        $this->accountJournalEndingServices = $accountJournalEndingServices;
     }
     public function DeleteJournal(
         int $ACCOUNT_ID,
@@ -309,27 +313,42 @@ class AccountJournalServices
 
         if ($ACCOUNT_ID > 0) {
 
-            AccountJournal::where('LOCATION_ID', $LOCATION_ID)
+            $source = AccountJournal::where('LOCATION_ID', $LOCATION_ID)
                 ->where('ACCOUNT_ID', $ACCOUNT_ID)
-                ->where('ENTRY_TYPE', $ENTRY_TYPE)
                 ->where('OBJECT_TYPE', $OBJECT_TYPE)
                 ->where('OBJECT_ID', $OBJECT_ID)
                 ->where('OBJECT_DATE', $OBJECT_DATE)
                 ->where('SUBSIDIARY_ID', $SUBSIDIARY_ID)
-                ->update([
-                    'AMOUNT' => $AMOUNT,
+                ->first();
+
+            if ($source) {
+                $ID = $source->ID;
+                $source->update([
+                    'AMOUNT'     => $AMOUNT,
+                    'ENTRY_TYPE' => $ENTRY_TYPE,
                 ]);
+                $this->accountJournalEndingServices->Recount($ID);
+            }
+
         } else {
-            AccountJournal::where('LOCATION_ID', $LOCATION_ID)
+
+            $source = AccountJournal::where('LOCATION_ID', $LOCATION_ID)
                 ->where('OBJECT_TYPE', $OBJECT_TYPE)
                 ->where('OBJECT_ID', $OBJECT_ID)
                 ->where('OBJECT_DATE', $OBJECT_DATE)
                 ->where('SUBSIDIARY_ID', $SUBSIDIARY_ID)
-                ->update([
+                ->first();
+
+            if ($source) {
+                $ID = $source->ID;
+                $source->update([
                     'SEQUENCE_GROUP' => $SEQUENCE_GROUP,
                     'ENTRY_TYPE'     => $ENTRY_TYPE,
                     'AMOUNT'         => $AMOUNT,
                 ]);
+                $this->accountJournalEndingServices->Recount($ID);
+
+            }
         }
     }
     private function Store(
@@ -367,6 +386,11 @@ class AccountJournalServices
             'ENDING_BALANCE'   => $ENDING_BALANCE,
             'EXTENDED_OPTIONS' => $EXTENDED_OPTIONS,
         ]);
+
+        if ($this->dateServices->NowDate() != $OBJECT_DATE) {
+            $this->accountJournalEndingServices->Recount($ID);
+        }
+
     }
     public function getJournalNo(int $OBJECT_TYPE, int $OBJECT_ID): int
     {
@@ -461,11 +485,10 @@ class AccountJournalServices
             'CREDIT' => 0,
         ];
     }
-    private function JournalExists(int $ACCOUNT_ID, int $ENTRY_TYPE, int $OBJECT_ID, int $OBJECT_TYPE, string $OBJECT_DATE, int $LOCATION_ID, int $SUBSIDIARY_ID): bool
+    private function JournalExists(int $ACCOUNT_ID, int $OBJECT_ID, int $OBJECT_TYPE, string $OBJECT_DATE, int $LOCATION_ID, int $SUBSIDIARY_ID): bool
     {
         $result = (bool) AccountJournal::query()
             ->where('ACCOUNT_ID', '=', $ACCOUNT_ID)
-            ->where('ENTRY_TYPE', '=', $ENTRY_TYPE)
             ->where('OBJECT_ID', '=', $OBJECT_ID)
             ->where('OBJECT_TYPE', '=', $OBJECT_TYPE)
             ->where('OBJECT_DATE', '=', $OBJECT_DATE)
@@ -481,7 +504,6 @@ class AccountJournalServices
         if (
             $this->JournalExists(
                 $OLD_ACCOUNT_ID,
-                $ENTRY_TYPE,
                 $OBJECT_ID,
                 $OBJECT_TYPE,
                 $OBJECT_DATE,
@@ -489,17 +511,27 @@ class AccountJournalServices
                 $SUBSIDIARY_ID,
             )
         ) {
-            AccountJournal::where('LOCATION_ID', $LOCATION_ID)
+            $source = AccountJournal::where('LOCATION_ID', $LOCATION_ID)
                 ->where('JOURNAL_NO', $JOURNAL_NO)
                 ->where('ACCOUNT_ID', $OLD_ACCOUNT_ID)
-                ->where('ENTRY_TYPE', $ENTRY_TYPE)
                 ->where('OBJECT_TYPE', $OBJECT_TYPE)
                 ->where('OBJECT_ID', $OBJECT_ID)
                 ->where('OBJECT_DATE', $OBJECT_DATE)
                 ->where('SUBSIDIARY_ID', $SUBSIDIARY_ID)
-                ->update([
+                ->first();
+
+            if ($source) {
+
+                $ID = $source->ID;
+                $source->update([
                     'ACCOUNT_ID' => $NEW_ACCOUNT_ID,
                 ]);
+
+                if ($this->dateServices->NowDate() != $OBJECT_DATE) {
+                    $this->accountJournalEndingServices->Recount($ID);
+                }
+            }
+
         }
     }
     public function JournalModify(
@@ -519,7 +551,6 @@ class AccountJournalServices
         if (
             ! $this->JournalExists(
                 $ACCOUNT_ID,
-                $ENTRY_TYPE,
                 $OBJECT_ID,
                 $OBJECT_TYPE,
                 $OBJECT_DATE,

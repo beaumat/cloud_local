@@ -1,6 +1,7 @@
 <?php
 namespace App\Livewire\ChartOfAccount;
 
+use App\Services\AccountJournalEndingServices;
 use App\Services\AccountServices;
 use App\Services\LocationServices;
 use App\Services\UserServices;
@@ -18,11 +19,13 @@ class ChartOfAccountList extends Component
     private $accountServices;
     private $locationServices;
     private $userServices;
-    public function boot(AccountServices $accountServices, LocationServices $locationServices, UserServices $userServices)
+    private $accountJournalEndingServices;
+    public function boot(AccountServices $accountServices, LocationServices $locationServices, UserServices $userServices, AccountJournalEndingServices $accountJournalEndingServices)
     {
-        $this->accountServices  = $accountServices;
-        $this->locationServices = $locationServices;
-        $this->userServices     = $userServices;
+        $this->accountServices              = $accountServices;
+        $this->locationServices             = $locationServices;
+        $this->userServices                 = $userServices;
+        $this->accountJournalEndingServices = $accountJournalEndingServices;
     }
     public function delete($id)
     {
@@ -51,6 +54,14 @@ class ChartOfAccountList extends Component
     public function accountInactive(int $id, int $status)
     {
         $this->accountServices->Inactive($id, $status);
+    }
+    public function RecalculateAllAccount()
+    {
+        $accountList = $this->accountServices->AccountList();
+        foreach ($accountList as $list) {
+            $this->accountJournalEndingServices->ResetFirstEntryAccount($list->ID, $this->locationid);
+        }
+        session()->flash('message','just working on calculate ending balance');
     }
     public function render()
     {

@@ -36,7 +36,8 @@
                                 </div>
                                 <div class="col-md-3">
                                     <div class="mt-0">
-                                        <label class="text-sm">Location:</label>
+                                        <label class="text-sm" wire:click='RecalculateAllAccount()'
+                                            wire:confirm='Just Calculate Account base in this location?'>Location:</label>
                                         <select
                                             @if (Auth::user()->locked_location) style="opacity: 0.5;pointer-events: none;" @endif
                                             name="location" wire:model.live='locationid'

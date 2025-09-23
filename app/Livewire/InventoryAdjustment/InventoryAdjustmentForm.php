@@ -91,16 +91,17 @@ class InventoryAdjustmentForm extends Component
             $JOURNAL_NO = $this->accountJournalServices->getRecord($invAdjustment, $this->ID);
             if ($JOURNAL_NO == 0) {
                 $JOURNAL_NO = $this->accountJournalServices->getJournalNo($invAdjustment, $this->ID) + 1;
+            }else{
+                // reset
+                $this->accountJournalServices->DeleteRecordJournal($JOURNAL_NO, $this->DATE, $this->LOCATION_ID);
             }
 
             //Main
             $dataSet = $this->inventoryAdjustmentServices->getInventoryAdjustmentJournal($this->ID);
             $this->accountJournalServices->JournalExecute($JOURNAL_NO, $dataSet, $this->LOCATION_ID, $invAdjustment, $this->DATE);
-
             //Item
             $dataSetItem = $this->inventoryAdjustmentServices->getInventoryAdjustmentItemsJournal($this->ID);
             $this->accountJournalServices->JournalExecute($JOURNAL_NO, $dataSetItem, $this->LOCATION_ID, $invAdjustmentItems, $this->DATE);
-
             $data = $this->accountJournalServices->getSumDebitCredit($JOURNAL_NO);
 
             $debit_sum  = (float) $data['DEBIT'];

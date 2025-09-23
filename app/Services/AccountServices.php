@@ -176,7 +176,6 @@ class AccountServices
     {
         $EB_SQL = "(SELECT  IFNULL( account_journal.ENDING_BALANCE, 0.00) from account_journal WHERE account_journal.ACCOUNT_ID = account.ID  and account_journal.LOCATION_ID = '$LOCATION_ID' order by account_journal.OBJECT_DATE desc, account_journal.ID desc LIMIT 1  ) ";
 
-
         return Accounts::query()
             ->select(
                 [
@@ -190,7 +189,7 @@ class AccountServices
                     'account.LINE_NO',
                     'account_type_map.DESCRIPTION as ACCOUNT_TYPE',
                     'g.NAME as GROUP_ACCOUNT',
-                    DB::raw("$EB_SQL as ENDING_BALANCE")
+                    DB::raw("$EB_SQL as ENDING_BALANCE"),
                 ]
             )
             ->join('account_type_map', 'account_type_map.ID', '=', 'account.TYPE')
@@ -200,6 +199,17 @@ class AccountServices
                     ->orwhere('account_type_map.DESCRIPTION', 'like', '%' . $search . '%')
                     ->orWhere('account.TAG', 'like', '%' . $search . '%');
             })
+            ->orderBy('account.TYPE', 'asc')
+            ->get();
+    }
+    public function AccountList()
+    {
+        return Accounts::query()
+            ->select(
+                [
+                    'account.ID',
+                ]
+            )
             ->orderBy('account.TYPE', 'asc')
             ->get();
     }
