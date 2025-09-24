@@ -61,7 +61,17 @@ class ChartOfAccountList extends Component
         foreach ($accountList as $list) {
             $this->accountJournalEndingServices->ResetFirstEntryAccount($list->ID, $this->locationid);
         }
-        session()->flash('message','just working on calculate ending balance');
+        session()->flash('message', 'just working on calculate ending balance');
+    }
+    public function updatedlocationid()
+    {
+
+        try {
+            $this->userServices->SwapLocation($this->locationid);
+        } catch (\Exception $e) {
+            $errorMessage = 'Error occurred: ' . $e->getMessage();
+            session()->flash('error', $errorMessage);
+        }
     }
     public function render()
     {
