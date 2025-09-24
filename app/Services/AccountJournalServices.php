@@ -2,6 +2,7 @@
 namespace App\Services;
 
 use App\Models\AccountJournal;
+use Carbon\Carbon;
 use Illuminate\Routing\Route;
 use Illuminate\Support\Facades\DB;
 
@@ -387,7 +388,7 @@ class AccountJournalServices
             'EXTENDED_OPTIONS' => $EXTENDED_OPTIONS,
         ]);
 
-        if ($this->dateServices->NowDate() != $OBJECT_DATE) {
+      if (Carbon::parse($this->dateServices->NowDate())->ne(Carbon::parse($OBJECT_DATE))) {
             $this->accountJournalEndingServices->Recount($ID);
         }
 
@@ -527,7 +528,7 @@ class AccountJournalServices
                     'ACCOUNT_ID' => $NEW_ACCOUNT_ID,
                 ]);
 
-                if ($this->dateServices->NowDate() != $OBJECT_DATE) {
+                if (Carbon::parse($this->dateServices->NowDate())->ne(Carbon::parse($OBJECT_DATE))) {
                     $this->accountJournalEndingServices->Recount($ID);
                 }
             }
