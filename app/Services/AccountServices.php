@@ -172,7 +172,7 @@ class AccountServices
     {
         Accounts::where('ID', $ID)->update(['INACTIVE' => $stats]);
     }
-    public function Search($search, int $LOCATION_ID)
+    public function Search($search, int $LOCATION_ID, bool $showAll)
     {
         $EB_SQL = "(SELECT  IFNULL( account_journal.ENDING_BALANCE, 0.00) from account_journal WHERE account_journal.ACCOUNT_ID = account.ID  and account_journal.LOCATION_ID = '$LOCATION_ID' order by account_journal.OBJECT_DATE desc, account_journal.ID desc LIMIT 1  ) ";
 
@@ -198,6 +198,9 @@ class AccountServices
                 $query->where('account.NAME', 'like', '%' . $search . '%')
                     ->orwhere('account_type_map.DESCRIPTION', 'like', '%' . $search . '%')
                     ->orWhere('account.TAG', 'like', '%' . $search . '%');
+            })
+            ->when(! $showAll, function ($query) {
+                $query->where('account.INACTIVE', '=', 0);
             })
             ->orderBy('account.TYPE', 'asc')
             ->paginate(40);

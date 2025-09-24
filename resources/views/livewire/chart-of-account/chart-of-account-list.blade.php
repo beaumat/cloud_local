@@ -32,6 +32,7 @@
                                     </div>
                                 </div>
                                 <div class="col-md-3">
+                                    <div class="text-sm">Display Inactive : <input type="checkbox" wire:model.live='showAll' name="showAll" /></div>
 
                                 </div>
                                 <div class="col-md-3">
