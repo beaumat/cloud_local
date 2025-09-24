@@ -3,13 +3,14 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-sm-6">
-                    <h5 class="m-0"><a href="{{ route('maintenancefinancialcoa') }}"> Chart Of Accounts : Ending
-                            Balance</a>
+                    <h5 class="m-0"><a href="{{ route('maintenancefinancialcoa') }}"> Chart Of Accounts
+                        </a>
                     </h5>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item active">
+                            <h6 class="text-info"> {{ $ACCOUNT_NAME }} : From {{ $LOCATION_NAME }}</h6>
                         </li>
                     </ol>
                 </div>
