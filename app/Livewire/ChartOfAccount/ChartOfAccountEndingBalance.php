@@ -5,8 +5,11 @@ use App\Services\AccountJournalEndingServices;
 use App\Services\AccountJournalServices;
 use App\Services\AccountServices;
 use App\Services\LocationServices;
+use Livewire\Attributes\Title;
 use Livewire\Component;
 
+
+#[Title('Chart Of Account - Balaance')]
 class ChartOfAccountEndingBalance extends Component
 {
 
