@@ -200,7 +200,7 @@ class AccountServices
                     ->orWhere('account.TAG', 'like', '%' . $search . '%');
             })
             ->orderBy('account.TYPE', 'asc')
-            ->get();
+            ->paginate(40);
     }
     public function AccountList()
     {

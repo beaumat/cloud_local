@@ -8,12 +8,15 @@ use App\Services\UserServices;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
 use Livewire\Component;
+use Livewire\WithPagination;
 
 #[Title('Chart Of Account')]
 class ChartOfAccountList extends Component
 {
-    public $accounts     = [];
-    public $search       = '';
+     use WithPagination;
+    protected $paginationTheme = 'bootstrap';
+    public $search;
+
     public $locationList = [];
     public int $locationid;
     private $accountServices;
@@ -75,7 +78,8 @@ class ChartOfAccountList extends Component
     }
     public function render()
     {
-        $this->accounts = $this->accountServices->Search($this->search, $this->locationid);
-        return view('livewire.chart-of-account.chart-of-account-list');
+        $dataList =  $this->accountServices->Search($this->search, $this->locationid);
+
+        return view('livewire.chart-of-account.chart-of-account-list',['dataList' => $dataList]);
     }
 }

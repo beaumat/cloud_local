@@ -69,8 +69,8 @@
                                         </th>
                                     </tr>
                                 </thead>
-                                <tbody class="text-xs">
-                                    @foreach ($accounts as $list)
+                                <tbody class="text-xs" wire:loading.attr='hidden'>
+                                    @foreach ($dataList as $list)
                                         <tr>
                                             <td> <a
                                                     href="{{ route('maintenancefinancialcoa_edit', ['id' => $list->ID]) }}">{{ $list->TAG }}
@@ -112,8 +112,15 @@
                                     @endforeach
                                 </tbody>
                             </table>
+                            <div wire:loading.delay>
+                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                Loading...
+                            </div>
                         </div>
                     </div>
+                </div>
+                <div class="col-md-6" wire:loading.attr='hidden'>
+                    {{ $dataList->links() }}
                 </div>
             </div>
         </div>
