@@ -7,8 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 class AccountJournalEnding extends Model
 {
     use HasFactory;
-
-    use HasFactory;
     protected $table      = 'account_journal_ending';
     protected $primaryKey = 'AJ_ID';
     public $timestamps    = false;
