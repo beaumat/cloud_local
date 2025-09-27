@@ -280,11 +280,13 @@ class FundTransferForm extends Component
             $fundTransfer = $this->fundTransferServices->object_type_id;
 
             $JOURNAL_NO = $this->accountJournalServices->getRecord($fundTransfer, $this->ID);
+                  
             if ($JOURNAL_NO == 0) {
                 $JOURNAL_NO = $this->accountJournalServices->getJournalNo($fundTransfer, $this->ID) + 1;
             }
+ 
             // Inter From
-            $fundData = $this->fundTransferServices->getJournalFrom($this->ID, true, true);
+            $fundData = $this->fundTransferServices->getJournalFrom($this->ID, true, true);  
             $this->accountJournalServices->JournalExecute(
                 $JOURNAL_NO,
                 $fundData,
@@ -292,7 +294,7 @@ class FundTransferForm extends Component
                 $fundTransfer,
                 $this->DATE
             );
-
+  
             //From
             $fundData = $this->fundTransferServices->getJournalFrom($this->ID, false, false);
             $this->accountJournalServices->JournalExecute(
@@ -303,6 +305,8 @@ class FundTransferForm extends Component
                 $this->DATE
             );
 
+
+            
             // Inter TO
             $fundData = $this->fundTransferServices->getJournalTo($this->ID, false, true);
             $this->accountJournalServices->JournalExecute(
@@ -313,6 +317,7 @@ class FundTransferForm extends Component
                 $this->DATE
             );
 
+   
             //TO
             $fundData = $this->fundTransferServices->getJournalTo($this->ID, true, false);
             $this->accountJournalServices->JournalExecute(
@@ -324,7 +329,7 @@ class FundTransferForm extends Component
             );
 
             $data = $this->accountJournalServices->getSumDebitCredit($JOURNAL_NO);
-
+    
             $debit_sum  = (float) $data['DEBIT'];
             $credit_sum = (float) $data['CREDIT'];
 

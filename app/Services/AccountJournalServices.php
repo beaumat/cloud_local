@@ -388,7 +388,7 @@ class AccountJournalServices
             'EXTENDED_OPTIONS' => $EXTENDED_OPTIONS,
         ]);
 
-      if (Carbon::parse($this->dateServices->NowDate())->ne(Carbon::parse($OBJECT_DATE))) {
+        if (Carbon::parse($this->dateServices->NowDate())->ne(Carbon::parse($OBJECT_DATE))) {
             $this->accountJournalEndingServices->Recount($ID);
         }
 
@@ -499,6 +499,20 @@ class AccountJournalServices
 
         return $result;
     }
+    private function JournalExistsEntity(int $ACCOUNT_ID, int $OBJECT_ID, int $OBJECT_TYPE, string $OBJECT_DATE, int $LOCATION_ID, int $SUBSIDIARY_ID, int $ENTRY_TYPE): bool
+    {
+        $result = (bool) AccountJournal::query()
+            ->where('ACCOUNT_ID', '=', $ACCOUNT_ID)
+            ->where('OBJECT_ID', '=', $OBJECT_ID)
+            ->where('OBJECT_TYPE', '=', $OBJECT_TYPE)
+            ->where('OBJECT_DATE', '=', $OBJECT_DATE)
+            ->where('LOCATION_ID', '=', $LOCATION_ID)
+            ->where('SUBSIDIARY_ID', '=', $SUBSIDIARY_ID)
+            ->where('ENTRY_TYPE', '=', $ENTRY_TYPE)
+            ->exists();
+
+        return $result;
+    }
     public function AccountSwitch(int $NEW_ACCOUNT_ID, int $OLD_ACCOUNT_ID, int $LOCATION_ID, int $JOURNAL_NO, int $SUBSIDIARY_ID, int $OBJECT_ID, int $OBJECT_TYPE, string $OBJECT_DATE, int $ENTRY_TYPE, )
     {
 
@@ -549,16 +563,14 @@ class AccountJournalServices
         string $EXTENDED_OPTIONS
     ) {
 
-        if (
-            ! $this->JournalExists(
-                $ACCOUNT_ID,
-                $OBJECT_ID,
-                $OBJECT_TYPE,
-                $OBJECT_DATE,
-                $LOCATION_ID,
-                $SUBSIDIARY_ID,
-            )
-        ) {
+        $JOURNAL_EXISTS = false;
+        if ($OBJECT_TYPE == 93) {
+            $JOURNAL_EXISTS = $this->JournalExistsEntity($ACCOUNT_ID, $OBJECT_ID, $OBJECT_TYPE, $OBJECT_DATE, $LOCATION_ID, $SUBSIDIARY_ID, $ENTRY_TYPE);
+        } else {
+            $JOURNAL_EXISTS = $this->JournalExists($ACCOUNT_ID, $OBJECT_ID, $OBJECT_TYPE, $OBJECT_DATE, $LOCATION_ID, $SUBSIDIARY_ID);
+        }
+
+        if (! $JOURNAL_EXISTS) {
 
             if ($ACCOUNT_ID == 0) {
                 return;
