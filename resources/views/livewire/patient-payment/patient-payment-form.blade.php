@@ -254,7 +254,7 @@ use App\Services\UserServices;
                                                 @endif
                                             @endif
 
-                                            @if ($showFileName)
+                                            @if ($FILE_PATH)
                                                 @can('patient.payment.print')
                                                     <a target="_blank" href="{{ asset('storage/' . $FILE_PATH) }}"
                                                         class="btn btn-sm btn-warning">
@@ -263,7 +263,7 @@ use App\Services\UserServices;
                                                 @endcan
                                             @endif
 
-                                            @if ($showFileName)
+                                            @if ($FILE_PATH)
                                                 @can('patient.payment.update')
                                                     @if (!$IS_CONFIRM)
                                                         <button type="button" wire:click='getConfirm()'
