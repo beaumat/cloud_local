@@ -271,7 +271,7 @@ use App\Services\UserServices;
                                             @endif
 
                                             @if ($FILE_PATH)
-                                                @can('patient.payment.update')
+                                                @can('patient.audit')
                                                     @if (!$IS_CONFIRM)
                                                         <button type="button" wire:click='getConfirm()'
                                                             wire:confirm="Are you sure this guaranteed letter is confirm?"
