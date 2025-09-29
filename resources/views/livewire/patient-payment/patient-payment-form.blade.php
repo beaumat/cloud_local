@@ -159,7 +159,7 @@ use App\Services\UserServices;
                                                         :vertical="false" />
                                                 </div>
 
-                                                @if ($showFileName && $Modify)
+                                                @if ($showFileName && $FILE_PATH == '')
                                                     <div class="col-md-12">
                                                         <div class="form-group">
                                                             <label for="fileUpload" class="text-xs">PDF document file
@@ -182,6 +182,12 @@ use App\Services\UserServices;
                                                                         @endif
                                                                     </label>
                                                                 </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                @if (!$Modify)
+                                                                    <button class="btn btn-xs btn-primary mt-2">Upload
+                                                                        File</button>
+                                                                @endif
                                                             </div>
                                                         </div>
                                                     </div>
@@ -214,7 +220,8 @@ use App\Services\UserServices;
                                                 @endif
                                             @endif
                                             @if ($ID > 0)
-                                                @if (UserServices::GetUserRightAccess('customer.invoice.view') && UserServices::GetUserRightAccess('customer.invoice.create'))
+                                                @if (UserServices::GetUserRightAccess('customer.invoice.view') &&
+                                                        UserServices::GetUserRightAccess('customer.invoice.create'))
                                                     @if ($PAYMENT_METHOD_ID == 1)
                                                         @if ($AMOUNT == $AMOUNT_APPLIED)
                                                             @if ($REF_ID > 0)
