@@ -6,14 +6,14 @@ use App\Services\ContactServices;
 use App\Services\LocationServices;
 use App\Services\PatientReportServices;
 use App\Services\UserServices;
+use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 use Maatwebsite\Excel\Facades\Excel;
 
-#[Title('Sales Report')]
-class PatientSalesReport extends Component
+#[Title('Sales Report - View')]
+class PatientSalesReportView extends Component
 {
-    public bool $showFilter = false;
 
     public bool $refreshComponent = false;
     public int $PATIENT_ID;
@@ -81,19 +81,38 @@ class PatientSalesReport extends Component
     {
         $this->shortFilter();
     }
-    public function mount()
+    public function mount($date_from, $date_to, $location_id, $patient = null, $item = null, $method = null)
     {
-        $this->locationList = $this->locationServices->getList();
-        $this->LOCATION_ID  = $this->userServices->getLocationDefault();
 
-        $this->updatedLocationId();
-        $this->resetFilter();
+        $this->locationList = $this->locationServices->getList();
+        $this->LOCATION_ID  = $location_id;
+
+        $this->DATE_TRANSACTION_FROM = $date_from;
+        $this->DATE_TRANSACTION_TO   = $date_to;
+
+        if ($patient) {
+            $this->selectedPatient = $patient !== 'none' ? explode(',', $patient) : [];
+        } else {
+            $this->selectedPatient = [];
+        }
+
+        if ($item) {
+            $this->selectedItem = $item !== 'none' ? explode(',', $item) : [];
+        } else {
+            $this->selectedItem = [];
+        }
+        if ($method) {
+            $this->selectedMethod = $method !== 'none' ? explode(',', $method) : [];
+        } else {
+            $this->selectedMethod = [];
+        }
+
+        $this->dispatch('show-data');
     }
-    public function updatedLocationId()
+    #[On('show-data')]
+    public function getData()
     {
-        $this->PATIENT_ID       = 0;
-        $this->patientList      = $this->contactServices->getPatientList($this->LOCATION_ID);
-        $this->refreshComponent = $this->refreshComponent ? false : true;
+        $this->shortFilter();
     }
 
     public function export()
@@ -109,15 +128,7 @@ class PatientSalesReport extends Component
             $this->selectedItem
         ), 'sales-report.xlsx');
     }
-    public function showfilter()
-    {
 
-        $this->selectedItem    = [];
-        $this->selectedPatient = [];
-        $this->selectedMethod  = [];
-        $this->shortFilter();
-
-    }
     public function shortFilter()
     {
         $this->NO_OF_PATIENT     = 0;
@@ -160,43 +171,9 @@ class PatientSalesReport extends Component
     {
         return redirect()->away(route('reportspatient_sales_report_print', []));
     }
-    public function resetFilter()
-    {
 
-        $this->DATE_TRANSACTION_FROM = $this->userServices->getTransactionDateDefault();
-        $this->DATE_TRANSACTION_TO   = $this->userServices->getTransactionDateDefault();
-        $this->PATIENT_ID            = 0;
-
-        $this->selectedItem    = [];
-        $this->selectedPatient = [];
-        $this->selectedMethod  = [];
-    }
-    public function generateReport()
-    {
-        $url = route('reportspatient_sales_report_view', [
-            'date_from'   => $this->DATE_TRANSACTION_FROM,
-            'date_to'     => $this->DATE_TRANSACTION_TO,
-            'location_id' => $this->LOCATION_ID,
-            'patient'     => ! empty($this->selectedPatient) ? implode(',', $this->selectedPatient) : 'none',
-            'item'        => ! empty($this->selectedItem) ? implode(',', $this->selectedItem) : 'none',
-            'method'      => ! empty($this->selectedMethod) ? implode(',', $this->selectedMethod) : 'none',
-        ]);
-
-        $this->js("window.open('$url', '_blank')");
-
-    }
     public function render()
     {
-
-        if ($this->showFilter == true) {
-            $this->filterPatient = $this->contactServices->getPatientListViaReport($this->LOCATION_ID, $this->DATE_TRANSACTION_FROM, $this->DATE_TRANSACTION_TO);
-            $this->filterItem    = $this->patientReportServices->getItemListViaReport($this->LOCATION_ID, $this->DATE_TRANSACTION_FROM, $this->DATE_TRANSACTION_TO);
-            $this->filterMethod  = $this->patientReportServices->getMethodListViaReport($this->LOCATION_ID, $this->DATE_TRANSACTION_FROM, $this->DATE_TRANSACTION_TO);
-
-            $this->refreshComponent = $this->refreshComponent ? false : true;
-        }
-
-        return view('livewire.patient-report.patient-sales-report');
+        return view('livewire.patient-report.patient-sales-report-view');
     }
-
 }

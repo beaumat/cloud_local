@@ -109,6 +109,7 @@ use App\Livewire\PatientReport\PatientBalanceReport;
 use App\Livewire\PatientReport\PatientInventoryReport;
 use App\Livewire\PatientReport\PatientSalesReport;
 use App\Livewire\PatientReport\PatientSalesReportPrint;
+use App\Livewire\PatientReport\PatientSalesReportView;
 use App\Livewire\PatientReport\PatientTreatmentReport;
 use App\Livewire\PatientReport\PhilhealthAnnex;
 use App\Livewire\PatientReport\PhilhealthAnnexOnePrint;
@@ -685,6 +686,7 @@ Route::middleware(['auth'])->group(function () {
 
             Route::prefix('/sales')->group(function () {
                 Route::get('/', PatientSalesReport::class)->name('patient_sales_report')->middleware(['permission:report.patient.sales']);
+                Route::get('/{date_from}/{date_to}/{location_id}/{patient?}/{item?}/{method?}/view', PatientSalesReportView::class)->name('patient_sales_report_view')->middleware(['permission:report.patient.sales']);
                 Route::get('/{date_from}/{date_to}/{location_id}/print', PatientSalesReportPrint::class)->name('patient_sales_report_print')->middleware(['permission:report.patient.sales']);
             });
             Route::prefix('/inventory')->group(function () {

@@ -84,3 +84,4 @@ class TransactionJournalReport extends Component
         return view('livewire.accounting-report.transaction-journal-report');
     }
 }
+

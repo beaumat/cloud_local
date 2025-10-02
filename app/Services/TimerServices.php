@@ -98,8 +98,6 @@ class TimerServices
        $transDate = $this->dateServices->NowDate();
         // $transDate = $this->dateServices->BackDate();
 
-
-
         $this->generateUnposted();
         $this->generateWaitingList($transDate);
         $this->GenerateItemServiceCharges($transDate);

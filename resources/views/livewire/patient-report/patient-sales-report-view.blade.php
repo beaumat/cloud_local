@@ -3,7 +3,7 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-sm-6">
-                    <h5 class="m-0"><a href="{{ route('reportspatient_sales_report') }}"> Patient Collection Report
+                    <h5 class="m-0"><a href="#"> Patient Collection Report
                         </a></h5>
                 </div>
                 <div class="col-sm-6">
@@ -17,134 +17,8 @@
     </div>
     <section class="content">
         <div class="container-fluid bg-light">
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="form-group bg-light p-2 border border-secondary">
-                        <div class="row">
-                            <div class="col-md-4">
-                                <div class="row">
-                                    <div class="col-md-5">
-                                        <livewire:date-input name="DATE_TRANSACTION_FROM" titleName="(SC) From"
-                                            wire:model.live='DATE_TRANSACTION_FROM' :isDisabled="false" />
-                                    </div>
-                                    <div class="col-md-5">
-                                        <livewire:date-input name="DATE_TRANSACTION_TO" titleName="(SC) To"
-                                            wire:model.live='DATE_TRANSACTION_TO' :isDisabled="false" />
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                {{-- <div class="row">
-                                    <div class="col-md-5">
-                                        <livewire:date-input name="DATE_COLLECTION_FROM" titleName="(P) From"
-                                            wire:model='DATE_COLLECTION_FROM' :isDisabled="false" />
-                                    </div>
-                                    <div class="col-md-5">
-                                        <livewire:date-input name="DATE_COLLECTION_TO" titleName="(P) To"
-                                            wire:model='DATE_COLLECTION_TO' :isDisabled="false" />
-                                    </div>
-                                </div> --}}
-                            </div>
-                            <div class="col-md-4">
-                                <div class="row">
-                                    <div class="col-md-8">
-                                        {{-- @if ($refreshComponent)
-                                            <livewire:select-option name="PATIENT_ID1" titleName="Selected patient"
-                                                :options="$patientList" :zero="true" :isDisabled=false
-                                                wire:model.live='PATIENT_ID' />
-                                        @else
-                                            <livewire:select-option name="PATIENT_ID2" titleName="Selected patient"
-                                                :options="$patientList" :zero="true" :isDisabled=false
-                                                wire:model.live='PATIENT_ID' />
-                                        @endif --}}
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="mt-0">
-                                            <label class="text-xs ">Location:</label>
-                                            <select
-                                                @if (Auth::user()->locked_location) style="opacity: 0.5;pointer-events: none;" @endif
-                                                name="location" wire:model.live='LOCATION_ID'
-                                                class="form-control form-control-sm text-xs ">
-                                                <option value="0"> All Location</option>
-                                                @foreach ($locationList as $item)
-                                                    <option value="{{ $item->ID }}"> {{ $item->NAME }}
-                                                    </option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="row">
-                            <div class="col-6">
-                                <div wire:loading.delay>
-                                    <span class="spinner"></span>
-                                </div>
-
-                                <button class="btn btn-xs btn-success w-25" wire:click='export()'
-                                    wire:loading.attr='disabled'>Export</button>
-                                <a type="button" class="btn btn-xs btn-warning w-25"
-                                    href="{{ route('reportspatient_sales_report_print', ['date_from' => $DATE_TRANSACTION_FROM, 'date_to' => $DATE_TRANSACTION_TO, 'location_id' => $LOCATION_ID]) }}"
-                                    target="_BLANK">
-                                    Print
-                                </a>
-                            </div>
-                            <div class="col-6">
-
-                            </div>
-                        </div>
-                    </div>
-
-
-                    <div class="form-group">
-                        <div class="row">
-                            @if ($showFilter)
-                                <div class="col-4">
-                                    @if ($refreshComponent)
-                                        <livewire:select-checkbox name="PATIENT_ID1" titleName="Filter patient"
-                                            :options="$filterPatient" :zero="true" :isDisabled=false
-                                            wire:model='selectedPatient' />
-                                    @else
-                                        <livewire:select-checkbox name="PATIENT_ID2" titleName="Filter patient"
-                                            :options="$filterPatient" :zero="true" :isDisabled=false
-                                            wire:model='selectedPatient' />
-                                    @endif
-                                </div>
-                                <div class="col-4">
-                                    @if ($refreshComponent)
-                                        <livewire:select-checkbox name="ITEM1" titleName="Filter item"
-                                            :options="$filterItem" :zero="true" :isDisabled=false
-                                            wire:model='selectedItem' />
-                                    @else
-                                        <livewire:select-checkbox name="ITEM2" titleName="Filter item"
-                                            :options="$filterItem" :zero="true" :isDisabled=false
-                                            wire:model='selectedItem' />
-                                    @endif
-                                </div>
-                                <div class="col-4">
-                                    @if ($refreshComponent)
-                                        <livewire:select-checkbox name="METHOD1" titleName="Filter method"
-                                            :options="$filterMethod" :zero="true" :isDisabled=false
-                                            wire:model='selectedMethod' />
-                                    @else
-                                        <livewire:select-checkbox name="METHOD2" titleName="Filter method"
-                                            :options="$filterMethod" :zero="true" :isDisabled=false
-                                            wire:model='selectedMethod' />
-                                    @endif
-                                </div>
-                            @endif
-                            <div class="col-6 p-1">
-                                <button class="btn btn-xs btn-danger w-25" wire:click='generateReport()'
-                                    wire:loading.attr='disabled'>Generate</button>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-                {{-- <div class="col-md-12" style="max-height: 80vh; overflow-y: auto;">
+            <div class="row" wire:loading.attr='hidden'>
+                <div class="col-md-12" style="max-height: 80vh; overflow-y: auto;">
                     <table class="table table-sm table-bordered table-hover">
                         <thead class="text-xs bg-sky sticky-header">
                             <tr>
@@ -165,7 +39,7 @@
                         </thead>
                         <tbody class="text-xs">
                             @foreach ($dataList as $list)
-
+                                {{-- LOGIC START --}}
                                 @php
                                     if ($sc_code == $list->SC_CODE) {
                                         $is_sc = false;
@@ -215,7 +89,7 @@
                                         <td></td>
                                     </tr>
                                 @endif
-
+                                {{-- LOGIC END --}}
                                 <tr class=" @if ($is_add == true) font-weight-bold @endif">
                                     <td>
                                         @if ($is_add == true)
@@ -270,40 +144,40 @@
                                                 $TOTAL_PAID = $TOTAL_PAID + $list->PP_PAID ?? 0;
 
                                                 if ($list->PAYMENT_METHOD_ID == 1) {
-
+                                                    //Cash
                                                     $CASH_AMOUNT = $CASH_AMOUNT + $list->PP_PAID ?? 0;
                                                 }
 
                                                 if ($list->PAYMENT_METHOD_ID == 91) {
-
+                                                    //Philhealth
                                                     $PHILHEALTH_AMOUNT = $PHILHEALTH_AMOUNT + $list->PP_PAID ?? 0;
                                                 }
 
                                                 if ($list->PAYMENT_METHOD_ID == 92) {
-
+                                                    //DSWD
                                                     $DSWD_AMOUNT = $DSWD_AMOUNT + $list->PP_PAID ?? 0;
                                                 }
 
                                                 if ($list->PAYMENT_METHOD_ID == 93) {
-
+                                                    //LINGAP
                                                     $LINGAP_AMOUNT = $LINGAP_AMOUNT + $list->PP_PAID ?? 0;
                                                 }
 
                                                 if ($list->PAYMENT_METHOD_ID == 94) {
-
+                                                    //PCSO
                                                     $PCSO_AMOUNT = $PCSO_AMOUNT + $list->PP_PAID ?? 0;
                                                 }
                                                 if ($list->PAYMENT_METHOD_ID == 96) {
-
+                                                    //Other GL
                                                     $OTHER_GL_AMOUNT = $OTHER_GL_AMOUNT + $list->PP_PAID ?? 0;
                                                 }
                                                 if ($list->PAYMENT_METHOD_ID == 97) {
-
+                                                    //OVP
                                                     $OVP_AMOUNT = $OVP_AMOUNT + $list->PP_PAID ?? 0;
                                                 }
 
                                                 if ($list->PAYMENT_METHOD_ID == 98) {
-
+                                                    //OP
                                                     $OP_AMOUNT = $OP_AMOUNT + $list->PP_PAID ?? 0;
                                                 }
                                             @endphp
@@ -342,7 +216,9 @@
                             <label class="h6">Previous Cash Collection </label>
                             <ol>
                                 @foreach ($preDataList as $list)
-                                    <li><strong class="text-purple"> {{ date('m/d/Y',strtotime($list->SC_DATE))  }} </strong>/ pt:<b>{{ $list->PATIENT_NAME }}</b>/<i class="text-orange">{{ $list->PAYMENT_METHOD }}</i> / Paid:
+                                    <li><strong class="text-purple"> {{ date('m/d/Y', strtotime($list->SC_DATE)) }}
+                                        </strong>/ pt:<b>{{ $list->PATIENT_NAME }}</b>/<i
+                                            class="text-orange">{{ $list->PAYMENT_METHOD }}</i> / Paid:
                                         <span class="text-success">{{ number_format($list->PP_PAID, 2) }}</span> on
                                         <span class="text-primary">{{ $list->ITEM_NAME }}</span>
                                     </li>
@@ -433,10 +309,14 @@
                             </h6 class="text-xs">
                         </div>
                     </div>
-                </div> --}}
+                </div>
+            </div>
+            <div wire:loading.delay>
+
+                <span class="spinner spinner-border-xs animate-spin text-info" role="status" aria-hidden="true"></span>
+                <span class="text-info"> Processing data, please wait...</span>
+
             </div>
         </div>
     </section>
-
-
 </div>
