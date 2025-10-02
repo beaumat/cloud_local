@@ -9,6 +9,15 @@ use Livewire\Component;
 #[Title('Account Transaction - Preview')]
 class TransactionDetailsGenerate extends Component
 {
+     public string $TEMP_ACCOUNT = "";
+    public float $TEMP_DEBIT    = 0;
+    public float $TEMP_CREDIT   = 0;
+   public string $DATE_FROM;
+    public string $DATE_TO;
+    public int $LOCATION_ID;
+    public float $TOTAL_DEBIT  = 0;
+    public float $TOTAL_CREDIT = 0;
+    public float $BALANCE      = 0;
     public $dataList = [];
     private $accountJournalServices;
     public function boot(AccountJournalServices $accountJournalServices) {
@@ -35,7 +44,17 @@ class TransactionDetailsGenerate extends Component
             $this->selectedAccountType
         );
     }
+    public function export()
+    {
+        if (! $this->dataList) {
+            session()->flash('error', 'Please generate first.');
+            return;
+        }
 
+        return Excel::download(new TransactionDetailsExport(
+            $this->dataList
+        ), 'account-transaction-details-export.xlsx');
+    }
     public function openDetails(int $JN)
     {
         $url = $this->accountJournalServices->getUrlBy($JN);

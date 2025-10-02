@@ -71,18 +71,7 @@ class TransactionJournalReport extends Component
             session()->flash('error', $errorMessage);
         }
     }
-    public function export()
-    {
-        if (! $this->dataList) {
 
-            session()->flash('error', 'Please generate first.');
-            return;
-        }
-
-        return Excel::download(new TransactionJournalReportExport(
-            $this->dataList
-        ), 'transaction-journal-export.xlsx');
-    }
     public function openDetails(int $JN)
     {
         $url = $this->accountJournalServices->getUrlBy($JN);
