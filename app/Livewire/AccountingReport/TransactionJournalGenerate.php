@@ -1,9 +1,11 @@
 <?php
 namespace App\Livewire\AccountingReport;
 
+use App\Exports\TransactionJournalReportExport;
 use App\Services\AccountJournalServices;
 use Livewire\Attributes\Title;
 use Livewire\Component;
+use Maatwebsite\Excel\Facades\Excel;
 
 #[Title('Transaction Journal - Preview')]
 class TransactionJournalGenerate extends Component
@@ -46,6 +48,13 @@ class TransactionJournalGenerate extends Component
         } catch (\Throwable $th) {
             //throw $th;
         }
+    }
+    public function export()
+    {
+
+        return Excel::download(new TransactionJournalReportExport(
+            $this->dataList
+        ), 'transaction-journal-export.xlsx');
     }
     public function setZero(int $JOURNAL_ID)
     {
