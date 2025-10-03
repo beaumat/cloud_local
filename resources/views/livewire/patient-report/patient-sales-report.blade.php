@@ -81,7 +81,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="form-group">
+                    {{-- <div class="form-group">
                         <div class="row">
                             <div class="col-6">
                                 <div wire:loading.delay>
@@ -100,7 +100,7 @@
 
                             </div>
                         </div>
-                    </div>
+                    </div> --}}
 
 
                     <div class="form-group">
