@@ -8,25 +8,23 @@ use Illuminate\Support\Facades\DB;
 
 class AccountJournalServices
 {
-    public string $CHECK_TYPE = "(
-        (select `check_type_map`.`NAME` from `check` inner join check_type_map on check_type_map.ID = check.TYPE where  check.ID = aj.OBJECT_ID limit 1 )
-        union
-        (select `check_type_map`.`NAME` from `check` inner join check_type_map on check_type_map.ID = check.TYPE inner join check_bills on check_bills.CHECK_ID = check.ID where  check_bills.ID = aj.OBJECT_ID limit 1 )
-        union
-        (select `check_type_map`.`NAME` from `check` inner join check_type_map on check_type_map.ID = check.TYPE inner join check_items on check_items.CHECK_ID = check.ID where  check_items.ID = aj.OBJECT_ID limit 1 )
-        union
-        (select `check_type_map`.`NAME` from `check` inner join check_type_map on check_type_map.ID = check.TYPE inner join check_expenses on check_expenses.CHECK_ID = check.ID where  check_expenses.ID = aj.OBJECT_ID limit 1 )
-    )";
+    public string $CHECK_TYPE = "
+        CASE 
+        WHEN aj.OBJECT_TYPE = 57 THEN (select `check_type_map`.`NAME` from `check` inner join check_type_map on check_type_map.ID = check.TYPE where check.ID = aj.OBJECT_ID limit 1 )
+        WHEN aj.OBJECT_TYPE = 58 THEN (select `check_type_map`.`NAME` from `check` inner join check_type_map on check_type_map.ID = check.TYPE inner join check_bills on check_bills.CHECK_ID = check.ID where  check_bills.ID = aj.OBJECT_ID limit 1 )      
+        WHEN aj.OBJECT_TYPE = 75 THEN (select `check_type_map`.`NAME` from `check` inner join check_type_map on check_type_map.ID = check.TYPE inner join check_items on check_items.CHECK_ID = check.ID where  check_items.ID = aj.OBJECT_ID limit 1)
+        WHEN aj.OBJECT_TYPE = 79 THEN (select `check_type_map`.`NAME` from `check` inner join check_type_map on check_type_map.ID = check.TYPE inner join check_expenses on check_expenses.CHECK_ID = check.ID where  check_expenses.ID = aj.OBJECT_ID limit 1)       
+        END  ";
 
-    public string $CHECK_TYPE_ID = "(
-        (select `check_type_map`.`ID` from `check` inner join check_type_map on check_type_map.ID = check.TYPE where  check.ID = aj.OBJECT_ID limit 1 )
-        union
-        (select `check_type_map`.`ID` from `check` inner join check_type_map on check_type_map.ID = check.TYPE inner join check_bills on check_bills.CHECK_ID = check.ID where  check_bills.ID = aj.OBJECT_ID limit 1 )
-        union
-        (select `check_type_map`.`ID` from `check` inner join check_type_map on check_type_map.ID = check.TYPE inner join check_items on check_items.CHECK_ID = check.ID where  check_items.ID = aj.OBJECT_ID limit 1 )
-        union
-        (select `check_type_map`.`ID` from `check` inner join check_type_map on check_type_map.ID = check.TYPE inner join check_expenses on check_expenses.CHECK_ID = check.ID where  check_expenses.ID = aj.OBJECT_ID limit 1 )
-    )";
+    // public string $CHECK_TYPE_ID = "(
+    //     (select `check_type_map`.`ID` from `check` inner join check_type_map on check_type_map.ID = check.TYPE where  check.ID = aj.OBJECT_ID limit 1 )
+    //     union
+    //     (select `check_type_map`.`ID` from `check` inner join check_type_map on check_type_map.ID = check.TYPE inner join check_bills on check_bills.CHECK_ID = check.ID where  check_bills.ID = aj.OBJECT_ID limit 1 )
+    //     union
+    //     (select `check_type_map`.`ID` from `check` inner join check_type_map on check_type_map.ID = check.TYPE inner join check_items on check_items.CHECK_ID = check.ID where  check_items.ID = aj.OBJECT_ID limit 1 )
+    //     union
+    //     (select `check_type_map`.`ID` from `check` inner join check_type_map on check_type_map.ID = check.TYPE inner join check_expenses on check_expenses.CHECK_ID = check.ID where  check_expenses.ID = aj.OBJECT_ID limit 1 )
+    // )";
 
     public string $TX_PO = '
     CASE
@@ -778,7 +776,7 @@ class AccountJournalServices
                 'aj.OBJECT_DATE as DATE',
                 'a.TAG as ACCOUNT_CODE',
                 'a.NAME as ACCOUNT_TITLE',
-                DB::raw("if(d.ID = 21, $this->CHECK_TYPE, d.DESCRIPTION) as TYPE"),
+                DB::raw("if(d.ID = 21, (". $this->CHECK_TYPE ."), d.DESCRIPTION) as TYPE"),
                 'l.NAME as LOCATION',
                 DB::raw($this->TX_CODE),
                 DB::raw($this->TX_NOTES),
@@ -1000,6 +998,7 @@ class AccountJournalServices
             ->join('document_type_map as d', 'd.ID', '=', 'o.DOCUMENT_TYPE')
             ->where('account_journal.JOURNAL_NO', '=', $Journal_no)
             ->whereIn('account_journal.OBJECT_TYPE', ['2', '12', '16', '19', '23', '38', '41', '52', '59', '57', '67', '70', '72', '81', '83', '84', '93', '95', '113', '121', '127', '135'])
+            ->limit(1)
             ->first();
 
         if ($result) {

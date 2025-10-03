@@ -94,6 +94,13 @@ class PatientSalesReport extends Component
         $this->PATIENT_ID       = 0;
         $this->patientList      = $this->contactServices->getPatientList($this->LOCATION_ID);
         $this->refreshComponent = $this->refreshComponent ? false : true;
+
+         try {
+            $this->userServices->SwapLocation($this->LOCATION_ID);
+        } catch (\Exception $e) {
+            $errorMessage = 'Error occurred: ' . $e->getMessage();
+            session()->flash('error', $errorMessage);
+        }
     }
 
     public function export()

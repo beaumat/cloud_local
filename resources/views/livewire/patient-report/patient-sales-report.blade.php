@@ -44,6 +44,10 @@
                                             wire:model='DATE_COLLECTION_TO' :isDisabled="false" />
                                     </div>
                                 </div> --}}
+
+
+                                <livewire:checkbox-input name="is_filter" titleName="Show Filter" wire:model.live='showFilter'
+                                    :isDisabled="false" />
                             </div>
                             <div class="col-md-4">
                                 <div class="row">

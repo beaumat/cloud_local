@@ -37,6 +37,7 @@ class TransactionJournalGenerate extends Component
     {
 
         try {
+
             $this->dataList = $this->accountJournalServices->getTransactionJournal(
                 $this->DATE_FROM,
                 $this->DATE_TO,
@@ -45,8 +46,10 @@ class TransactionJournalGenerate extends Component
                 $this->selectedAccountType
             );
 
+
+          
         } catch (\Throwable $th) {
-            //throw $th;
+            dd($th->getMessage());
         }
     }
     public function export()
