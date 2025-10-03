@@ -16,15 +16,7 @@ class AccountJournalServices
         WHEN aj.OBJECT_TYPE = 79 THEN (select `check_type_map`.`NAME` from `check` inner join check_type_map on check_type_map.ID = check.TYPE inner join check_expenses on check_expenses.CHECK_ID = check.ID where  check_expenses.ID = aj.OBJECT_ID limit 1)       
         END  ";
 
-    // public string $CHECK_TYPE_ID = "(
-    //     (select `check_type_map`.`ID` from `check` inner join check_type_map on check_type_map.ID = check.TYPE where  check.ID = aj.OBJECT_ID limit 1 )
-    //     union
-    //     (select `check_type_map`.`ID` from `check` inner join check_type_map on check_type_map.ID = check.TYPE inner join check_bills on check_bills.CHECK_ID = check.ID where  check_bills.ID = aj.OBJECT_ID limit 1 )
-    //     union
-    //     (select `check_type_map`.`ID` from `check` inner join check_type_map on check_type_map.ID = check.TYPE inner join check_items on check_items.CHECK_ID = check.ID where  check_items.ID = aj.OBJECT_ID limit 1 )
-    //     union
-    //     (select `check_type_map`.`ID` from `check` inner join check_type_map on check_type_map.ID = check.TYPE inner join check_expenses on check_expenses.CHECK_ID = check.ID where  check_expenses.ID = aj.OBJECT_ID limit 1 )
-    // )";
+
 
     public string $TX_PO = '
     CASE
