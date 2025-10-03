@@ -283,7 +283,7 @@
                                     <span
                                         class="text-success font-weight-bold text-xs">{{ number_format($CASH_AMOUNT, 2) }}</span>
                                 </div>
-                                <div class="col-12  text-xs"> <label class="text-xs">Previous Cash Collection :
+                                <div class="col-12  text-xs"> <label class="text-xs">Previous Cash :
                                     </label>
                                     <span
                                         class="text-success font-weight-bold text-xs">{{ number_format($PRE_CASH_AMOUNT, 2) }}</span>
