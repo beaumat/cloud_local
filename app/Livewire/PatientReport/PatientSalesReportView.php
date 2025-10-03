@@ -38,6 +38,7 @@ class PatientSalesReportView extends Component
     public float $TOTAL_PAID        = 0;
     public float $CASH_AMOUNT;
     public float $PRE_COLLECTION;
+    public float $PRE_CASH_AMOUNT;
     public float $PHILHEALTH_AMOUNT;
     public float $DSWD_AMOUNT;
     public float $LINGAP_AMOUNT;
@@ -137,6 +138,7 @@ class PatientSalesReportView extends Component
         $this->CASH_AMOUNT       = 0;
         $this->PHILHEALTH_AMOUNT = 0;
         $this->PRE_COLLECTION    = 0;
+        $this->PRE_CASH_AMOUNT   = 0;
         $this->DSWD_AMOUNT       = 0;
         $this->LINGAP_AMOUNT     = 0;
         $this->PCSO_AMOUNT       = 0;
@@ -154,7 +156,7 @@ class PatientSalesReportView extends Component
             $this->selectedMethod
         );
 
-        $this->preDataList = $this->patientReportServices->generatePrevCollection(
+        $this->preDataList = $this->patientReportServices->getPreviousCollection(
             $this->DATE_TRANSACTION_FROM,
             $this->DATE_TRANSACTION_TO,
             $this->LOCATION_ID,
@@ -164,7 +166,12 @@ class PatientSalesReportView extends Component
         );
 
         foreach ($this->preDataList as $data) {
-            $this->PRE_COLLECTION = $this->PRE_COLLECTION + $data->PP_PAID ?? 0;
+            if($data->PAYMENT_METHOD_ID == 1) {
+                $this->PRE_CASH_AMOUNT = $this->PRE_CASH_AMOUNT + $data->PP_PAID ?? 0;
+            }else{
+                   $this->PRE_COLLECTION = $this->PRE_COLLECTION + $data->PP_PAID ?? 0;
+            }
+
         }
     }
     public function print()
