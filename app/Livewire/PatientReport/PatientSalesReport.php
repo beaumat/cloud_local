@@ -119,27 +119,27 @@ class PatientSalesReport extends Component
         $this->OVP_AMOUNT        = 0;
         $this->NO_OF_TREATMENT   = 0;
 
-        $this->dataList = $this->patientReportServices->generateSalesReportData(
-            $this->DATE_TRANSACTION_FROM,
-            $this->DATE_TRANSACTION_TO,
-            $this->LOCATION_ID,
-            $this->selectedPatient,
-            $this->selectedItem,
-            $this->selectedMethod
-        );
+        // $this->dataList = $this->patientReportServices->generateSalesReportData(
+        //     $this->DATE_TRANSACTION_FROM,
+        //     $this->DATE_TRANSACTION_TO,
+        //     $this->LOCATION_ID,
+        //     $this->selectedPatient,
+        //     $this->selectedItem,
+        //     $this->selectedMethod
+        // );
 
-        $this->preDataList = $this->patientReportServices->generatePrevCollection(
-            $this->DATE_TRANSACTION_FROM,
-            $this->DATE_TRANSACTION_TO,
-            $this->LOCATION_ID,
-            $this->selectedPatient,
-            $this->selectedItem,
-            $this->selectedMethod
-        );
+        // $this->preDataList = $this->patientReportServices->generatePrevCollection(
+        //     $this->DATE_TRANSACTION_FROM,
+        //     $this->DATE_TRANSACTION_TO,
+        //     $this->LOCATION_ID,
+        //     $this->selectedPatient,
+        //     $this->selectedItem,
+        //     $this->selectedMethod
+        // );
 
-        foreach ($this->preDataList as $data) {
-            $this->PRE_COLLECTION = $this->PRE_COLLECTION + $data->PP_PAID ?? 0;
-        }
+        // foreach ($this->preDataList as $data) {
+        //     $this->PRE_COLLECTION = $this->PRE_COLLECTION + $data->PP_PAID ?? 0;
+        // }
     }
     public function print()
     {

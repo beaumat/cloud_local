@@ -76,6 +76,7 @@ class PatientReportServices
             ->join('location as l', 'l.ID', '=', 'pp.LOCATION_ID')
             ->join('contact as c', 'c.ID', '=', 'pp.PATIENT_ID')
             ->join('payment_method as pm', 'pm.ID', '=', 'pp.PAYMENT_METHOD_ID')
+             ->where('pm.ID','<>', 91)
             ->when($patientData, function ($query) use (&$patientData) {
                 $array = $patientData;
                 $query->whereIn('pp.PATIENT_ID', $array);
@@ -104,71 +105,7 @@ class PatientReportServices
 
         return $finalQuery;
     }
-    // public function generateSalesReportDataOriginal(string $scFrom, string $scTo, int $locatoinId, array $patientData = [], array $itemData = [], array $methodData = []): object
-    // {
-    //     $isWhole = (bool) $this->dateServices->isWholeMonth($scFrom, $scTo);
-
-    //     $results = DB::table('service_charges_items as sci')
-    //         ->select([
-    //             'sc.ID as SC_ID',
-    //             'sc.CODE as SC_CODE',
-    //             'sc.DATE as SC_DATE',
-    //             'sci.ID as SC_ITEM_REF_ID',
-    //             'sci.AMOUNT as SC_AMOUNT',
-    //             DB::raw("CONCAT(c.LAST_NAME, ', ', c.FIRST_NAME, ' .', LEFT(c.MIDDLE_NAME, 1), IF(c.SALUTATION IS NOT NULL AND c.SALUTATION != '', CONCAT(' .', c.SALUTATION), '')) as PATIENT_NAME"),
-    //             'i.CODE as ITEM_CODE',
-    //             'i.DESCRIPTION as ITEM_NAME',
-    //             'pp.ID as PP_ID',
-    //             DB::raw('IFNULL(pp.RECEIPT_DATE,pp.DATE)  as PP_DATE'),
-    //             DB::raw('IFNULL(pp.RECEIPT_REF_NO,pp.CODE) as PP_CODE'),
-    //             'pm.DESCRIPTION as PAYMENT_METHOD',
-    //             DB::raw('IFNULL(pp.AMOUNT, 0) as PP_DEPOSIT'),
-    //             DB::raw(' IF(ISNULL(pp.AMOUNT),0, IFNULL(ppc.AMOUNT_APPLIED, 0))  as PP_PAID'),
-    //             'l.NAME as LOCATION_NAME',
-    //             DB::raw('(select d.PRINT_NAME_AS  from patient_doctor  as pd join contact as d on d.ID = pd.DOCTOR_ID where pd.PATIENT_ID = c.ID limit 1) as DOCTOR_NAME '),
-    //             'pp.PAYMENT_METHOD_ID',
-    //         ])
-    //         ->join('item as i', 'i.ID', '=', 'sci.ITEM_ID')
-    //         ->join('service_charges as sc', 'sc.ID', '=', 'sci.SERVICE_CHARGES_ID')
-    //         ->join('location as l', 'l.ID', '=', 'sc.LOCATION_ID')
-    //         ->join('contact as c', 'c.ID', '=', 'sc.PATIENT_ID')
-    //         ->leftJoin('patient_payment_charges as ppc', 'ppc.SERVICE_CHARGES_ITEM_ID', '=', 'sci.ID')
-    //         ->leftJoin('patient_payment as pp', function ($join) use (&$isWhole) {
-    //             $join->when($isWhole, function ($q) {
-    //                 $q->on('pp.ID', '=', 'ppc.PATIENT_PAYMENT_ID')
-    //                     ->on('pp.LOCATION_ID', '=', 'sc.LOCATION_ID');
-    //             });
-    //             $join->when(! $isWhole, function ($q) {
-    //                 $q->on('pp.ID', '=', 'ppc.PATIENT_PAYMENT_ID')
-    //                     ->on('pp.LOCATION_ID', '=', 'sc.LOCATION_ID')
-    //                     ->on('pp.DATE', '<=', 'sc.DATE');
-    //             });
-
-    //         })
-    //         ->leftJoin('payment_method as pm', 'pm.ID', '=', 'pp.PAYMENT_METHOD_ID')
-    //         ->whereBetween('sc.DATE', [$scFrom, $scTo])
-    //         ->when($locatoinId > 0, function ($query) use (&$locatoinId) {
-    //             $query->where('sc.LOCATION_ID', $locatoinId);
-    //         })
-    //         ->when($patientData, function ($query) use (&$patientData) {
-    //             $array = $patientData;
-    //             $query->whereIn('sc.PATIENT_ID', $array);
-    //         })
-    //         ->when($itemData, function ($query) use (&$itemData) {
-    //             $array = $itemData;
-    //             $query->whereIn('sci.ITEM_ID', $array);
-    //         })
-    //         ->when($methodData, function ($query) use (&$methodData) {
-    //             $array = $methodData;
-    //             $query->whereIn('pp.PAYMENT_METHOD_ID', $array);
-    //         })
-    //         ->orderBy('c.LAST_NAME')
-    //         ->orderBy('sc.CODE')
-    //         ->orderBy('sci.ID')
-    //         ->get();
-
-    //     return $results;
-    // }
+   
 
     public function getPreviousCollection(string $scFrom, string $scTo, int $locatoinId, array $patientData = [], array $itemData = [], array $methodData = []): object
     {
@@ -203,8 +140,8 @@ class PatientReportServices
                     ->on('pp.LOCATION_ID', '=', 'sc.LOCATION_ID');
             })
             ->leftJoin('payment_method as pm', 'pm.ID', '=', 'pp.PAYMENT_METHOD_ID')
-
             ->where('pp.DATE', '<', $scFrom)
+            ->where('pm.ID','<>', 91)
             ->whereBetween('sc.DATE', [$scFrom, $scTo])
             ->when($locatoinId > 0, function ($query) use (&$locatoinId): void {
                 $query->where('sc.LOCATION_ID', $locatoinId);
