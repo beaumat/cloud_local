@@ -9,6 +9,7 @@
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item active">
+                            <button class="btn btn-sm btn-success" wire:click='export()'>Export To Excel</button>
                         </li>
                     </ol>
                 </div>
@@ -165,9 +166,6 @@
                                         @endif
                                     </td>
                                 </tr>
-
-
-
 
                                 @php
                                     switch ($list->ITEM_NAME) {

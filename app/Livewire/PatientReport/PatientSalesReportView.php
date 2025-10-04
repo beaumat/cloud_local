@@ -119,14 +119,8 @@ class PatientSalesReportView extends Component
     public function export()
     {
         return Excel::download(new PatientSalesReportExport(
-            $this->patientReportServices,
-            $this->DATE_TRANSACTION_FROM,
-            $this->DATE_TRANSACTION_TO,
-            $this->DATE_TRANSACTION_FROM,
-            $this->DATE_TRANSACTION_TO,
-            $this->LOCATION_ID,
-            $this->selectedPatient,
-            $this->selectedItem
+            $this->dataList,
+            $this->preDataList
         ), 'sales-report.xlsx');
     }
 
@@ -166,12 +160,11 @@ class PatientSalesReportView extends Component
         );
 
         foreach ($this->preDataList as $data) {
-            if($data->PAYMENT_METHOD_ID == 1) {
+            if ($data->PAYMENT_METHOD_ID == 1) {
                 $this->PRE_CASH_AMOUNT = $this->PRE_CASH_AMOUNT + $data->PP_PAID ?? 0;
-            }else{
-                   $this->PRE_COLLECTION = $this->PRE_COLLECTION + $data->PP_PAID ?? 0;
+            } else {
+                $this->PRE_COLLECTION = $this->PRE_COLLECTION + $data->PP_PAID ?? 0;
             }
-
         }
     }
     public function print()

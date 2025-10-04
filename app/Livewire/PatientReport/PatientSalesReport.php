@@ -1,7 +1,6 @@
 <?php
 namespace App\Livewire\PatientReport;
 
-use App\Exports\PatientSalesReportExport;
 use App\Services\ContactServices;
 use App\Services\LocationServices;
 use App\Services\PatientReportServices;
@@ -103,19 +102,6 @@ class PatientSalesReport extends Component
         }
     }
 
-    public function export()
-    {
-        return Excel::download(new PatientSalesReportExport(
-            $this->patientReportServices,
-            $this->DATE_TRANSACTION_FROM,
-            $this->DATE_TRANSACTION_TO,
-            $this->DATE_TRANSACTION_FROM,
-            $this->DATE_TRANSACTION_TO,
-            $this->LOCATION_ID,
-            $this->selectedPatient,
-            $this->selectedItem
-        ), 'sales-report.xlsx');
-    }
 
     public function shortFilter()
     {
