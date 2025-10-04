@@ -97,6 +97,7 @@ class PatientReportServices
         $finalQuery = DB::query()
             ->fromSub($union, 'combined')
             ->orderBy('PATIENT_NAME')
+            ->orderBy('DATE')
             ->orderBy('LINE_NO')
             ->orderBy('CODE')
             ->get();
