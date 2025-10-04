@@ -94,6 +94,7 @@ class PatientSalesReportExport implements FromCollection, ShouldAutoSize, WithSt
                     $is_sc           = true;
                     $NO_OF_TREATMENT = $NO_OF_TREATMENT + 1;
                     $rowData         = $this->empty();
+                     $finalData[] = array_values($rowData);
                 }
             }
 
