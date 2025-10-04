@@ -195,7 +195,7 @@ class PatientSalesReport extends Component
     public function render()
     {
 
-        if ($this->showFilter == true) {
+        if ($this->showFilter) {
             $this->filterPatient = $this->contactServices->getPatientListViaReport($this->LOCATION_ID, $this->DATE_TRANSACTION_FROM, $this->DATE_TRANSACTION_TO);
             $this->filterItem    = $this->patientReportServices->getItemListViaReport($this->LOCATION_ID, $this->DATE_TRANSACTION_FROM, $this->DATE_TRANSACTION_TO);
             $this->filterMethod  = $this->patientReportServices->getMethodListViaReport($this->LOCATION_ID, $this->DATE_TRANSACTION_FROM, $this->DATE_TRANSACTION_TO);
