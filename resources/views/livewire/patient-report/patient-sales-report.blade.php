@@ -62,7 +62,6 @@
                             </div>
                         </div>
                     </div>
-
                     <div class="form-group">
                         <div class="row">
                             @if ($showFilter)
@@ -107,14 +106,15 @@
 
                             </div>
                             <div class="col-6 p-1" wire:loading.class='loading-form'>
-                                <a target="_blank" href="{{ route('reportspatient_sales_report_view', [
-                                    'date_from' => $DATE_TRANSACTION_FROM,
-                                    'date_to' => $DATE_TRANSACTION_TO,
-                                    'location_id' => $LOCATION_ID,
-                                    'patient' => !empty($selectedPatient) ? implode(',', $selectedPatient) : 'none',
-                                    'item' => !empty($selectedItem) ? implode(',', $selectedItem) : 'none',
-                                    'method' => !empty($selectedMethod) ? implode(',', $selectedMethod) : 'none',
-                                ]) }}"
+                                <a target="_blank"
+                                    href="{{ route('reportspatient_sales_report_view', [
+                                        'date_from' => $DATE_TRANSACTION_FROM,
+                                        'date_to' => $DATE_TRANSACTION_TO,
+                                        'location_id' => $LOCATION_ID,
+                                        'patient' => !empty($selectedPatient) ? implode(',', $selectedPatient) : 'none',
+                                        'item' => !empty($selectedItem) ? implode(',', $selectedItem) : 'none',
+                                        'method' => !empty($selectedMethod) ? implode(',', $selectedMethod) : 'none',
+                                    ]) }}"
                                     class="btn btn-xs btn-danger w-25">
                                     View Report
                                 </a>

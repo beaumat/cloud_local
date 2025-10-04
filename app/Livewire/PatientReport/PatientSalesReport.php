@@ -180,6 +180,7 @@ class PatientSalesReport extends Component
         $this->selectedItem    = [];
         $this->selectedPatient = [];
         $this->selectedMethod  = [];
+        $this->DATE_TRANSACTION_TO = $this->DATE_TRANSACTION_FROM;
         $this->updatedshowFilter();
     }
     public function updatedDateTransactionTo()
@@ -206,9 +207,9 @@ class PatientSalesReport extends Component
             //throw $th;
         }
 
-    
-     
-     
+
+
+
         $this->refreshComponent = $this->refreshComponent ? false : true;
     }
     public function render()
