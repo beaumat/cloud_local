@@ -71,15 +71,15 @@ class PatientSalesReport extends Component
     }
     public function updatedselectedPatient()
     {
-        $this->shortFilter();
+        //$this->shortFilter();
     }
     public function updatedselectedItem()
     {
-        $this->shortFilter();
+        //$this->shortFilter();
     }
     public function updatedselectedMethod()
     {
-        $this->shortFilter();
+       // $this->shortFilter();
     }
     public function mount()
     {
@@ -95,7 +95,7 @@ class PatientSalesReport extends Component
         $this->patientList      = $this->contactServices->getPatientList($this->LOCATION_ID);
         $this->refreshComponent = $this->refreshComponent ? false : true;
 
-         try {
+        try {
             $this->userServices->SwapLocation($this->LOCATION_ID);
         } catch (\Exception $e) {
             $errorMessage = 'Error occurred: ' . $e->getMessage();
@@ -116,15 +116,7 @@ class PatientSalesReport extends Component
             $this->selectedItem
         ), 'sales-report.xlsx');
     }
-    public function showfilter()
-    {
 
-        $this->selectedItem    = [];
-        $this->selectedPatient = [];
-        $this->selectedMethod  = [];
-        $this->shortFilter();
-
-    }
     public function shortFilter()
     {
         $this->NO_OF_PATIENT     = 0;
@@ -180,29 +172,61 @@ class PatientSalesReport extends Component
     }
     public function generateReport()
     {
-        $url = route('reportspatient_sales_report_view', [
-            'date_from'   => $this->DATE_TRANSACTION_FROM,
-            'date_to'     => $this->DATE_TRANSACTION_TO,
-            'location_id' => $this->LOCATION_ID,
-            'patient'     => ! empty($this->selectedPatient) ? implode(',', $this->selectedPatient) : 'none',
-            'item'        => ! empty($this->selectedItem) ? implode(',', $this->selectedItem) : 'none',
-            'method'      => ! empty($this->selectedMethod) ? implode(',', $this->selectedMethod) : 'none',
-        ]);
+        try {
+            $url = route('reportspatient_sales_report_view', [
+                'date_from'   => $this->DATE_TRANSACTION_FROM,
+                'date_to'     => $this->DATE_TRANSACTION_TO,
+                'location_id' => $this->LOCATION_ID,
+                'patient'     => ! empty($this->selectedPatient) ? implode(',', $this->selectedPatient) : 'none',
+                'item'        => ! empty($this->selectedItem) ? implode(',', $this->selectedItem) : 'none',
+                'method'      => ! empty($this->selectedMethod) ? implode(',', $this->selectedMethod) : 'none',
+            ]);
 
-        $this->js("window.open('$url', '_blank')");
+            $this->js("window.open(" . json_encode($url) . ", '_blank');");
 
+        } catch (\Throwable $th) {
+            dd($th->getMessage());
+        }
+
+    }
+    public function updatedDateTransactionFrom()
+    {
+        $this->selectedItem    = [];
+        $this->selectedPatient = [];
+        $this->selectedMethod  = [];
+        $this->updatedshowFilter();
+    }
+    public function updatedDateTransactionTo()
+    {
+        $this->selectedItem    = [];
+        $this->selectedPatient = [];
+        $this->selectedMethod  = [];
+        $this->updatedshowFilter();
+    }
+    public function updatedshowFilter()
+    {
+        try {
+         if ($this->showFilter) {
+            $this->filterPatient    = $this->contactServices->getPatientListViaReport($this->LOCATION_ID, $this->DATE_TRANSACTION_FROM, $this->DATE_TRANSACTION_TO);
+            $this->filterItem       = $this->patientReportServices->getItemListViaReport($this->LOCATION_ID, $this->DATE_TRANSACTION_FROM, $this->DATE_TRANSACTION_TO);
+            $this->filterMethod     = $this->patientReportServices->getMethodListViaReport($this->LOCATION_ID, $this->DATE_TRANSACTION_FROM, $this->DATE_TRANSACTION_TO);
+
+        } else {
+            $this->selectedItem    = [];
+            $this->selectedPatient = [];
+            $this->selectedMethod  = [];
+        }
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
+
+    
+     
+     
+        $this->refreshComponent = $this->refreshComponent ? false : true;
     }
     public function render()
     {
-
-        if ($this->showFilter) {
-            $this->filterPatient = $this->contactServices->getPatientListViaReport($this->LOCATION_ID, $this->DATE_TRANSACTION_FROM, $this->DATE_TRANSACTION_TO);
-            $this->filterItem    = $this->patientReportServices->getItemListViaReport($this->LOCATION_ID, $this->DATE_TRANSACTION_FROM, $this->DATE_TRANSACTION_TO);
-            $this->filterMethod  = $this->patientReportServices->getMethodListViaReport($this->LOCATION_ID, $this->DATE_TRANSACTION_FROM, $this->DATE_TRANSACTION_TO);
-
-            $this->refreshComponent = $this->refreshComponent ? false : true;
-        }
-
         return view('livewire.patient-report.patient-sales-report');
     }
 
