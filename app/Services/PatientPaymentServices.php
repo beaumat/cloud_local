@@ -698,7 +698,7 @@ class PatientPaymentServices
     }
     public function PH_Store(int $PHILHEALTH_ID, float $AMOUNT, string $RECEIPT_REF_NO, string $RECEIPT_DATE, string $NOTES)
     {
-        $METHOD_ID                    = 91; // Philhealth
+        $METHOD_ID                    = $this->PHILHEALTH_METHOD_ID; // Philhealth
         $DATE                         = $this->dateServices->NowDate();
         $phData                       = $this->philHealthServices->get($PHILHEALTH_ID);
         $UNDEPOSITED_FUNDS_ACCOUNT_ID = 0;
