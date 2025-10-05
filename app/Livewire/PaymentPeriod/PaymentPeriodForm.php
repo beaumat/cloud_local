@@ -149,6 +149,7 @@ class PaymentPeriodForm extends Component
             foreach ($dataList as $list) {
                 // PAYMENT
                 $this->paymentServices->getUpdateDateOnly($list->ID, $this->DATE);
+                
                 $PAY_JOUNRAL_NO = $this->accountJournalServices->getRecord($this->paymentServices->object_type_payment, $list->ID);
                 $this->accountJournalServices->updateObjectDate($PAY_JOUNRAL_NO, $this->DATE);
 

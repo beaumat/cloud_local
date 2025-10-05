@@ -544,6 +544,16 @@ class PaymentServices
     {
         Payment::where('ID', '=', $ID)
             ->update(['DATE' => $DATE]);
+
+        DB::table('patient_payment as pp')
+            ->join('philhealth as ph', 'ph.ID', '=', 'pp.PHILHEALTH_ID')
+            ->join('payment_invoices as pn', 'pn.INVOICE_ID', '=', 'ph.INVOICE_ID')
+            ->join('payment as p', 'p.ID', '=', 'pn.PAYMENT_ID')
+            ->where('pp.PAYMENT_METHOD_ID', '=', 91)
+            ->where('p.ID', '=', $ID)
+            ->update([
+                'pp.DATE' => $DATE,
+            ]);
     }
     public function getPaymentIdViaInvoiceID(int $INVOICE_ID): int
     {
