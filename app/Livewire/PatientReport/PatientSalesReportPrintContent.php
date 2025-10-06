@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Livewire\PatientReport;
 
 use App\Services\ContactServices;
@@ -12,13 +11,12 @@ use Livewire\Component;
 class PatientSalesReportPrintContent extends Component
 {
 
+
     public bool $refreshComponent = false;
     public int $PATIENT_ID;
     public int $LOCATION_ID;
     public $locationList = [];
-    public $patientList = [];
-    public string $DATE_COLLECTION_FROM;
-    public string $DATE_COLLECTION_TO;
+    public $patientList  = [];
     public string $DATE_TRANSACTION_FROM;
     public string $DATE_TRANSACTION_TO;
     public string $tempName;
@@ -29,29 +27,34 @@ class PatientSalesReportPrintContent extends Component
     public bool $is_code;
     private $locationServices;
     private $userServices;
-    public $dataList = [];
-    public $preDataList = [];
+    public $dataList                = [];
+    public $preDataList             = [];
     public int $PREV_SC_ITEM_REF_ID = 0;
-    public bool $not_to_charge = false;
-    public float $TOTAL_CHARGE = 0;
-    public float $TOTAL_PAID = 0;
+    public bool $not_to_charge      = false;
+    public float $TOTAL_CHARGE      = 0;
+    public float $TOTAL_PAID        = 0;
     public float $CASH_AMOUNT;
     public float $PRE_COLLECTION;
+    public float $PRE_CASH_AMOUNT;
     public float $PHILHEALTH_AMOUNT;
     public float $DSWD_AMOUNT;
     public float $LINGAP_AMOUNT;
     public float $PCSO_AMOUNT;
     public float $OTHER_GL_AMOUNT;
-    public int $NO_OF_PATIENT = 0;
+    public float $OP_AMOUNT;
+    public float $OVP_AMOUNT;
+
+    public int $NO_OF_PATIENT   = 0;
     public int $NO_OF_TREATMENT = 0;
     private $contactServices;
     private $patientReportServices;
-    private $itemServices;
-    public $filterPatient = [];
-    public $selectedPatient = [];
-    public $filterItem = [];
-    public $selectedItem = [];
 
+    public $filterPatient   = [];
+    public $selectedPatient = [];
+    public $filterItem      = [];
+    public $selectedItem    = [];
+    public $filterMethod    = [];
+    public $selectedMethod  = [];
     public function boot(
         LocationServices $locationServices,
         UserServices $userServices,
@@ -59,65 +62,81 @@ class PatientSalesReportPrintContent extends Component
         PatientReportServices $patientReportServices,
         ItemServices $itemServices
     ) {
-        $this->locationServices = $locationServices;
-        $this->userServices = $userServices;
-        $this->contactServices = $contactServices;
+        $this->locationServices      = $locationServices;
+        $this->userServices          = $userServices;
+        $this->contactServices       = $contactServices;
         $this->patientReportServices = $patientReportServices;
-        $this->itemServices = $itemServices;
+        $this->itemServices          = $itemServices;
     }
 
-    public function mount($DATE_FROM, $DATE_TO, $LOCATION_ID)
+    public function mount($DATE_FROM, $DATE_TO, $LOCATION_ID, $patient = null, $item = null, $method = null)
     {
+
+        $this->LOCATION_ID  = $LOCATION_ID;
+
         $this->DATE_TRANSACTION_FROM = $DATE_FROM;
-        $this->DATE_TRANSACTION_TO = $DATE_TO;
-        $this->LOCATION_ID = $LOCATION_ID;
-        $this->showfilter();
-    }
+        $this->DATE_TRANSACTION_TO   = $DATE_TO;
 
-    public function showfilter()
-    {
+        if ($patient) {
+            $this->selectedPatient = $patient !== 'none' ? explode(',', $patient) : [];
+        } else {
+            $this->selectedPatient = [];
+        }
 
-        $this->selectedItem = [];
-        $this->selectedPatient = [];
+        if ($item) {
+            $this->selectedItem = $item !== 'none' ? explode(',', $item) : [];
+        } else {
+            $this->selectedItem = [];
+        }
+        if ($method) {
+            $this->selectedMethod = $method !== 'none' ? explode(',', $method) : [];
+        } else {
+            $this->selectedMethod = [];
+        }
         $this->shortFilter();
-        $this->refreshComponent = $this->refreshComponent ? false : true;
     }
 
-    public function shortFilter()
+     public function shortFilter()
     {
-        $this->NO_OF_PATIENT  = 0;
-        $this->TOTAL_CHARGE = 0;
-        $this->TOTAL_PAID = 0;
-        $this->CASH_AMOUNT = 0;
+        $this->NO_OF_PATIENT     = 0;
+        $this->TOTAL_CHARGE      = 0;
+        $this->TOTAL_PAID        = 0;
+        $this->CASH_AMOUNT       = 0;
         $this->PHILHEALTH_AMOUNT = 0;
-        $this->PRE_COLLECTION = 0;
-        $this->DSWD_AMOUNT = 0;
-        $this->LINGAP_AMOUNT = 0;
-        $this->PCSO_AMOUNT = 0;
-        $this->OTHER_GL_AMOUNT = 0;
-        $this->NO_OF_TREATMENT = 0;
-        $this->DATE_COLLECTION_FROM  = '';
-        $this->DATE_COLLECTION_TO = '';
+        $this->PRE_COLLECTION    = 0;
+        $this->PRE_CASH_AMOUNT   = 0;
+        $this->DSWD_AMOUNT       = 0;
+        $this->LINGAP_AMOUNT     = 0;
+        $this->PCSO_AMOUNT       = 0;
+        $this->OTHER_GL_AMOUNT   = 0;
+        $this->OP_AMOUNT         = 0;
+        $this->OVP_AMOUNT        = 0;
+        $this->NO_OF_TREATMENT   = 0;
 
         $this->dataList = $this->patientReportServices->generateSalesReportData(
-
             $this->DATE_TRANSACTION_FROM,
             $this->DATE_TRANSACTION_TO,
             $this->LOCATION_ID,
             $this->selectedPatient,
-            $this->selectedItem
+            $this->selectedItem,
+            $this->selectedMethod
         );
 
-        $this->preDataList = $this->patientReportServices->generatePrevCollection(
+        $this->preDataList = $this->patientReportServices->getPreviousCollection(
             $this->DATE_TRANSACTION_FROM,
             $this->DATE_TRANSACTION_TO,
             $this->LOCATION_ID,
             $this->selectedPatient,
-            $this->selectedItem
+            $this->selectedItem,
+            $this->selectedMethod
         );
 
         foreach ($this->preDataList as $data) {
-            $this->PRE_COLLECTION =  $this->PRE_COLLECTION + $data->PP_PAID ?? 0;
+            if ($data->PAYMENT_METHOD_ID == 1) {
+                $this->PRE_CASH_AMOUNT = $this->PRE_CASH_AMOUNT + $data->PP_PAID ?? 0;
+            } else {
+                $this->PRE_COLLECTION = $this->PRE_COLLECTION + $data->PP_PAID ?? 0;
+            }
         }
     }
     public function render()

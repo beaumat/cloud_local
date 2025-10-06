@@ -9,6 +9,15 @@
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item active">
+                            <a target="_blank" href="{{ route('reportspatient_sales_report_print', [
+                                'date_from' => $DATE_TRANSACTION_FROM,
+                                'date_to' => $DATE_TRANSACTION_TO,
+                                'location_id' => $LOCATION_ID,
+                                'patient' => !empty($selectedPatient) ? implode(',', $selectedPatient) : 'none',
+                                'item' => !empty($selectedItem) ? implode(',', $selectedItem) : 'none',
+                                'method' => !empty($selectedMethod) ? implode(',', $selectedMethod) : 'none',
+                            ]) }}"
+                                class="btn btn-sm btn-primary">Print</a>
                             <button class="btn btn-sm btn-success" wire:click='export()'>Export To Excel</button>
                         </li>
                     </ol>
@@ -210,6 +219,7 @@
                         </tbody>
                     </table>
                 </div>
+                
                 <div class="col-md-4">
                     <div class="row">
                         <div class="col-md-6">

@@ -21,7 +21,7 @@
         </div>
     </div>
 
-    @livewire('PatientReport.PatientSalesReportPrintContent', ['DATE_FROM' => $DATE_TRANSACTION_FROM, 'DATE_TO' => $DATE_TRANSACTION_TO, 'LOCATION_ID' => $LOCATION_ID])
+    @livewire('PatientReport.PatientSalesReportPrintContent', ['DATE_FROM' => $DATE_TRANSACTION_FROM, 'DATE_TO' => $DATE_TRANSACTION_TO, 'LOCATION_ID' => $LOCATION_ID, 'patient' => $patient, 'item' => $item, 'method' => $method])
 
 
 </div>
