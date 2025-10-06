@@ -204,14 +204,14 @@ class PatientSalesReportExport implements FromCollection, ShouldAutoSize, WithSt
         // TOTAL_CHARGE
         $rowData = [
             'PN'          => 'No. of Patient: ' . $NO_OF_PATIENT,
-            'DESCRIPTION' => '',
+            'DESCRIPTION' => 'No. of Treatment:  ' . $NO_OF_TREATMENT,
             'CODE'        => '',
-            'DATE'        => 'No. of Treatment:  ' . $NO_OF_TREATMENT,
+            'DATE'        => '',
             'AMOUNT'      => '',
             'CREDIT'      => 'Philhealth Paid: ' . $PHILHEALTH_AMOUNT,
             'BAL'         => 'Cash Paid: ' . $CASH_AMOUNT,
-            'DOCTOR'      => '',
-            'LOCATION'    => 'Total Charges :' . $TOTAL_CHARGE,
+            'DOCTOR'      => 'Total Charges :' . $TOTAL_CHARGE,
+            'LOCATION'    => '',
         ];
         $finalData[] = array_values($rowData);
 
@@ -224,8 +224,8 @@ class PatientSalesReportExport implements FromCollection, ShouldAutoSize, WithSt
             'AMOUNT'      => 'DSWD Paid: ' . $DSWD_AMOUNT,
             'CREDIT'      => 'OP Paid: ' . $OP_AMOUNT,
             'BAL'         => 'Previous Cash: ' . $PRE_CASH_AMOUNT,
-            'DOCTOR'      => '',
-            'LOCATION'    => 'Total Credit :' . $TOTAL_PAID,
+            'DOCTOR'      => 'Total Credit :' . $TOTAL_PAID,
+            'LOCATION'    => '',
         ];
         $finalData[] = array_values($rowData);
 
@@ -238,8 +238,8 @@ class PatientSalesReportExport implements FromCollection, ShouldAutoSize, WithSt
             'AMOUNT'      => 'LINGAP Paid: ' . $LINGAP_AMOUNT,
             'CREDIT'      => 'OVP Paid: ' . $OVP_AMOUNT,
             'BAL'         => 'Net Cash Sales: ' . $CASH_AMOUNT + $PRE_CASH_AMOUNT,
-            'DOCTOR'      => '',
-            'LOCATION'    => 'Total Balance :' . $TOTAL_CHARGE - $TOTAL_PAID,
+            'DOCTOR'      => 'Total Balance :' . $TOTAL_CHARGE - $TOTAL_PAID,
+            'LOCATION'    => '',
         ];
         $finalData[] = array_values($rowData);
 
