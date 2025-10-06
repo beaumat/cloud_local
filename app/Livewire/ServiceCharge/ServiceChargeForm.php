@@ -121,11 +121,7 @@ class ServiceChargeForm extends Component
     }
     public function LoadDropdown(bool $isAllContact)
     {
-        if ($isAllContact) {
-            $this->patientList = $this->contactServices->getPatientList($this->LOCATION_ID);
-        } else {
-            $this->patientList = $this->scheduleServices->ContactListFromSchedules($this->DATE, $this->LOCATION_ID);
-        }
+        $this->contactLoad();
 
         $this->locationList    = $this->locationServices->getList();
         $this->shipViaList     = $this->shipViaServices->getList();
@@ -180,8 +176,9 @@ class ServiceChargeForm extends Component
             $data = $this->serviceChargeServices->get($id);
             if ($data) {
                 $this->LOCATION_ID = $data->LOCATION_ID ?? 0;
-                $this->LoadDropdown(true);
+
                 $this->getInfo($data);
+                $this->LoadDropdown(true);
                 $this->Modify  = false;
                 $this->HEMO_ID = $this->hemoServices->GetHemoID($data->DATE, $data->PATIENT_ID, $data->LOCATION_ID);
                 if ($this->HEMO_ID > 0) {
@@ -245,7 +242,7 @@ class ServiceChargeForm extends Component
                 'PAYMENT_TERMS_ID' => 'Payment Terms',
             ]
         );
-        
+
         if ($this->systemSettingServices->IsCloseDate($this->DATE)) {
             session()->flash('error', 'You cannot create a transaction before or on the closing date on :' . $this->systemSettingServices->CloseDate());
             return;
@@ -400,9 +397,9 @@ class ServiceChargeForm extends Component
     public function openForm()
     {
         $data = [
-            'HEMO_ID' => $this->HEMO_ID,
-            'DATE'    => $this->DATE,
-            'PATIENT_ID' => $this->PATIENT_ID,
+            'HEMO_ID'     => $this->HEMO_ID,
+            'DATE'        => $this->DATE,
+            'PATIENT_ID'  => $this->PATIENT_ID,
             'LOCATION_ID' => $this->LOCATION_ID,
         ];
 
