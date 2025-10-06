@@ -67,7 +67,7 @@ class PatientReportServices
                 DB::raw('999 as LINE_NO'),
                 'pp.AMOUNT as AMOUNT',
                 DB::raw("CONCAT(c.LAST_NAME, ', ', c.FIRST_NAME, ' .', LEFT(c.MIDDLE_NAME, 1), IF(c.SALUTATION IS NOT NULL AND c.SALUTATION != '', CONCAT(' .', c.SALUTATION), '')) as PATIENT_NAME"),
-                DB::raw("CONCAT(pm.DESCRIPTION ,': ',(SELECT GROUP_CONCAT( CONCAT( CONVERT(i.DESCRIPTION USING utf8mb4), ' : ', FORMAT(sci.AMOUNT, 2) ) ORDER BY sci.LINE_NO ASC SEPARATOR '| ' ) AS items_summary FROM patient_payment_charges AS ppc INNER JOIN service_charges_items AS sci ON sci.ID = ppc.SERVICE_CHARGES_ITEM_ID INNER JOIN item AS i ON i.ID = sci.ITEM_ID WHERE ppc.PATIENT_PAYMENT_ID = pp.ID)) as ITEM_NAME"),
+                DB::raw("CONCAT(pm.DESCRIPTION ,' : ',(SELECT GROUP_CONCAT( CONCAT( CONVERT(i.DESCRIPTION USING utf8mb4), ' : ', FORMAT(sci.AMOUNT, 2) ) ORDER BY sci.LINE_NO ASC SEPARATOR '| ' ) AS items_summary FROM patient_payment_charges AS ppc INNER JOIN service_charges_items AS sci ON sci.ID = ppc.SERVICE_CHARGES_ITEM_ID INNER JOIN item AS i ON i.ID = sci.ITEM_ID WHERE ppc.PATIENT_PAYMENT_ID = pp.ID)) as ITEM_NAME"),
                 'l.NAME as LOCATION_NAME',
                 DB::raw("0 as PREVIOUS_CREDIT "), // Placeholder for previous credit
                 DB::raw('(select d.PRINT_NAME_AS  from patient_doctor  as pd join contact as d on d.ID = pd.DOCTOR_ID where pd.PATIENT_ID = c.ID limit 1) as DOCTOR_NAME '),
