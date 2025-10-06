@@ -282,7 +282,26 @@ class ContactServices
 
         return $result;
     }
+    public function getPatientList2(int $LOCATION_ID): object
+    {
 
+        $result = Contacts::query()
+            ->select([
+                'ID',
+                DB::raw("CONCAT(LAST_NAME, ', ', FIRST_NAME, ', ', LEFT(MIDDLE_NAME, 1)) as NAME"),
+            ])
+            ->where('INACTIVE', '=', '0')
+            ->where('TYPE', 3)
+            ->when($LOCATION_ID > 0, function ($query) use (&$LOCATION_ID) {
+                $query->where('LOCATION_ID', '=', $LOCATION_ID);
+            })->orWhere('TYPE', '=', 1)
+            ->where('INACTIVE', '=', '0')
+            ->where('')
+            ->orderBy('LAST_NAME', 'asc')
+            ->get();
+
+        return $result;
+    }
     public function getPatientAvailmentList($search, int $LOCATION_ID, int $YEAR): object
     {
 

@@ -114,7 +114,7 @@ class ServiceChargeForm extends Component
     private function contactLoad()
     {
         if ($this->WALK_IN) {
-            $this->patientList = $this->contactServices->getPatientList($this->LOCATION_ID);
+            $this->patientList = $this->contactServices->getPatientList2($this->LOCATION_ID);
         } else {
             $this->patientList = $this->scheduleServices->ContactListFromSchedules($this->DATE, $this->LOCATION_ID);
         }
