@@ -140,35 +140,36 @@ class PatientSalesReportExport implements FromCollection, ShouldAutoSize, WithSt
 
             $running_balance = $running_balance - $list->PREVIOUS_CREDIT ?? 0;
             $TOTAL_CHARGE    = $TOTAL_CHARGE - $list->PREVIOUS_CREDIT ?? 0;
+            if (substr($list->ITEM_NAME, 0, 6) == 'Cash :') {
+                $CASH_AMOUNT = $CASH_AMOUNT + $list->AMOUNT ?? 0;
+            }
 
-            switch ($list->ITEM_NAME) {
-                case 'Cash':
-                    $CASH_AMOUNT = $CASH_AMOUNT + $list->AMOUNT ?? 0;
-                    break;
-                case 'Philhealth':
-                    $PHILHEALTH_AMOUNT = $PHILHEALTH_AMOUNT + $list->AMOUNT ?? 0;
-                    break;
-                case 'DSWD':
-                    $DSWD_AMOUNT = $DSWD_AMOUNT + $list->AMOUNT ?? 0;
-                    break;
-                case 'LINGAP':
-                    $LINGAP_AMOUNT = $LINGAP_AMOUNT + $list->AMOUNT ?? 0;
-                    break;
-                case 'PCSO':
-                    $PCSO_AMOUNT = $PCSO_AMOUNT + $list->AMOUNT ?? 0;
-                    break;
-                case 'OP':
-                    $OP_AMOUNT = $OP_AMOUNT + $list->AMOUNT ?? 0;
-                    break;
-                case 'OVP':
-                    $OVP_AMOUNT = $OVP_AMOUNT + $list->AMOUNT ?? 0;
-                    break;
-                case 'Other GL':
-                    $OTHER_GL_AMOUNT = $OTHER_GL_AMOUNT + $list->AMOUNT ?? 0;
-                    break;
-                default:
-                    # code...
-                    break;
+            if (substr($list->ITEM_NAME, 0, 12) == 'Philhealth :') {
+                $PHILHEALTH_AMOUNT = $PHILHEALTH_AMOUNT + $list->AMOUNT ?? 0;
+            }
+
+            if (substr($list->ITEM_NAME, 0, 6) == 'DSWD :') {
+                $DSWD_AMOUNT = $DSWD_AMOUNT + $list->AMOUNT ?? 0;
+            }
+
+            if (substr($list->ITEM_NAME, 0, 8) == 'LINGAP :') {
+                $LINGAP_AMOUNT = $LINGAP_AMOUNT + $list->AMOUNT ?? 0;
+            }
+
+            if (substr($list->ITEM_NAME, 0, 6) == 'PCSO :') {
+                $PCSO_AMOUNT = $PCSO_AMOUNT + $list->AMOUNT ?? 0;
+            }
+
+            if (substr($list->ITEM_NAME, 0, 4) == 'OP :') {
+                $OP_AMOUNT = $OP_AMOUNT + $list->AMOUNT ?? 0;
+            }
+
+            if (substr($list->ITEM_NAME, 0, 5) == 'OVP :') {
+                $OVP_AMOUNT = $OVP_AMOUNT + $list->AMOUNT ?? 0;
+            }
+
+            if (substr($list->ITEM_NAME, 0, 10) == 'Other GL :') {
+                $OTHER_GL_AMOUNT = $OTHER_GL_AMOUNT + $list->AMOUNT ?? 0;
             }
 
             if ($list->LINE_NO == 999) {

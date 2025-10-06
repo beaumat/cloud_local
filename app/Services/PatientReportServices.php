@@ -76,7 +76,7 @@ class PatientReportServices
             ->join('location as l', 'l.ID', '=', 'pp.LOCATION_ID')
             ->join('contact as c', 'c.ID', '=', 'pp.PATIENT_ID')
             ->join('payment_method as pm', 'pm.ID', '=', 'pp.PAYMENT_METHOD_ID')
-             ->where('pm.ID','<>', 91)
+            ->where('pm.ID', '<>', 91)
             ->when($patientData, function ($query) use (&$patientData) {
                 $array = $patientData;
                 $query->whereIn('pp.PATIENT_ID', $array);
@@ -105,7 +105,6 @@ class PatientReportServices
 
         return $finalQuery;
     }
-   
 
     public function getPreviousCollection(string $scFrom, string $scTo, int $locatoinId, array $patientData = [], array $itemData = [], array $methodData = []): object
     {
@@ -141,7 +140,7 @@ class PatientReportServices
             })
             ->leftJoin('payment_method as pm', 'pm.ID', '=', 'pp.PAYMENT_METHOD_ID')
             ->where('pp.DATE', '<', $scFrom)
-            ->where('pm.ID','<>', 91)
+            ->where('pm.ID', '<>', 91)
             ->whereBetween('sc.DATE', [$scFrom, $scTo])
             ->when($locatoinId > 0, function ($query) use (&$locatoinId): void {
                 $query->where('sc.LOCATION_ID', $locatoinId);
