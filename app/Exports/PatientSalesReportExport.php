@@ -94,11 +94,12 @@ class PatientSalesReportExport implements FromCollection, ShouldAutoSize, WithSt
                     $is_sc           = true;
                     $NO_OF_TREATMENT = $NO_OF_TREATMENT + 1;
                     $rowData         = $this->empty();
-                     $finalData[] = array_values($rowData);
+                    $finalData[]     = array_values($rowData);
                 }
             }
 
             if ($PREV_SC_ITEM_REF_ID == $list->ITEM_REF_ID) {
+
                 $not_to_charge = true;
             } else {
                 $not_to_charge = false;
@@ -172,12 +173,15 @@ class PatientSalesReportExport implements FromCollection, ShouldAutoSize, WithSt
 
             if ($list->LINE_NO == 999) {
                 $TOTAL_PAID = $TOTAL_PAID + $list->AMOUNT ?? 0;
+
+                $not_to_charge = true;
             } else {
                 if ($list->PREVIOUS_CREDIT ?? 0 > 0) {
                     $running_balance = $running_balance - $list->PREVIOUS_CREDIT ?? 0;
                     $TOTAL_CHARGE    = $TOTAL_CHARGE - $list->PREVIOUS_CREDIT ?? 0;
 
                 }
+
             }
 
             $rowData = [
