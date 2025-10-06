@@ -142,7 +142,7 @@ class PatientPaymentForm extends Component
     {
         $this->accountList       = $this->accountServices->getIncome();
         $this->locationList      = $this->locationServices->getList();
-        $this->contactList       = $this->contactServices->getPatientList($this->LOCATION_ID);
+        $this->contactList       = $this->contactServices->getPatientList2($this->LOCATION_ID);
         $this->paymentMethodList = $this->paymentMethodServices->getPaymentMethodViaPatientPayment();
     }
     public function mount($id = null)
@@ -370,7 +370,7 @@ class PatientPaymentForm extends Component
 
             $this->UNDEPOSITED_FUNDS_ACCOUNT_ID = $paymentMethod->GL_ACCOUNT_ID ?? 0;
         }
-       // $this->UNDEPOSITED_FUNDS_ACCOUNT_ID = 0;
+        // $this->UNDEPOSITED_FUNDS_ACCOUNT_ID = 0;
     }
     public function openPayment()
     {

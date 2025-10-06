@@ -299,47 +299,7 @@ class ServiceChargeServices
 
         return [];
     }
-    // public function Search($search, int $locationId, int $perPage, string $dateFrom, string $dateTo)
-    // {
-    //     $result = ServiceCharges::query()
-    //         ->select([
-    //             'service_charges.ID',
-    //             'service_charges.CODE',
-    //             'service_charges.DATE',
-    //             'service_charges.AMOUNT',
-    //             'service_charges.BALANCE_DUE',
-    //             'service_charges.OUTPUT_TAX_RATE',
-    //             'service_charges.NOTES',
-    //             DB::raw("CONCAT(c.LAST_NAME, ', ', c.FIRST_NAME, ', ', LEFT(c.MIDDLE_NAME, 1)) as CONTACT_NAME"),
-    //             'l.NAME as LOCATION_NAME',
-    //             't.NAME as TAX_NAME',
-    //             's.DESCRIPTION as STATUS',
-    //             's.ID as STATUS_ID',
-    //             DB::raw('(select s.DESCRIPTION from hemodialysis as h join hemo_status as s on s.ID = h.STATUS_ID where h.CUSTOMER_ID = service_charges.PATIENT_ID and h.DATE = service_charges.DATE and h.LOCATION_ID = service_charges.LOCATION_ID limit 1 ) as TR_STATUS'),
-    //             DB::raw('(select if(count(*) > 0, true, false)  from hemodialysis_items inner join service_charges_items on service_charges_items.ID = hemodialysis_items.SC_ITEM_ID  where service_charges_items.SERVICE_CHARGES_ID = service_charges.ID and hemodialysis_items.IS_CASHIER = 1) as got_charge')
-    //         ])
-    //         ->join('contact as c', 'c.ID', '=', 'service_charges.PATIENT_ID')
-    //         ->join('location as l', 'l.ID', '=', 'service_charges.LOCATION_ID')
-    //         ->join('document_status_map as s', 's.ID', '=', 'service_charges.STATUS')
-    //         ->leftJoin('tax as t', 't.ID', '=', 'service_charges.OUTPUT_TAX_ID')
-    //         ->when($search, function ($query) use (&$search) {
-    //             $query->where('service_charges.CODE', 'like', '%' . $search . '%')
-    //                 ->orWhere('service_charges.AMOUNT', 'like', '%' . $search . '%')
-    //                 ->orWhere('service_charges.NOTES', 'like', '%' . $search . '%')
-    //                 ->orWhere('c.NAME', 'like', '%' . $search . '%')
-    //                 ->orWhere('c.PRINT_NAME_AS', 'like', '%' . $search . '%');
-    //         })
-    //         ->when($locationId > 0, function ($query) use ($locationId) {
-    //             $query->where('l.ID', $locationId);
-    //         })
-    //         ->whereBetween('service_charges.DATE', [$dateFrom, $dateTo])
-    //         ->where('service_charges.USE_PHIC', '=', 0)
-    //         ->orderBy('service_charges.DATE', 'desc')
-    //         ->limit(1000)
-    //         ->paginate($perPage);
 
-    //     return $result;
-    // }
 
     public function Search($search, int $locationId, int $perPage, string $dateEntry, bool $showNurseEntry = false)
     {
@@ -352,13 +312,11 @@ class ServiceChargeServices
                 'service_charges.BALANCE_DUE',
                 'service_charges.OUTPUT_TAX_RATE',
                 'service_charges.NOTES',
-                DB::raw("c.NAME as CONTACT_NAME"),
+                DB::raw("If(c.TYPE = 3, CONCAT(c.LAST_NAME, ', ', c.FIRST_NAME, ', ', LEFT(c.MIDDLE_NAME, 1)),c.NAME) as CONTACT_NAME"),
                 'l.NAME as LOCATION_NAME',
                 't.NAME as TAX_NAME',
                 's.DESCRIPTION as STATUS',
                 's.ID as STATUS_ID',
-                // DB::raw('(SELECT s.DESCRIPTION FROM hemodialysis AS h JOIN hemo_status AS s ON s.ID = h.STATUS_ID WHERE h.CUSTOMER_ID = service_charges.PATIENT_ID AND h.DATE = service_charges.DATE AND h.LOCATION_ID = service_charges.LOCATION_ID LIMIT 1) as TR_STATUS'),
-                // DB::raw('(SELECT IF(COUNT(*) > 0, TRUE, FALSE) FROM hemodialysis_items INNER JOIN service_charges_items ON service_charges_items.ID = hemodialysis_items.SC_ITEM_ID WHERE service_charges_items.SERVICE_CHARGES_ID = service_charges.ID AND hemodialysis_items.IS_CASHIER = 1 limit 1) as got_charge')
             ])
             ->when($showNurseEntry, function ($query) use ($showNurseEntry) {
                 if ($showNurseEntry) {

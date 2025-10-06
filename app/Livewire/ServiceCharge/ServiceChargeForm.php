@@ -119,10 +119,9 @@ class ServiceChargeForm extends Component
             $this->patientList = $this->scheduleServices->ContactListFromSchedules($this->DATE, $this->LOCATION_ID);
         }
     }
-    public function LoadDropdown(bool $isAllContact)
+    public function LoadDropdown()
     {
         $this->contactLoad();
-
         $this->locationList    = $this->locationServices->getList();
         $this->shipViaList     = $this->shipViaServices->getList();
         $this->paymentTermList = $this->paymentTermServices->getList();
@@ -176,9 +175,8 @@ class ServiceChargeForm extends Component
             $data = $this->serviceChargeServices->get($id);
             if ($data) {
                 $this->LOCATION_ID = $data->LOCATION_ID ?? 0;
-
                 $this->getInfo($data);
-                $this->LoadDropdown(true);
+                $this->LoadDropdown();
                 $this->Modify  = false;
                 $this->HEMO_ID = $this->hemoServices->GetHemoID($data->DATE, $data->PATIENT_ID, $data->LOCATION_ID);
                 if ($this->HEMO_ID > 0) {
@@ -191,7 +189,7 @@ class ServiceChargeForm extends Component
         }
         $this->DATE        = $this->userServices->getTransactionDateDefault();
         $this->LOCATION_ID = $this->userServices->getLocationDefault();
-        $this->LoadDropdown(false);
+        $this->LoadDropdown();
         $this->Modify                 = true;
         $this->ID                     = 0;
         $this->CODE                   = '';

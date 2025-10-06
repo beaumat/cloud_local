@@ -288,13 +288,13 @@ class ContactServices
         $result = Contacts::query()
             ->select([
                 'ID',
-                DB::raw("NAME as NAME"),
+                DB::raw("IF(TYPE =3, CONCAT(LAST_NAME, ', ', FIRST_NAME, ', ', LEFT(MIDDLE_NAME, 1)), NAME ) as NAME"),
             ])
             ->where('INACTIVE', '=', '0')
             ->where('TYPE', 3)
             ->when($LOCATION_ID > 0, function ($query) use (&$LOCATION_ID) {
                 $query->where('LOCATION_ID', '=', $LOCATION_ID);
-            })->orWhere('TYPE', '=', 1)       
+            })->orWhere('TYPE', '=', 1)
             ->orderBy('LAST_NAME', 'asc')
             ->get();
 
