@@ -23,7 +23,7 @@ use Livewire\Component;
 #[Title('Service Charge')]
 class ServiceChargeForm extends Component
 {
-    public int $ID;
+    public int $ID = 0;
     public int $PATIENT_ID;
     public int $SALES_REP_ID;
     public string $DATE;
@@ -116,7 +116,8 @@ class ServiceChargeForm extends Component
         if ($this->WALK_IN) {
             $this->patientList = $this->contactServices->getPatientList2($this->LOCATION_ID);
         } else {
-            $this->patientList = $this->scheduleServices->ContactListFromSchedules($this->DATE, $this->LOCATION_ID);
+            $isCreated         = $this->ID == 0 ? true : false;
+            $this->patientList = $this->scheduleServices->ContactListFromSchedules($this->DATE, $this->LOCATION_ID, $isCreated);
         }
     }
     public function LoadDropdown()
@@ -217,6 +218,7 @@ class ServiceChargeForm extends Component
     public function getModify()
     {
         $this->Modify = true;
+        $this->contactLoad();
     }
     public function save()
     {
@@ -376,6 +378,7 @@ class ServiceChargeForm extends Component
             $this->getInfo($data);
         }
         $this->Modify = false;
+        $this->contactLoad();
     }
     #[On('clear-alert')]
     public function clearAlert()

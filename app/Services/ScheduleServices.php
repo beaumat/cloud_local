@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Services;
 
 use App\Models\Contacts;
@@ -24,7 +23,7 @@ class ScheduleServices
     private $dateServices;
     public function __construct(ObjectServices $objectService, DateServices $dateServices)
     {
-        $this->object = $objectService;
+        $this->object       = $objectService;
         $this->dateServices = $dateServices;
     }
     public function getInfo(int $Id)
@@ -32,9 +31,9 @@ class ScheduleServices
         return Schedules::where('ID', $Id)->first();
     }
 
-    public function ContactListFromSchedules(string $Date, int $LOCATION_ID)
+    public function ContactListFromSchedules(string $Date, int $LOCATION_ID, bool $isCreated = true)
     {
-        return Schedules::query()
+        $result = Schedules::query()
             ->select([
                 'schedules.CONTACT_ID as ID',
                 DB::raw("CONCAT(c.LAST_NAME, ', ', c.FIRST_NAME, ', ', LEFT(c.MIDDLE_NAME, 1)) as NAME"),
@@ -43,15 +42,20 @@ class ScheduleServices
             ->where('c.TYPE', 3)
             ->whereDate('schedules.SCHED_DATE', $Date)
             ->where('schedules.LOCATION_ID', $LOCATION_ID)
-            ->whereNotExists(function ($query) {
-                $query->select(DB::raw(1))
-                    ->from('service_charges as sc')
-                    ->whereRaw('sc.`DATE` = schedules.`SCHED_DATE`')
-                    ->whereRaw('sc.`PATIENT_ID` = schedules.`CONTACT_ID`')
-                    ->whereRaw('sc.`LOCATION_ID`= schedules.`LOCATION_ID`');
+            ->when($isCreated, function ($q) {
+                $q->whereNotExists(function ($query) {
+                    $query->select(DB::raw(1))
+                        ->from('service_charges as sc')
+                        ->whereRaw('sc.`DATE` = schedules.`SCHED_DATE`')
+                        ->whereRaw('sc.`PATIENT_ID` = schedules.`CONTACT_ID`')
+                        ->whereRaw('sc.`LOCATION_ID`= schedules.`LOCATION_ID`');
+                });
             })
             ->orderBy('c.LAST_NAME')
             ->get();
+
+        return $result;
+
     }
     public function scheduleList($Date, int $LOCATION_ID)
     {
@@ -60,7 +64,7 @@ class ScheduleServices
                 'schedules.CONTACT_ID',
                 'c.NAME aS CONTACT_NAME',
                 's.NAME as SHIFT',
-                't.DESCRIPTION as STATUS'
+                't.DESCRIPTION as STATUS',
             ])
             ->leftJoin('contact as c', 'c.ID', '=', 'schedules.CONTACT_ID')
             ->leftJoin('shift as s', 's.ID', '=', 'schedules.SHIFT_ID')
@@ -78,7 +82,7 @@ class ScheduleServices
                 'schedules.CONTACT_ID',
                 'c.LAST_NAME aS CONTACT_NAME',
                 't.DESCRIPTION as STATUS',
-                'schedules.HEMO_MACHINE_ID'
+                'schedules.HEMO_MACHINE_ID',
             ])
             ->leftJoin('contact as c', 'c.ID', '=', 'schedules.CONTACT_ID')
             ->leftJoin('schedule_status as t', 't.ID', '=', 'schedules.SCHED_STATUS')
@@ -103,7 +107,7 @@ class ScheduleServices
                     'STATUS_LOG',
                     'LOCATION_ID',
                     'HEMO_MACHINE_ID',
-                    DB::raw("(select count(hemodialysis.ID) from hemodialysis where hemodialysis.CUSTOMER_ID = schedules.CONTACT_ID and hemodialysis.DATE = schedules.SCHED_DATE and hemodialysis.LOCATION_ID = schedules.LOCATION_ID ) as  EXIST_HEMO")
+                    DB::raw("(select count(hemodialysis.ID) from hemodialysis where hemodialysis.CUSTOMER_ID = schedules.CONTACT_ID and hemodialysis.DATE = schedules.SCHED_DATE and hemodialysis.LOCATION_ID = schedules.LOCATION_ID ) as  EXIST_HEMO"),
                 ])
                 ->where('CONTACT_ID', '=', $ContactId)
                 ->where('SCHED_DATE', '=', $Date)
@@ -149,11 +153,11 @@ class ScheduleServices
             ->where('SCHED_DATE', $DATE)
             ->where('LOCATION_ID', $LOCATION_ID)
             ->update([
-                'SHIFT_ID' => $SHIFT_ID,
-                'SCHED_STATUS' => $STATUS,
-                'STATUS_LOG' => $LOG,
+                'SHIFT_ID'        => $SHIFT_ID,
+                'SCHED_STATUS'    => $STATUS,
+                'STATUS_LOG'      => $LOG,
                 'HEMO_MACHINE_ID' => $HEMO_MACHINE_ID,
-                'UPDATED_AT' => $this->dateServices->Now()
+                'UPDATED_AT'      => $this->dateServices->Now(),
             ]);
     }
     public function UpdateHemoMachine(int $CONTACT_ID, string $DATE, int $LOCATION_ID, int $HEMO_MACHINE_ID)
@@ -163,7 +167,7 @@ class ScheduleServices
             ->where('LOCATION_ID', $LOCATION_ID)
             ->update([
                 'HEMO_MACHINE_ID' => $HEMO_MACHINE_ID,
-                'UPDATED_AT' => $this->dateServices->Now()
+                'UPDATED_AT'      => $this->dateServices->Now(),
             ]);
     }
     public function StatusUpdate(int $CONTACT_ID, string $DATE, int $LOCATION_ID, int $STATUS)
@@ -173,7 +177,7 @@ class ScheduleServices
             ->where('LOCATION_ID', $LOCATION_ID)
             ->update([
                 'SCHED_STATUS' => $STATUS,
-                'UPDATED_AT' => $this->dateServices->Now()
+                'UPDATED_AT'   => $this->dateServices->Now(),
             ]);
     }
     public function CheckingType(int $SHIFT_ID, int $CONTACT_ID, string $DATE, int $LOCATION_ID, int $HEMO_MACHINE_ID): int
@@ -185,7 +189,6 @@ class ScheduleServices
             ->where('CONTACT_ID', '<>', $CONTACT_ID)
             ->count();
 
-
         return $totalCount;
     }
     public function Store(int $SHIFT_ID, int $CONTACT_ID, string $DATE, int $STATUS, $LOG, int $LOCATION_ID, int $HEMO_MACHINE_ID)
@@ -194,16 +197,16 @@ class ScheduleServices
         $ID = (int) $this->object->ObjectNextID('SCHEDULES');
 
         Schedules::create([
-            'ID' => $ID,
-            'SHIFT_ID' => $SHIFT_ID,
-            'CONTACT_ID' => $CONTACT_ID,
-            'SCHED_DATE' => $DATE,
-            'SCHED_STATUS' => $STATUS,
-            'STATUS_LOG' => $LOG,
-            'LOCATION_ID' => $LOCATION_ID,
+            'ID'              => $ID,
+            'SHIFT_ID'        => $SHIFT_ID,
+            'CONTACT_ID'      => $CONTACT_ID,
+            'SCHED_DATE'      => $DATE,
+            'SCHED_STATUS'    => $STATUS,
+            'STATUS_LOG'      => $LOG,
+            'LOCATION_ID'     => $LOCATION_ID,
             'HEMO_MACHINE_ID' => $HEMO_MACHINE_ID,
-            'CREATED_AT' => $this->dateServices->Now(),
-            'UPDATED_AT' => $this->dateServices->Now()
+            'CREATED_AT'      => $this->dateServices->Now(),
+            'UPDATED_AT'      => $this->dateServices->Now(),
         ]);
     }
 
@@ -216,7 +219,7 @@ class ScheduleServices
                 'schedules.SCHED_STATUS',
                 's.DESCRIPTION as STATUS',
                 't.NAME as SHIFT',
-                'h.DESCRIPTION as TYPE'
+                'h.DESCRIPTION as TYPE',
             ])
             ->leftJoin('schedule_status as s', 's.ID', '=', 'schedules.SCHED_STATUS')
             ->leftJoin('shift as t', 't.ID', '=', 'schedules.SHIFT_ID')
@@ -226,7 +229,6 @@ class ScheduleServices
             ->where('schedules.SCHED_STATUS', $STATUS_ID)
             ->orderBy('schedules.SCHED_DATE', 'asc')
             ->paginate($perPage);
-
 
         return $result;
     }
@@ -238,7 +240,7 @@ class ScheduleServices
                 DB::raw('IF(schedules.SCHED_STATUS = 0, COUNT(*), 0) AS W'),
                 DB::raw('IF(schedules.SCHED_STATUS = 1, COUNT(*), 0) AS P'),
                 DB::raw('IF(schedules.SCHED_STATUS = 2, COUNT(*), 0) AS A'),
-                DB::raw('IF(schedules.SCHED_STATUS = 3, COUNT(*), 0) AS C')
+                DB::raw('IF(schedules.SCHED_STATUS = 3, COUNT(*), 0) AS C'),
             ])
             ->join('contact AS c', 'c.ID', '=', 'schedules.CONTACT_ID')
             ->join('shift AS s', 's.ID', '=', 'schedules.SHIFT_ID')
@@ -254,7 +256,7 @@ class ScheduleServices
                 DB::raw('SUM(sched.W) AS W'),
                 DB::raw('SUM(sched.P) AS P'),
                 DB::raw('SUM(sched.A) AS A'),
-                DB::raw('SUM(sched.C) AS C')
+                DB::raw('SUM(sched.C) AS C'),
             ])
             ->groupBy('sched.SHIFT_ID')
             ->get();
@@ -328,10 +330,8 @@ class ScheduleServices
     private function AutoProcess(int $PATIENT_ID, int $LOCATION_ID, array $weekDate = [], $patientType, $shiftList)
     {
 
-
-        $capacity = (int) $patientType->CAPACITY;
+        $capacity        = (int) $patientType->CAPACITY;
         $patient_type_id = (int) $patientType->ID;
-
 
         foreach ($weekDate as $date) {
             $weekDateFormatted = (string) Carbon::parse($date)->format('Y-m-d');
@@ -380,8 +380,8 @@ class ScheduleServices
     public function PatientWeeklySchedule($SHIFT_ID, $DATE, $LOCATION_ID)
     {
         $demandOutput = [];
-        $res = HemodialysisMachines::where('LOCATION_ID', $LOCATION_ID)->get();
-        $run = 1;
+        $res          = HemodialysisMachines::where('LOCATION_ID', $LOCATION_ID)->get();
+        $run          = 1;
         foreach ($res as $list) {
 
             for ($z = 1; $z <= $list->CAPACITY; $z++) {
@@ -412,8 +412,6 @@ class ScheduleServices
             ->orderBy('c.LAST_NAME')
             ->get();
 
-
-
         foreach ($result as $list) {
 
             foreach ($demandOutput as &$item) {
@@ -425,7 +423,6 @@ class ScheduleServices
                 }
             }
         }
-
 
         return $demandOutput;
     }
@@ -442,7 +439,7 @@ class ScheduleServices
                 'c.LONG_HRS_DURATION',
                 'c.ADMITTED',
                 'c.ID as PATIENT_ID',
-                's.NAME as SHIFT'
+                's.NAME as SHIFT',
             ])
             ->join('contact as c', 'c.ID', '=', 'schedules.CONTACT_ID')
             ->join('shift AS s', 's.ID', '=', 'schedules.SHIFT_ID')
@@ -470,7 +467,7 @@ class ScheduleServices
 
     public function getCountScheduleList($DATE_FROM, $DATE_TO, int $LOCATION_ID): int
     {
-        return  Schedules::query()->whereBetween('SCHED_DATE', [$DATE_FROM, $DATE_TO])->where('LOCATION_ID', $LOCATION_ID)->count();
+        return Schedules::query()->whereBetween('SCHED_DATE', [$DATE_FROM, $DATE_TO])->where('LOCATION_ID', $LOCATION_ID)->count();
     }
     public function getWaitingList(string $Date)
     {
@@ -480,7 +477,7 @@ class ScheduleServices
                 'CONTACT_ID',
                 'LOCATION_ID',
                 'HEMO_MACHINE_ID',
-                'SCHED_DATE'
+                'SCHED_DATE',
             ])
             ->where('SCHED_STATUS', 0)
             ->where('SCHED_DATE', '<=', $Date)
