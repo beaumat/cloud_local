@@ -456,6 +456,7 @@ class SalesReceiptServices
                 DB::raw('(select ifnull(sum(p.CUSTOM_COST),0) from price_level_lines as p inner join location as l on l.PRICE_LEVEL_ID = p.PRICE_LEVEL_ID where l.ID = sales_receipt.LOCATION_ID  and p.ITEM_ID = sales_receipt_items.ITEM_ID) as COST')
             ])
             ->join('item', 'item.ID', '=', 'sales_receipt_items.ITEM_ID')
+            ->join('sales_receipt','sales_receipt.ID','=', 'sales_receipt_items.SALES_RECEIPT_ID')
             ->whereIn('item.TYPE', ['0', '1'])
             ->where('sales_receipt_items.SALES_RECEIPT_ID', $SALES_RECEIPT_ID)
             ->get();
