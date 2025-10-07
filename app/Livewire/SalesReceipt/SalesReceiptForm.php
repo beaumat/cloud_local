@@ -352,14 +352,8 @@ class SalesReceiptForm extends Component
                 }
                 DB::commit();
                 if ($this->IS_MODAL) {
-                    $data = $this->salesReceiptServices->get($this->ID);
-                    if ($data) {
-                        $this->getInfo($data);
-                    }
-                    $this->Modify = false;
-                    return;
+                    return Redirect::route('customerssales_receipt_edit', ['id' => $this->ID])->with('message', 'Successfully created');
                 }
-                return Redirect::route('customerssales_receipt_edit', ['id' => $this->ID])->with('message', 'Successfully created');
             } else {
 
                 $this->validate(
