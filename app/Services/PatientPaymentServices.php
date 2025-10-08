@@ -703,7 +703,6 @@ class PatientPaymentServices
         $DATE                         = $RECEIPT_DATE;
         $phData                       = $this->philHealthServices->get($PHILHEALTH_ID);
         $UNDEPOSITED_FUNDS_ACCOUNT_ID = 0;
-
         $ACCOUNTS_RECEIVABLE_ID = (int) $this->accountServices->getByName('Accounts Receivables');
 
         $ID = $this->Store(
