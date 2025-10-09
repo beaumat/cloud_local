@@ -322,11 +322,11 @@
                             </h6>
                             <h6 class="text-xs"> <label class="text-xs">CURRENT CREDIT : </label>
                                 <span
-                                    class="text-success font-weight-bold h6">{{ number_format($TOTAL_PAID, 2) }}</span>
+                                    class="text-success font-weight-bold h6">{{ number_format(($TOTAL_PAID  +  $PRE_COLLECTION), 2) }}</span>
                             </h6>
                             <h6 class="text-xs"> <label class="text-xs">TOTAL BALANCE : </label>
                                 <span
-                                    class="text-danger font-weight-bold h6">{{ number_format($TOTAL_CHARGE - $TOTAL_PAID, 2) }}</span>
+                                    class="text-danger font-weight-bold h6">{{ number_format($TOTAL_CHARGE - ($TOTAL_PAID  +  $PRE_COLLECTION), 2) }}</span>
                             </h6 class="text-xs">
                         </div>
                     </div>
