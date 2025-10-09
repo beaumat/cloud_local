@@ -177,10 +177,10 @@ class PatientSalesReportView extends Component
                 case 96:
                     $this->OTHER_GL_AMOUNT = $this->OTHER_GL_AMOUNT + $data->PP_PAID ?? 0;
                     break;
-                case 97:
+                case 98:
                     $this->OP_AMOUNT = $this->OP_AMOUNT + $data->PP_PAID ?? 0;
                     break;
-                case 98:
+                case 97:
                     $this->OVP_AMOUNT = $this->OVP_AMOUNT + $data->PP_PAID ?? 0;
                     break;
                 default:

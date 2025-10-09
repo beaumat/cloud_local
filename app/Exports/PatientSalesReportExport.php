@@ -87,10 +87,10 @@ class PatientSalesReportExport implements FromCollection, ShouldAutoSize, WithSt
                 case 96:
                     $OTHER_GL_AMOUNT = $OTHER_GL_AMOUNT + $data->PP_PAID ?? 0;
                     break;
-                case 97:
+                case 98:
                     $OP_AMOUNT = $OP_AMOUNT + $data->PP_PAID ?? 0;
                     break;
-                case 98:
+                case 97:
                     $OVP_AMOUNT = $OVP_AMOUNT + $data->PP_PAID ?? 0;
                     break;
                 default:
