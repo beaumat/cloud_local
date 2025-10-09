@@ -638,6 +638,7 @@ class PatientPaymentServices
             ->leftJoin('payment_method', 'payment_method.ID', '=', 'patient_payment.PAYMENT_METHOD_ID')
             ->where('patient_payment.PATIENT_ID', $PATIENT_ID)
             ->where('patient_payment.LOCATION_ID', $LOCATION_ID)
+            ->where('payment_method.ID','!=', 91)
             ->whereRaw('(patient_payment.AMOUNT - patient_payment.AMOUNT_APPLIED) > 0')
             ->orderBy('patient_payment.DATE')
             ->get();
@@ -702,7 +703,6 @@ class PatientPaymentServices
         $DATE                         = $RECEIPT_DATE;
         $phData                       = $this->philHealthServices->get($PHILHEALTH_ID);
         $UNDEPOSITED_FUNDS_ACCOUNT_ID = 0;
-
         $ACCOUNTS_RECEIVABLE_ID = (int) $this->accountServices->getByName('Accounts Receivables');
 
         $ID = $this->Store(

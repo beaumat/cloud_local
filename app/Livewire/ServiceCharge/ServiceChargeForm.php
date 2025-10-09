@@ -111,12 +111,13 @@ class ServiceChargeForm extends Component
     {
         $this->contactLoad();
     }
+
     private function contactLoad()
     {
         if ($this->WALK_IN) {
             $this->patientList = $this->contactServices->getPatientList2($this->LOCATION_ID);
         } else {
-            $isCreated         = $this->ID == 0 ? true : false;
+            $isCreated         = (bool) $this->ID == 0 ? true : false;
             $this->patientList = $this->scheduleServices->ContactListFromSchedules($this->DATE, $this->LOCATION_ID, $isCreated);
         }
     }
