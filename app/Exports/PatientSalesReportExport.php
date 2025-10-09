@@ -253,7 +253,7 @@ class PatientSalesReportExport implements FromCollection, ShouldAutoSize, WithSt
             'AMOUNT'      => 'DSWD Paid: ' . $DSWD_AMOUNT,
             'CREDIT'      => 'OP Paid: ' . $OP_AMOUNT,
             'BAL'         => 'Previous Cash: ' . $PRE_CASH_AMOUNT,
-            'DOCTOR'      => 'Total Credit :' . ($TOTAL_PAID  +  $PRE_COLLECTION),
+            'DOCTOR'      => 'Total Credit :' . $TOTAL_PAID,
             'LOCATION'    => '',
         ];
         $finalData[] = array_values($rowData);
@@ -267,7 +267,7 @@ class PatientSalesReportExport implements FromCollection, ShouldAutoSize, WithSt
             'AMOUNT'      => 'LINGAP Paid: ' . $LINGAP_AMOUNT,
             'CREDIT'      => 'OVP Paid: ' . $OVP_AMOUNT,
             'BAL'         => 'Net Cash Sales: ' . $CASH_AMOUNT + $PRE_CASH_AMOUNT,
-            'DOCTOR'      => 'Total Balance :' . $TOTAL_CHARGE - ($TOTAL_PAID  +  $PRE_COLLECTION),
+            'DOCTOR'      => 'Total Balance :' . $TOTAL_CHARGE - $TOTAL_PAID,
             'LOCATION'    => '',
         ];
         $finalData[] = array_values($rowData);
