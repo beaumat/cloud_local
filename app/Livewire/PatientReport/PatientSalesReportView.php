@@ -160,8 +160,36 @@ class PatientSalesReportView extends Component
         );
 
         foreach ($this->preDataList as $data) {
+
+            switch ($data->PAYMENT_METHOD_ID) {
+                case 1:
+                    $this->PRE_CASH_AMOUNT = $this->PRE_CASH_AMOUNT + $data->PP_PAID ?? 0;
+                    break;
+                case 92:
+                    $this->DSWD_AMOUNT = $this->DSWD_AMOUNT + $data->PP_PAID ?? 0;
+                    break;
+                case 93:
+                    $this->LINGAP_AMOUNT = $this->LINGAP_AMOUNT + $data->PP_PAID ?? 0;
+                    break;
+                case 94:
+                    $this->PCSO_AMOUNT = $this->PCSO_AMOUNT + $data->PP_PAID ?? 0;
+                    break;
+                case 96:
+                    $this->OTHER_GL_AMOUNT = $this->OTHER_GL_AMOUNT + $data->PP_PAID ?? 0;
+                    break;
+                case 97:
+                    $this->OP_AMOUNT = $this->OP_AMOUNT + $data->PP_PAID ?? 0;
+                    break;
+                case 98:
+                    $this->OVP_AMOUNT = $this->OVP_AMOUNT + $data->PP_PAID ?? 0;
+                    break;
+                default:
+                    # code...
+                    break;
+            }
+
             if ($data->PAYMENT_METHOD_ID == 1) {
-                $this->PRE_CASH_AMOUNT = $this->PRE_CASH_AMOUNT + $data->PP_PAID ?? 0;
+
             } else {
                 $this->PRE_COLLECTION = $this->PRE_COLLECTION + $data->PP_PAID ?? 0;
             }

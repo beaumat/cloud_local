@@ -1,8 +1,6 @@
 <?php
 namespace App\Livewire\PatientReport;
 
-use App\Services\ContactServices;
-use App\Services\ItemServices;
 use App\Services\LocationServices;
 use App\Services\PatientReportServices;
 use App\Services\UserServices;
@@ -10,7 +8,6 @@ use Livewire\Component;
 
 class PatientSalesReportPrintContent extends Component
 {
-
 
     public bool $refreshComponent = false;
     public int $PATIENT_ID;
@@ -46,7 +43,7 @@ class PatientSalesReportPrintContent extends Component
 
     public int $NO_OF_PATIENT   = 0;
     public int $NO_OF_TREATMENT = 0;
-    private $contactServices;
+
     private $patientReportServices;
 
     public $filterPatient   = [];
@@ -58,21 +55,18 @@ class PatientSalesReportPrintContent extends Component
     public function boot(
         LocationServices $locationServices,
         UserServices $userServices,
-        ContactServices $contactServices,
         PatientReportServices $patientReportServices,
-        ItemServices $itemServices
     ) {
         $this->locationServices      = $locationServices;
         $this->userServices          = $userServices;
-        $this->contactServices       = $contactServices;
         $this->patientReportServices = $patientReportServices;
-        $this->itemServices          = $itemServices;
+
     }
 
     public function mount($DATE_FROM, $DATE_TO, $LOCATION_ID, $patient = null, $item = null, $method = null)
     {
 
-        $this->LOCATION_ID  = $LOCATION_ID;
+        $this->LOCATION_ID = $LOCATION_ID;
 
         $this->DATE_TRANSACTION_FROM = $DATE_FROM;
         $this->DATE_TRANSACTION_TO   = $DATE_TO;
@@ -96,7 +90,7 @@ class PatientSalesReportPrintContent extends Component
         $this->shortFilter();
     }
 
-     public function shortFilter()
+    public function shortFilter()
     {
         $this->NO_OF_PATIENT     = 0;
         $this->TOTAL_CHARGE      = 0;
@@ -132,8 +126,36 @@ class PatientSalesReportPrintContent extends Component
         );
 
         foreach ($this->preDataList as $data) {
+
+            switch ($data->PAYMENT_METHOD_ID) {
+                case 1:
+                    $this->PRE_CASH_AMOUNT = $this->PRE_CASH_AMOUNT + $data->PP_PAID ?? 0;
+                    break;
+                case 92:
+                    $this->DSWD_AMOUNT = $this->DSWD_AMOUNT + $data->PP_PAID ?? 0;
+                    break;
+                case 93:
+                    $this->LINGAP_AMOUNT = $this->LINGAP_AMOUNT + $data->PP_PAID ?? 0;
+                    break;
+                case 94:
+                    $this->PCSO_AMOUNT = $this->PCSO_AMOUNT + $data->PP_PAID ?? 0;
+                    break;
+                case 96:
+                    $this->OTHER_GL_AMOUNT = $this->OTHER_GL_AMOUNT + $data->PP_PAID ?? 0;
+                    break;
+                case 97:
+                    $this->OP_AMOUNT = $this->OP_AMOUNT + $data->PP_PAID ?? 0;
+                    break;
+                case 98:
+                    $this->OVP_AMOUNT = $this->OVP_AMOUNT + $data->PP_PAID ?? 0;
+                    break;
+                default:
+                    # code...
+                    break;
+            }
+
             if ($data->PAYMENT_METHOD_ID == 1) {
-                $this->PRE_CASH_AMOUNT = $this->PRE_CASH_AMOUNT + $data->PP_PAID ?? 0;
+
             } else {
                 $this->PRE_COLLECTION = $this->PRE_COLLECTION + $data->PP_PAID ?? 0;
             }

@@ -70,8 +70,37 @@ class PatientSalesReportExport implements FromCollection, ShouldAutoSize, WithSt
         $tempName = '';
 
         foreach ($this->preDataList as $data) {
+
+            switch ($data->PAYMENT_METHOD_ID) {
+                case 1:
+                    $PRE_CASH_AMOUNT = $PRE_CASH_AMOUNT + $data->PP_PAID ?? 0;
+                    break;
+                case 92:
+                    $DSWD_AMOUNT = $DSWD_AMOUNT + $data->PP_PAID ?? 0;
+                    break;
+                case 93:
+                    $LINGAP_AMOUNT = $LINGAP_AMOUNT + $data->PP_PAID ?? 0;
+                    break;
+                case 94:
+                    $PCSO_AMOUNT = $PCSO_AMOUNT + $data->PP_PAID ?? 0;
+                    break;
+                case 96:
+                    $OTHER_GL_AMOUNT = $OTHER_GL_AMOUNT + $data->PP_PAID ?? 0;
+                    break;
+                case 97:
+                    $OP_AMOUNT = $OP_AMOUNT + $data->PP_PAID ?? 0;
+                    break;
+                case 98:
+                    $OVP_AMOUNT = $OVP_AMOUNT + $data->PP_PAID ?? 0;
+                    break;
+                default:
+                    # code...
+                    break;
+            }
+
+
             if ($data->PAYMENT_METHOD_ID == 1) {
-                $PRE_CASH_AMOUNT = $PRE_CASH_AMOUNT + $data->PP_PAID ?? 0;
+                // $PRE_CASH_AMOUNT = $PRE_CASH_AMOUNT + $data->PP_PAID ?? 0;
             } else {
                 $PRE_COLLECTION = $PRE_COLLECTION + $data->PP_PAID ?? 0;
             }
@@ -184,6 +213,9 @@ class PatientSalesReportExport implements FromCollection, ShouldAutoSize, WithSt
                 }
 
             }
+
+
+
 
             $rowData = [
                 'PN'          => $is_add ? $list->PATIENT_NAME : '',
