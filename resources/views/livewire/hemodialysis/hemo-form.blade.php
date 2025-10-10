@@ -107,6 +107,11 @@ use App\Services\UserServices;
                                                         </button>
                                                     @endif
                                                 @endif
+                                                <button name="btnPosted" type='button' wire:click='openForm()'
+                                                    class="btn btn-sm btn-primary">
+                                                    <i class="fa fa-thumbs-o-up" aria-hidden="true"></i> Agreement Form
+                                                </button>
+
                                             @endif
 
                                             @if ($STATUS == 3)
@@ -515,4 +520,5 @@ use App\Services\UserServices;
     @endif
     @livewire('PincodeEnter')
     @livewire('Hemodialysis.NurseNotes')
+    @livewire('ServiceCharge.AgreementFormModal');
 </div>

@@ -637,6 +637,20 @@ class HemoForm extends Component
         return Redirect::route('patientshemo_edit', ['id' => $this->ID])->with('message', 'Re-create Journal');
 
     }
+    public function openForm()
+    {
+
+
+
+        $data = [
+            'HEMO_ID'     => $this->ID,
+            'DATE'        => $this->DATE,
+            'PATIENT_ID'  => $this->CUSTOMER_ID,
+            'LOCATION_ID' => $this->LOCATION_ID,
+        ];
+
+        $this->dispatch('open-agreement-form', data: $data);
+    }
     public function render()
     {
         return view('livewire.hemodialysis.hemo-form');

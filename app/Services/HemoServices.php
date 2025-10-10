@@ -983,7 +983,7 @@ class HemoServices
                 'hemodialysis.STATUS_ID',
                 'hemodialysis.FILE_PATH',
                 'hemodialysis.IS_INCOMPLETE',
-                DB::raw('(SELECT IF(count(sc.ID) > 0,true,false) from service_charges as sc where sc.PATIENT_ID = hemodialysis.CUSTOMER_ID and sc.LOCATION_ID =  hemodialysis.LOCATION_ID and sc.DATE = hemodialysis.DATE ) as IS_SC'),
+                DB::raw('(SELECT IF(count(sc.ID) > 0,true,false) from service_charges as sc where sc.PATIENT_ID = hemodialysis.CUSTOMER_ID and sc.LOCATION_ID =  hemodialysis.LOCATION_ID and sc.DATE = hemodialysis.DATE LIMIT 1) as IS_SC'),
                 'e.NAME as NURSE_NAME',
                 DB::raw('(SELECT IF(count(*) > 0,true,false) from hemodialysis_items as i where i.HEMO_ID = hemodialysis.ID and i.IS_JUSTIFY = 1  ) as JUSTIFY'),
                 DB::raw(value: "(SELECT IF(COUNT(*) = 2, 'BOTH', MAX(t.DESCRIPTION)) FROM hemodialysis_items AS i JOIN item AS t ON t.id = i.ITEM_ID WHERE i.HEMO_ID = hemodialysis.ID AND i.ITEM_ID IN (6, 7) GROUP BY i.HEMO_ID) AS ACCESS_TYPE"),
@@ -1015,6 +1015,7 @@ class HemoServices
             })
             ->where('hemodialysis.STATUS_ID', '<>', 4)
             ->orderBy('hemodialysis.DATE', 'desc')
+            ->limit(1000)
             ->paginate($perPage);
         return $result;
     }
