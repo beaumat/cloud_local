@@ -772,6 +772,7 @@ class PhilHealthServices
                 $query->where('philhealth.DATE_DISCHARGED', '<=', $DISCHARGED);
             })
             ->where('IS_TEMP', '0')
+            ->where('philhealth.IS_MANUAL', '=', false)
             ->orderBy('philhealth.ID', 'desc')
             ->paginate($perPage);
 

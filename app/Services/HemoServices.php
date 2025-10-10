@@ -1205,6 +1205,7 @@ class HemoServices
             ->when($search, function ($query) use (&$search) {
                 $query->where('contact.NAME', 'like', '%' . $search . '%');
             })
+
             ->groupBy(['contact.ID', 'contact.NAME', 'contact.PIN', 'contact.LAST_NAME', 'contact.FIRST_NAME', 'contact.MIDDLE_NAME', 'contact.SALUTATION'])
             ->orderBy('contact.LAST_NAME')
             ->get();
