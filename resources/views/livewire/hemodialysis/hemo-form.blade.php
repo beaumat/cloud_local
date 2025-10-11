@@ -107,6 +107,7 @@ use App\Services\UserServices;
                                                         </button>
                                                     @endif
                                                 @endif
+                                                
                                                 <button name="btnPosted" type='button' wire:click='openForm()'
                                                     class="btn btn-sm btn-primary">
                                                     <i class="fa fa-thumbs-o-up" aria-hidden="true"></i> Agreement Form
