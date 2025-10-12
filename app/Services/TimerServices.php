@@ -12,13 +12,15 @@ class TimerServices
     private $itemInventoryServices;
     private $serviceChargeServices;
     private $userServices;
+    private $postingLogServices;
     function __construct(
         ScheduleServices $scheduleServices,
         HemoServices $hemoServices,
         DateServices $dateServices,
         ItemInventoryServices $itemInventoryServices,
         ServiceChargeServices $serviceChargeServices,
-        UserServices $userServices
+        UserServices $userServices,
+        PostingLogServices $postingLogServices
 
     ) {
         $this->scheduleServices      = $scheduleServices;
@@ -27,6 +29,7 @@ class TimerServices
         $this->itemInventoryServices = $itemInventoryServices;
         $this->serviceChargeServices = $serviceChargeServices;
         $this->userServices          = $userServices;
+        $this->postingLogServices    = $postingLogServices;
     }
     private function generateUnposted()
     {
@@ -95,7 +98,7 @@ class TimerServices
     }
     public function getExecute()
     {
-       $transDate = $this->dateServices->NowDate();
+        $transDate = $this->dateServices->NowDate();
         // $transDate = $this->dateServices->BackDate();
 
         $this->generateUnposted();
@@ -103,6 +106,9 @@ class TimerServices
         $this->GenerateItemServiceCharges($transDate);
         $this->generateItemHemo($transDate);
         $this->userDefaultUserDate();
+
+        $this->postingLogServices->logPosting($transDate);
+
     }
 
     public function getPosted(int $CONTACT_ID, string $DATE, int $LOCATION_ID)
