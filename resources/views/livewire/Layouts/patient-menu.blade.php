@@ -17,6 +17,15 @@ use App\Services\UserServices;
                 </a>
             </li>
         @endif
+        @if (UserServices::GetUserRightAccess('patient.treatment.view'))
+            <li class="nav-item">
+                <a href="{{ route('patientshemo') }}"
+                    class="nav-link {{ request()->is('patients/hemodialysis-treatment*') ? 'text-warning font-weight-bold' : '' }}">
+                    <i class="fas fa-medkit nav-icon"></i>
+                    <p>Treatment</p>
+                </a>
+            </li>
+        @endif
         @if (UserServices::GetUserRightAccess('patient.service-charges.view'))
             <li class="nav-item">
                 <a href="{{ route('patientsservice_charges') }}"
@@ -35,21 +44,22 @@ use App\Services\UserServices;
                 </a>
             </li>
         @endif
-        @if (UserServices::GetUserRightAccess('patient.treatment.view'))
-            <li class="nav-item">
-                <a href="{{ route('patientshemo') }}"
-                    class="nav-link {{ request()->is('patients/hemodialysis-treatment*') ? 'text-warning font-weight-bold' : '' }}">
-                    <i class="fas fa-medkit nav-icon"></i>
-                    <p>Treatment</p>
-                </a>
-            </li>
-        @endif
+
         @if (UserServices::GetUserRightAccess('patient.philhealth.view'))
             <li class="nav-item {{ request()->is('patients/phil-health*') ? 'menu-open' : '' }}">
                 <a href="{{ route('patientsphic') }}"
                     class="nav-link {{ request()->is('patients/phil-health*') ? 'text-warning font-weight-bold' : '' }}">
                     <i class="fas fa-wheelchair nav-icon"></i>
                     <p>PhilHealth</p>
+                </a>
+            </li>
+        @endif
+        @if (UserServices::GetUserRightAccess('patient.philhealth.manual.view'))
+            <li class="nav-item {{ request()->is('patients/phil-health-manual*') ? 'menu-open' : '' }}">
+                <a href="{{ route('patientsphic') }}"
+                    class="nav-link {{ request()->is('patients/phil-health-manual*') ? 'text-warning font-weight-bold' : '' }}">
+                    <i class="fas fa-wheelchair nav-icon"></i>
+                    <p>PhilHealth Manual</p>
                 </a>
             </li>
         @endif

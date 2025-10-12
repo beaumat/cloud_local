@@ -24,7 +24,9 @@
                             UserServices::GetUserRightAccess('patient.service-charges.view') ||
                             UserServices::GetUserRightAccess('patient.payment.view') ||
                             UserServices::GetUserRightAccess('patient.treatment.view') ||
-                            UserServices::GetUserRightAccess('patient.philhealth.view'))
+                            UserServices::GetUserRightAccess('patient.philhealth.view') ||
+                            UserServices::GetUserRightAccess('patient.philhealth.manual.view') ||
+                            UserServices::GetUserRightAccess('doctor.view'))
                         @livewire('Layouts.PatientMenu')
                     @endif
                 @endif

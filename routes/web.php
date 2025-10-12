@@ -148,6 +148,7 @@ use App\Livewire\PhilHealthSoaCustom\PhilCustomSoaForm;
 use App\Livewire\PhilHealthSoaCustom\PhilCustomSoaList;
 use App\Livewire\PhilHealth\PhilHealthForm;
 use App\Livewire\PhilHealth\PhilHealthList;
+use App\Livewire\PhilHealth\PhilHealthManualList;
 use App\Livewire\PriceLevelPage\PriceLevelForm;
 use App\Livewire\PriceLevelPage\PriceLevelList;
 use App\Livewire\PriceLocation\PriceLocationList;
@@ -286,7 +287,9 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/{id}/printout-cf4-temp-out', PrintOutCf4TempOut::class)->name('printout_cf4_temp_out')->middleware(['permission:patient.philhealth.print']);
 
         });
-
+        Route::prefix('/phil-health-manual')->group(function () {
+            Route::get('/', PhilHealthManualList::class)->name('phic-manual')->middleware(['permission:patient.philhealth.manual.view']);
+        });
         Route::prefix('/doctor-pf')->group(function () {
             Route::get('/', DoctorFeeList::class)->name('doctor_fee')->middleware(['permission:report.patient.doctor-pf']);
             Route::get('/{id}/{locationid}/print-form', DoctorsFeeReportPrint::class)->name('doctor_fee_print');
