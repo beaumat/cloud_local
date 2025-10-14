@@ -355,13 +355,18 @@ class ContactServices
 
         $result = Contacts::query()
             ->select([
-                DB::raw("(select sum(service_charges_items.QUANTITY) from service_charges join service_charges_items on service_charges_items.SERVICE_CHARGES_ID = service_charges.ID  where service_charges.PATIENT_ID = contact.ID and service_charges_items.ITEM_ID IN ($list)  and service_charges.LOCATION_ID = $LOCATION_ID  and YEAR(service_charges.DATE) = $YEAR and service_charges.DATE <= '$DATE' ) as TOTAL_ITEMS"),
+                DB::raw("(select IFNULL(sum(service_charges_items.QUANTITY),0) from service_charges join service_charges_items on service_charges_items.SERVICE_CHARGES_ID = service_charges.ID  where service_charges.PATIENT_ID = contact.ID and service_charges_items.ITEM_ID IN ($list)  and service_charges.LOCATION_ID = $LOCATION_ID  and YEAR(service_charges.DATE) = $YEAR and service_charges.DATE <= '$DATE' ) as TOTAL_ITEMS"),
             ])->where('TYPE', 3)
             ->where('INACTIVE', '0')
             ->where('ID', '=', $PATIENT_ID)
             ->first();
 
-        return (int) $result->TOTAL_ITEMS ?? 0;
+        if ($result) {
+            return (int) $result->TOTAL_ITEMS ?? 0;
+        }
+
+        return 0;
+
     }
     public function getPatientAvailmentListDialyzerQtyDetails(int $PATIENT_ID, int $LOCATION_ID, string $DATE)
     {
