@@ -1,26 +1,30 @@
 <?php
-
 namespace App\Livewire\AccountingReport;
 
+use App\Exports\TransactionDetailsExport;
 use App\Services\AccountJournalServices;
 use Livewire\Attributes\Title;
 use Livewire\Component;
+use Maatwebsite\Excel\Facades\Excel;
 
 #[Title('Account Transaction - Preview')]
 class TransactionDetailsGenerate extends Component
 {
-     public string $TEMP_ACCOUNT = "";
-    public float $TEMP_DEBIT    = 0;
-    public float $TEMP_CREDIT   = 0;
-   public string $DATE_FROM;
+    public array $selectedAccount     = [];
+    public array $selectedAccountType = [];
+    public string $TEMP_ACCOUNT       = "";
+    public float $TEMP_DEBIT          = 0;
+    public float $TEMP_CREDIT         = 0;
+    public string $DATE_FROM;
     public string $DATE_TO;
     public int $LOCATION_ID;
     public float $TOTAL_DEBIT  = 0;
     public float $TOTAL_CREDIT = 0;
     public float $BALANCE      = 0;
-    public $dataList = [];
+    public $dataList           = [];
     private $accountJournalServices;
-    public function boot(AccountJournalServices $accountJournalServices) {
+    public function boot(AccountJournalServices $accountJournalServices)
+    {
         $this->accountJournalServices = $accountJournalServices;
     }
     public function mount($from, $to, $location, string $account, string $accounttype)

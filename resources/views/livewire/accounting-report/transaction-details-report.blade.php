@@ -47,8 +47,7 @@
                                                 class="btn btn-danger btn-xs w-25" wire:loading.attr='disabled'>
                                                 Generate
                                             </a>
-                                            <button class="btn btn-success btn-xs w-25" wire:click='export()'
-                                                wire:loading.attr='disabled'>Export</button>
+                                         
                                             <div wire:loading.delay>
                                                 <span class='spinner'></span>
                                             </div>

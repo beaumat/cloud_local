@@ -12,6 +12,8 @@
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item active">
+                               <button class="btn btn-success btn-xs w-100" wire:click='export()'
+                                                wire:loading.attr='disabled'>Export</button>
                         </li>
                     </ol>
                 </div>
