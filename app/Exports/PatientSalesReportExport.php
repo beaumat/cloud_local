@@ -378,7 +378,7 @@ class PatientSalesReportExport implements FromCollection, ShouldAutoSize, WithSt
             for ($col = 1; $col <= $highestColumnIndex; $col++) {
                 $cellCoordinate = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($col) . $row;
                 $cellValue      = $sheet->getCell($cellCoordinate)->getValue();
-                if ($cellValue === 'PATIENT NAME' || $cellValue === 'DESCRIPTION' || $cellValue === 'DOCTOR' || $cellValue === 'LOCATION') {
+                if ($cellValue === 'PATIENT NAME' || $cellValue === 'CATEGORY' || $cellValue === 'QTY' || $cellValue === 'DESCRIPTION' || $cellValue === 'DOCTOR' || $cellValue === 'LOCATION') {
                     $sheet->getStyle($cellCoordinate)
                         ->getFill()
                         ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
