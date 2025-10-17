@@ -170,6 +170,7 @@ class PatientSalesReportExport implements FromCollection, ShouldAutoSize, WithSt
             $TOTAL_CHARGE    = $TOTAL_CHARGE - $list->PREVIOUS_CREDIT ?? 0;
             if (substr($list->ITEM_NAME, 0, 6) == 'Cash :') {
                 $CASH_AMOUNT = $CASH_AMOUNT + $list->AMOUNT ?? 0;
+                $TOTAL_PAID = $TOTAL_PAID + $list->AMOUNT ?? 0;
             }
 
             if (substr($list->ITEM_NAME, 0, 12) == 'Philhealth :') {
@@ -201,7 +202,7 @@ class PatientSalesReportExport implements FromCollection, ShouldAutoSize, WithSt
             }
 
             if ($list->LINE_NO == 999) {
-                $TOTAL_PAID = $TOTAL_PAID + $list->AMOUNT ?? 0;
+                // $TOTAL_PAID = $TOTAL_PAID + $list->AMOUNT ?? 0;
 
                 $not_to_charge = true;
             } else {

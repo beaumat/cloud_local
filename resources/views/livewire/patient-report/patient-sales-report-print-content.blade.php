@@ -129,7 +129,7 @@
                                       @if ($list->LINE_NO == 999)
                                           {{ number_format($list->AMOUNT * -1, 2) }}
                                           @php
-                                              $TOTAL_PAID = $TOTAL_PAID + $list->AMOUNT ?? 0;
+                                            //   $TOTAL_PAID = $TOTAL_PAID + $list->AMOUNT ?? 0;
                                           @endphp
                                       @else
                                           {{ $list->PREVIOUS_CREDIT > 0 ? number_format($list->PREVIOUS_CREDIT * -1, 2) : '' }}
@@ -164,6 +164,7 @@
 
                                   if (substr($list->ITEM_NAME, 0, 6) == 'Cash :') {
                                       $CASH_AMOUNT = $CASH_AMOUNT + $list->AMOUNT ?? 0;
+                                      $TOTAL_PAID = $TOTAL_PAID + $list->AMOUNT ?? 0;
                                   }
 
                                   if (substr($list->ITEM_NAME, 0, 12) == 'Philhealth :') {
