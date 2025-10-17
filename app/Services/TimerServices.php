@@ -98,8 +98,7 @@ class TimerServices
     }
     public function getExecute()
     {
-        //  $transDate = $this->dateServices->NowDate();
-        $transDate = $this->dateServices->BackDate();
+        $transDate = $this->dateServices->NowDate();
 
         $this->generateUnposted();
         $this->generateWaitingList($transDate);
@@ -110,7 +109,19 @@ class TimerServices
         $this->postingLogServices->logPosting($transDate);
 
     }
+    public function getExecutePrevious()
+    {
 
+        $transDate = $this->dateServices->BackDate();
+        $this->generateUnposted();
+        $this->generateWaitingList($transDate);
+        $this->GenerateItemServiceCharges($transDate);
+        $this->generateItemHemo($transDate);
+        $this->userDefaultUserDate();
+
+        $this->postingLogServices->logPosting($transDate);
+
+    }
     public function getPosted(int $CONTACT_ID, string $DATE, int $LOCATION_ID)
     {
         try {
