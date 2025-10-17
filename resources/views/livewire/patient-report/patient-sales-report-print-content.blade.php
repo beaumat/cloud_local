@@ -13,7 +13,9 @@
                       <thead class="bgBlack">
                           <tr>
                               <th class="bg-primary">Patient</th>
+                              <th class="bg-primary">Category</th>
                               <th class="bg-primary">Description</th>
+                              <th class="bg-primary text-center">Qty</th>
                               <th class="bg-info">Reference</th>
                               <th class="bg-info">Date</th>
                               <th class="bg-info">Charges </th>
@@ -82,6 +84,8 @@
                                       <td></td>
                                       <td></td>
                                       <td></td>
+                                      <td></td>
+                                      <td></td>
                                   </tr>
                               @endif
                               {{-- LOGIC END --}}
@@ -92,7 +96,14 @@
                                       @endif
                                   </td>
                                   <td class="@if ($list->LINE_NO == 999) text-success font-weight-bold @endif">
+                                      {{ $list->CLASS_NAME }}
+                                  </td>
+                                  <td class="@if ($list->LINE_NO == 999) text-success font-weight-bold @endif">
                                       {{ $list->ITEM_NAME }}
+                                  </td>
+                                  <td
+                                      class="text-center @if ($list->LINE_NO == 999) text-success font-weight-bold @endif">
+                                      {{ $list->QUANTITY > 0 ? number_format($list->QUANTITY, 0) : '' }}
                                   </td>
                                   <td class="@if ($list->LINE_NO == 999) text-success font-weight-bold @endif">
                                       @if ($list->LINE_NO != 999)
@@ -129,7 +140,7 @@
                                       @if ($list->LINE_NO == 999)
                                           {{ number_format($list->AMOUNT * -1, 2) }}
                                           @php
-                                            //   $TOTAL_PAID = $TOTAL_PAID + $list->AMOUNT ?? 0;
+                                              //   $TOTAL_PAID = $TOTAL_PAID + $list->AMOUNT ?? 0;
                                           @endphp
                                       @else
                                           {{ $list->PREVIOUS_CREDIT > 0 ? number_format($list->PREVIOUS_CREDIT * -1, 2) : '' }}

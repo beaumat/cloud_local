@@ -36,8 +36,10 @@
                     <table class="table table-sm table-bordered table-hover">
                         <thead class="text-xs bg-sky sticky-header">
                             <tr>
-                                <th>Patient</th>
-                                <th>Description</th>
+                                <th class="col-2">Patient</th>
+                                <th class="col-1"> Category</th>
+                                <th class="col-3">Description</th>
+                                <th class="text-center">Qty</th>
                                 <th class="bg-info">Reference</th>
                                 <th class="bg-info">Date</th>
                                 <th class="bg-info">Charges </th>
@@ -106,6 +108,8 @@
                                         <td></td>
                                         <td></td>
                                         <td></td>
+                                        <td></td>
+                                        <td></td>
                                     </tr>
                                 @endif
                                 {{-- LOGIC END --}}
@@ -116,7 +120,13 @@
                                         @endif
                                     </td>
                                     <td class="@if ($list->LINE_NO == 999) text-success font-weight-bold @endif">
+                                        {{ $list->CLASS_NAME }}
+                                    </td>
+                                    <td class="@if ($list->LINE_NO == 999) text-success font-weight-bold @endif">
                                         {{ $list->ITEM_NAME }}
+                                    </td>
+                                    <td class="text-center @if ($list->LINE_NO == 999) text-success font-weight-bold @endif">
+                                        {{  $list->QUANTITY > 0 ? number_format($list->QUANTITY, 0) : '' }}
                                     </td>
                                     <td class="@if ($list->LINE_NO == 999) text-success font-weight-bold @endif">
                                         @if ($list->LINE_NO != 999)
@@ -153,7 +163,7 @@
                                         @if ($list->LINE_NO == 999)
                                             {{ number_format($list->AMOUNT * -1, 2) }}
                                             @php
-                                             //   $TOTAL_PAID = $TOTAL_PAID + $list->AMOUNT ?? 0;
+                                                //   $TOTAL_PAID = $TOTAL_PAID + $list->AMOUNT ?? 0;
                                             @endphp
                                         @else
                                             {{ $list->PREVIOUS_CREDIT > 0 ? number_format($list->PREVIOUS_CREDIT * -1, 2) : '' }}
@@ -323,11 +333,11 @@
                             </h6>
                             <h6 class="text-xs"> <label class="text-xs">CURRENT CREDIT : </label>
                                 <span
-                                    class="text-success font-weight-bold h6">{{ number_format($TOTAL_PAID  , 2) }}</span>
+                                    class="text-success font-weight-bold h6">{{ number_format($TOTAL_PAID, 2) }}</span>
                             </h6>
                             <h6 class="text-xs"> <label class="text-xs">TOTAL BALANCE : </label>
                                 <span
-                                    class="text-danger font-weight-bold h6">{{ number_format($TOTAL_CHARGE - $TOTAL_PAID  , 2) }}</span>
+                                    class="text-danger font-weight-bold h6">{{ number_format($TOTAL_CHARGE - $TOTAL_PAID, 2) }}</span>
                             </h6 class="text-xs">
                         </div>
                     </div>

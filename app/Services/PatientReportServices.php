@@ -36,12 +36,16 @@ class PatientReportServices
                 'l.NAME as LOCATION_NAME',
                 DB::raw("(select SUM(ppc.AMOUNT_APPLIED) FROM PATIENT_PAYMENT_CHARGES AS ppc inner join  PATIENT_PAYMENT as pp on pp.ID = ppc.PATIENT_PAYMENT_ID where pp.DATE < '$scFrom' and pp.LOCATION_ID = sc.LOCATION_ID and ppc.SERVICE_CHARGES_ITEM_ID = sci.ID ) as PREVIOUS_CREDIT "), // Placeholder for previous credit
                 DB::raw('(select d.PRINT_NAME_AS  from patient_doctor  as pd join contact as d on d.ID = pd.DOCTOR_ID where pd.PATIENT_ID = c.ID limit 1) as DOCTOR_NAME '),
+                'item_class.DESCRIPTION as CLASS_NAME',
+                'sci.QUANTITY',
 
             ])
             ->join('item as i', 'i.ID', '=', 'sci.ITEM_ID')
             ->join('service_charges as sc', 'sc.ID', '=', 'sci.SERVICE_CHARGES_ID')
             ->join('location as l', 'l.ID', '=', 'sc.LOCATION_ID')
             ->join('contact as c', 'c.ID', '=', 'sc.PATIENT_ID')
+            ->leftJoin('item_sub_class', 'item_sub_class.ID', '=', 'i.SUB_CLASS_ID')
+            ->leftJoin('item_class', 'item_class.ID', '=', 'item_sub_class.CLASS_ID')
             ->whereBetween('sc.DATE', [$scFrom, $scTo])
             ->when($locatoinId > 0, function ($query) use (&$locatoinId) {
                 $query->where('sc.LOCATION_ID', $locatoinId);
@@ -71,7 +75,8 @@ class PatientReportServices
                 'l.NAME as LOCATION_NAME',
                 DB::raw("0 as PREVIOUS_CREDIT "), // Placeholder for previous credit
                 DB::raw('(select d.PRINT_NAME_AS  from patient_doctor  as pd join contact as d on d.ID = pd.DOCTOR_ID where pd.PATIENT_ID = c.ID limit 1) as DOCTOR_NAME '),
-
+                DB::raw("'' as CLASS_NAME"),
+                DB::raw("'' as QUANTITY"),
             ])
             ->join('location as l', 'l.ID', '=', 'pp.LOCATION_ID')
             ->join('contact as c', 'c.ID', '=', 'pp.PATIENT_ID')

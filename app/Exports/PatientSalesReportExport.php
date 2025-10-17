@@ -26,8 +26,10 @@ class PatientSalesReportExport implements FromCollection, ShouldAutoSize, WithSt
 
         return [
             'PN'          => '`',
+            'CATEGORY'    => '`',
             'DESCRIPTION' => '`',
-            'REFERENCE'   => '`',
+            'QTY'         => '`',
+            'CODE'        => '`',
             'DATE'        => '`',
             'AMOUNT'      => '`',
             'CREDIT'      => '`',
@@ -57,7 +59,9 @@ class PatientSalesReportExport implements FromCollection, ShouldAutoSize, WithSt
 
         $headers = [
             'PN'          => 'PATIENT NAME',
+            'CATEGORY'    => 'CATEGORY',
             'DESCRIPTION' => 'DESCRIPTION',
+            'QTY'         => 'QTY',
             'REFERENCE'   => 'REFERENCE',
             'DATE'        => 'DATE',
             'AMOUNT'      => 'CHARGES',
@@ -170,7 +174,7 @@ class PatientSalesReportExport implements FromCollection, ShouldAutoSize, WithSt
             $TOTAL_CHARGE    = $TOTAL_CHARGE - $list->PREVIOUS_CREDIT ?? 0;
             if (substr($list->ITEM_NAME, 0, 6) == 'Cash :') {
                 $CASH_AMOUNT = $CASH_AMOUNT + $list->AMOUNT ?? 0;
-                $TOTAL_PAID = $TOTAL_PAID + $list->AMOUNT ?? 0;
+                $TOTAL_PAID  = $TOTAL_PAID + $list->AMOUNT ?? 0;
             }
 
             if (substr($list->ITEM_NAME, 0, 12) == 'Philhealth :') {
@@ -216,7 +220,9 @@ class PatientSalesReportExport implements FromCollection, ShouldAutoSize, WithSt
 
             $rowData = [
                 'PN'          => $is_add ? $list->PATIENT_NAME : '',
-                'DESCRIPTION' => $list->ITEM_NAME ?? '',
+                'CATEGORY'    => $list->CLASS_NAME ?? '',
+                'DESCRIPTION' => trim($list->ITEM_NAME) ?? '',
+                'QTY'         => $list->QUANTITY > 0 ? number_format($list->QUANTITY, 0) : '',
                 'CODE'        => $is_sc ? $list->CODE : '',
                 'DATE'        => $is_sc ? date('M/d/Y', strtotime($list->DATE)) : '',
                 'AMOUNT'      => $not_to_charge ? 0 : $list->AMOUNT,
@@ -234,7 +240,9 @@ class PatientSalesReportExport implements FromCollection, ShouldAutoSize, WithSt
         // TOTAL_CHARGE
         $rowData = [
             'PN'          => 'No. of Patient: ' . $NO_OF_PATIENT,
-            'DESCRIPTION' => 'No. of Treatment:  ' . $NO_OF_TREATMENT,
+            'CATEGORY'    => 'No. of Treatment:  ' . $NO_OF_TREATMENT,
+            'DESCRIPTION' => '',
+            'QTY'         => '',
             'CODE'        => '',
             'DATE'        => '',
             'AMOUNT'      => '',
@@ -248,7 +256,9 @@ class PatientSalesReportExport implements FromCollection, ShouldAutoSize, WithSt
         // TOTAL_PAID
         $rowData = [
             'PN'          => '',
+            'CATEGORY'    => '',
             'DESCRIPTION' => '',
+            'QTY'         => '',
             'CODE'        => '',
             'DATE'        => '',
             'AMOUNT'      => 'DSWD Paid: ' . $DSWD_AMOUNT,
@@ -262,7 +272,9 @@ class PatientSalesReportExport implements FromCollection, ShouldAutoSize, WithSt
         // BALANCE
         $rowData = [
             'PN'          => '',
+            'CATEGORY'    => '',
             'DESCRIPTION' => '',
+            'QTY'         => '',
             'CODE'        => '',
             'DATE'        => '',
             'AMOUNT'      => 'LINGAP Paid: ' . $LINGAP_AMOUNT,
@@ -276,7 +288,9 @@ class PatientSalesReportExport implements FromCollection, ShouldAutoSize, WithSt
         // LAST
         $rowData = [
             'PN'          => '',
+            'CATEGORY'    => '',
             'DESCRIPTION' => '',
+            'QTY'         => '',
             'CODE'        => '',
             'DATE'        => '',
             'AMOUNT'      => 'PCSO Paid: ' . $PCSO_AMOUNT,
@@ -292,8 +306,10 @@ class PatientSalesReportExport implements FromCollection, ShouldAutoSize, WithSt
         $finalData[] = array_values($rowData);
         $rowData     = [
             'PN'          => 'Previous Credit Summary',
+            'CATEGORY'    => '',
             'DESCRIPTION' => '',
-            'REFERENCE'   => '',
+            'QTY'         => '',
+            'CODE'        => '',
             'DATE'        => '',
             'AMOUNT'      => '',
             'CREDIT'      => '',
@@ -304,10 +320,12 @@ class PatientSalesReportExport implements FromCollection, ShouldAutoSize, WithSt
 
         $rowData = [
             'PN'          => 'Payment Type',
-            'DESCRIPTION' => 'Patient Name',
-            'REFERENCE'   => 'Payment Date',
-            'DATE'        => 'Item Credit',
-            'AMOUNT'      => 'Amount Credit',
+            'CATEGORY'    => 'Patient Name',
+            'DESCRIPTION' => 'Payment Date',
+            'QTY'         => 'Item Credit',
+            'CODE'        => 'Amount Credit',
+            'DATE'        => '',
+            'AMOUNT'      => '',
             'CREDIT'      => '',
             'BAL'         => '',
             'DOCTOR'      => '',
@@ -317,10 +335,12 @@ class PatientSalesReportExport implements FromCollection, ShouldAutoSize, WithSt
         foreach ($this->preDataList as $list) {
             $rowData = [
                 'PN'          => $list->PAYMENT_METHOD,
-                'DESCRIPTION' => $list->PATIENT_NAME,
-                'REFERENCE'   => date('m/d/Y', strtotime($list->PP_DATE)),
-                'DATE'        => $list->ITEM_NAME,
-                'AMOUNT'      => $list->PP_PAID,
+                'CATEGORY'    => $list->PATIENT_NAME,
+                'DESCRIPTION' => date('m/d/Y', strtotime($list->PP_DATE)),
+                'QTY'         => $list->ITEM_NAME,
+                'CODE'        => $list->PP_PAID,
+                'DATE'        => '',
+                'AMOUNT'      => '',
                 'CREDIT'      => '',
                 'BAL'         => '',
                 'DOCTOR'      => '',
