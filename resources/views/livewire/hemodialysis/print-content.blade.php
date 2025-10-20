@@ -451,8 +451,8 @@
                                             &nbsp; {!! preg_replace('/\[(.*?)\]/', '<span style="color:red;">$1</span>', $parts) !!}
                                         </div>
                                     @endforeach
-                                    @if ($SE_COUNT < 8)
-                                        @for ($i = $SE_COUNT; $i < 8; $i++)
+                                    @if ($SE_COUNT < 6)
+                                        @for ($i = $SE_COUNT; $i < 6; $i++)
                                             <div class="col-12  text-center bottom-line2 ">
                                                 &nbsp;
                                             </div>
@@ -483,8 +483,8 @@
                                             {!! preg_replace('/\[(.*?)\]/', '<span style="color:red;">$1</span>', $parts) !!}
                                         </div>
                                     @endforeach
-                                    @if ($SO_COUNT < 8)
-                                        @for ($i = $SO_COUNT; $i < 8; $i++)
+                                    @if ($SO_COUNT < 6)
+                                        @for ($i = $SO_COUNT; $i < 6; $i++)
                                             <div class="col-12  text-center bottom-line2 ">
                                                 &nbsp;
                                             </div>
