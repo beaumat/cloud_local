@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Livewire\BillPayments;
 
 use App\Services\AccountJournalServices;
@@ -34,17 +33,17 @@ class BillPaymentForm extends Component
     public float $AMOUNT_APPLIED;
     public float $WTAX_APPLIED;
     public string $NOTES;
-    public int $TYPE = 1;
+    public int $TYPE   = 1;
     public int $STATUS = 0;
     public string $STATUS_DESCRIPTION;
     public int $ACCOUNTS_PAYABLE_ID = 21;
-    public bool $ppRefresh = false;
+    public bool $ppRefresh          = false;
     public int $PF_PERIOD_ID;
     public bool $SAME_AMOUNT = true;
-    public $locationList = [];
+    public $locationList     = [];
     public bool $Modify;
-    public $contactList = [];
-    public $accountList = [];
+    public $contactList       = [];
+    public $accountList       = [];
     public $paymentPeriodList = [];
     private $billPaymentServices;
     private $contactServices;
@@ -68,30 +67,30 @@ class BillPaymentForm extends Component
         WithholdingTaxServices $withholdingTaxServices,
         SystemSettingServices $systemSettingServices
     ) {
-        $this->billPaymentServices = $billPaymentServices;
-        $this->contactServices = $contactServices;
-        $this->locationServices = $locationServices;
-        $this->userServices = $userServices;
-        $this->accountServices = $accountServices;
+        $this->billPaymentServices    = $billPaymentServices;
+        $this->contactServices        = $contactServices;
+        $this->locationServices       = $locationServices;
+        $this->userServices           = $userServices;
+        $this->accountServices        = $accountServices;
         $this->documentStatusServices = $documentStatusServices;
         $this->accountJournalServices = $accountJournalServices;
-        $this->paymentPeriodServices = $paymentPeriodServices;
+        $this->paymentPeriodServices  = $paymentPeriodServices;
         $this->withholdingTaxServices = $withholdingTaxServices;
-        $this->systemSettingServices = $systemSettingServices;
+        $this->systemSettingServices  = $systemSettingServices;
 
     }
     #[On('reset-payment')]
     public function ResetPaymentApplied()
     {
         $this->AMOUNT_APPLIED = (float) $this->billPaymentServices->UpdateBillPaymentApplied($this->ID);
-        $this->WTAX_APPLIED = (float) $this->withholdingTaxServices->getAmountBetweenBillPayment($this->ID);
+        $this->WTAX_APPLIED   = (float) $this->withholdingTaxServices->getAmountBetweenBillPayment($this->ID);
         $this->getNewAmount();
     }
     private function LoadDropDown()
     {
-        $this->contactList = $this->contactServices->getVendorDoc();
+        $this->contactList  = $this->contactServices->getVendorDoc();
         $this->locationList = $this->locationServices->getList();
-        $this->accountList = $this->accountServices->getBankAccount();
+        $this->accountList  = $this->accountServices->getBankAccount();
         $this->updatedLocationid();
     }
 
@@ -110,40 +109,44 @@ class BillPaymentForm extends Component
             return Redirect::route('vendorsbill_payment')->with('error', $errorMessage);
         }
 
-        $this->ID = 0;
-        $this->CODE = '';
-        $this->DATE = $this->userServices->getTransactionDateDefault();
-        $this->LOCATION_ID = $this->userServices->getLocationDefault();
-        $this->AMOUNT = 0;
-        $this->NOTES = '';
+        $this->ID              = 0;
+        $this->CODE            = '';
+        $this->DATE            = $this->userServices->getTransactionDateDefault();
+        $this->LOCATION_ID     = $this->userServices->getLocationDefault();
+        $this->AMOUNT          = 0;
+        $this->NOTES           = '';
         $this->BANK_ACCOUNT_ID = 0;
-        $this->PAY_TO_ID = 0;
-        $this->Modify = true;
-        $this->AMOUNT_APPLIED = 0;
-        $this->PF_PERIOD_ID = 0;
+        $this->PAY_TO_ID       = 0;
+        $this->Modify          = true;
+        $this->AMOUNT_APPLIED  = 0;
+        $this->PF_PERIOD_ID    = 0;
         $this->LoadDropDown();
     }
     public function updatedLocationid()
     {
 
         $this->paymentPeriodList = $this->paymentPeriodServices->prPFList($this->LOCATION_ID ?? 0);
-        $this->ppRefresh = $this->ppRefresh ? false : true;
+        $this->ppRefresh         = $this->ppRefresh ? false : true;
     }
     public function getInfo($data)
     {
-        $this->ID = $data->ID;
-        $this->CODE = $data->CODE;
-        $this->DATE = $data->DATE;
-        $this->LOCATION_ID = $data->LOCATION_ID;
-        $this->AMOUNT = $data->AMOUNT;
-        $this->NOTES = $data->NOTES ?? '';
+        $this->ID              = $data->ID;
+        $this->CODE            = $data->CODE;
+        $this->DATE            = $data->DATE;
+        $this->LOCATION_ID     = $data->LOCATION_ID;
+        $this->AMOUNT          = $data->AMOUNT;
+        $this->NOTES           = $data->NOTES ?? '';
         $this->BANK_ACCOUNT_ID = $data->BANK_ACCOUNT_ID;
-        $this->PAY_TO_ID = $data->PAY_TO_ID;
-        $this->STATUS = $data->STATUS;
+        $this->PAY_TO_ID       = $data->PAY_TO_ID;
+        $this->STATUS          = $data->STATUS;
+        if ($this->STATUS == 16) {
+            $this->removeJournal();
+        }
+
         $this->STATUS_DESCRIPTION = $this->documentStatusServices->getDesc($this->STATUS);
-        $this->Modify = false;
-        $this->IS_DOCTOR = (bool) $this->contactServices->isDoctor($this->PAY_TO_ID);
-        $this->PF_PERIOD_ID = $data->PF_PERIOD_ID ?? 0;
+        $this->Modify             = false;
+        $this->IS_DOCTOR          = (bool) $this->contactServices->isDoctor($this->PAY_TO_ID);
+        $this->PF_PERIOD_ID       = $data->PF_PERIOD_ID ?? 0;
     }
     public function getModify()
     {
@@ -165,29 +168,26 @@ class BillPaymentForm extends Component
         $this->validate(
             [
                 'BANK_ACCOUNT_ID' => 'required|not_in:0|exists:account,id',
-                'PAY_TO_ID' => 'required|not_in:0|exists:contact,id',
-                'CODE' => 'nullable|max:20|unique:check,code,' . ($this->ID > 0 ? $this->ID : 'NULL') . ',id',
-                'DATE' => 'required|date',
-                'LOCATION_ID' => 'required|exists:location,id',
-
+                'PAY_TO_ID'       => 'required|not_in:0|exists:contact,id',
+                'CODE'            => 'nullable|max:20|unique:check,code,' . ($this->ID > 0 ? $this->ID : 'NULL') . ',id',
+                'DATE'            => 'required|date',
+                'LOCATION_ID'     => 'required|exists:location,id',
 
             ],
             [],
             [
-                'PAY_TO_ID' => 'Pay To',
+                'PAY_TO_ID'       => 'Pay To',
                 'BANK_ACCOUNT_ID' => 'Bank Account',
-                'DATE' => 'Date',
-                'LOCATION_ID' => 'Location',
-                'CODE' => 'Reference No.',
+                'DATE'            => 'Date',
+                'LOCATION_ID'     => 'Location',
+                'CODE'            => 'Reference No.',
             ]
         );
-
 
         if ($this->systemSettingServices->IsCloseDate($this->DATE)) {
             session()->flash('error', 'You cannot create a transaction before or on the closing date on :' . $this->systemSettingServices->CloseDate());
             return;
         }
-
 
         try {
             if ($this->ID == 0) {
@@ -215,9 +215,9 @@ class BillPaymentForm extends Component
                     if ($this->STATUS == 16) {
                         $JNO = $this->accountJournalServices->getRecord($this->billPaymentServices->object_type_check, $this->ID);
                         if ($JNO > 0) {
-                            // BANK_ACCOUNT_ID on CREDIT 
+                            // BANK_ACCOUNT_ID on CREDIT
                             $this->accountJournalServices->AccountSwitch($this->BANK_ACCOUNT_ID, $data->BANK_ACCOUNT_ID, $this->LOCATION_ID, $JNO, $data->PAY_TO_ID, $this->ID, $this->billPaymentServices->object_type_check, $this->DATE, 1);
-                            // BANK_ACCOUNT_ID on DEBIT 
+                            // BANK_ACCOUNT_ID on DEBIT
                             $this->accountJournalServices->AccountSwitch($this->BANK_ACCOUNT_ID, $data->BANK_ACCOUNT_ID, $this->LOCATION_ID, $JNO, $data->PAY_TO_ID, $this->ID, $this->billPaymentServices->object_type_check, $this->DATE, 0);
                         }
                     }
@@ -251,7 +251,7 @@ class BillPaymentForm extends Component
     {
         try {
             DB::beginTransaction();
-            $check = $this->billPaymentServices->object_type_check;
+            $check      = $this->billPaymentServices->object_type_check;
             $checkbills = $this->billPaymentServices->object_type_check_bills;
             $JOURNAL_NO = (int) $this->accountJournalServices->getRecord($check, $this->ID);
             if ($JOURNAL_NO == 0) {
@@ -289,10 +289,8 @@ class BillPaymentForm extends Component
             );
 
             $data = $this->accountJournalServices->getSumDebitCredit($JOURNAL_NO);
-
-            $debit_sum = (float) $data['DEBIT'];
+            $debit_sum  = (float) $data['DEBIT'];
             $credit_sum = (float) $data['CREDIT'];
-
             if ($debit_sum == $credit_sum) {
                 $this->billPaymentServices->StatusUpdate($this->ID, 15);
                 DB::commit();
@@ -317,6 +315,7 @@ class BillPaymentForm extends Component
         try {
             DB::beginTransaction();
             $this->billPaymentServices->StatusUpdate($this->ID, 16);
+            $this->removeJournal();
             DB::commit();
             Redirect::route('vendorsbill_payment_edit', $this->ID)->with('message', 'Successfully unposted');
         } catch (\Throwable $th) {
@@ -325,9 +324,15 @@ class BillPaymentForm extends Component
             session()->flash('error', $errorMessage);
         }
     }
+    private function removeJournal()
+    {
+        $JOURNAL_NO = $this->accountJournalServices->getRecord($this->billPaymentServices->object_type_check, $this->ID);
+        if ($JOURNAL_NO > 0) {
+            $this->accountJournalServices->UpdatedJournalAmountZero($JOURNAL_NO);
+        }
+    }
     public function OpenJournal()
     {
-
         $JOURNAL_NO = $this->accountJournalServices->getRecord($this->billPaymentServices->object_type_check, $this->ID);
         if ($JOURNAL_NO > 0) {
             $data = ['JOURNAL_NO' => $JOURNAL_NO];
@@ -336,7 +341,6 @@ class BillPaymentForm extends Component
     }
     public function DoctorPrint()
     {
-
 
     }
     #[On('reload_bill_list')]
@@ -358,7 +362,7 @@ class BillPaymentForm extends Component
     public function render()
     {
         $this->AMOUNT_APPLIED = (float) $this->billPaymentServices->getTotalApplied($this->ID);
-        $this->WTAX_APPLIED = (float) $this->withholdingTaxServices->getAmountBetweenBillPayment($this->ID);
+        $this->WTAX_APPLIED   = (float) $this->withholdingTaxServices->getAmountBetweenBillPayment($this->ID);
         return view('livewire.bill-payments.bill-payment-form');
     }
 }

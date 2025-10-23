@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Livewire\BuildAssembly;
 
 use App\Services\AccountJournalServices;
@@ -35,9 +34,9 @@ class BuildAssemblyForm extends Component
     public int $BATCH_ID;
     public int $STATUS;
     public string $STATUS_DESCRIPTION;
-    public $itemList = [];
+    public $itemList     = [];
     public $locationList = [];
-    public $unitList = [];
+    public $unitList     = [];
     public bool $Modify;
     private $buildAssemblyServices;
     private $locationServices;
@@ -64,30 +63,30 @@ class BuildAssemblyForm extends Component
         ObjectServices $objectServices,
         AccountJournalServices $accountJournalServices
     ) {
-        $this->buildAssemblyServices = $buildAssemblyServices;
-        $this->locationServices = $locationServices;
-        $this->itemServices = $itemServices;
-        $this->userServices = $userServices;
+        $this->buildAssemblyServices  = $buildAssemblyServices;
+        $this->locationServices       = $locationServices;
+        $this->itemServices           = $itemServices;
+        $this->userServices           = $userServices;
         $this->documentStatusServices = $documentStatusServices;
-        $this->systemSettingServices = $systemSettingServices;
+        $this->systemSettingServices  = $systemSettingServices;
 
-        $this->unitOfMeasureServices = $unitOfMeasureServices;
-        $this->itemInventoryServices = $itemInventoryServices;
-        $this->documentTypeServices = $documentTypeServices;
-        $this->objectServices = $objectServices;
+        $this->unitOfMeasureServices  = $unitOfMeasureServices;
+        $this->itemInventoryServices  = $itemInventoryServices;
+        $this->documentTypeServices   = $documentTypeServices;
+        $this->objectServices         = $objectServices;
         $this->accountJournalServices = $accountJournalServices;
     }
     public function LoadDropdown()
     {
-        $this->itemList = $this->itemServices->AssemblyItem();
+        $this->itemList     = $this->itemServices->AssemblyItem();
         $this->locationList = $this->locationServices->getList();
-        $this->unitList = [];
+        $this->unitList     = [];
     }
 
     public function updatedASSEMBLYITEMID()
     {
         $this->unitList = $this->unitOfMeasureServices->ItemUnit($this->ASSEMBLY_ITEM_ID);
-        $dataItem = $this->itemServices->get($this->ASSEMBLY_ITEM_ID);
+        $dataItem       = $this->itemServices->get($this->ASSEMBLY_ITEM_ID);
         if ($dataItem) {
             $this->ASSET_ACCOUNT_ID = $dataItem->ASSET_ACCOUNT_ID ?? 0;
             return;
@@ -97,19 +96,22 @@ class BuildAssemblyForm extends Component
 
     private function getInfo($data)
     {
-        $this->ID = $data->ID;
-        $this->CODE = $data->CODE;
-        $this->DATE = $data->DATE;
-        $this->LOCATION_ID = $data->LOCATION_ID;
-        $this->ASSEMBLY_ITEM_ID = $data->ASSEMBLY_ITEM_ID;
-        $this->ASSET_ACCOUNT_ID = $data->ASSET_ACCOUNT_ID ?? 0;
-        $this->NOTES = $data->NOTES ?? '';
-        $this->AMOUNT = $data->AMOUNT ?? 0;
-        $this->BATCH_ID = $data->BATCH_ID ?? 0;
-        $this->QUANTITY = $data->QUANTITY ?? 1;
-        $this->UNIT_ID = $data->UNIT_ID ?? 0;
-        $this->STATUS = $data->STATUS ?? 0;
+        $this->ID                 = $data->ID;
+        $this->CODE               = $data->CODE;
+        $this->DATE               = $data->DATE;
+        $this->LOCATION_ID        = $data->LOCATION_ID;
+        $this->ASSEMBLY_ITEM_ID   = $data->ASSEMBLY_ITEM_ID;
+        $this->ASSET_ACCOUNT_ID   = $data->ASSET_ACCOUNT_ID ?? 0;
+        $this->NOTES              = $data->NOTES ?? '';
+        $this->AMOUNT             = $data->AMOUNT ?? 0;
+        $this->BATCH_ID           = $data->BATCH_ID ?? 0;
+        $this->QUANTITY           = $data->QUANTITY ?? 1;
+        $this->UNIT_ID            = $data->UNIT_ID ?? 0;
+        $this->STATUS             = $data->STATUS ?? 0;
         $this->STATUS_DESCRIPTION = $this->documentStatusServices->getDesc($this->STATUS);
+        if ($this->STATUS == 16) {
+            $this->removeJournal();
+        }
     }
     public function mount($id = null)
     {
@@ -126,19 +128,19 @@ class BuildAssemblyForm extends Component
             return Redirect::route('companybuild_assembly')->with('error', $errorMessage);
         }
         $this->LoadDropdown();
-        $this->Modify = true;
-        $this->ID = 0;
-        $this->CODE = '';
-        $this->DATE = $this->userServices->getTransactionDateDefault();
-        $this->LOCATION_ID = $this->userServices->getLocationDefault();
-        $this->ASSEMBLY_ITEM_ID = 0;
-        $this->ASSET_ACCOUNT_ID = 21;
-        $this->NOTES = '';
-        $this->AMOUNT = 0;
-        $this->QUANTITY = 0;
-        $this->BATCH_ID = 0;
-        $this->UNIT_ID = 0;
-        $this->STATUS = 0;
+        $this->Modify             = true;
+        $this->ID                 = 0;
+        $this->CODE               = '';
+        $this->DATE               = $this->userServices->getTransactionDateDefault();
+        $this->LOCATION_ID        = $this->userServices->getLocationDefault();
+        $this->ASSEMBLY_ITEM_ID   = 0;
+        $this->ASSET_ACCOUNT_ID   = 21;
+        $this->NOTES              = '';
+        $this->AMOUNT             = 0;
+        $this->QUANTITY           = 0;
+        $this->BATCH_ID           = 0;
+        $this->UNIT_ID            = 0;
+        $this->STATUS             = 0;
         $this->STATUS_DESCRIPTION = "";
     }
     public function getModify()
@@ -149,31 +151,29 @@ class BuildAssemblyForm extends Component
     {
         try {
 
-
             if ($this->ID == 0) {
 
                 $this->validate(
                     [
                         'ASSEMBLY_ITEM_ID' => 'required|integer|exists:item,id',
-                        'DATE' => 'required|date_format:Y-m-d',
-                        'LOCATION_ID' => 'required|integer|exists:location,id',
-                        'QUANTITY' => 'required|not_in:0',
-                        'ASSET_ACCOUNT_ID' => 'required|not_in:0|integer|exists:account,id'
+                        'DATE'             => 'required|date_format:Y-m-d',
+                        'LOCATION_ID'      => 'required|integer|exists:location,id',
+                        'QUANTITY'         => 'required|not_in:0',
+                        'ASSET_ACCOUNT_ID' => 'required|not_in:0|integer|exists:account,id',
                     ],
                     [],
                     [
                         'ASSEMBLY_ITEM_ID' => 'Aseembly Item',
-                        'DATE' => 'Date',
-                        'LOCATION_ID' => 'Location',
-                        'QUANTITY' => 'Quantity',
-                        'ASSET_ACCOUNT_ID' => 'Asset Accounts'
+                        'DATE'             => 'Date',
+                        'LOCATION_ID'      => 'Location',
+                        'QUANTITY'         => 'Quantity',
+                        'ASSET_ACCOUNT_ID' => 'Asset Accounts',
                     ]
                 );
 
                 if ($this->systemSettingServices->IsCloseDate($this->DATE)) {
                     session()->flash('error', 'You cannot create a transaction before or on the closing date on :' . $this->systemSettingServices->CloseDate());
                     return;
-
                 }
 
                 $unitRelated = $this->unitOfMeasureServices->GetItemUnitDetails($this->ASSEMBLY_ITEM_ID, $this->UNIT_ID ?? 0);
@@ -198,18 +198,18 @@ class BuildAssemblyForm extends Component
                 $this->validate(
                     [
                         'ASSEMBLY_ITEM_ID' => 'required|integer|exists:item,id',
-                        'CODE' => 'required|max:20|unique:build_assembly,code,' . $this->ID,
-                        'DATE' => 'required|date_format:Y-m-d',
-                        'LOCATION_ID' => 'required|integer|exists:location,id',
-                        'QUANTITY' => 'required|not_in:0',
+                        'CODE'             => 'required|max:20|unique:build_assembly,code,' . $this->ID,
+                        'DATE'             => 'required|date_format:Y-m-d',
+                        'LOCATION_ID'      => 'required|integer|exists:location,id',
+                        'QUANTITY'         => 'required|not_in:0',
                     ],
                     [],
                     [
                         'ASSEMBLY_ITEM_ID' => 'Aseembly Item',
-                        'CODE' => 'Reference No.',
-                        'DATE' => 'Date',
-                        'LOCATION_ID' => 'Location',
-                        'QUANTITY' => 'Quantity'
+                        'CODE'             => 'Reference No.',
+                        'DATE'             => 'Date',
+                        'LOCATION_ID'      => 'Location',
+                        'QUANTITY'         => 'Quantity',
                     ]
                 );
                 $unitRelated = $this->unitOfMeasureServices->GetItemUnitDetails($this->ASSEMBLY_ITEM_ID, $this->UNIT_ID ?? 0);
@@ -292,7 +292,7 @@ class BuildAssemblyForm extends Component
     {
         try {
 
-            $buildAssembly = (int) $this->buildAssemblyServices->object_type_build_assembly;
+            $buildAssembly      = (int) $this->buildAssemblyServices->object_type_build_assembly;
             $buildAssemblyItems = (int) $this->buildAssemblyServices->object_type_build_assembly_items;
 
             $JOURNAL_NO = $this->accountJournalServices->getRecord($buildAssembly, $this->ID);
@@ -324,13 +324,12 @@ class BuildAssemblyForm extends Component
 
             $data = $this->accountJournalServices->getSumDebitCredit($JOURNAL_NO);
 
-            $debit_sum = (float) $data['DEBIT'];
+            $debit_sum  = (float) $data['DEBIT'];
             $credit_sum = (float) $data['CREDIT'];
 
             if ($debit_sum == $credit_sum) {
                 return true;
             }
-
 
             session()->flash('error', 'debit:' . $debit_sum . ' and credit:' . $credit_sum . ' is not balance');
             return false;
@@ -349,7 +348,6 @@ class BuildAssemblyForm extends Component
                 return;
             }
 
-
             $checkItem = $this->buildAssemblyServices->ComponentList($this->ID, $this->LOCATION_ID);
 
             foreach ($checkItem as $list) {
@@ -360,16 +358,13 @@ class BuildAssemblyForm extends Component
                 }
             }
 
-
-
-
             DB::beginTransaction();
-            if (!$this->ItemInventory()) {
+            if (! $this->ItemInventory()) {
                 DB::rollBack();
                 return;
             }
 
-            if (!$this->AccountJournal()) {
+            if (! $this->AccountJournal()) {
                 DB::rollBack();
                 return;
             }
@@ -403,6 +398,7 @@ class BuildAssemblyForm extends Component
         try {
             DB::beginTransaction();
             $this->buildAssemblyServices->StatusUpdate($this->ID, 16);
+            $this->removeJournal();
             DB::commit();
             Redirect::route('companybuild_assembly_edit', $this->ID);
         } catch (\Throwable $th) {
@@ -410,6 +406,15 @@ class BuildAssemblyForm extends Component
             $errorMessage = 'Error occurred: ' . $th->getMessage();
             session()->flash('error', $errorMessage);
         }
+    }
+
+    private function removeJournal()
+    {
+        $JOURNAL_NO = $this->accountJournalServices->getRecord($this->buildAssemblyServices->object_type_build_assembly, $this->ID);
+        if ($JOURNAL_NO > 0) {
+            $this->accountJournalServices->UpdatedJournalAmountZero($JOURNAL_NO);
+        }
+
     }
     public function render()
     {

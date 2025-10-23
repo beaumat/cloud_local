@@ -152,8 +152,11 @@ class WriteCheckForm extends Component
         $this->INPUT_TAX_VAT_METHOD = $data->INPUT_TAX_VAT_METHOD > 0 ? $data->INPUT_TAX_VAT_METHOD : 0;
         $this->INPUT_TAX_ACCOUNT_ID = $data->INPUT_TAX_ACCOUNT_ID > 0 ? $data->INPUT_TAX_ACCOUNT_ID : 0;
         $this->STATUS               = $data->STATUS;
-        $this->STATUS_DESCRIPTION   = $this->documentStatusServices->getDesc($this->STATUS);
-        $this->Modify               = false;
+        if ($this->STATUS == 16) {
+            $this->removeJournal();
+        }
+        $this->STATUS_DESCRIPTION = $this->documentStatusServices->getDesc($this->STATUS);
+        $this->Modify             = false;
         $this->getTax();
         $getResult = $this->writeCheckServices->ReComputed($this->ID);
         $this->getUpdateAmount($getResult);
@@ -420,6 +423,7 @@ class WriteCheckForm extends Component
         try {
             DB::beginTransaction();
             $this->writeCheckServices->StatusUpdate($this->ID, 16);
+            $this->removeJournal();
             DB::commit();
             Redirect::route('bankingmake_cheque_edit', $this->ID)->with('message', 'Successfully unposted');
         } catch (\Throwable $th) {
@@ -427,6 +431,14 @@ class WriteCheckForm extends Component
             $errorMessage = 'Error occurred: ' . $th->getMessage();
             session()->flash('error', $errorMessage);
         }
+    }
+    private function removeJournal()
+    {
+        $JOURNAL_NO = $this->accountJournalServices->getRecord($this->writeCheckServices->object_type_check, $this->ID);
+        if ($JOURNAL_NO > 0) {
+            $this->accountJournalServices->UpdatedJournalAmountZero($JOURNAL_NO);
+        }
+
     }
     public function render()
     {

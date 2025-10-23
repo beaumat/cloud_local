@@ -186,20 +186,24 @@ class BillingForm extends Component
     private function getInfo($data)
     {
 
-        $this->ID                   = $data->ID;
-        $this->CODE                 = $data->CODE;
-        $this->DATE                 = $data->DATE;
-        $this->DUE_DATE             = $data->DUE_DATE ? $data->DUE_DATE : '';
-        $this->DISCOUNT_DATE        = $data->DISCOUNT_DATE ? $data->DISCOUNT_DATE : '';
-        $this->DISCOUNT_PCT         = $data->DISCOUNT_PCT ? $data->DISCOUNT_PCT : 0;
-        $this->LOCATION_ID          = $data->LOCATION_ID;
-        $this->VENDOR_ID            = $data->VENDOR_ID;
-        $this->PAYMENT_TERMS_ID     = $data->PAYMENT_TERMS_ID ? $data->PAYMENT_TERMS_ID : 0;
-        $this->NOTES                = $data->NOTES;
-        $this->AMOUNT               = $data->AMOUNT ?? 0;
-        $this->BALANCE_DUE          = $data->BALANCE_DUE ?? 0;
-        $this->PAYMENT              = $this->AMOUNT - $this->BALANCE_DUE;
-        $this->STATUS               = $data->STATUS;
+        $this->ID               = $data->ID;
+        $this->CODE             = $data->CODE;
+        $this->DATE             = $data->DATE;
+        $this->DUE_DATE         = $data->DUE_DATE ? $data->DUE_DATE : '';
+        $this->DISCOUNT_DATE    = $data->DISCOUNT_DATE ? $data->DISCOUNT_DATE : '';
+        $this->DISCOUNT_PCT     = $data->DISCOUNT_PCT ? $data->DISCOUNT_PCT : 0;
+        $this->LOCATION_ID      = $data->LOCATION_ID;
+        $this->VENDOR_ID        = $data->VENDOR_ID;
+        $this->PAYMENT_TERMS_ID = $data->PAYMENT_TERMS_ID ? $data->PAYMENT_TERMS_ID : 0;
+        $this->NOTES            = $data->NOTES;
+        $this->AMOUNT           = $data->AMOUNT ?? 0;
+        $this->BALANCE_DUE      = $data->BALANCE_DUE ?? 0;
+        $this->PAYMENT          = $this->AMOUNT - $this->BALANCE_DUE;
+        $this->STATUS           = $data->STATUS;
+
+        if ($this->STATUS == 16) {
+            $this->removeJournal();
+        }
         $this->INPUT_TAX_ID         = $data->INPUT_TAX_ID > 0 ? $data->INPUT_TAX_ID : 0;
         $this->INPUT_TAX_RATE       = $data->INPUT_TAX_RATE > 0 ? $data->INPUT_TAX_RATE : 0;
         $this->INPUT_TAX_AMOUNT     = $data->INPUT_TAX_AMOUNT > 0 ? $data->INPUT_TAX_AMOUNT : 0;
@@ -273,7 +277,6 @@ class BillingForm extends Component
         $this->STATUS_DESCRIPTION   = "";
         $this->ACCOUNTS_PAYABLE_ID  = $this->accountServices->getByName('Accounts Payable');
         $this->getTax();
-
         $this->FILE_NAME    = '';
         $this->FILE_PATH    = '';
         $this->DATE_CONFIRM = '';
@@ -628,16 +631,24 @@ class BillingForm extends Component
     }
     public function getUnposted()
     {
-
         try {
             DB::beginTransaction();
             $this->billingServices->StatusUpdate($this->ID, 16);
+            $this->removeJournal();
             DB::commit();
             Redirect::route('vendorsbills_edit', $this->ID)->with('message', 'Successfully unposted');
         } catch (\Throwable $th) {
             DB::rollBack();
             $errorMessage = 'Error occurred: ' . $th->getMessage();
             session()->flash('error', $errorMessage);
+        }
+
+    }
+    private function removeJournal()
+    {
+        $JOURNAL_NO = $this->accountJournalServices->getRecord($this->billingServices->object_type_map_bill, $this->ID);
+        if ($JOURNAL_NO > 0) {
+            $this->accountJournalServices->UpdatedJournalAmountZero($JOURNAL_NO);
         }
 
     }

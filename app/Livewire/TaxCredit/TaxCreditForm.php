@@ -82,6 +82,10 @@ class TaxCreditForm extends Component
         $this->EWT_ID                 = $data->EWT_ID ?? 0;
         $this->NOTES                  = $data->NOTES ?? '';
         $this->STATUS                 = $data->STATUS ?? 0;
+
+        if($this->STATUS  == 16) {
+            $this->removeJournal();
+        }
     }
 
     public function updatedEwtId()
@@ -297,6 +301,7 @@ class TaxCreditForm extends Component
         try {
             DB::beginTransaction();
             $this->taxCreditServices->StatusUpdate($this->ID, 16);
+            $this->removeJournal();
             DB::commit();
             Redirect::route('customerstax_credit_edit', $this->ID)->with('message', 'Successfully unposted');
         } catch (\Throwable $th) {
@@ -304,6 +309,15 @@ class TaxCreditForm extends Component
             $errorMessage = 'Error occurred: ' . $th->getMessage();
             session()->flash('error', $errorMessage);
         }
+    }
+
+      private function removeJournal()
+    {
+        $JOURNAL_NO = $this->accountJournalServices->getRecord($this->taxCreditServices->object_type_tax_credit, $this->ID);
+        if ($JOURNAL_NO > 0) {
+            $this->accountJournalServices->UpdatedJournalAmountZero($JOURNAL_NO);
+        }
+
     }
     public function OpenJournal()
     {

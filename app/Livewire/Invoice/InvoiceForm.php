@@ -675,6 +675,7 @@ class InvoiceForm extends Component
         try {
             DB::beginTransaction();
             $this->invoiceServices->StatusUpdate($this->ID, 16);
+            $this->removeJournal();
             DB::commit();
             Redirect::route('customersinvoice_edit', $this->ID)->with('message', 'Successfully posted');
         } catch (\Throwable $th) {
@@ -683,7 +684,14 @@ class InvoiceForm extends Component
             session()->flash('error', $errorMessage);
         }
     }
+    private function removeJournal()
+    {
+        $JOURNAL_NO = $this->accountJournalServices->getRecord($this->invoiceServices->object_type_invoice, $this->ID);
+        if ($JOURNAL_NO > 0) {
+            $this->accountJournalServices->UpdatedJournalAmountZero($JOURNAL_NO);
+        }
 
+    }
     public function render()
     {
         return view('livewire.invoice.invoice-form');

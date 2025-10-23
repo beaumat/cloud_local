@@ -5,15 +5,15 @@
                 <div class="col-sm-6">
                     <h5 class="m-0">
                         <a href="{{ route('reportsaccountingtransaction_details_report') }}">
-                            Account Transaction Report
+                            Account Transaction Error
                         </a>
                     </h5>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item active">
-                               <button class="btn btn-success btn-xs w-100" wire:click='export()'
-                                wire:loading.attr='disabled'>Export</button>
+                               <button class="btn btn-success btn-xs w-100" wire:click='cleanData()'
+                                wire:loading.attr='disabled'>Clean</button>
                         </li>
                     </ol>
                 </div>

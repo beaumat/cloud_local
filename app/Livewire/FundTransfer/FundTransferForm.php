@@ -108,7 +108,9 @@ class FundTransferForm extends Component
         $this->FROM_NAME_ID              = $data->FROM_NAME_ID ?? 0;
         $this->NOTES                     = $data->NOTES ?? '';
         $this->STATUS                    = $data->STATUS ?? 0;
-
+        if ($this->STATUS == 16) {
+            $this->removeJournal();
+        }
         $this->STATUS_DESCRIPTION = $this->documentStatusServices->getDesc($this->STATUS);
     }
     public function mount($id = null)
@@ -280,13 +282,13 @@ class FundTransferForm extends Component
             $fundTransfer = $this->fundTransferServices->object_type_id;
 
             $JOURNAL_NO = $this->accountJournalServices->getRecord($fundTransfer, $this->ID);
-                  
+
             if ($JOURNAL_NO == 0) {
                 $JOURNAL_NO = $this->accountJournalServices->getJournalNo($fundTransfer, $this->ID) + 1;
             }
- 
+
             // Inter From
-            $fundData = $this->fundTransferServices->getJournalFrom($this->ID, true, true);  
+            $fundData = $this->fundTransferServices->getJournalFrom($this->ID, true, true);
             $this->accountJournalServices->JournalExecute(
                 $JOURNAL_NO,
                 $fundData,
@@ -294,7 +296,7 @@ class FundTransferForm extends Component
                 $fundTransfer,
                 $this->DATE
             );
-  
+
             //From
             $fundData = $this->fundTransferServices->getJournalFrom($this->ID, false, false);
             $this->accountJournalServices->JournalExecute(
@@ -305,8 +307,6 @@ class FundTransferForm extends Component
                 $this->DATE
             );
 
-
-            
             // Inter TO
             $fundData = $this->fundTransferServices->getJournalTo($this->ID, false, true);
             $this->accountJournalServices->JournalExecute(
@@ -317,7 +317,6 @@ class FundTransferForm extends Component
                 $this->DATE
             );
 
-   
             //TO
             $fundData = $this->fundTransferServices->getJournalTo($this->ID, true, false);
             $this->accountJournalServices->JournalExecute(
@@ -329,7 +328,7 @@ class FundTransferForm extends Component
             );
 
             $data = $this->accountJournalServices->getSumDebitCredit($JOURNAL_NO);
-    
+
             $debit_sum  = (float) $data['DEBIT'];
             $credit_sum = (float) $data['CREDIT'];
 
@@ -412,6 +411,7 @@ class FundTransferForm extends Component
         try {
             DB::beginTransaction();
             $this->fundTransferServices->StatusUpdate($this->ID, 16);
+            $this->removeJournal();
             DB::commit();
             Redirect::route('bankingfund_transfer_edit', $this->ID);
         } catch (\Throwable $th) {
@@ -420,7 +420,14 @@ class FundTransferForm extends Component
             session()->flash('error', $errorMessage);
         }
     }
+    private function removeJournal()
+    {
+        $JOURNAL_NO = $this->accountJournalServices->getRecord($this->fundTransferServices->object_type_id, $this->ID);
+        if ($JOURNAL_NO > 0) {
+            $this->accountJournalServices->UpdatedJournalAmountZero($JOURNAL_NO);
+        }
 
+    }
     public function render()
     {
         return view('livewire.fund-transfer.fund-transfer-form');

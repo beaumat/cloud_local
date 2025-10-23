@@ -60,7 +60,6 @@ class GeneralJournalForm extends Component
         $this->locationList = $this->locationServices->getList();
         $this->contactList  = $this->contactServices->getListAllType();
     }
-
     private function getInfo($data)
     {
         $this->ID                 = $data->ID;
@@ -72,6 +71,9 @@ class GeneralJournalForm extends Component
         $this->ADJUSTING_ENTRY    = $data->ADJUSTING_ENTRY ?? false;
         $this->STATUS             = $data->STATUS ?? 0;
         $this->STATUS_DESCRIPTION = $this->documentStatusServices->getDesc($this->STATUS);
+        if ($this->STATUS == 16) {
+            $this->removeJournal();
+        }
     }
     public function mount($id = null)
     {
@@ -290,6 +292,7 @@ class GeneralJournalForm extends Component
         try {
             DB::beginTransaction();
             $this->generalJournalServices->StatusUpdate($this->ID, 16);
+            $this->removeJournal();
             DB::commit();
             Redirect::route('companygeneral_journal_edit', $this->ID);
         } catch (\Throwable $th) {
@@ -297,6 +300,20 @@ class GeneralJournalForm extends Component
             $errorMessage = 'Error occurred: ' . $th->getMessage();
             session()->flash('error', $errorMessage);
         }
+    }
+    private function removeJournal()
+    {
+
+        $FirstID    = $this->generalJournalServices->getFirstDetailsID($this->ID);
+        $JOURNAL_NO = $this->accountJournalServices->getRecord(
+            $this->generalJournalServices->object_type_general_journal_details_id,
+            $FirstID
+        );
+
+        if ($JOURNAL_NO > 0) {
+            $this->accountJournalServices->UpdatedJournalAmountZero($JOURNAL_NO);
+        }
+
     }
     public function render()
     {

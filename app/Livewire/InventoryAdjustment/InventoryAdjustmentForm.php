@@ -91,7 +91,7 @@ class InventoryAdjustmentForm extends Component
             $JOURNAL_NO = $this->accountJournalServices->getRecord($invAdjustment, $this->ID);
             if ($JOURNAL_NO == 0) {
                 $JOURNAL_NO = $this->accountJournalServices->getJournalNo($invAdjustment, $this->ID) + 1;
-            }else{
+            } else {
                 // reset
                 $this->accountJournalServices->DeleteRecordJournal($JOURNAL_NO, $this->DATE, $this->LOCATION_ID);
             }
@@ -159,6 +159,9 @@ class InventoryAdjustmentForm extends Component
         $this->ACCOUNT_ID         = $data->ACCOUNT_ID ?? 0;
         $this->STATUS             = $data->STATUS ?? 0;
         $this->STATUS_DESCRIPTION = $this->documentStatusServices->getDesc($this->STATUS);
+        if($this->STATUS == 16) {
+            $this->removeJournal();
+        }
     }
     public function mount($id = null)
     {
@@ -194,12 +197,20 @@ class InventoryAdjustmentForm extends Component
         try {
             DB::beginTransaction();
             $this->inventoryAdjustmentServices->StatusUpdate($this->ID, 16);
+            $this->removeJournal();
             DB::commit();
             return Redirect::route('companyinventory_adjustment_edit', ['id' => $this->ID]);
         } catch (\Throwable $th) {
             DB::rollBack();
             $errorMessage = 'Error occurred: ' . $th->getMessage();
             session()->flash('error', $errorMessage);
+        }
+    }
+    private function removeJournal()
+    {
+        $JOURNAL_NO = $this->accountJournalServices->getRecord($this->inventoryAdjustmentServices->object_type_map_inventory_adjustment, $this->ID);
+        if ($JOURNAL_NO > 0) {
+            $this->accountJournalServices->UpdatedJournalAmountZero($JOURNAL_NO);
         }
     }
     public function save()
@@ -273,27 +284,27 @@ class InventoryAdjustmentForm extends Component
         if ($this->ID > 0) {
             DB::beginTransaction();
             try {
-             $JOURNAL_NO = (int) $this->accountJournalServices->getJournalNo($this->inventoryAdjustmentServices->object_type_map_inventory_adjustment, $this->ID);
-            if ($JOURNAL_NO > 0) {
-                $this->accountJournalServices->DeleteRecordJournal($JOURNAL_NO, $this->DATE, $this->LOCATION_ID);
-            }
-            $ItemList = $this->inventoryAdjustmentServices->ItemView($this->ID);
-            foreach ($ItemList as $list) {
-                $this->itemInventoryServices->InventoryModify(
-                    $list->ITEM_ID,
-                    $this->LOCATION_ID,
-                    $list->ID,
-                    $this->inventoryAdjustmentServices->documentTypeMapId,
-                    $this->DATE,
-                    0,
-                    0,
-                    0
-                );
-            }
+                $JOURNAL_NO = (int) $this->accountJournalServices->getJournalNo($this->inventoryAdjustmentServices->object_type_map_inventory_adjustment, $this->ID);
+                if ($JOURNAL_NO > 0) {
+                    $this->accountJournalServices->DeleteRecordJournal($JOURNAL_NO, $this->DATE, $this->LOCATION_ID);
+                }
+                $ItemList = $this->inventoryAdjustmentServices->ItemView($this->ID);
+                foreach ($ItemList as $list) {
+                    $this->itemInventoryServices->InventoryModify(
+                        $list->ITEM_ID,
+                        $this->LOCATION_ID,
+                        $list->ID,
+                        $this->inventoryAdjustmentServices->documentTypeMapId,
+                        $this->DATE,
+                        0,
+                        0,
+                        0
+                    );
+                }
 
-            $this->inventoryAdjustmentServices->Delete($this->ID);
-            DB::commit();
-            return Redirect::route('companyinventory_adjustment')->with('message', 'Successfully deleted');
+                $this->inventoryAdjustmentServices->Delete($this->ID);
+                DB::commit();
+                return Redirect::route('companyinventory_adjustment')->with('message', 'Successfully deleted');
             } catch (\Throwable $th) {
                 DB::rollBack();
                 session()->flash('error', $th->getMessage());

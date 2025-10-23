@@ -104,6 +104,9 @@ class PaymentForm extends Component
         $this->OVERPAYMENT_ACCOUNT_ID       = $data->OVERPAYMENT_ACCOUNT_ID ?? 0;
         $this->ACCOUNTS_RECEIVABLE_ID       = $data->ACCOUNTS_RECEIVABLE_ID ?? 0;
         $this->STATUS                       = $data->STATUS ?? 0;
+        if($this->STATUS == 16) {
+            $this->removeJournal();
+        }
         $this->STATUS_DESCRIPTION           = $this->documentStatusServices->getDesc($this->STATUS);
         $this->STATUS_DATE                  = $data->STATUS_DATE ?? null;
         $this->DEPOSITED                    = $data->DEPOSITED ?? null;
@@ -339,6 +342,7 @@ class PaymentForm extends Component
         try {
             DB::beginTransaction();
             $this->paymentServices->StatusUpdate($this->ID, 16);
+            $this->removeJournal();
             DB::commit();
             Redirect::route('customerspayment_edit', $this->ID)->with('message', 'Successfully unposted');
         } catch (\Throwable $th) {
@@ -346,6 +350,14 @@ class PaymentForm extends Component
             $errorMessage = 'Error occurred: ' . $th->getMessage();
             session()->flash('error', $errorMessage);
         }
+    }
+    private function removeJournal()
+    {
+        $JOURNAL_NO = $this->accountJournalServices->getRecord($this->paymentServices->object_type_payment, $this->ID);
+        if ($JOURNAL_NO > 0) {
+            $this->accountJournalServices->UpdatedJournalAmountZero($JOURNAL_NO);
+        }
+
     }
     public function getModify()
     {

@@ -176,14 +176,17 @@ class SalesReceiptForm extends Component
         $this->AMOUNT                       = $Data->AMOUNT;
         $this->UNDEPOSITED_FUNDS_ACCOUNT_ID = $Data->UNDEPOSITED_FUNDS_ACCOUNT_ID;
         $this->STATUS                       = $Data->STATUS;
-        $this->OUTPUT_TAX_ID                = $Data->OUTPUT_TAX_ID ? $Data->OUTPUT_TAX_ID : 0;
-        $this->OUTPUT_TAX_RATE              = $Data->OUTPUT_TAX_RATE ? $Data->OUTPUT_TAX_RATE : 0;
-        $this->OUTPUT_TAX_AMOUNT            = $Data->OUTPUT_TAX_AMOUNT ? $Data->OUTPUT_TAX_AMOUNT : 0;
-        $this->OUTPUT_TAX_VAT_METHOD        = $Data->OUTPUT_TAX_VAT_METHOD ? $Data->OUTPUT_TAX_VAT_METHOD : 0;
-        $this->OUTPUT_TAX_ACCOUNT_ID        = $Data->OUTPUT_TAX_ACCOUNT_ID ? $Data->OUTPUT_TAX_ACCOUNT_ID : 0;
-        $this->TAXABLE_AMOUNT               = $Data->TAXABLE_AMOUNT ? $Data->TAXABLE_AMOUNT : 0;
-        $this->NONTAXABLE_AMOUNT            = $Data->NONTAXABLE_AMOUNT ? $Data->NONTAXABLE_AMOUNT : 0;
-        $this->STATUS_DESCRIPTION           = $this->documentStatusServices->getDesc($this->STATUS);
+        if ($this->STATUS == 16) {
+            $this->removeJournal();
+        }
+        $this->OUTPUT_TAX_ID         = $Data->OUTPUT_TAX_ID ? $Data->OUTPUT_TAX_ID : 0;
+        $this->OUTPUT_TAX_RATE       = $Data->OUTPUT_TAX_RATE ? $Data->OUTPUT_TAX_RATE : 0;
+        $this->OUTPUT_TAX_AMOUNT     = $Data->OUTPUT_TAX_AMOUNT ? $Data->OUTPUT_TAX_AMOUNT : 0;
+        $this->OUTPUT_TAX_VAT_METHOD = $Data->OUTPUT_TAX_VAT_METHOD ? $Data->OUTPUT_TAX_VAT_METHOD : 0;
+        $this->OUTPUT_TAX_ACCOUNT_ID = $Data->OUTPUT_TAX_ACCOUNT_ID ? $Data->OUTPUT_TAX_ACCOUNT_ID : 0;
+        $this->TAXABLE_AMOUNT        = $Data->TAXABLE_AMOUNT ? $Data->TAXABLE_AMOUNT : 0;
+        $this->NONTAXABLE_AMOUNT     = $Data->NONTAXABLE_AMOUNT ? $Data->NONTAXABLE_AMOUNT : 0;
+        $this->STATUS_DESCRIPTION    = $this->documentStatusServices->getDesc($this->STATUS);
         $this->updatedpaymentmethodid();
         $this->DEPOST_ID = $this->depositServices->getSalesReceipt($this->ID);
     }
@@ -595,6 +598,7 @@ class SalesReceiptForm extends Component
         try {
             DB::beginTransaction();
             $this->salesReceiptServices->StatusUpdate($this->ID, 16);
+            $this->removeJournal();
             DB::commit();
             Redirect::route('customerssales_receipt_edit', $this->ID)->with('message', 'Successfully posted');
         } catch (\Throwable $th) {
@@ -602,6 +606,14 @@ class SalesReceiptForm extends Component
             $errorMessage = 'Error occurred: ' . $th->getMessage();
             session()->flash('error', $errorMessage);
         }
+    }
+    private function removeJournal()
+    {
+        $JOURNAL_NO = $this->accountJournalServices->getRecord($this->salesReceiptServices->object_type_sales_receipt, $this->ID);
+        if ($JOURNAL_NO > 0) {
+            $this->accountJournalServices->UpdatedJournalAmountZero($JOURNAL_NO);
+        }
+
     }
     public function delete()
     {

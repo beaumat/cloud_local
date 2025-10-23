@@ -894,6 +894,25 @@ public string $TX_CODE_E = '
 
         return $result;
     }
+
+    public function getTransactionJournalErrorUpdate(string $dateFrom, string $dateTo, int $LOCATION_ID)
+    {
+        $result = DB::table('account_journal as aj')
+            ->leftJoin('account as a', 'a.ID', '=', 'aj.ACCOUNT_ID')
+            ->leftJoin('object_type_map as o', 'o.ID', '=', 'aj.OBJECT_TYPE')
+            ->leftJoin('document_type_map as d', 'd.ID', '=', 'o.DOCUMENT_TYPE')
+            ->leftJoin('location as l', 'l.ID', '=', 'aj.LOCATION_ID')
+            ->where('aj.AMOUNT', '>', '0')
+            ->whereBetween('aj.OBJECT_DATE', [$dateFrom, $dateTo])
+            ->when($LOCATION_ID > 0, function ($query) use (&$LOCATION_ID) {
+                $query->where('aj.LOCATION_ID', '=', $LOCATION_ID);
+            })  
+            ->whereRaw("($this->TX_CODE_E) IS NULL")
+              ->update([
+                  'AMOUNT' => 0,
+              ]);
+
+    }
     public function getUndepositedActiveList(int $LOCATION_ID)
     {
         $undeposited_account_id = 0;
@@ -1196,9 +1215,10 @@ public string $TX_CODE_E = '
                 'AMOUNT' => 0,
             ]);
     }
-    public function Unposted(int $JOURNAL_NO)
+    public function UpdatedJournalAmountZero(int $JOURNAL_NO)
     {
         AccountJournal::where('JOURNAL_NO', '=', $JOURNAL_NO)
+        ->where('AMOUNT','>', 0)
             ->update([
                 'AMOUNT' => 0,
             ]);

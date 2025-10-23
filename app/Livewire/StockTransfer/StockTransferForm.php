@@ -216,6 +216,9 @@ class StockTransferForm extends Component
         $this->PREPARED_BY_ID     = $data->PREPARED_BY_ID ?? 0;
         $this->ACCOUNT_ID         = $data->ACCOUNT_ID ?? 0;
         $this->STATUS             = $data->STATUS ?? 0;
+        if($this->STATUS == 16) {
+            $this->removeJournal();
+        }
         $this->STATUS_DESCRIPTION = $this->documentStatusServices->getDesc($this->STATUS);
     }
     public function mount($id = null)
@@ -348,6 +351,7 @@ class StockTransferForm extends Component
         try {
             DB::beginTransaction();
             $this->stockTransferServices->StatusUpdate($this->ID, 16);
+            $this->removeJournal();
             DB::commit();
             Redirect::route('companystock_transfer_edit', $this->ID);
         } catch (\Throwable $th) {
@@ -355,6 +359,14 @@ class StockTransferForm extends Component
             $errorMessage = 'Error occurred: ' . $th->getMessage();
             session()->flash('error', $errorMessage);
         }
+    }
+      private function removeJournal()
+    {
+        $JOURNAL_NO = $this->accountJournalServices->getRecord($this->stockTransferServices->object_type_stock_transfer, $this->ID);
+        if ($JOURNAL_NO > 0) {
+            $this->accountJournalServices->UpdatedJournalAmountZero($JOURNAL_NO);
+        }
+
     }
     public function updateCancel()
     {

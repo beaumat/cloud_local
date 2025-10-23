@@ -31,7 +31,10 @@ class TransactionJournalError extends Component
         $this->selectedAccountType = $accounttype !== 'none' ? explode(',', $accounttype) : [];
         $this->Generete();
     }
-
+    public function cleanData() {
+            $this->accountJournalServices->getTransactionJournalErrorUpdate($this->DATE_FROM, $this->DATE_TO, $this->LOCATION_ID);
+                   session()->flash('message', 'Success clean');
+    }
     public function Generete()
     {
 
