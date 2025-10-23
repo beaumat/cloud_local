@@ -2256,8 +2256,11 @@ class HemoServices
                 } else {
                     // make adjustment
                     $gotUpdate = true;
+                    $this->accountJournalServices->UpdatedJournalAmountZero($JOURNAL_NO);
+                    // reset first
                 }
                 $resultDebit = $this->getHemoJournalByItemDebit($HEMO_ID);
+
                 if ($gotUpdate) {
 
                     foreach ($resultDebit as $list) {
@@ -2285,6 +2288,7 @@ class HemoServices
                 );
 
                 $resultCredit = $this->getHemoJournalByItemCredit($HEMO_ID);
+
                 if ($gotUpdate) {
 
                     foreach ($resultCredit as $list) {
