@@ -892,6 +892,44 @@ class AccountJournalServices
 
         return $result;
     }
+      public function getTransactionJournalUnposted(string $dateFrom, string $dateTo, int $LOCATION_ID, array $account = [], array $accountType = [])
+    {
+        $result = DB::table('account_journal as aj')
+            ->select([
+                'aj.ID',
+                'aj.JOURNAL_NO',
+                'aj.OBJECT_DATE as DATE',
+                'a.TAG as ACCOUNT_CODE',
+                'a.NAME as ACCOUNT_TITLE',
+                DB::raw("if(d.ID = 21, (" . $this->CHECK_TYPE . "), d.DESCRIPTION) as TYPE"),
+                'l.NAME as LOCATION',
+                DB::raw($this->TX_CODE),
+                DB::raw($this->TX_NOTES),
+                DB::raw(" if(aj.ENTRY_TYPE = 0, aj.AMOUNT, '' ) as DEBIT "),
+                DB::raw(" if(aj.ENTRY_TYPE = 1, aj.AMOUNT, '' ) as CREDIT "),
+                DB::raw($this->TX_NAME),
+                DB::raw($this->TX_ROUTE_ID),
+            ])->leftJoin('account as a', 'a.ID', '=', 'aj.ACCOUNT_ID')
+            ->leftJoin('object_type_map as o', 'o.ID', '=', 'aj.OBJECT_TYPE')
+            ->leftJoin('document_type_map as d', 'd.ID', '=', 'o.DOCUMENT_TYPE')
+            ->leftJoin('location as l', 'l.ID', '=', 'aj.LOCATION_ID')
+            ->where('aj.AMOUNT', '>', '0')
+            ->whereBetween('aj.OBJECT_DATE', [$dateFrom, $dateTo])
+            ->when($LOCATION_ID > 0, function ($query) use (&$LOCATION_ID) {
+                $query->where('aj.LOCATION_ID', '=', $LOCATION_ID);
+            })
+            ->when($account, function ($query) use (&$account) {
+                $query->whereIn('aj.ACCOUNT_ID', $account);
+            })
+            ->when($accountType, function ($query) use (&$accountType) {
+                $query->whereIn('a.TYPE', $accountType);
+            })
+            ->whereRaw("($this->TX_CODE_E) like '%U:'")
+            ->get();
+
+        return $result;
+    }
+
 
     public function getTransactionJournalErrorUpdate(string $dateFrom, string $dateTo, int $LOCATION_ID)
     {

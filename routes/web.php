@@ -7,6 +7,7 @@ use App\Livewire\AccountingReport\TransactionDetailsReport;
 use App\Livewire\AccountingReport\TransactionJournalError;
 use App\Livewire\AccountingReport\TransactionJournalGenerate;
 use App\Livewire\AccountingReport\TransactionJournalReport;
+use App\Livewire\AccountingReport\TransactionJournalUnpost;
 use App\Livewire\AccountingReport\TrialBalanceGenerate;
 use App\Livewire\AccountingReport\TrialBalanceReport;
 use App\Livewire\BankRecon\BankReconForm;
@@ -739,6 +740,7 @@ Route::middleware(['auth'])->group(function () {
                 Route::get('/', TransactionJournalReport::class)->name('transaction_journal_report');
                 Route::get('/view/{from}/{to?}/{location}/{account?}/{accounttype?}', TransactionJournalGenerate::class)->name('transaction_journal_view');
                 Route::get('/error/{from}/{to?}/{location}/{account?}/{accounttype?}', TransactionJournalError::class)->name('transaction_journal_error');
+                Route::get('/unpost/{from}/{to?}/{location}/{account?}/{accounttype?}', TransactionJournalUnpost::class)->name('transaction_journal_unpost');
             });
         });
 
