@@ -924,7 +924,7 @@ class AccountJournalServices
             ->when($accountType, function ($query) use (&$accountType) {
                 $query->whereIn('a.TYPE', $accountType);
             })
-            ->whereRaw("($this->TX_CODE_E) like '%U:'")
+            ->whereRaw("($this->TX_CODE_E) like 'U:%'")
             ->get();
 
         return $result;
