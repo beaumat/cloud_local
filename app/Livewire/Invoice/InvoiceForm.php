@@ -632,6 +632,7 @@ class InvoiceForm extends Component
             if ($debit_sum == $credit_sum) {
                 return true;
             }
+
             session()->flash('error', 'debit:' . $debit_sum . ' and credit:' . $credit_sum . ' is not balance');
             return false;
         } catch (\Exception $e) {

@@ -9,14 +9,12 @@ use Illuminate\Support\Facades\DB;
 class AccountJournalServices
 {
     public string $CHECK_TYPE = "
-        CASE 
+        CASE
         WHEN aj.OBJECT_TYPE = 57 THEN (select `check_type_map`.`NAME` from `check` inner join check_type_map on check_type_map.ID = check.TYPE where check.ID = aj.OBJECT_ID limit 1 )
-        WHEN aj.OBJECT_TYPE = 58 THEN (select `check_type_map`.`NAME` from `check` inner join check_type_map on check_type_map.ID = check.TYPE inner join check_bills on check_bills.CHECK_ID = check.ID where  check_bills.ID = aj.OBJECT_ID limit 1 )      
+        WHEN aj.OBJECT_TYPE = 58 THEN (select `check_type_map`.`NAME` from `check` inner join check_type_map on check_type_map.ID = check.TYPE inner join check_bills on check_bills.CHECK_ID = check.ID where  check_bills.ID = aj.OBJECT_ID limit 1 )
         WHEN aj.OBJECT_TYPE = 75 THEN (select `check_type_map`.`NAME` from `check` inner join check_type_map on check_type_map.ID = check.TYPE inner join check_items on check_items.CHECK_ID = check.ID where  check_items.ID = aj.OBJECT_ID limit 1)
-        WHEN aj.OBJECT_TYPE = 79 THEN (select `check_type_map`.`NAME` from `check` inner join check_type_map on check_type_map.ID = check.TYPE inner join check_expenses on check_expenses.CHECK_ID = check.ID where  check_expenses.ID = aj.OBJECT_ID limit 1)       
+        WHEN aj.OBJECT_TYPE = 79 THEN (select `check_type_map`.`NAME` from `check` inner join check_type_map on check_type_map.ID = check.TYPE inner join check_expenses on check_expenses.CHECK_ID = check.ID where  check_expenses.ID = aj.OBJECT_ID limit 1)
         END  ";
-
-
 
     public string $TX_PO = '
     CASE
@@ -120,7 +118,7 @@ class AccountJournalServices
 
 
         END as TX_CODE';
-public string $TX_CODE_E = '
+    public string $TX_CODE_E = '
     CASE
         WHEN o.`ID` = 2     THEN ( select concat(LEFT(document_status_map.DESCRIPTION,1),":",bill.`CODE`) as `CODE` from bill join document_status_map on document_status_map.ID = bill.STATUS  where bill.ID = aj.OBJECT_ID and bill.DATE = aj.OBJECT_DATE  and bill.LOCATION_ID = aj.LOCATION_ID  )
         WHEN o.`ID` = 3     THEN ( select concat(LEFT(document_status_map.DESCRIPTION,1),":",bill.`CODE`) as `CODE` from bill_items join bill on bill.ID = bill_items.BILL_ID  join document_status_map on document_status_map.ID = bill.STATUS where bill_items.ID = aj.OBJECT_ID and bill.DATE = aj.OBJECT_DATE  and bill.LOCATION_ID = aj.LOCATION_ID )
@@ -522,7 +520,7 @@ public string $TX_CODE_E = '
                 DB::raw('IFNULL(SUM(IF(ENTRY_TYPE=0, AMOUNT, 0)),0) as DEBIT'),
                 DB::raw('IFNULL(SUM(IF(ENTRY_TYPE=1, AMOUNT, 0)),0) as CREDIT'),
             ])
-            ->where('ACCOUNT_JOURNAL.JOURNAL_NO', $JOURNAL_NO)
+            ->where('ACCOUNT_JOURNAL.JOURNAL_NO', '=', $JOURNAL_NO)
             ->first();
 
         if ($result) {
@@ -697,7 +695,7 @@ public string $TX_CODE_E = '
                 $OBJECT_TYPE,
                 $OBJECT_DATE,
                 $ENTRY_TYPE,
-                $AMOUNT,
+                $AMOUNT < 0 ? $AMOUNT * -1 : $AMOUNT,
                 $SEQUENCE_GROUP,
                 $EXTENDED_OPTIONS
             );
@@ -830,7 +828,7 @@ public string $TX_CODE_E = '
                 'aj.OBJECT_DATE as DATE',
                 'a.TAG as ACCOUNT_CODE',
                 'a.NAME as ACCOUNT_TITLE',
-                DB::raw("if(d.ID = 21, (". $this->CHECK_TYPE ."), d.DESCRIPTION) as TYPE"),
+                DB::raw("if(d.ID = 21, (" . $this->CHECK_TYPE . "), d.DESCRIPTION) as TYPE"),
                 'l.NAME as LOCATION',
                 DB::raw($this->TX_CODE),
                 DB::raw($this->TX_NOTES),
@@ -857,7 +855,7 @@ public string $TX_CODE_E = '
 
         return $result;
     }
- public function getTransactionJournalError(string $dateFrom, string $dateTo, int $LOCATION_ID, array $account = [], array $accountType = [])
+    public function getTransactionJournalError(string $dateFrom, string $dateTo, int $LOCATION_ID, array $account = [], array $accountType = [])
     {
         $result = DB::table('account_journal as aj')
             ->select([
@@ -866,7 +864,7 @@ public string $TX_CODE_E = '
                 'aj.OBJECT_DATE as DATE',
                 'a.TAG as ACCOUNT_CODE',
                 'a.NAME as ACCOUNT_TITLE',
-                DB::raw("if(d.ID = 21, (". $this->CHECK_TYPE ."), d.DESCRIPTION) as TYPE"),
+                DB::raw("if(d.ID = 21, (" . $this->CHECK_TYPE . "), d.DESCRIPTION) as TYPE"),
                 'l.NAME as LOCATION',
                 DB::raw($this->TX_CODE),
                 DB::raw($this->TX_NOTES),
@@ -906,11 +904,11 @@ public string $TX_CODE_E = '
             ->whereBetween('aj.OBJECT_DATE', [$dateFrom, $dateTo])
             ->when($LOCATION_ID > 0, function ($query) use (&$LOCATION_ID) {
                 $query->where('aj.LOCATION_ID', '=', $LOCATION_ID);
-            })  
+            })
             ->whereRaw("($this->TX_CODE_E) IS NULL")
-              ->update([
-                  'AMOUNT' => 0,
-              ]);
+            ->update([
+                'AMOUNT' => 0,
+            ]);
 
     }
     public function getUndepositedActiveList(int $LOCATION_ID)
@@ -1218,7 +1216,6 @@ public string $TX_CODE_E = '
     public function UpdatedJournalAmountZero(int $JOURNAL_NO)
     {
         AccountJournal::where('JOURNAL_NO', '=', $JOURNAL_NO)
-        ->where('AMOUNT','>', 0)
             ->update([
                 'AMOUNT' => 0,
             ]);
