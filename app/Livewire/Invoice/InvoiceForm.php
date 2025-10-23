@@ -172,6 +172,9 @@ class InvoiceForm extends Component
         $this->TAXABLE_AMOUNT         = $Data->TAXABLE_AMOUNT ? $Data->TAXABLE_AMOUNT : 0;
         $this->NONTAXABLE_AMOUNT      = $Data->NONTAXABLE_AMOUNT ? $Data->NONTAXABLE_AMOUNT : 0;
         $this->STATUS_DESCRIPTION     = $this->documentStatusServices->getDesc($this->STATUS);
+        if ($this->STATUS == 16) {
+            $this->removeJournal();
+        }
     }
 
     public function updatedPAYMENTTERMSID()
