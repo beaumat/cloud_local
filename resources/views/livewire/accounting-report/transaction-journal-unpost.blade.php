@@ -9,7 +9,7 @@
                     </h5>
                 </div>
                 <div class="col-sm-6">
-                    <button class="btn btn-sm btn-primary" wire:click='cleanData'>Clean</button>
+                    {{-- <button class="btn btn-sm btn-primary" wire:click='cleanData'>Clean</button> --}}
                 </div>
             </div>
         </div>

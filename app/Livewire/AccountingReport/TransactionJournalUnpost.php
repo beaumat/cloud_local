@@ -39,7 +39,7 @@ class TransactionJournalUnpost extends Component
 
         try {
 
-            $this->dataList = $this->accountJournalServices->getTransactionJournalError(
+            $this->dataList = $this->accountJournalServices->getTransactionJournalUnposted(
                 $this->DATE_FROM,
                 $this->DATE_TO,
                 $this->LOCATION_ID,
