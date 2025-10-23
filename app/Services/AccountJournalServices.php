@@ -851,6 +851,7 @@ class AccountJournalServices
             ->when($accountType, function ($query) use (&$accountType) {
                 $query->whereIn('a.TYPE', $accountType);
             })
+            ->orderBy('aj.JOURNAL_NO')
             ->get();
 
         return $result;
