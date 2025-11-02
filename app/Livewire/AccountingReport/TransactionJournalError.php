@@ -47,9 +47,6 @@ class TransactionJournalError extends Component
                 $this->selectedAccount,
                 $this->selectedAccountType
             );
-
-
-          
         } catch (\Throwable $th) {
             dd($th->getMessage());
         }
@@ -57,7 +54,7 @@ class TransactionJournalError extends Component
     public function export()
     {
 
-    
+
     }
     public function setZero(int $JOURNAL_ID)
     {

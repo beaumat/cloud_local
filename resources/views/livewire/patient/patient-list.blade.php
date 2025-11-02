@@ -285,7 +285,7 @@
                                     @foreach ($dataList as $list)
                                         <tr class="@if (!$list->IS_COMPLETE) text-secondary @endif">
                                             <td>
-                                                <a
+                                                <a target="_blank"
                                                     href="{{ route('maintenancecontactpatients_view', ['id' => $list->ID, 'locationid' => $locationid]) }}">
                                                     {{ $list->ACCOUNT_NO }}
                                                 </a>
@@ -325,7 +325,7 @@
                                                 @endif
                                             </td>
                                             <td class="text-center">
-                                                <a type='button' title="View Details"
+                                                <a type='button' target="_blank" title="View Details"
                                                     href="{{ route('maintenancecontactpatients_view', ['id' => $list->ID, 'locationid' => $locationid]) }}"
                                                     class="btn btn-xs btn-info">
                                                     <i class="fas fa-eye" aria-hidden="true"></i>
