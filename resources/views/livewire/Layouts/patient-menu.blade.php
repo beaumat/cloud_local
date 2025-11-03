@@ -91,6 +91,14 @@ use App\Services\UserServices;
                     <p>Payment Period (ACPN)</p>
                 </a>
             </li>
+
+            <li class="nav-item {{ request()->is('patients/phic-paid*') ? 'menu-open' : '' }}">
+                <a href="{{ route('patientsphic_paid') }}"
+                    class="nav-link {{ request()->is('patients/phic-paid*') ? 'text-warning font-weight-bold' : '' }}">
+                    <i class="fa fa-paypal nav-icon" aria-hidden="true"></i>
+                    <p>Philhealth Paid (ACPN)</p>
+                </a>
+            </li>
         @endif
 
     </ul>

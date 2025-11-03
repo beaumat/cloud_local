@@ -11,9 +11,9 @@ use App\Services\ModeServices;
                     <h5 class="m-0"><a href="{{ route('customersinvoice') }}"> Invoice </a></h5>
                 </div>
                 <div class="col-sm-6 text-right">
-                    @if (ModeServices::GET() == 'H')
+                    {{-- @if (ModeServices::GET() == 'H')
                         @livewire('Invoice.QuickPaid', ['LOCATION_ID' => $locationid])
-                    @endif
+                    @endif --}}
                 </div>
             </div>
         </div>

@@ -1,30 +1,45 @@
 <?php
-
 namespace App\Livewire\Invoice;
 
 use App\Services\InvoiceServices;
+use App\Services\LocationServices;
 use App\Services\PaymentServices;
 use App\Services\TaxCreditServices;
+use App\Services\UserServices;
 use Livewire\Attributes\On;
-use Livewire\Attributes\Reactive;
+use Livewire\Attributes\Title;
 use Livewire\Component;
+use Livewire\WithPagination;
 
+#[Title('PhilHealth Paid (ACPN)')]
 class QuickPaid extends Component
 {
-    #[Reactive]
-    public $LOCATION_ID;
 
+    use WithPagination;
+    protected $paginationTheme = 'bootstrap';
+    public $locationid;
+    public $locationList = [];
     public $search;
-    public $dataList = [];
     public bool $showModal = false;
     private $invoiceServices;
     private $paymentServices;
     private $taxCreditServices;
-    public function boot(InvoiceServices $invoiceServices, PaymentServices $paymentServices, TaxCreditServices $taxCreditServices)
+    private $locationServices;
+    private $userServices;
+    public function boot(InvoiceServices $invoiceServices, PaymentServices $paymentServices, TaxCreditServices $taxCreditServices, LocationServices $locationServices, UserServices $userServices)
     {
-        $this->invoiceServices = $invoiceServices;
-        $this->paymentServices = $paymentServices;
+        $this->invoiceServices   = $invoiceServices;
+        $this->paymentServices   = $paymentServices;
         $this->taxCreditServices = $taxCreditServices;
+        $this->locationServices  = $locationServices;
+        $this->userServices      = $userServices;
+    }
+    public function mount()
+    {
+
+        $this->locationList = $this->locationServices->getList();
+        $this->locationid   = $this->userServices->getLocationDefault();
+
     }
     public function openModal()
     {
@@ -41,19 +56,27 @@ class QuickPaid extends Component
     public function makePaid(int $INVOICE_ID)
     {
         $data = [
-            'INVOICE_ID' => $INVOICE_ID
+            'INVOICE_ID' => $INVOICE_ID,
         ];
         $this->dispatch('quick-paid', result: $data);
     }
     #[On('quick-paid-reload', 'ar-form-data')]
     public function render()
     {
-        if ($this->showModal) {
-            $this->dataList = $this->invoiceServices->getActiveList($this->search, $this->LOCATION_ID);
-        } else {
-            $this->dataList = [];
+
+        $data = $this->invoiceServices->getActiveList($this->search, $this->locationid);
+
+        return view('livewire.invoice.quick-paid', ['dataList' => $data]);
+
+    }
+    public function updatedlocationid()
+    {
+        try {
+            $this->userServices->SwapLocation($this->locationid);
+        } catch (\Exception $e) {
+            $errorMessage = 'Error occurred: ' . $e->getMessage();
+            session()->flash('error', $errorMessage);
         }
 
-        return view('livewire.invoice.quick-paid');
     }
 }

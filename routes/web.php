@@ -81,6 +81,7 @@ use App\Livewire\InventoryReport\ValidationSummaryReport;
 use App\Livewire\Invoice\InvoiceForm;
 use App\Livewire\Invoice\InvoiceList;
 use App\Livewire\Invoice\PrintInvoice;
+use App\Livewire\Invoice\QuickPaid;
 use App\Livewire\ItemClassPage\ItemClassForm;
 use App\Livewire\ItemClassPage\ItemClassList;
 use App\Livewire\ItemGroupPage\ItemGroupForm;
@@ -306,6 +307,10 @@ Route::middleware(['auth'])->group(function () {
         Route::prefix('/payment-period')->group(function () {
             Route::get('/', PaymentPeriodList::class)->name('payment_period')->middleware(['permission:patient.payment-period.view']);
             Route::get('/{id}/details', PaymentPeriodForm::class)->name('payment_period_details')->middleware(['permission:patient.payment-period.view']);
+        });
+
+        Route::prefix('/phic-paid')->group(function () {
+            Route::get('/', QuickPaid::class)->name('phic_paid')->middleware(['permission:patient.payment-period.view']);
         });
 
     });
