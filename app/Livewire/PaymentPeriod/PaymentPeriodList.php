@@ -15,7 +15,9 @@ use Livewire\WithPagination;
 class PaymentPeriodList extends Component
 {
     use WithPagination;
+    protected $paginationTheme = 'bootstrap';
     public $paymentMethods = [];
+  
     public $search = '';
     public int $perPage = 30;
     public int $locationid;
