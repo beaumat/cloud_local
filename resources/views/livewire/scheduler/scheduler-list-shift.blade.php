@@ -21,9 +21,7 @@
                         wire:click="SelectTab('s4th')" data-toggle="pill" href="#custom-tabs-four-s4th" role="tab"
                         aria-controls="custom-tabs-four-s4th" aria-selected="true">4th</a>
                 </li>
-                <li wire:loading.delay>
-                    <span class="spinner"></span>
-                </li>
+                
             </ul>
         </div>
         <div class="card-body p-1">
