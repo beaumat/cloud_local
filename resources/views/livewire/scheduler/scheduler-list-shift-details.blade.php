@@ -8,8 +8,8 @@
              </thead>
              <tbody class="text-xs">
                  @foreach ($dataList as $list)
-                     <tr class="{{ $list['EXTRA_CLASS'] }}">
-                         <td>{{ $list['ID'] }}</td>
+                     <tr >
+                         <td class="{{ $list['EXTRA_CLASS'] }}" >{{ $list['ID'] }}</td>
                          <td>{{ $list['NAME'] }}</td>
                          <td
                              class="@if ($list['STATUS'] == 'Present') text-success font-weight-bold @elseif ($list['STATUS'] == 'Absent')  text-danger font-weight-bold @elseif($list['STATUS'] == 'Cancelled') text-secondary font-weight-bold @endif">
