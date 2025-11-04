@@ -91,6 +91,7 @@ class ScheduleServices
             ->where('schedules.LOCATION_ID', $LOCATION_ID)
             ->where('schedules.SHIFT_ID', $shiftId)
             ->where('schedules.HEMO_MACHINE_ID', $hemoId)
+            ->limit(100)
             ->orderBy('c.LAST_NAME')
             ->get();
     }

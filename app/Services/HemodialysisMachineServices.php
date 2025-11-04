@@ -50,7 +50,7 @@ class HemodialysisMachineServices
     }
     public function GetList(int $LOCATION_ID)
     {
-        return HemodialysisMachines::where('LOCATION_ID', $LOCATION_ID)->get();
+        return HemodialysisMachines::where('LOCATION_ID', $LOCATION_ID)->limit(50)->get();
     }
     public function GetCapacity(int $HEMO_ID): int
     {
