@@ -1,7 +1,5 @@
 <?php
-
 namespace App\Livewire\Scheduler;
-
 
 use App\Services\ContactServices;
 use App\Services\DateServices;
@@ -22,9 +20,9 @@ class SchedulerForm extends Component
     protected $paginationTheme = 'bootstrap';
     public $month;
     public $year;
-    public $contactList = [];
+    public $contactList      = [];
     public $refreshComponent = false;
-    protected $listeners = ['reloadComponent'];
+    protected $listeners     = ['reloadComponent'];
     public $CONTACT_ID;
     public $LOCATION_ID;
     public $HEMO_MACHINE_ID;
@@ -34,8 +32,8 @@ class SchedulerForm extends Component
     private $userServices;
     private $dateServices;
     private $scheduleServices;
-    public $monthList = [];
-    public $scheduleStatusList = [];
+    public $monthList            = [];
+    public $scheduleStatusList   = [];
     public int $scheduleStatusId = 0;
     private $hemodialysisMachineServices;
     public function boot(
@@ -46,21 +44,20 @@ class SchedulerForm extends Component
         ScheduleServices $scheduleServices,
         HemodialysisMachineServices $hemodialysisMachineServices
     ) {
-        $this->locationServices = $locationServices;
-        $this->contactServices = $contactServices;
-        $this->userServices = $userServices;
-        $this->dateServices = $dateServices;
-        $this->scheduleServices = $scheduleServices;
+        $this->locationServices            = $locationServices;
+        $this->contactServices             = $contactServices;
+        $this->userServices                = $userServices;
+        $this->dateServices                = $dateServices;
+        $this->scheduleServices            = $scheduleServices;
         $this->hemodialysisMachineServices = $hemodialysisMachineServices;
     }
-
 
     public function updatedcontactid()
     {
         $this->reloadComponent();
         $data = $this->contactServices->get($this->CONTACT_ID, 3);
         if ($data) {
-            $this->HEMO_MACHINE_ID = $this->hemodialysisMachineServices->getDefaultByLocation($data->LOCATION_ID);  //$data->PATIENT_TYPE_ID;
+            $this->HEMO_MACHINE_ID = $this->hemodialysisMachineServices->getDefaultByLocation($data->LOCATION_ID); //$data->PATIENT_TYPE_ID;
             return;
         }
         $this->HEMO_MACHINE_ID = 0;
@@ -71,7 +68,7 @@ class SchedulerForm extends Component
     }
     public function reloadComponent()
     {
-        $this->refreshComponent = !$this->refreshComponent;
+        $this->refreshComponent = ! $this->refreshComponent;
     }
     public function updatedyear()
     {
@@ -87,13 +84,13 @@ class SchedulerForm extends Component
     private function resetDate()
     {
         $this->month = $this->dateServices->NowMonth();
-        $this->year =  $this->dateServices->NowYear();
+        $this->year  = $this->dateServices->NowYear();
     }
     public function mount()
     {
         $this->scheduleStatusList = $this->scheduleServices->ScheduleStatusList();
-        $this->LOCATION_ID = $this->userServices->getLocationDefault();
-        $this->monthList = $this->dateServices->MonthList();
+        $this->LOCATION_ID        = $this->userServices->getLocationDefault();
+        $this->monthList          = $this->dateServices->MonthList();
         $this->resetDate();
     }
     public function todayMonth()
@@ -104,14 +101,14 @@ class SchedulerForm extends Component
     public function nextMonth()
     {
         $this->month = $this->month == 12 ? 1 : $this->month + 1;
-        $this->year = $this->month == 1 ? $this->year + 1 : $this->year;
-        
+        $this->year  = $this->month == 1 ? $this->year + 1 : $this->year;
+
         $this->reloadComponent();
     }
     public function previousMonth()
     {
         $this->month = $this->month == 1 ? 12 : $this->month - 1;
-        $this->year = $this->month == 12 ? $this->year - 1 : $this->year;
+        $this->year  = $this->month == 12 ? $this->year - 1 : $this->year;
 
         $this->reloadComponent();
     }
@@ -123,10 +120,10 @@ class SchedulerForm extends Component
     public function render()
     {
 
-        $this->contactList = $this->contactServices->getPatientList($this->LOCATION_ID);
+        $this->contactList  = $this->contactServices->getPatientList($this->LOCATION_ID);
         $this->locationList = $this->locationServices->getList();
-        $scheduleList = $this->scheduleServices->ContactSchedule($this->CONTACT_ID ?? 0, $this->LOCATION_ID ?? 0, $this->scheduleStatusId, 10);
-       
+        $scheduleList       = $this->scheduleServices->ContactSchedule($this->CONTACT_ID ?? 0, $this->LOCATION_ID ?? 0, $this->scheduleStatusId, 10);
+
         return view('livewire.scheduler.scheduler-form', ['scheduleList' => $scheduleList]);
     }
 }

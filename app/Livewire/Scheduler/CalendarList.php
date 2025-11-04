@@ -1,9 +1,7 @@
 <?php
-
 namespace App\Livewire\Scheduler;
 
 use Carbon\Carbon;
-use Livewire\Attributes\Reactive;
 use Livewire\Component;
 
 class CalendarList extends Component
@@ -21,24 +19,24 @@ class CalendarList extends Component
     public string $contactName;
     public function mount(int $year, int $month, $locationid = null, $date = null)
     {
-        $this->year = $year;
-        $this->month = $month;
+        $this->year        = $year;
+        $this->month       = $month;
         $this->LOCATION_ID = $locationid ? $locationid : 0;
-        $this->date = $date;
+        $this->date        = $date;
     }
     public function getsched($date)
     {
         $this->date = $date;
-        $Dt = Carbon::createFromFormat('Y-m-d', $date)->format('Y-m-d');
+        $Dt         = Carbon::createFromFormat('Y-m-d', $date)->format('Y-m-d');
 
         $this->dispatch('back-load', Date: $Dt);
 
     }
     private function reloadData()
     {
-        $this->currentDate = Carbon::create($this->year, $this->month, 1);
-        $this->startDayOfWeek = $this->currentDate->startOfMonth()->dayOfWeek;
-        $this->daysInMonth = $this->currentDate->daysInMonth;
+        $this->currentDate         = Carbon::create($this->year, $this->month, 1);
+        $this->startDayOfWeek      = $this->currentDate->startOfMonth()->dayOfWeek;
+        $this->daysInMonth         = $this->currentDate->daysInMonth;
         $this->daysInPreviousMonth = $this->currentDate->copy()->subMonth()->daysInMonth;
     }
     public function updatedyear()

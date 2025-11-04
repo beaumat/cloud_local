@@ -272,12 +272,14 @@ class ContactServices
             ->select([
                 'ID',
                 DB::raw("CONCAT(LAST_NAME, ', ', FIRST_NAME, ', ', LEFT(MIDDLE_NAME, 1)) as NAME"),
-            ])->where('TYPE', 3)
-            ->where('INACTIVE', '0')
+            ])
+            ->where('TYPE', '=', 3)
+            ->where('INACTIVE', '=', '0')
             ->when($LOCATION_ID > 0, function ($query) use (&$LOCATION_ID) {
                 $query->where('LOCATION_ID', $LOCATION_ID);
             })
             ->orderBy('LAST_NAME', 'asc')
+            ->limit(200)
             ->get();
 
         return $result;

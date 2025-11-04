@@ -14,8 +14,8 @@
                             <tbody class="text-xs">
                                 @foreach ($dataList as $list)
                                     <tr
-                                        class="{{ $list['EXTRA_CLASS'] }} @if ($list['CONTACT_ID'] == $CONTACT_ID) font-weight-bolder @endif">
-                                        <td>
+                                        class="@if ($list['CONTACT_ID'] == $CONTACT_ID) font-weight-bolder @endif">
+                                        <td class="{{ $list['EXTRA_CLASS'] }}">
                                             {{ $list['ID'] }}</td>
                                         <td>{{ $list['NAME'] }}</td>
                                     </tr>

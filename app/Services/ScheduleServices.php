@@ -229,6 +229,7 @@ class ScheduleServices
             ->where('schedules.LOCATION_ID', $LOCATION_ID)
             ->where('schedules.SCHED_STATUS', $STATUS_ID)
             ->orderBy('schedules.SCHED_DATE', 'asc')
+            ->limit(250)
             ->paginate($perPage);
 
         return $result;
