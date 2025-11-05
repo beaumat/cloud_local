@@ -1035,7 +1035,7 @@ class HemoServices
 
         return $result;
     }
-    public function UnpostedTratment(int $LOCATION_ID, $search)
+    public function     UnpostedTratment(int $LOCATION_ID, $search)
     {
         $result = Hemodialysis::query()
             ->select([
