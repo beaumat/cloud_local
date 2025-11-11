@@ -125,6 +125,7 @@ use App\Livewire\Patient\MedcertPrint;
 use App\Livewire\Patient\PatientForm;
 use App\Livewire\Patient\PatientList;
 use App\Livewire\Patient\PrintAvailment;
+use App\Livewire\PatientReport\PatientSalesReport2;
 use App\Livewire\PayableReport\AccountPayableAging;
 use App\Livewire\PayableReport\VendorBalance;
 use App\Livewire\PaymentMethod\PaymentMethodForm;
@@ -695,9 +696,14 @@ Route::middleware(['auth'])->group(function () {
         Route::prefix('/patients')->group(function () {
 
             Route::prefix('/sales')->group(function () {
-                Route::get('/', PatientSalesReport::class)->name('patient_sales_report')->middleware(['permission:report.patient.sales']);
-                Route::get('/{date_from}/{date_to}/{location_id}/{patient?}/{item?}/{method?}/view', PatientSalesReportView::class)->name('patient_sales_report_view')->middleware(['permission:report.patient.sales']);
-                Route::get('/{date_from}/{date_to}/{location_id}/{patient?}/{item?}/{method?}/print', PatientSalesReportPrint::class)->name('patient_sales_report_print')->middleware(['permission:report.patient.sales']);
+                Route::get('/', PatientSalesReport2::class)->name('patient_sales_report')->middleware(['permission:report.patient.sales']);
+                Route::get('/{date_from}/{date_to}/{location_id}/print', PatientSalesReportPrint::class)->name('patient_sales_report_print')->middleware(['permission:report.patient.sales']);
+
+                // Route::get('/', PatientSalesReport::class)->name('patient_sales_report')->middleware(['permission:report.patient.sales']);
+                // Route::get('/{date_from}/{date_to}/{location_id}/{patient?}/{item?}/{method?}/view', PatientSalesReportView::class)->name('patient_sales_report_view')->middleware(['permission:report.patient.sales']);
+                // Route::get('/{date_from}/{date_to}/{location_id}/{patient?}/{item?}/{method?}/print', PatientSalesReportPrint::class)->name('patient_sales_report_print')->middleware(['permission:report.patient.sales']);
+
+
             });
             Route::prefix('/inventory')->group(function () {
                 Route::get('/', PatientInventoryReport::class)->name('patient_inventory_report')->middleware(['permission:report.patient.sales']);
