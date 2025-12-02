@@ -1015,7 +1015,7 @@ class HemoServices
             })
             ->where('hemodialysis.STATUS_ID', '<>', 4)
             ->orderBy('hemodialysis.DATE', 'desc')
-            ->limit(1000)
+            ->limit(100)
             ->paginate($perPage);
         return $result;
     }
@@ -1086,6 +1086,7 @@ class HemoServices
             })
             ->where('hemodialysis.STATUS_ID', 4)
             ->orderBy('hemodialysis.DATE', 'asc')
+            ->limit(20)
             ->get();
 
         return $result;
