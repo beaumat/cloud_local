@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Livewire\Patient;
 
 use App\Exports\PatientListExport;
@@ -23,11 +22,10 @@ class PatientList extends Component
     use WithPagination;
     protected $paginationTheme = 'bootstrap';
 
-
-    public $search = '';
-    public int $perPage = 50;
+    public $search       = '';
+    public int $perPage  = 25;
     public $locationList = [];
-    public $doctorList = [];
+    public $doctorList   = [];
     public int $locationid;
     public int $doctorid;
     private $contactServices;
@@ -40,22 +38,22 @@ class PatientList extends Component
         ContactServices $contactServices,
         LocationServices $locationServices,
         UserServices $userServices,
-        DoctorLocationServices   $doctorLocationServices,
+        DoctorLocationServices $doctorLocationServices,
         PatientDoctorServices $patientDoctorServices,
         ContactRequirementServices $contactRequirementServices
     ) {
-        $this->contactServices = $contactServices;
-        $this->locationServices = $locationServices;
-        $this->userServices = $userServices;
-        $this->doctorLocationServices = $doctorLocationServices;
-        $this->patientDoctorServices = $patientDoctorServices;
+        $this->contactServices            = $contactServices;
+        $this->locationServices           = $locationServices;
+        $this->userServices               = $userServices;
+        $this->doctorLocationServices     = $doctorLocationServices;
+        $this->patientDoctorServices      = $patientDoctorServices;
         $this->contactRequirementServices = $contactRequirementServices;
     }
     public function mount()
     {
         $this->locationList = $this->locationServices->getList();
-        $this->locationid = $this->userServices->getLocationDefault();
-        $this->doctorid = 0;
+        $this->locationid   = $this->userServices->getLocationDefault();
+        $this->doctorid     = 0;
     }
     public function delete($id)
     {
@@ -105,7 +103,7 @@ class PatientList extends Component
     public string $sortby = 'contact.ID';
     public function sorting(string $column)
     {
-        if ($this->sortby  == $column) {
+        if ($this->sortby == $column) {
             $this->isDesc = $this->isDesc ? false : true;
             return;
         }
