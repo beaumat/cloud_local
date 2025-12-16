@@ -708,6 +708,79 @@ class ContactServices
 
         return $result;
     }
+    public function SearchPatient2($search, int $perPage, int $locationId, string $sortBy, bool $isDesc, int $doctorId = 0)
+    {
+        $TYPE = 3;
+
+        $result = Contacts::query()
+            ->select(
+                [
+                    "contact.ID",
+                    "contact.NAME",
+                    "contact.COMPANY_NAME",
+                    "contact.FIRST_NAME",
+                    "contact.LAST_NAME",
+                    "contact.MIDDLE_NAME",
+                    "contact.SALUTATION",
+                    "contact.PRINT_NAME_AS",
+                    "contact.MOBILE_NO",
+                    "contact.EMAIL",
+                    "contact.ACCOUNT_NO",
+                    "contact.POSTAL_ADDRESS",
+                    "contact.CONTACT_PERSON",
+                    "contact.INACTIVE",
+                    'contact.PIN',
+                    'contact.IS_COMPLETE',
+                    'gender_map.DESCRIPTION as GENDER',
+                    'contact.DATE_OF_BIRTH',
+                    'contact.DATE_EXPIRED',
+                    'contact.DATE_ADMISSION',
+                    DB::raw('TIMESTAMPDIFF(YEAR, contact.DATE_OF_BIRTH ,if( isnull(contact.DATE_EXPIRED) = false, contact.DATE_EXPIRED, CURDATE() )) AS AGE'),
+                    'l.NAME as LOCATION_NAME',
+                    'd.PRINT_NAME_AS as DOCTOR_NAME',
+                    'pc.DESCRIPTION as CLASS',
+                    'contact.SECOND_CASE_RATE as PDP',
+                ]
+            )
+            ->join('contact_type_map as t', function ($join) use (&$TYPE) {
+                $join->on('t.ID', '=', 'contact.TYPE')
+                    ->where('t.ID', '=', $TYPE);
+            })
+            ->leftJoin('gender_map', 'gender_map.ID', '=', 'contact.GENDER')
+            ->leftJoin('location as l', 'l.ID', '=', 'contact.LOCATION_ID')
+            ->leftJoin('patient_doctor as pd', 'pd.PATIENT_ID', '=', 'contact.ID')
+            ->leftJoin('contact as d', 'd.ID', '=', 'pd.DOCTOR_ID')
+            ->leftJoin('doctor_location as dl', 'dl.DOCTOR_ID', 'd.ID')
+            ->leftJoin('patient_class as pc', 'pc.ID', '=', 'contact.CLASS_ID')
+
+            ->when($doctorId > 0, function ($query) use (&$doctorId) {
+                $query->where('pd.DOCTOR_ID', $doctorId);
+            })
+            ->when($search, function ($query) use (&$search) {
+                $query->where(function ($q) use ($search) {
+                    $q->where('contact.NAME', 'like', '%' . $search . '%')
+                        ->orWhere('contact.ACCOUNT_NO', 'like', '%' . $search . '%')
+                        ->orWhere('contact.PIN', 'like', '%' . $search . '%')
+                        ->orWhere('contact.COMPANY_NAME', 'like', '%' . $search . '%')
+                        ->orWhere('contact.FIRST_NAME', 'like', '%' . $search . '%')
+                        ->orWhere('contact.LAST_NAME', 'like', '%' . $search . '%')
+                        ->orWhere('contact.PRINT_NAME_AS', 'like', '%' . $search . '%')
+                        ->orWhere('contact.MOBILE_NO', 'like', '%' . $search . '%')
+                        ->orWhere('contact.EMAIL', 'like', '%' . $search . '%')
+                        ->orWhere('d.PRINT_NAME_AS', 'like', '%' . $search . '%');
+                });
+            })
+            ->when($locationId > 0, function ($query) use (&$locationId, &$search, &$doctorId) {
+                $query->where('contact.LOCATION_ID', '=', $locationId)
+                 ->where('dl.LOCATION_ID','=', $locationId);
+         
+            })
+            ->orderBy($sortBy, $isDesc ? 'desc' : 'asc')
+          
+            ->paginate($perPage);
+
+        return $result;
+    }
     public function SearchPatient($search, int $perPage, int $locationId, string $sortBy, bool $isDesc, int $doctorId = 0)
     {
         $TYPE = 3;

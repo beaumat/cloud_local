@@ -114,7 +114,7 @@ class PatientList extends Component
     {
         $this->doctorList = $this->doctorLocationServices->ViewList($this->locationid);
 
-        $dataList = $this->contactServices->SearchPatient($this->search, $this->perPage, $this->locationid, $this->sortby, $this->isDesc, $this->doctorid);
+        $dataList = $this->contactServices->SearchPatient2($this->search, $this->perPage, $this->locationid, $this->sortby, $this->isDesc, $this->doctorid);
 
         return view('livewire.patient.patient-list', ['dataList' => $dataList]);
     }
