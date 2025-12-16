@@ -826,7 +826,7 @@ class ContactServices
                 'pc.DESCRIPTION',
                 'contact.SECOND_CASE_RATE',
 
-            ])
+            ])->limit(100)
             ->paginate($perPage);
 
         return $result;
