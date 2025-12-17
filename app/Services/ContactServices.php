@@ -771,8 +771,8 @@ class ContactServices
                 });
             })
             ->when($locationId > 0, function ($query) use (&$locationId, &$search, &$doctorId) {
-                $query->where('contact.LOCATION_ID', '=', $locationId);
-
+                $query->where('contact.LOCATION_ID', '=', $locationId)
+                    ->where('dl.LOCATION_ID', '=', $locationId);
 
             })
             ->orderBy($sortBy, $isDesc ? 'desc' : 'asc')
@@ -846,7 +846,7 @@ class ContactServices
             })
             ->when($locationId > 0, function ($query) use (&$locationId, &$search, &$doctorId) {
                 $query->where('contact.LOCATION_ID', '=', $locationId)
-                 ->where('dl.LOCATION_ID','=', $locationId)
+                //  ->where('dl.LOCATION_ID','=', $locationId)
                     ->orWhereExists(function ($q) use (&$locationId, &$search, &$doctorId) {
                         $q->select(DB::raw(1))
                             ->from('service_charges as sc')
