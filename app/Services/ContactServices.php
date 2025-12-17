@@ -770,11 +770,7 @@ class ContactServices
                         ->orWhere('d.PRINT_NAME_AS', 'like', '%' . $search . '%');
                 });
             })
-            ->when($locationId > 0, function ($query) use (&$locationId, &$search, &$doctorId) {
-                $query->where('contact.LOCATION_ID', '=', $locationId)
-                 ->where('dl.LOCATION_ID','=', $locationId);
 
-            })
             ->orderBy($sortBy, $isDesc ? 'desc' : 'asc')
 
             ->paginate($perPage);
