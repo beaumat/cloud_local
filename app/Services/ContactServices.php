@@ -771,8 +771,8 @@ class ContactServices
                 });
             })
             ->when($locationId > 0, function ($query) use (&$locationId, &$search, &$doctorId) {
-                $query->where('contact.LOCATION_ID', '=', $locationId)
-                    ->where('dl.LOCATION_ID', '=', $locationId)->orWhereNull('dl.LOCATION_ID');
+                $query->where('contact.LOCATION_ID', '=', $locationId);
+
 
             })
             ->orderBy($sortBy, $isDesc ? 'desc' : 'asc')
