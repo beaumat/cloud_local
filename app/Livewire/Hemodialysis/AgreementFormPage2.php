@@ -49,7 +49,7 @@ class AgreementFormPage2 extends Component
             }
             if ($dataLoc) {
                 $this->LEAVE_BLANK_AG_ADMIN_OFFICE_FEE = $dataLoc->LEAVE_BLANK_AG_ADMIN_OFFICE_FEE ?? false;
-                $hdcon                                 = $this->contactServices->get($dataLoc->HD_FACILITY_REP_ID, 2);
+                $hdcon                                 = $this->contactServices->get($dataLoc->HD_FACILITY_REP_ID ?? 0, 2);
                 if ($hdcon) {
                     $this->HD_FACILITY_REP_NAME = $hdcon->NAME ?? '';
                     $this->HD_FACILITY_REP_POS  = $hdcon->NICKNAME ?? '';
