@@ -1728,36 +1728,34 @@ class HemoServices
     public function GetNoTreatment(int $CUSTOMER_ID, int $LOCATION_ID, string $DATE): int
     {
 
-        $year  = date('Y', strtotime($DATE)); // Extract the year from the provided date
+        // $year  = date('Y', strtotime($DATE)); // Extract the year from the provided date
 
-        $trtNo = (int) Hemodialysis::where('CUSTOMER_ID', '=', $CUSTOMER_ID)
-            ->join('service_charges as s', function ($join) {
-                $join->on('s.PATIENT_ID', '=', 'hemodialysis.CUSTOMER_ID');
-                $join->on('s.LOCATION_ID', '=', 'hemodialysis.LOCATION_ID');
-                $join->on('s.DATE', '=', 'hemodialysis.DATE');
-            })
-            ->join('service_charges_items as sci', 'sci.SERVICE_CHARGES_ID', '=', 's.ID')
-            ->where('sci.ITEM_ID','=', 2)
-            ->where('hemodialysis.LOCATION_ID', '=', $LOCATION_ID)
-            ->whereYear('hemodialysis.DATE', '=', $year) // Add a condition to filter by year
-            ->where('hemodialysis.DATE', '<=', $DATE)    // Add a condition to filter by year
-            ->whereBetween('hemodialysis.STATUS_ID', [1, 2])
-            ->count();
+        // $trtNo = (int) Hemodialysis::where('CUSTOMER_ID', '=', $CUSTOMER_ID)
+        //     ->join('service_charges as s', function ($join) {
+        //         $join->on('s.PATIENT_ID', '=', 'hemodialysis.CUSTOMER_ID');
+        //         $join->on('s.LOCATION_ID', '=', 'hemodialysis.LOCATION_ID');
+        //         $join->on('s.DATE', '=', 'hemodialysis.DATE');
+        //     })
+        //     ->join('service_charges_items as sci', 'sci.SERVICE_CHARGES_ID', '=', 's.ID')
+        //     ->where('sci.ITEM_ID','=', 2)
+        //     ->where('hemodialysis.LOCATION_ID', '=', $LOCATION_ID)
+        //     ->whereYear('hemodialysis.DATE', '=', $year) // Add a condition to filter by year
+        //     ->where('hemodialysis.DATE', '<=', $DATE)    // Add a condition to filter by year
+        //     ->whereBetween('hemodialysis.STATUS_ID', [1, 2])
+        //     ->count();
             
   
-        $sc = (int) PhilhealthItemAdjustment::where('PATIENT_ID', '=', $CUSTOMER_ID)
-            ->where('LOCATION_ID', '=', $LOCATION_ID)
-            ->where('YEAR', '=', $year)
-            ->sum('NO_OF_USED');
+        // $sc = (int) PhilhealthItemAdjustment::where('PATIENT_ID', '=', $CUSTOMER_ID)
+        //     ->where('LOCATION_ID', '=', $LOCATION_ID)
+        //     ->where('YEAR', '=', $year)
+        //     ->sum('NO_OF_USED');
 
-        $number = $trtNo + $sc;
+        // $number = $trtNo + $sc;
         
-        return $number;
-    }
-     public function GetNoTreatmentPrint(int $CUSTOMER_ID, int $LOCATION_ID, string $DATE): int
-    {
+        // return $number;
 
-        $year  = date('Y', strtotime($DATE)); // Extract the year from the provided date
+
+         $year  = date('Y', strtotime($DATE)); // Extract the year from the provided date
 
         $trtNo = (int) Hemodialysis::where('CUSTOMER_ID', '=', $CUSTOMER_ID)      
             ->where('hemodialysis.LOCATION_ID', '=', $LOCATION_ID)
@@ -1775,6 +1773,27 @@ class HemoServices
         
         return $number;
     }
+    //  public function GetNoTreatmentPrint(int $CUSTOMER_ID, int $LOCATION_ID, string $DATE): int
+    // {
+
+    //     $year  = date('Y', strtotime($DATE)); // Extract the year from the provided date
+
+    //     $trtNo = (int) Hemodialysis::where('CUSTOMER_ID', '=', $CUSTOMER_ID)      
+    //         ->where('hemodialysis.LOCATION_ID', '=', $LOCATION_ID)
+    //         ->whereYear('hemodialysis.DATE', '=', $year) // Add a condition to filter by year
+    //         ->where('hemodialysis.DATE', '<=', $DATE)    // Add a condition to filter by year
+    //         ->whereBetween('hemodialysis.STATUS_ID', [1, 2])
+    //         ->count();
+            
+    //     $sc = (int) PhilhealthItemAdjustment::where('PATIENT_ID', '=', $CUSTOMER_ID)
+    //         ->where('LOCATION_ID', '=', $LOCATION_ID)
+    //         ->where('YEAR', '=', $year)
+    //         ->sum('NO_OF_USED');
+
+    //     $number = $trtNo + $sc;
+        
+    //     return $number;
+    // }
     public function codeIfExist(string $CODE): bool
     {
         return Hemodialysis::where('CODE', '=', $CODE)->exists();

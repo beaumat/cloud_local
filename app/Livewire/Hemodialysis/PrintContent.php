@@ -372,7 +372,7 @@ class PrintContent extends Component
                 $this->ADD_NO_TREATMENT = is_numeric($dataPatient->CUSTOM_FIELD2) ? $dataPatient->CUSTOM_FIELD2 : 0;
             }
 
-            $this->NO_OF_TREATMENT = $this->hemoServices->GetNoTreatmentPrint($this->CUSTOMER_ID, $this->LOCATION_ID, $this->DATE) + $this->ADD_NO_TREATMENT;
+            $this->NO_OF_TREATMENT = $this->hemoServices->GetNoTreatment($this->CUSTOMER_ID, $this->LOCATION_ID, $this->DATE) + $this->ADD_NO_TREATMENT;
 
             $locData = $this->locationServices->get($this->LOCATION_ID);
             if ($locData) {
