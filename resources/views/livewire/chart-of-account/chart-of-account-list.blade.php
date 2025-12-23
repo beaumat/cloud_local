@@ -32,7 +32,10 @@
                                     </div>
                                 </div>
                                 <div class="col-md-3">
-                                    <div class="text-sm">Display Inactive : <input type="checkbox" wire:model.live='showAll' name="showAll" /></div>
+                                    <div class="text-sm">Display Inactive : <input type="checkbox"
+                                            wire:model.live='showAll' name="showAll" /></div>
+                                    <div class="text-sm">Show Ending Balance : <input type="checkbox"
+                                            wire:model.live='showBalance' name="showBalance" /></div>
 
                                 </div>
                                 <div class="col-md-3">
@@ -61,7 +64,9 @@
                                         <th>Group of Account</th>
                                         <th>Back Account No.</th>
                                         <th class="col-1 text-center">Inactive</th>
-                                        <th class="text-right">Ending Balance</th>
+                                        @if ($showBalance)
+                                            <th class="text-right">Ending Balance</th>
+                                        @endif
                                         <th class="col-2 text-center">
                                             <a href="{{ route('maintenancefinancialcoa_create') }}"
                                                 class="text-white btn btn-xs btn-success w-100">
@@ -93,11 +98,13 @@
                                                         class="text-primary">No</strong>
                                                 @endif
                                             </td>
-                                            <td class="text-info text-right">
-                                                <a target="_blank"
-                                                    href="{{ route('maintenancefinancialcoa_balance', ['id' => $list->ID, 'locationid' => $locationid]) }}">
-                                                    {{ number_format($list->ENDING_BALANCE, 2) }}</a>
-                                            </td>
+                                            @if ($showBalance)
+                                                <td class="text-info text-right">
+                                                    <a target="_blank"
+                                                        href="{{ route('maintenancefinancialcoa_balance', ['id' => $list->ID, 'locationid' => $locationid]) }}">
+                                                        {{ number_format($list->ENDING_BALANCE, 2) }}</a>
+                                                </td>
+                                            @endif
                                             <td class="text-center">
                                                 <a href="{{ route('maintenancefinancialcoa_edit', ['id' => $list->ID]) }}"
                                                     class="btn btn-xs btn-info">

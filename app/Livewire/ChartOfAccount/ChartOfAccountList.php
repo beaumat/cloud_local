@@ -24,6 +24,7 @@ class ChartOfAccountList extends Component
     private $userServices;
     private $accountJournalEndingServices;
     public bool $showAll = false;
+    public bool $showBalance = false;
     public function boot(AccountServices $accountServices, LocationServices $locationServices, UserServices $userServices, AccountJournalEndingServices $accountJournalEndingServices)
     {
         $this->accountServices              = $accountServices;
@@ -79,7 +80,7 @@ class ChartOfAccountList extends Component
     }
     public function render()
     {
-        $dataList = $this->accountServices->Search($this->search, $this->locationid, $this->showAll);
+        $dataList = $this->accountServices->Search($this->search, $this->locationid, $this->showAll, $this->showBalance);
 
         return view('livewire.chart-of-account.chart-of-account-list', ['dataList' => $dataList]);
     }

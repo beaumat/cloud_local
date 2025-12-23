@@ -172,9 +172,9 @@ class AccountServices
     {
         Accounts::where('ID', $ID)->update(['INACTIVE' => $stats]);
     }
-    public function Search($search, int $LOCATION_ID, bool $showAll)
+    public function Search($search, int $LOCATION_ID, bool $showAll, bool $showBalance = false )
     {
-        $EB_SQL = "(SELECT  IFNULL( account_journal.ENDING_BALANCE, 0.00) from account_journal WHERE account_journal.ACCOUNT_ID = account.ID  and account_journal.LOCATION_ID = '$LOCATION_ID' order by account_journal.OBJECT_DATE desc, account_journal.ID desc LIMIT 1  ) ";
+        $EB_SQL = $showBalance == false ? "0" : "(SELECT  IFNULL( account_journal.ENDING_BALANCE, 0.00) from account_journal WHERE account_journal.ACCOUNT_ID = account.ID  and account_journal.LOCATION_ID = '$LOCATION_ID' order by account_journal.OBJECT_DATE desc, account_journal.ID desc LIMIT 1  ) ";
 
         return Accounts::query()
             ->select(
