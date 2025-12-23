@@ -125,9 +125,9 @@
                                                 </th>
                                             </tr>
                                         </thead>
-                                        <tbody class="text-xs bg-light" wire:loading.attr='hidden'>
-                                            {{-- unposted --}}
-                                            @foreach ($pendingList as $list)
+
+                                        <tbody class="text-xs" wire:loading.attr='hidden'>
+                                            @foreach ($dataList as $list)
                                                 <tr>
                                                     @php
                                                         $count++;
@@ -140,7 +140,11 @@
                                                         </a>
                                                     </td>
                                                     <td> {{ date('m/d/Y', strtotime($list->DATE)) }}</td>
-                                                    <td> {{ $list->CONTACT_NAME }}</td>
+                                                    <td>
+                                                        <a target="_BLANK" class="text-primary"
+                                                            @if ($list->PATIENT_ID) href="{{ route('maintenancecontactpatients_edit', ['id' => $list->PATIENT_ID]) }}">
+                                                            {{ $list->CONTACT_NAME }}</a> @endif
+                                                            </td>
                                                     <td class="text-center">
                                                         {{ $list->PRE_WEIGHT }} | {{ $list->POST_WEIGHT }}
                                                     </td>
@@ -168,121 +172,6 @@
                                                     <td class="text-center">
                                                         @if ($list->IS_INCOMPLETE)
                                                             <i class="fa fa-check text-success" aria-hidden="true"></i>
-                                                        @else
-                                                            <i class="fa fa-times text-danger" aria-hidden="true"></i>
-                                                        @endif
-                                                    </td>
-                                                    <td class="text-center">
-                                                        {{ $list->ACCESS_TYPE }}
-                                                    </td>
-                                                    <td>{{ $list->NURSE_NAME }}</td>
-
-                                                    <td> {{ $list->LOCATION_NAME }} </td>
-                                                    <td
-                                                        class="text-center @if ($list->STATUS_ID == 1) bg-warning  @elseif ($list->STATUS_ID == 2) bg-success  @elseif ($list->STATUS_ID == 4) bg-secondary @else bg-danger @endif ">
-                                                        {{ substr($list->STATUS, 0, 1) }} </td>
-                                                    <td class="text-center">
-                                                        @if ($list->IS_SC)
-                                                            <i class="fa fa-check text-success"
-                                                                aria-hidden="true"></i>
-                                                        @else
-                                                            <i class="fa fa-times text-danger" aria-hidden="true"></i>
-                                                        @endif
-                                                    </td>
-                                                    <td class="text-center">
-                                                        <a type="button"
-                                                            href="{{ route('patientshemo_edit', ['id' => $list->ID]) }}"
-                                                            class="btn btn-xs btn-info">
-                                                            <i class="fas fa-eye" aria-hidden="true"></i>
-                                                        </a>
-                                                        @can('patient.treatment.delete')
-                                                            @if ($list->STATUS_ID == 1)
-                                                                <button type="button" title="Void"
-                                                                    wire:click='void({{ $list->ID }})'
-                                                                    wire:confirm="Are you sure you want to void this?"
-                                                                    class="btn btn-xs btn-danger">
-                                                                    <i class="fa fa-ban" aria-hidden="true"></i>
-                                                                </button>
-                                                            @else
-                                                                <a class="btn btn-xs btn-secondary" title="Posted">
-                                                                    <i class="fa fa-lock" aria-hidden="true"></i>
-                                                                </a>
-                                                            @endif
-                                                        @endcan
-
-                                                        @can('patient.treatment.print')
-                                                            <a target="_blank" type="button"
-                                                                href="{{ route('patientshemo_print', ['id' => $list->ID]) }}"
-                                                                class="btn btn-xs btn-primary">
-                                                                <i class="fa fa-print" aria-hidden="true"></i>
-                                                            </a>
-
-                                                            @if ($list->FILE_PATH)
-                                                                <a type="button"
-                                                                    href="{{ asset('storage/' . $list->FILE_PATH) }}"
-                                                                    target="_blank" class="btn btn-xs btn-danger">
-                                                                    <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
-                                                                </a>
-                                                            @else
-                                                                <button type="button" class="btn btn-xs btn-secondary">
-                                                                    <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
-                                                                </button>
-                                                            @endif
-                                                        @endcan
-
-                                                    </td>
-                                                </tr>
-                                            @endforeach
-
-                                        </tbody>
-                                        {{-- end of pending --}}
-                                        <tbody class="text-xs" wire:loading.attr='hidden'>
-                                            @foreach ($dataList as $list)
-                                                <tr>
-                                                    @php
-                                                        $count++;
-                                                    @endphp
-                                                    <td>{{ $count }}</td>
-                                                    <td>
-                                                        <a href="{{ route('patientshemo_edit', ['id' => $list->ID]) }}"
-                                                            class="text-primary">
-                                                            {{ $list->CODE }}
-                                                        </a>
-                                                    </td>
-                                                    <td> {{ date('m/d/Y', strtotime($list->DATE)) }}</td>
-                                                    <td>
-                                                        <a target="_BLANK" class="text-primary"
-                                                            href="{{ route('maintenancecontactpatients_edit', ['id' => $list->PATIENT_ID]) }}">
-                                                            {{ $list->CONTACT_NAME }}</a>
-                                                    </td>
-                                                    <td class="text-center">
-                                                        {{ $list->PRE_WEIGHT }} | {{ $list->POST_WEIGHT }}
-                                                    </td>
-                                                    <td class="text-center">
-                                                        {{ $list->PRE_BLOOD_PRESSURE }}/{{ $list->PRE_BLOOD_PRESSURE2 }}
-                                                        |
-                                                        {{ $list->POST_BLOOD_PRESSURE }}/{{ $list->POST_BLOOD_PRESSURE2 }}
-                                                    </td>
-                                                    <td class="text-center"> {{ $list->PRE_HEART_RATE }} |
-                                                        {{ $list->POST_HEART_RATE }}</td>
-                                                    <td class="text-center"> {{ $list->PRE_O2_SATURATION }} |
-                                                        {{ $list->POST_O2_SATURATION }}</td>
-                                                    <td class="text-center"> {{ $list->PRE_TEMPERATURE }} |
-                                                        {{ $list->POST_TEMPERATURE }}</td>
-                                                    <td class="text-center">
-                                                        @if ($list->TIME_START)
-                                                            {{ \Carbon\Carbon::parse($list->TIME_START)->format('h:i A') }}
-                                                        @endif
-                                                    </td>
-                                                    <td class="text-center">
-                                                        @if ($list->TIME_END)
-                                                            {{ \Carbon\Carbon::parse($list->TIME_END)->format('h:i A') }}
-                                                        @endif
-                                                    </td>
-                                                    <td class="text-center">
-                                                        @if ($list->IS_INCOMPLETE)
-                                                            <i class="fa fa-check text-success"
-                                                                aria-hidden="true"></i>
                                                         @else
                                                             <i class="fa fa-times text-danger" aria-hidden="true"></i>
                                                         @endif
@@ -377,9 +266,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-6 col-md-6">
-                    {{ $dataList->links() }}
-                </div>
+
             </div>
         </div>
     </section>

@@ -24,12 +24,13 @@ class HemoList extends Component
     public $statusList         = [];
     public int $perPage        = 100;
     public int $locationid;
-    public int $statusid = 0;
+
     public $locationList = [];
     private $hemoServices;
     private $locationServices;
     private $userServices;
-    public $pendingList = [];
+    public $dataList = [];
+
     public string $DATE_FROM;
     private $dateServices;
     private $scheduleServices;
@@ -82,6 +83,7 @@ class HemoList extends Component
         $this->locationList = $this->locationServices->getList();
         $this->locationid   = $this->userServices->getLocationDefault();
         $this->statusList   = $this->hemoServices->HemoStatus();
+        $this->refreshList();
     }
     public function refreshList()
     {
@@ -97,15 +99,20 @@ class HemoList extends Component
             $this->search,
             $this->locationid,
             $this->perPage,
-            $this->DATE_FROM == '' ? $this->dateServices->NowDate() : $this->DATE_FROM,
-            $this->statusid
+            $this->DATE_FROM == '' ? $this->dateServices->NowDate() : $this->DATE_FROM
+
         );
         return Excel::download(new TreatmentListExport($dataList), 'hemo-treatment-.xlsx');
+    }
+    public function updatedDateFrom() {
+            $this->refreshList();
     }
     public function updatedlocationid()
     {
         try {
+
             $this->userServices->SwapLocation($this->locationid);
+             $this->refreshList();
         } catch (\Exception $e) {
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
@@ -137,18 +144,27 @@ class HemoList extends Component
     }
     public int $count = 0;
     #[On('refresh-list')]
-    public function render()
+    public function handleRefresh()
     {
-        $this->count       = 0;
-        $this->pendingList = $this->hemoServices->UnpostedTratment($this->locationid, $this->search);
-
-        $dataList = $this->hemoServices->Search(
+        $this->dataList = $this->hemoServices->Search(
             $this->search,
             $this->locationid,
             $this->perPage,
-            $this->DATE_FROM == '' ? $this->dateServices->NowDate() : $this->DATE_FROM,
-            $this->statusid
+            $this->DATE_FROM == '' ? $this->dateServices->NowDate() : $this->DATE_FROM
+
         );
-        return view('livewire.hemodialysis.hemo-list', ['dataList' => $dataList]);
+
+    }
+    public function updatedsearch()
+    {
+        $this->refreshList();
+    }
+
+    public function render()
+    {
+        $this->count = 0;
+        // $this->pendingList = $this->hemoServices->UnpostedTratment($this->locationid, $this->search);
+
+        return view('livewire.hemodialysis.hemo-list');
     }
 }
