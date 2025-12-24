@@ -469,7 +469,10 @@ class ScheduleServices
 
     public function getCountScheduleList($DATE_FROM, $DATE_TO, int $LOCATION_ID): int
     {
-        return Schedules::query()->whereBetween('SCHED_DATE', [$DATE_FROM, $DATE_TO])->where('LOCATION_ID', $LOCATION_ID)->count();
+        return Schedules::query()
+            ->whereBetween('SCHED_DATE', [$DATE_FROM, $DATE_TO])
+            ->where('LOCATION_ID','=', $LOCATION_ID)
+            ->count();
     }
     public function getWaitingList(string $Date)
     {
@@ -487,5 +490,55 @@ class ScheduleServices
             ->get();
 
         return $data;
+    }
+    public function getNewListSchedule(int $LOCATION_ID, string $dateFrom, string $dateTo)
+    {
+        // $result = DB::table('schedules as s')
+        //     ->select(
+        //         's.SCHED_DATE',
+        //         's.SHIFT_ID',
+        //         DB::raw('SUM(s.SCHED_STATUS = 0) AS W'),
+        //         DB::raw('SUM(s.SCHED_STATUS = 1) AS P'),
+        //         DB::raw('SUM(s.SCHED_STATUS = 2) AS A'),
+        //         DB::raw('SUM(s.SCHED_STATUS = 3) AS C')
+        //     )
+        //     ->whereBetween('s.SCHED_DATE', [$dateFrom, $dateTo])
+        //     ->where('s.LOCATION_ID', $LOCATION_ID)
+        //     ->groupBy('s.SCHED_DATE', 's.SHIFT_ID')
+        //     ->toSql();
+        //         dd($result);
+
+
+          $subQuery = Schedules::query()
+            ->select([
+                'schedules.SCHED_DATE',
+                'schedules.SHIFT_ID',
+                DB::raw('IF(schedules.SCHED_STATUS = 0, COUNT(*), 0) AS W'),
+                DB::raw('IF(schedules.SCHED_STATUS = 1, COUNT(*), 0) AS P'),
+                DB::raw('IF(schedules.SCHED_STATUS = 2, COUNT(*), 0) AS A'),
+                DB::raw('IF(schedules.SCHED_STATUS = 3, COUNT(*), 0) AS C'),
+            ])
+            ->join('contact AS c', 'c.ID', '=', 'schedules.CONTACT_ID')
+            ->join('shift AS s', 's.ID', '=', 'schedules.SHIFT_ID')
+            ->where('c.TYPE', 3)
+            ->whereBetween('schedules.SCHED_DATE', [$dateFrom, $dateTo])
+            ->where('schedules.LOCATION_ID', $LOCATION_ID)
+            ->groupBy(['schedules.SCHED_DATE','schedules.SHIFT_ID', 'schedules.SCHED_STATUS']);
+
+        $result = DB::table(DB::raw("({$subQuery->toSql()}) as sched"))
+            ->mergeBindings($subQuery->getQuery()) // you need to merge bindings
+            ->select([
+                'sched.SCHED_DATE',
+                'sched.SHIFT_ID',
+                DB::raw('SUM(sched.W) AS W'),
+                DB::raw('SUM(sched.P) AS P'),
+                DB::raw('SUM(sched.A) AS A'),
+                DB::raw('SUM(sched.C) AS C'),
+            ])
+            ->groupBy(['sched.SCHED_DATE','sched.SHIFT_ID'])
+            ->get();
+
+
+        return $result;
     }
 }

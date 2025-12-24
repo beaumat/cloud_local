@@ -1,6 +1,7 @@
 <?php
 namespace App\Livewire\Scheduler;
 
+use App\Services\ScheduleServices;
 use Carbon\Carbon;
 use Livewire\Component;
 
@@ -17,6 +18,12 @@ class CalendarList extends Component
     public int $dayCounter = 1;
     public int $LOCATION_ID;
     public string $contactName;
+    public $dataList = [];
+    private $scheduleServices;
+    public function boot(ScheduleServices $scheduleServices)
+    {
+        $this->scheduleServices = $scheduleServices;
+    }
     public function mount(int $year, int $month, $locationid = null, $date = null)
     {
         $this->year        = $year;
@@ -38,6 +45,19 @@ class CalendarList extends Component
         $this->startDayOfWeek      = $this->currentDate->startOfMonth()->dayOfWeek;
         $this->daysInMonth         = $this->currentDate->daysInMonth;
         $this->daysInPreviousMonth = $this->currentDate->copy()->subMonth()->daysInMonth;
+        $this->newReloadData();
+    }
+
+    private function newReloadData()
+    {
+        $calendarStart = Carbon::create($this->year, $this->month, 1)
+            ->startOfMonth()
+            ->startOfWeek(Carbon::SUNDAY);
+
+        $calendarEnd = $calendarStart->copy()->addDays(41);
+
+        $this->dataList = $this->scheduleServices->getNewListSchedule($this->LOCATION_ID, $calendarStart, $calendarEnd);
+
     }
     public function updatedyear()
     {

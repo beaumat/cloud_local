@@ -1,11 +1,9 @@
 <?php
-
 namespace App\Livewire\Scheduler;
 
 use App\Services\ScheduleServices;
 use Carbon\Carbon;
 use Livewire\Component;
-
 
 class ShiftList extends Component
 {
@@ -20,12 +18,12 @@ class ShiftList extends Component
         $this->scheduleServices = $scheduleServices;
     }
     public function mount($date, $location_id, $select_date)
-    {   
-  
-        $this->Date = Carbon::createFromFormat('Y-m-d', $date);
+    {
+
+        $this->Date        = Carbon::createFromFormat('Y-m-d', $date);
         $this->LOCATION_ID = $location_id;
         $this->select_date = $select_date;
-    
+
     }
     public function getList()
     {

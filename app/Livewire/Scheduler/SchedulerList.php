@@ -27,7 +27,7 @@ class SchedulerList extends Component
     private $scheduleServices;
     public $monthList    = [];
     public $scheduleList = [];
-    
+
     public $DATE;
 
     public function boot(LocationServices $locationServices, UserServices $userServices, DateServices $dateServices, ScheduleServices $scheduleServices)
@@ -100,7 +100,7 @@ class SchedulerList extends Component
         $this->LOCATION_ID  = $this->userServices->getLocationDefault();
         $this->monthList    = $this->dateServices->MonthList();
         $this->todayMonth();
-        //$this->reloadContactList(Carbon::now()->format('Y-m-d'));
+       
     }
 
     public function todayMonth()
