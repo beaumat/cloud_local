@@ -27,6 +27,7 @@ class SchedulerList extends Component
     private $scheduleServices;
     public $monthList    = [];
     public $scheduleList = [];
+    
     public $DATE;
 
     public function boot(LocationServices $locationServices, UserServices $userServices, DateServices $dateServices, ScheduleServices $scheduleServices)

@@ -103,16 +103,18 @@ class HemoList extends Component
 
         );
         return Excel::download(new TreatmentListExport($dataList), 'hemo-treatment-.xlsx');
+
     }
-    public function updatedDateFrom() {
-            $this->refreshList();
+    public function updatedDateFrom()
+    {
+        $this->refreshList();
     }
     public function updatedlocationid()
     {
         try {
 
             $this->userServices->SwapLocation($this->locationid);
-             $this->refreshList();
+            $this->refreshList();
         } catch (\Exception $e) {
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
@@ -134,6 +136,7 @@ class HemoList extends Component
                 );
                 DB::commit();
                 session()->flash('message', 'Unpost successfully');
+                $this->refreshList();
             }
 
         } catch (\Throwable $ex) {
@@ -146,6 +149,8 @@ class HemoList extends Component
     #[On('refresh-list')]
     public function handleRefresh()
     {
+        $this->count = 0;
+
         $this->dataList = $this->hemoServices->Search(
             $this->search,
             $this->locationid,
@@ -162,7 +167,7 @@ class HemoList extends Component
 
     public function render()
     {
-        $this->count = 0;
+
         // $this->pendingList = $this->hemoServices->UnpostedTratment($this->locationid, $this->search);
 
         return view('livewire.hemodialysis.hemo-list');
