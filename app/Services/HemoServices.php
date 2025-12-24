@@ -1019,7 +1019,7 @@ class HemoServices
             })
 
             ->orderBy('hemodialysis.STATUS_ID', 'desc')
-            ->orderBy('hemodialysis.DATE', 'asc')
+            ->orderBy('hemodialysis.DATE', 'desc')
             ->limit(100)
             ->get();
 
