@@ -370,8 +370,7 @@ class ServiceChargeFormItems extends Component
     #[On('phic-message')]
     public function philhealth_Item($result)
     {
-        $total = $result['count'];
-
+        $total = (int) $result['count'];
         if ($total <= 156) {
             session()->flash('message', 'PHIC 156 Treatment. The number of Used is ' . $result['count']);
             return;
@@ -456,10 +455,8 @@ class ServiceChargeFormItems extends Component
         );
 
         DB::beginTransaction();
-
         try {
             $taxRate = $this->taxServices->getRate($this->TAX_ID);
-
             $tax_result = $this->computeServices->ItemComputeTax($this->lineAmount, $this->lineTax, $this->TAX_ID, $taxRate);
             if ($tax_result) {
                 $this->lineTaxable   = $tax_result['TAXABLE_AMOUNT'];
@@ -503,7 +500,6 @@ class ServiceChargeFormItems extends Component
             $getResult = $this->serviceChargeServices->ReComputed($this->SERVICE_CHARGES_ID);
             DB::commit();
             $this->dispatch('update-amount', result: $getResult);
-
             $this->editItemId = null;
             $this->lineQty    = 0;
             $this->lineUnitId = 0;

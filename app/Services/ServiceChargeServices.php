@@ -32,6 +32,7 @@ class ServiceChargeServices
         $this->locationReference     = $locationReferenceServices;
         $this->systemSettingServices = $systemSettingServices;
         $this->dateServices          = $dateServices;
+
     }
     public function getItemBalance(int $SERVICE_CHARGES_ITEM_ID): float
     {
@@ -300,7 +301,6 @@ class ServiceChargeServices
         return [];
     }
 
-
     public function Search($search, int $locationId, int $perPage, string $dateEntry, bool $showNurseEntry = false)
     {
         $query = ServiceCharges::query()
@@ -532,6 +532,7 @@ class ServiceChargeServices
                 DB::raw('(select if(count(*) > 0, true, false)  from hemodialysis_items where hemodialysis_items.SC_ITEM_ID = service_charges_items.ID and hemodialysis_items.IS_CASHIER = 1) as other_charge '),
                 'service_charges_items.INCOME_ACCOUNT_ID',
                 'a.NAME as ACCOUNT_NAME',
+                'service_charges_items.INVOICE_ID',
 
             ])
             ->leftJoin('item as i', 'i.ID', '=', 'service_charges_items.ITEM_ID')
@@ -994,4 +995,36 @@ class ServiceChargeServices
         return (int) $result;
     }
 
+
+    public function GetItemPhic156UnInvoice(string $transDate, int $PHIL_HEALTH_ITEM_ID)
+    {
+        $result = ServiceChargesItems::query()
+            ->select([
+                'service_charges_items.ID',
+                'service_charges_items.SERVICE_CHARGES_ID',
+                'service_charges_items.ITEM_ID',
+                'service_charges_items.AMOUNT',
+                'sc.DATE',
+                'sc.LOCATION_ID',
+                'sc.PATIENT_ID',
+            ])
+            ->join('SERVICE_CHARGES as sc', 'sc.ID', '=', 'service_charges_items.SERVICE_CHARGES_ID')
+            ->where('sc.DATE', '<=', $transDate)
+            ->whereYear('sc.DATE', '>=', 2026)
+            ->where('service_charges_items.ITEM_ID', $PHIL_HEALTH_ITEM_ID)
+            ->where('service_charges_items.INVOICE_ID','=', 0)
+            ->whereNotNull('service_charges_items.AMOUNT')
+            ->get();
+
+
+        return $result;
+    }
+    public function UpdateInvoiceID(int $ID, int $INVOICE_ID)
+    {
+        ServiceChargesItems::where('ID', '=', $ID)
+            ->where('INVOICE_ID', '=', 0)
+            ->update([
+                'INVOICE_ID' => $INVOICE_ID,
+            ]);
+    }
 }

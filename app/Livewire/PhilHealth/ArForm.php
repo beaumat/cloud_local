@@ -1,8 +1,6 @@
 <?php
-
 namespace App\Livewire\PhilHealth;
 
-use App\Models\PaymentTerms;
 use App\Models\PhilHealth;
 use App\Services\AccountJournalServices;
 use App\Services\ComputeServices;
@@ -50,31 +48,30 @@ class ArForm extends Component
         TaxServices $taxServices,
         ComputeServices $computeServices
     ) {
-        $this->philHealthServices = $philHealthServices;
-        $this->invoiceServices = $invoiceServices;
-        $this->paymentTermServices = $paymentTermServices;
-        $this->itemServices = $itemServices;
-        $this->itemInventoryServices = $itemInventoryServices;
+        $this->philHealthServices     = $philHealthServices;
+        $this->invoiceServices        = $invoiceServices;
+        $this->paymentTermServices    = $paymentTermServices;
+        $this->itemServices           = $itemServices;
+        $this->itemInventoryServices  = $itemInventoryServices;
         $this->priceLevelLineServices = $priceLevelLineServices;
         $this->accountJournalServices = $accountJournalServices;
-        $this->taxServices = $taxServices;
-        $this->computeServices = $computeServices;
+        $this->taxServices            = $taxServices;
+        $this->computeServices        = $computeServices;
     }
     public function save()
     {
 
-
-        if ($this->AR_DATE == '' && $this->AR_NO <> '') {
+        if ($this->AR_DATE == '' && $this->AR_NO != '') {
             session()->flash('error', 'Date Transmit Requred');
             return;
         }
 
-        if ($this->AR_DATE <> '' && $this->AR_NO == '') {
+        if ($this->AR_DATE != '' && $this->AR_NO == '') {
             session()->flash('error', 'LHIO No. Requred');
             return;
         }
 
-        if ($this->AR_DATE <> '' && $this->AR_NO <> '') {
+        if ($this->AR_DATE != '' && $this->AR_NO != '') {
             if ($this->philHealthServices->IsExistsARNumber($this->AR_NO, $this->PHILHEALTH_ID)) {
                 session()->flash('error', 'LHIO No. already used.');
                 return;
@@ -87,7 +84,6 @@ class ArForm extends Component
 
             $data = $this->makeReceivableForCustomer($this->PHILHEALTH_ID);
 
-
             if ($data['STATUS'] == true) {
                 session()->flash('message', $data['MESSAGE']);
                 $this->dispatch('reload-list');
@@ -95,17 +91,15 @@ class ArForm extends Component
                 session()->flash('error', $data['MESSAGE']);
             }
 
-
             DB::commit();
 
             $dataAR = [
-                'AR_DATE' => $this->AR_DATE,
-                'AR_NO' => $this->AR_NO,
-                'PHILHEALTH_ID' => $this->PHILHEALTH_ID
+                'AR_DATE'       => $this->AR_DATE,
+                'AR_NO'         => $this->AR_NO,
+                'PHILHEALTH_ID' => $this->PHILHEALTH_ID,
             ];
 
             $this->dispatch('ar-form-data', ar: $dataAR);
-
 
         } catch (\Exception $e) {
             //throw $th;
@@ -119,15 +113,15 @@ class ArForm extends Component
     public function openModal($result)
     {
         $this->PHILHEALTH_ID = $result['PHILHEALTH_ID'];
-        $data = $this->philHealthServices->get($this->PHILHEALTH_ID);
+        $data                = $this->philHealthServices->get($this->PHILHEALTH_ID);
         if ($data) {
-            $this->CODE = $data->CODE;
-            $this->DATE = $data->DATE;
+            $this->CODE       = $data->CODE;
+            $this->DATE       = $data->DATE;
             $this->INVOICE_ID = $data->INVOICE_ID ?? 0;
-            $this->AR_DATE = $data->AR_DATE ?? '';
-            $this->AR_NO = $data->AR_NO ?? '';
-            $this->showModal = true;
-            $this->isPaid = $this->philHealthServices->isPaid($this->PHILHEALTH_ID);
+            $this->AR_DATE    = $data->AR_DATE ?? '';
+            $this->AR_NO      = $data->AR_NO ?? '';
+            $this->showModal  = true;
+            $this->isPaid     = $this->philHealthServices->isPaid($this->PHILHEALTH_ID);
 
         }
     }
@@ -143,23 +137,35 @@ class ArForm extends Component
         session()->forget('message');
         session()->forget('error');
     }
-
+    private function isTreatmentHaveBelow2026(int $PHILHEALTH_ID): bool
+    {
+        return $this->philHealthServices->getPhilhealthHaveBelow2026($PHILHEALTH_ID);
+    }
     private function makeReceivableForCustomer(int $PHILHEALTH_ID): array
     {
+
+        if ($this->isTreatmentHaveBelow2026($PHILHEALTH_ID) == false) {
+            return [
+                'STATUS'     => true,
+                'MESSAGE'    => 'Cannot create invoice for treatments below year 2026. but LHIO saved successfully.',
+                'INVOICE_ID' => 0,
+            ];
+        }
+
         $dataPhic = $this->philHealthServices->get($PHILHEALTH_ID);
         if ($dataPhic->INVOICE_ID > 0) {
             $dtInv = $this->invoiceServices->get($dataPhic->INVOICE_ID);
             if ($dtInv) {
-                if ($dtInv->DATE == $dataPhic->AR_DATE && $dtInv->PO_NUMBER <> $dataPhic->AR_NO) {
+                if ($dtInv->DATE == $dataPhic->AR_DATE && $dtInv->PO_NUMBER != $dataPhic->AR_NO) {
                     $para = [
-                        'PO_NUMBER' => $dataPhic->AR_NO
+                        'PO_NUMBER' => $dataPhic->AR_NO,
                     ];
                     // update PO number
                     $this->invoiceServices->UpdateParameter($dataPhic->INVOICE_ID, $para);
                     return [
-                        'STATUS' => true,
-                        'MESSAGE' => 'Successfully save & LHIO number has updated',
-                        'INVOICE_ID' => $dataPhic->INVOICE_ID
+                        'STATUS'     => true,
+                        'MESSAGE'    => 'Successfully save & LHIO number has updated',
+                        'INVOICE_ID' => $dataPhic->INVOICE_ID,
                     ];
                 } else {
                     //delete
@@ -172,31 +178,29 @@ class ArForm extends Component
 
         if ($dataPhic->AR_DATE == '') {
             return [
-                'STATUS' => false,
-                'MESSAGE' => '',
-                'INVOICE_ID' => 0
+                'STATUS'     => false,
+                'MESSAGE'    => '',
+                'INVOICE_ID' => 0,
             ];
         }
 
-        $QTY = $this->philHealthServices->getNumberOfTreatment($dataPhic->CONTACT_ID, $dataPhic->LOCATION_ID, $dataPhic->DATE_ADMITTED, $dataPhic->DATE_DISCHARGED);
-        $RATE = (float) $dataPhic->P1_TOTAL / $QTY;
-        $INVOICE_ID = $this->makeInvoice($dataPhic, $this->philHealthServices->TERM_ID, $PHILHEALTH_ID, $QTY, $this->philHealthServices->PHIL_HEALTH_ITEM_ID, $this->philHealthServices->TAX_ID, $RATE);
+        $QTY              = $this->philHealthServices->getNumberOfTreatment($dataPhic->CONTACT_ID, $dataPhic->LOCATION_ID, $dataPhic->DATE_ADMITTED, $dataPhic->DATE_DISCHARGED);
+        $RATE             = (float) $dataPhic->P1_TOTAL / $QTY;
+        $INVOICE_ID       = $this->makeInvoice($dataPhic, $this->philHealthServices->TERM_ID, $PHILHEALTH_ID, $QTY, $this->philHealthServices->PHIL_HEALTH_ITEM_ID, $this->philHealthServices->TAX_ID, $RATE);
         $this->INVOICE_ID = $INVOICE_ID;
         return [
-            'STATUS' => true,
-            'MESSAGE' => 'Successfully save & invoice created',
-            'INVOICE_ID' => $INVOICE_ID
+            'STATUS'     => true,
+            'MESSAGE'    => 'Successfully save & invoice created',
+            'INVOICE_ID' => $INVOICE_ID,
         ];
     }
     private function makeInvoice($data, int $TERM_ID, int $PHILHEALTH_ID, int $QTY, int $PHIL_HEALTH_ITEM_ID, int $TAX_ID, float $RATE): int
     {
 
-
-
-        $DUE_DATE = (string) $this->paymentTermServices->getDueDate($TERM_ID, $data->AR_DATE);
+        $DUE_DATE              = (string) $this->paymentTermServices->getDueDate($TERM_ID, $data->AR_DATE);
         $ACCOUNT_RECEIVABLE_ID = 4;
-        $OUTPUT_TAX_ID = 12;
-        $OUTPUT_TAX_RATE = 0;
+        $OUTPUT_TAX_ID         = 12;
+        $OUTPUT_TAX_RATE       = 0;
         $OUTPUT_TAX_VAT_METHOD = 0;
         $OUTPUT_TAX_ACCOUNT_ID = 28;
 
@@ -225,19 +229,16 @@ class ArForm extends Component
             $PHILHEALTH_ID
         );
 
-
-
-
         $dataItem = $this->itemServices->get($PHIL_HEALTH_ITEM_ID);
         if ($dataItem) {
             // $RATE = $this->priceLevelLineServices->GetPriceByLocation($data->LOCATION_ID, $PHIL_HEALTH_ITEM_ID);
             $AMOUNT = $RATE * $QTY;
 
-            $taxRate = $this->taxServices->getRate($TAX_ID);
+            $taxRate    = $this->taxServices->getRate($TAX_ID);
             $tax_result = $this->computeServices->ItemComputeTax($AMOUNT, $dataItem->TAXABLE, $TAX_ID, $taxRate);
             if ($tax_result) {
                 $TAXABLE_AMOUNT = $tax_result['TAXABLE_AMOUNT'];
-                $TAX_AMOUNT = $tax_result['TAX_AMOUNT'];
+                $TAX_AMOUNT     = $tax_result['TAX_AMOUNT'];
             }
 
             $this->invoiceServices->ItemStore(
@@ -284,9 +285,8 @@ class ArForm extends Component
 
         PhilHealth::where('ID', '=', $PHILHEALTH_ID)
             ->update([
-                'INVOICE_ID' => $INVOICE_ID
+                'INVOICE_ID' => $INVOICE_ID,
             ]);
-
 
         return (int) $INVOICE_ID;
 
@@ -400,11 +400,11 @@ class ArForm extends Component
     {
         $invoice_data = $this->invoiceServices->get($this->INVOICE_ID);
         if ($invoice_data) {
-            $this->INVOICE_CODE = $invoice_data->CODE;
+            $this->INVOICE_CODE   = $invoice_data->CODE;
             $this->INVOICE_AMOUNT = $invoice_data->AMOUNT;
             return;
         }
-        $this->INVOICE_CODE = '';
+        $this->INVOICE_CODE   = '';
         $this->INVOICE_AMOUNT = 0;
     }
     public function render()

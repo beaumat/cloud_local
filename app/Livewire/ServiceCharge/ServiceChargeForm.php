@@ -340,7 +340,6 @@ class ServiceChargeForm extends Component
                 DB::commit();
                 session()->flash('message', 'Successfully updated');
             }
-
             $data = $this->serviceChargeServices->get($this->ID);
             if ($data) {
                 $this->getInfo($data);

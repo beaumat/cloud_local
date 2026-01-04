@@ -93,6 +93,12 @@ class PhilHealthServices
             ->where('STATUS_ID', '=', 11)
             ->exists();
     }
+    public function getPhilhealthHaveBelow2026(int $ID): bool
+    {
+        return (bool) PhilHealth::where('ID', '=', $ID)
+            ->whereYear('DATE_DISCHARGED', '<', 2026)
+            ->exists();
+    }
     public function getCF4(int $ID)
     {
         return PhilHealth::select([

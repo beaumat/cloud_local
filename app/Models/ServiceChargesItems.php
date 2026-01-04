@@ -34,6 +34,7 @@ class ServiceChargesItems extends Model
         'PRINT_IN_FORMS',
         'PAID_AMOUNT',
         'DATE_LOG',
-        'IS_POSTED'
+        'IS_POSTED',
+        'INVOICE_ID',
     ];
 }

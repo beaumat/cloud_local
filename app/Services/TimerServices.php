@@ -13,6 +13,13 @@ class TimerServices
     private $serviceChargeServices;
     private $userServices;
     private $postingLogServices;
+    private $philHealthServices;
+    private $invoiceServices;
+    private $accountJournalServices;
+    private $paymentTermServices;
+    private $itemServices;
+    private $taxServices;
+    private $computeServices;
     function __construct(
         ScheduleServices $scheduleServices,
         HemoServices $hemoServices,
@@ -20,16 +27,30 @@ class TimerServices
         ItemInventoryServices $itemInventoryServices,
         ServiceChargeServices $serviceChargeServices,
         UserServices $userServices,
-        PostingLogServices $postingLogServices
-
+        PostingLogServices $postingLogServices,
+        PhilHealthServices $philHealthServices,
+        InvoiceServices $invoiceServices,
+        AccountJournalServices $accountJournalServices,
+        PaymentTermServices $paymentTermServices,
+        ItemServices $itemServices,
+        TaxServices $taxServices,
+        ComputeServices $computeServices
     ) {
-        $this->scheduleServices      = $scheduleServices;
-        $this->hemoServices          = $hemoServices;
-        $this->dateServices          = $dateServices;
-        $this->itemInventoryServices = $itemInventoryServices;
-        $this->serviceChargeServices = $serviceChargeServices;
-        $this->userServices          = $userServices;
-        $this->postingLogServices    = $postingLogServices;
+        $this->scheduleServices       = $scheduleServices;
+        $this->hemoServices           = $hemoServices;
+        $this->dateServices           = $dateServices;
+        $this->itemInventoryServices  = $itemInventoryServices;
+        $this->serviceChargeServices  = $serviceChargeServices;
+        $this->userServices           = $userServices;
+        $this->postingLogServices     = $postingLogServices;
+        $this->philHealthServices     = $philHealthServices;
+        $this->invoiceServices        = $invoiceServices;
+        $this->accountJournalServices = $accountJournalServices;
+        $this->paymentTermServices    = $paymentTermServices;
+        $this->itemServices           = $itemServices;
+        $this->taxServices            = $taxServices;
+        $this->computeServices        = $computeServices;
+
     }
     private function generateUnposted()
     {
@@ -96,6 +117,129 @@ class TimerServices
             Log::error('Error executing SC generateItem() : ' . $th->getMessage());
         }
     }
+
+    private function GenerateItemServiceChargesMakeJournalPhic156($transDate)
+    {
+
+        $dataList = $this->serviceChargeServices->GetItemPhic156UnInvoice($transDate, $this->philHealthServices->PHIL_HEALTH_ITEM_ID);
+
+        foreach ($dataList as $data) {
+            $this->setSC_TO_INVOICE($data);
+        }
+
+    }
+    private function setSC_TO_INVOICE($data)
+    {
+        DB::beginTransaction();
+        try {
+
+            $INVOICE_ID = $this->makeInvoice($data,
+                3,
+                1,
+                $this->philHealthServices->PHIL_HEALTH_ITEM_ID,
+            );
+            $this->serviceChargeServices->UpdateInvoiceID($data->ID, $INVOICE_ID);
+            DB::commit();
+        } catch (\Throwable $th) {
+            //throw $th;
+            DB::rollBack();
+            dd($th->getMessage());
+
+        }
+    }
+
+    private function makeInvoice($dataSC, int $TERM_ID, int $QTY, int $PHIL_HEALTH_ITEM_ID): int
+    {
+
+        $DUE_DATE              = (string) $this->paymentTermServices->getDueDate($TERM_ID, $dataSC->DATE);
+        $ACCOUNT_RECEIVABLE_ID = 4;
+        $OUTPUT_TAX_ID         = 12;
+        $OUTPUT_TAX_RATE       = 0;
+        $OUTPUT_TAX_VAT_METHOD = 0;
+        $OUTPUT_TAX_ACCOUNT_ID = 28;
+
+        $INVOICE_ID = (int) $this->invoiceServices->Store(
+            '',
+            $dataSC->DATE,
+            $dataSC->PATIENT_ID,
+            $dataSC->LOCATION_ID,
+            0,
+            0,
+            '',
+            '',
+            0,
+            null,
+            $TERM_ID,
+            $DUE_DATE,
+            null,
+            0,
+            'SERVICE CHARGE PHIC 156',
+            $ACCOUNT_RECEIVABLE_ID,
+            15,
+            $OUTPUT_TAX_ID,
+            $OUTPUT_TAX_RATE,
+            $OUTPUT_TAX_VAT_METHOD,
+            $OUTPUT_TAX_ACCOUNT_ID,
+            0,
+        );
+
+        $dataItem = $this->itemServices->get($PHIL_HEALTH_ITEM_ID);
+        if ($dataItem) {
+
+            // $RATE = $this->priceLevelLineServices->GetPriceByLocation($data->LOCATION_ID, $PHIL_HEALTH_ITEM_ID);
+            $AMOUNT = $dataSC->AMOUNT ?? 0 * $QTY;
+            $taxRate    = $this->taxServices->getRate(0);
+            $tax_result = $this->computeServices->ItemComputeTax($AMOUNT, $dataItem->TAXABLE, 0, $taxRate);
+            if ($tax_result) {
+                $TAXABLE_AMOUNT = $tax_result['TAXABLE_AMOUNT'];
+                $TAX_AMOUNT     = $tax_result['TAX_AMOUNT'];
+            }
+
+            $this->invoiceServices->ItemStore(
+                $INVOICE_ID,
+                $PHIL_HEALTH_ITEM_ID,
+                $QTY,
+                0,
+                1,
+                $dataSC->AMOUNT ?? 0,
+                0,
+                $AMOUNT,
+                $dataItem->TAXABLE ?? false,
+                $TAXABLE_AMOUNT,
+                $TAX_AMOUNT,
+                $dataItem->COGS_ACCOUNT_ID ?? 0,
+                $dataItem->ASSET_ACCOUNT_ID ?? 0,
+                $dataItem->GL_ACCOUNT_ID ?? 0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+            );
+
+            $this->invoiceServices->ReComputed($INVOICE_ID);
+        }
+
+        // JOURNAL
+        $JOURNAL_NO = $this->accountJournalServices->getRecord($this->invoiceServices->object_type_invoice, $INVOICE_ID);
+        if ($JOURNAL_NO == 0) {
+            $JOURNAL_NO = $this->accountJournalServices->getJournalNo($this->invoiceServices->object_type_invoice, $INVOICE_ID) + 1;
+        }
+
+        //Main
+        $invoiceData = $this->invoiceServices->getInvoiceJournal($INVOICE_ID);
+        $this->accountJournalServices->JournalExecute($JOURNAL_NO, $invoiceData, $dataSC->LOCATION_ID, $this->invoiceServices->object_type_invoice, $dataSC->DATE);
+        //Tax
+        $invoiceDataTax = $this->invoiceServices->getInvoiceTaxJournal($INVOICE_ID);
+        $this->accountJournalServices->JournalExecute($JOURNAL_NO, $invoiceDataTax, $dataSC->LOCATION_ID, $this->invoiceServices->object_type_invoice, $dataSC->DATE);
+        //Income
+        $invoiceItemData = $this->invoiceServices->getInvoiceItemJournalIncome($INVOICE_ID);
+        $this->accountJournalServices->JournalExecute($JOURNAL_NO, $invoiceItemData, $dataSC->LOCATION_ID, $this->invoiceServices->object_type_invoice_item, $dataSC->DATE);
+
+        return (int) $INVOICE_ID;
+
+    }
     public function getExecute()
     {
         $transDate = $this->dateServices->NowDate();
@@ -105,8 +249,9 @@ class TimerServices
         $this->GenerateItemServiceCharges($transDate);
         $this->generateItemHemo($transDate);
         $this->userDefaultUserDate();
-
         $this->postingLogServices->logPosting($transDate);
+
+        $this->GenerateItemServiceChargesMakeJournalPhic156($transDate);
 
     }
     public function getExecutePrevious()
@@ -121,6 +266,7 @@ class TimerServices
 
         $this->postingLogServices->logPosting($transDate);
 
+        $this->GenerateItemServiceChargesMakeJournalPhic156($transDate);
     }
     public function getPosted(int $CONTACT_ID, string $DATE, int $LOCATION_ID)
     {

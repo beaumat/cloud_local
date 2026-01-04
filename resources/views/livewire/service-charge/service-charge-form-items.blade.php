@@ -12,6 +12,7 @@
                 <th class="text-right col-1">Rate</th>
                 <th class="text-right col-1">Amount</th>
                 <th class="text-center">Tax</th>
+                <th class="text-center "> Invoice </th>
                 <th class="text-center col-2">Action</th>
             </tr>
         </thead>
@@ -78,6 +79,12 @@
                         @endif
                     </td>
                     <td class="text-center">
+                        @if ($list->INVOICE_ID > 0)
+                            <i class="fa fa-check-square-o text-success" aria-hidden="true"></i>
+                        @else
+                            {{ ' ' }}
+                        @endif
+                    <td class="text-center">
                         @if ($editItemId === $list->ID)
                             <button title="Update" id="updatebtn" wire:click="updateItem({{ $list->ID }})"
                                 class="btn btn-xs btn-success">
@@ -88,7 +95,7 @@
                                 <i class="fas fa-ban" aria-hidden="true"></i>
                             </button>
                         @else
-                            @if ($list->count_pay == 0 || $isAdmin == true || $alowedEdit == true)
+                            @if (($list->count_pay == 0 || $isAdmin == true || $alowedEdit == true) && $list->INVOICE_ID == 0)
                                 <button title="Edit Active" id="editbtn"
                                     wire:click='editItem( {{ $list->ID }}, {{ $list->QUANTITY }} ,{{ $list->UNIT_ID ? $list->UNIT_ID : 0 }},{{ $list->RATE }},{{ $list->AMOUNT }},{{ $list->TAXABLE }},{{ $list->ITEM_ID }})'
                                     class="btn btn-xs btn-info">
@@ -101,6 +108,7 @@
                                     <i class="fas fa-trash" aria-hidden="true"></i>
                                 </button>
                             @else
+                                {{-- Disabled buttons --}}
                                 <button type="button" title="Edit Disabled" id="editbtn"
                                     class="btn btn-xs btn-secondary">
                                     <i class="fas fa-edit" aria-hidden="true"></i>
@@ -185,7 +193,7 @@
                     <td>
                         <select wire:model='UNIT_ID' name="UNIT_ID" @if ($ITEM_ID == 0) readonly @endif
                             class="text-xs text-center form-control form-control-sm ">
-                               <option value="0"></option>
+                            <option value="0"></option>
                             @foreach ($unitList as $list)
                                 <option value="{{ $list->ID }}">{{ $list->SYMBOL }}</option>
                             @endforeach
@@ -203,6 +211,7 @@
                         <input @if ($ITEM_ID == 0) disabled @endif type="checkbox" class="text-lg"
                             wire:model='TAXABLE' name="taxable" />
                     </td>
+                    <td> {{ ' ' }}</td>
                     <td>
                         <div class="">
                             <button type="submit" wire:loading.attr='hidden'

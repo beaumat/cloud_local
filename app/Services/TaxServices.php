@@ -13,7 +13,11 @@ class TaxServices
     }
     public function getRate(int $ID): float
     {
-        return (float) Tax::where('ID', $ID)->first()->RATE;
+        $result =  Tax::where('ID', $ID)->first();
+        if($result ) {
+            return (float) $result->RATE;
+        }
+        return 0;
     }
     public function get(int $ID)
     {
@@ -88,5 +92,5 @@ class TaxServices
             ->orderBy('tax.ID', 'desc')
             ->get();
     }
- 
+
 }
