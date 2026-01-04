@@ -464,13 +464,13 @@ class ItemSoaServices
                 $list->RATE,
                 $list->ACTUAL_BASE,
                 $list->DOSAGE ?? '',
-                $list->ROUTE,
-                $list->FREQUENCY,
-                $list->BRAND,
+                $list->ROUTE ?? '',
+                $list->FREQUENCY ?? '',
+                $list->BRAND ??     '',
                 $list->GROUP_ID > 0 ? $list->GROUP_ID : null,
-                $list->SC_BASE,
-                $list->SOA_BASE,
-                $list->GENERIC_NAME
+                $list->SC_BASE ?? false,
+                $list->SOA_BASE ?? false,
+                $list->GENERIC_NAME ?? ''
             );
 
             if ($list->ACTUAL_BASE) {
