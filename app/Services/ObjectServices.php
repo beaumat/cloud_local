@@ -59,7 +59,7 @@ class ObjectServices
             $Nxt_ID = $result->NEXT_ID;
 
             $this->UpdateObject($TABLE_NAME, $Nxt_ID + 1);
-            
+
             return $Nxt_ID;
         } else {
 
@@ -86,7 +86,6 @@ class ObjectServices
     }
     public function GetSequence(int $Type, $LocationId): string
     {
-
         $data = ObjectCodeSequence::where('OBJECT_TYPE', '=', $Type)
             ->where('LOCATION_ID', '=', $LocationId)
             ->first();
