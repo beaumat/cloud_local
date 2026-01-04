@@ -467,7 +467,7 @@ class ItemSoaServices
                 $list->ROUTE ?? '',
                 $list->FREQUENCY ?? '',
                 $list->BRAND ??     '',
-                $list->GROUP_ID > 0 ? $list->GROUP_ID : null,
+                $list->GROUP_ID > 0 ? $list->GROUP_ID : 0,
                 $list->SC_BASE ?? false,
                 $list->SOA_BASE ?? false,
                 $list->GENERIC_NAME ?? ''
