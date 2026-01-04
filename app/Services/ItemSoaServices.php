@@ -444,7 +444,7 @@ class ItemSoaServices
         }
         return 0.00;
     }
-    
+
     public function haveDataExist(int $LOC_ID): bool
     {
         return ItemSoa::where('LOCATION_ID', '=', $LOC_ID)->exists();
@@ -463,7 +463,7 @@ class ItemSoaServices
                 $list->UNIT_NAME,
                 $list->RATE,
                 $list->ACTUAL_BASE,
-                $list->DOSAGE,
+                $list->DOSAGE ?? '',
                 $list->ROUTE,
                 $list->FREQUENCY,
                 $list->BRAND,
