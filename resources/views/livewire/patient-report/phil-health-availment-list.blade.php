@@ -76,9 +76,12 @@
                 <div class="col-md-12">
                     <div class="row">
                         <div class="col-1">
-                            <button class="btn btn-sm btn-success w-100" wire:click='printAll()'>Print All</button>
+                            <button class="btn btn-sm btn-primary w-100" wire:click='printAll()'>Print All</button>
                         </div>
-                        <div class="col-11">
+                           <div class="col-1">
+                            <button class="btn btn-sm btn-success w-100" wire:click='exportAll()'>Export All</button>
+                        </div>
+                        <div class="col-10">
                             <input type="text" wire:model.live.debounce.150ms='search' name="search"
                                 class="form-control form-control-sm mb-1" placeholder="Search.." />
                         </div>
@@ -93,6 +96,19 @@
                                 </th>
                                 <th>Name</th>
                                 <th class="col-1 text-center">Total Dialyzer</th>
+                                <th class="text-center">Jan </th>
+                                <th class="text-center">Feb </th>
+                                <th class=" text-center">Mar </th>
+                                <th class=" text-center">Apr </th>
+                                <th class=" text-center">May </th>
+                                <th class=" text-center">Jun </th>
+                                <th class=" text-center">Jul </th>
+                                <th class=" text-center">Aug </th>
+                                <th class=" text-center">Sep </th>
+                                <th class=" text-center">Oct </th>
+                                <th class=" text-center">Nov </th>
+                                <th class=" text-center">Dec </th>
+
                                 <th class="col-1 text-center">No. Actual Confinement </th>
                                 <th class="col-1 text-center">No. Other Confinement</th>
                                 <th class="col-1 text-center">Total Confinement</th>
@@ -108,6 +124,19 @@
                                     </td>
                                     <td>{{ $list->NAME }}</td>
                                     <td class="text-center">{{ $list->TOTAL_ITEMS + $list->TOTAL_OTHER_ITEM }}</td>
+                                    <td class="text-center">{{ $list->TOTAL_JAN }}</td>
+                                    <td class="text-center">{{ $list->TOTAL_FEB }}</td>
+                                    <td class="text-center">{{ $list->TOTAL_MAR }}</td>
+                                    <td class="text-center">{{ $list->TOTAL_APR }}</td>
+                                    <td class="text-center">{{ $list->TOTAL_MAY }}</td>
+                                    <td class="text-center">{{ $list->TOTAL_JUN }}</td>
+                                    <td class="text-center">{{ $list->TOTAL_JUL }}</td>
+                                    <td class="text-center">{{ $list->TOTAL_AUG }}</td>
+                                    <td class="text-center">{{ $list->TOTAL_SEP }}</td>
+                                    <td class="text-center">{{ $list->TOTAL_OCT }}</td>
+                                    <td class="text-center">{{ $list->TOTAL_NOV }}</td>
+                                    <td class="text-center">{{ $list->TOTAL_DEC }}</td>
+
                                     <td class="text-center">{{ $list->TOTAL_DAYS }}</td>
                                     <td class="text-center">{{ $list->TOTAL_OTHER }}</td>
                                     <td class="text-center">{{ $list->TOTAL_DAYS + $list->TOTAL_OTHER }}</td>

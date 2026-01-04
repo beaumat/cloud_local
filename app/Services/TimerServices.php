@@ -117,7 +117,6 @@ class TimerServices
             Log::error('Error executing SC generateItem() : ' . $th->getMessage());
         }
     }
-
     private function GenerateItemServiceChargesMakeJournalPhic156($transDate)
     {
 
@@ -185,7 +184,6 @@ class TimerServices
 
         $dataItem = $this->itemServices->get($PHIL_HEALTH_ITEM_ID);
         if ($dataItem) {
-
             // $RATE = $this->priceLevelLineServices->GetPriceByLocation($data->LOCATION_ID, $PHIL_HEALTH_ITEM_ID);
             $AMOUNT = $dataSC->AMOUNT ?? 0 * $QTY;
             $taxRate    = $this->taxServices->getRate(0);
