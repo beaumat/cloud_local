@@ -15,7 +15,6 @@ class ARAgingExportReport implements FromCollection, ShouldAutoSize
         $this->dataList = $dataList;
         $this->isSummary = $isSummary;
     }
-
     private function SetSummary(string $CUSTOMER, string $CURRENT, string $N1_30, string $N31_60, string $N61_90, string $N90_OVER, string $BALANCE)
     {
 
@@ -33,13 +32,13 @@ class ARAgingExportReport implements FromCollection, ShouldAutoSize
     public function SetDetails(string $DATE, string $REFERENCE, string $CUSTOMER, string $TERMS, string $DUE_DATE, string $AGING, string $OPEN_BALANCE, string $LOCATION)
     {
         $rowData = [
-            'DATE'=> $DATE, 
-            'REFERENCE'        => $REFERENCE, 
-            'CUSTOMER'         => $CUSTOMER, 
-            'TERMS'            => $TERMS, 
-            'DUE-DATE'        => $DUE_DATE, 
-            'AGING'           => $AGING, 
-            'OPEN-BALANCE'    =>  $OPEN_BALANCE, 
+            'DATE'=> $DATE,
+            'REFERENCE'        => $REFERENCE,
+            'CUSTOMER'         => $CUSTOMER,
+            'TERMS'            => $TERMS,
+            'DUE-DATE'        => $DUE_DATE,
+            'AGING'           => $AGING,
+            'OPEN-BALANCE'    =>  $OPEN_BALANCE,
             'LOCATION'        => $LOCATION
             ];
 
