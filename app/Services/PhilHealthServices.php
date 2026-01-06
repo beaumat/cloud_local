@@ -1311,4 +1311,40 @@ class PhilHealthServices
 
         return $result;
     }
+
+    public function getLHIO_List($search, int $LOCATION_ID): object
+    {
+        $result = DB::table('philhealth as ph')
+            ->select([
+                'c.NAME as CUSTOMER_NAME',
+                'ph.AR_NO',
+                'ph.AR_DATE',
+                'ph.CODE as SOA_NO',
+                'ph.DATE_ADMITTED',
+                'ph.DATE_DISCHARGED',
+                'ph.ID as PHILHEALTH_ID',
+                'l.NAME as LOCATION_NAME',
+                'ph.P1_TOTAL as AMOUNT',
+                DB::raw('(select count(*) from hemodialysis where hemodialysis.STATUS_ID = 2 and hemodialysis.CUSTOMER_ID = ph.CONTACT_ID and hemodialysis.DATE between ph.DATE_ADMITTED and ph.DATE_DISCHARGED) as TOTAL_TREATMENT '),
+                DB::raw('(select cd.NAME from philhealth_prof_fee as pf join contact as cd on cd.ID = pf.CONTACT_ID where pf.PHIC_ID = ph.ID) as DOCTOR_NAME'),
+            ])->join('contact as c', 'c.ID', '=', 'ph.CONTACT_ID')
+            ->join('location as l', function ($join) use (&$LOCATION_ID) {
+                $join->on('l.ID', '=', 'ph.LOCATION_ID');
+                if ($LOCATION_ID > 0) {
+                    $join->where('l.ID', $LOCATION_ID);
+                }
+            })
+            ->whereYear('ph.DATE_DISCHARGED', '>=', 2026)
+            ->whereNotNull('ph.AR_NO')
+            ->when($search, function ($query) use (&$search) {
+                $query->where(function ($sql) use (&$search) {
+                    $sql->orWhere('ph.CODE', 'like', '%' . $search . '%')
+                        ->orWhere('c.NAME', 'like', '%' . $search . '%')
+                        ->orWhere('ph.AR_NO', 'like', '%' . $search . '%');
+                });
+            })
+            ->paginate(15);
+
+        return $result;
+    }
 }

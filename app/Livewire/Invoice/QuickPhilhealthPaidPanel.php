@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
-class QuickPaidPanel extends Component
+class QuickPhilhealthPaidPanel extends Component
 {
 
     public bool $refreshComponent = false;
@@ -382,6 +382,6 @@ class QuickPaidPanel extends Component
     }
     public function render()
     {
-        return view('livewire.invoice.quick-paid-panel');
+        return view('livewire.invoice.quick-philhealth-paid-panel');
     }
 }

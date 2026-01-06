@@ -82,6 +82,7 @@ use App\Livewire\Invoice\InvoiceForm;
 use App\Livewire\Invoice\InvoiceList;
 use App\Livewire\Invoice\PrintInvoice;
 use App\Livewire\Invoice\QuickPaid;
+use App\Livewire\Invoice\QuickPhilhealthPaid;
 use App\Livewire\ItemClassPage\ItemClassForm;
 use App\Livewire\ItemClassPage\ItemClassList;
 use App\Livewire\ItemGroupPage\ItemGroupForm;
@@ -110,9 +111,8 @@ use App\Livewire\PatientReport\DoctorsFeeReportPrint;
 use App\Livewire\PatientReport\GuaranteeLetterReport;
 use App\Livewire\PatientReport\PatientBalanceReport;
 use App\Livewire\PatientReport\PatientInventoryReport;
-use App\Livewire\PatientReport\PatientSalesReport;
+use App\Livewire\PatientReport\PatientSalesReport2;
 use App\Livewire\PatientReport\PatientSalesReportPrint;
-use App\Livewire\PatientReport\PatientSalesReportView;
 use App\Livewire\PatientReport\PatientTreatmentReport;
 use App\Livewire\PatientReport\PhilhealthAnnex;
 use App\Livewire\PatientReport\PhilhealthAnnexOnePrint;
@@ -125,7 +125,6 @@ use App\Livewire\Patient\MedcertPrint;
 use App\Livewire\Patient\PatientForm;
 use App\Livewire\Patient\PatientList;
 use App\Livewire\Patient\PrintAvailment;
-use App\Livewire\PatientReport\PatientSalesReport2;
 use App\Livewire\PayableReport\AccountPayableAging;
 use App\Livewire\PayableReport\VendorBalance;
 use App\Livewire\PaymentMethod\PaymentMethodForm;
@@ -312,6 +311,9 @@ Route::middleware(['auth'])->group(function () {
 
         Route::prefix('/phic-paid')->group(function () {
             Route::get('/', QuickPaid::class)->name('phic_paid')->middleware(['permission:patient.payment-period.view']);
+        });
+        Route::prefix('/phic-payment-2026')->group(function () {
+            Route::get('/', QuickPhilhealthPaid::class)->name('phic_payment2026')->middleware(['permission:patient.payment-period.view']);
         });
 
     });
@@ -702,7 +704,6 @@ Route::middleware(['auth'])->group(function () {
                 // Route::get('/', PatientSalesReport::class)->name('patient_sales_report')->middleware(['permission:report.patient.sales']);
                 // Route::get('/{date_from}/{date_to}/{location_id}/{patient?}/{item?}/{method?}/view', PatientSalesReportView::class)->name('patient_sales_report_view')->middleware(['permission:report.patient.sales']);
                 // Route::get('/{date_from}/{date_to}/{location_id}/{patient?}/{item?}/{method?}/print', PatientSalesReportPrint::class)->name('patient_sales_report_print')->middleware(['permission:report.patient.sales']);
-
 
             });
             Route::prefix('/inventory')->group(function () {

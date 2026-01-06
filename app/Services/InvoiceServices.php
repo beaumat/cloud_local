@@ -676,8 +676,7 @@ class InvoiceServices
 
         return $result;
     }
-
-    public function getActiveList($search, int $LOCATION_ID): object
+public function getActiveList($search, int $LOCATION_ID): object
     {
         $result = Invoice::query()
             ->select([
@@ -701,12 +700,13 @@ class InvoiceServices
                 DB::raw('(select cd.NAME from philhealth_prof_fee as pf join contact as cd on cd.ID = pf.CONTACT_ID where pf.PHIC_ID = ph.ID) as DOCTOR_NAME'),
             ])->join('contact as c', 'c.ID', '=', 'invoice.CUSTOMER_ID')
             ->join('philhealth as ph', 'ph.INVOICE_ID', '=', 'invoice.ID')
-          ->join('location as l', function ($join) use (&$LOCATION_ID) {
+            ->join('location as l', function ($join) use (&$LOCATION_ID) {
                 $join->on('l.ID', '=', 'invoice.LOCATION_ID');
                 if ($LOCATION_ID > 0) {
                     $join->where('l.ID', $LOCATION_ID);
                 }
             })
+            ->whereYear('ph.DATE_DISCHARGED', '<=', 2025)
             ->where('invoice.BALANCE_DUE', '>', 0)
             ->whereNotNull('ph.AR_NO')
             ->when($search, function ($query) use (&$search) {
@@ -727,6 +727,7 @@ class InvoiceServices
 
         return $result;
     }
+
     public function getPaid(int $INVOICE_ID): float
     {
         $data = $this->get($INVOICE_ID);
