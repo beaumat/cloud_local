@@ -82,8 +82,7 @@
                                             <td>{{ $list->LOCATION_NAME }}</td>
                                             <td>
                                                 <button class="btn btn-xs btn-success w-100"
-                                                    {{-- wire:click='makePaid({{ $list->ID }})' --}}
-                                                    >Paid</button>
+                                                    wire:click='makePaidNew({{ $list->PHILHEALTH_ID }})'>Paid</button>
                                             </td>
                                         </tr>
                                     @endforeach
@@ -100,6 +99,6 @@
     </section>
 
 
-    @livewire('Invoice.QuickPaidPanel')
+    @livewire('Invoice.QuickPhilhealthPaidPanel')
     @livewire('PhilHealth.ArForm')
 </div>

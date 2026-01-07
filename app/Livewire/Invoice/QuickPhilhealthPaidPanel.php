@@ -24,7 +24,7 @@ class QuickPhilhealthPaidPanel extends Component
     public bool $refreshComponent = false;
     public int $PAYMENT_METHOD_ID = 5;
     public int $ACCOUNTS_RECEIVABLE_ID;
-    public int $INVOICE_ID;
+    public int $PHIC_ID;
     public int $CUSTOMER_ID;
     public float $PAYMENT_AMOUNT;
     public float $TAX_AMOUNT;
@@ -38,6 +38,13 @@ class QuickPhilhealthPaidPanel extends Component
     public string $NAME;
     public float $AMOUNT;
     public float $BALANCE_DUE;
+
+    public string $PH_CODE;
+    public string $PH_DATE_ADMITTED;
+    public string $PH_DATE_DISCHARGED;
+    public string $PH_DOCTOR_NAME;
+    public float $DOCTOR_FEE = 0;
+
     public int $LOCATION_ID;
     private $invoiceServices;
     private $accountServices;
@@ -51,9 +58,9 @@ class QuickPhilhealthPaidPanel extends Component
     private $paymentPeriodServices;
     private $userServices;
     private $philHealthServices;
-    public bool $isPhilHealth = false;
-    public bool $isGL         = false;
-
+    public bool $isPhilHealth      = false;
+    public bool $isGL              = false;
+    public $INVOICE_TREATMENT_LIST = [];
     private $patientPaymentServices;
     private $serviceChargeServices;
     private $hemoServices;
@@ -100,51 +107,29 @@ class QuickPhilhealthPaidPanel extends Component
         $this->EWT_ACCOUNT_ID  = 0;
         $this->TAX_DESCRIPTION = '';
     }
-    #[On('quick-paid')]
+    #[On('quick-paid-new')]
     public function openModal($result)
     {
-        $this->INVOICE_ID = $result['INVOICE_ID'];
+
+        $this->PHIC_ID = $result['PHIC_ID'];
         $this->clearField();
-        $data = $this->invoiceServices->get($this->INVOICE_ID);
+        $data = $this->philHealthServices->get($this->PHIC_ID);
         if ($data) {
-            $this->CUSTOMER_ID            = $data->CUSTOMER_ID;
-            $this->ACCOUNTS_RECEIVABLE_ID = $data->ACCOUNTS_RECEIVABLE_ID;
+            $this->CUSTOMER_ID            = $data->CONTACT_ID;
+            $this->ACCOUNTS_RECEIVABLE_ID = $this->accountServices->ACCOUNTS_RECEIVABLE_ID;
             $this->CODE                   = $data->CODE ?? '';
-            $this->DATE                   = $data->DATE;
-            $this->DUE_DATE               = $data->DUE_DATE;
+            $this->DATE                   = $data->AR_DATE ?? '';
+            $this->PO_NUMBER              = $data->AR_NO;
+            $this->DUE_DATE               = date('Y-m-d', strtotime($data->AR_DATE . ' +60 days'));
             $this->LOCATION_ID            = $data->LOCATION_ID;
             $this->ReloadPeriodList();
-            $this->PO_NUMBER   = $data->PO_NUMBER ?? '';
-            $this->AMOUNT      = $data->AMOUNT ?? 0;
-            $this->BALANCE_DUE = $data->BALANCE_DUE ?? 0;
+            $this->AMOUNT      = $data->P1_TOTAL ?? 0;
+            $this->BALANCE_DUE = $data->P1_TOTAL ?? 0;
             $con               = $this->contactServices->getSingleData($this->CUSTOMER_ID);
             if ($con) {
                 $this->NAME = $con->NAME ?? '';
             }
-        }
 
-        $this->taxList = $this->taxServices->getWTax();
-
-        $this->philhealthInfo($this->INVOICE_ID);
-
-        if ($this->isPhilHealth) {
-            $this->TAX_ID = 9;
-            $this->updatedTaxId();
-        }
-
-        $this->showModal = true;
-    }
-
-    public string $PH_CODE;
-    public string $PH_DATE_ADMITTED;
-    public string $PH_DATE_DISCHARGED;
-    public string $PH_DOCTOR_NAME;
-    public float $DOCTOR_FEE = 0;
-
-    private function philhealthInfo(int $INVOICE_ID)
-    {
-        $data = $this->philHealthServices->getDataByInvoiceId($INVOICE_ID);
-        if ($data) {
             $this->isPhilHealth       = true;
             $this->PH_CODE            = $data->CODE ?? '';
             $this->PH_DATE_ADMITTED   = $data->DATE_ADMITTED ?? '';
@@ -155,18 +140,21 @@ class QuickPhilhealthPaidPanel extends Component
                 $this->DOCTOR_FEE     = $dataPF->FIRST_CASE ?? 0;
             }
 
-            return;
         }
 
-        $this->isPhilHealth       = false;
-        $this->PH_CODE            = '';
-        $this->PH_DATE_ADMITTED   = '';
-        $this->PH_DATE_DISCHARGED = '';
-
-        $this->PH_DOCTOR_NAME = '';
-        $this->DOCTOR_FEE     = 0;
+        $this->taxList   = $this->taxServices->getWTax();
+        $this->showModal = true;
+        $this->InvoiceTreatmentRecord();
     }
 
+    private function InvoiceTreatmentRecord()
+    {
+        $this->INVOICE_TREATMENT_LIST = $this->invoiceServices->getInvoiceByPatientDateRange($this->PH_DATE_ADMITTED,
+            $this->PH_DATE_DISCHARGED,
+            $this->CUSTOMER_ID,
+            $this->LOCATION_ID);
+
+    }
     #[On('period-refresh')]
     public function ReloadPeriodList()
     {
@@ -224,24 +212,49 @@ class QuickPhilhealthPaidPanel extends Component
             $this->ACCOUNTS_RECEIVABLE_ID
         );
 
-        $this->taxCreditServices->StoreInvoice(
-            $ID,
-            $this->INVOICE_ID,
-            $this->AMOUNT_WITHHELD,
-            $this->ACCOUNTS_RECEIVABLE_ID
-        );
-        $total = $this->taxCreditServices->GetTotal($ID);
-        $this->taxCreditServices->setTotal($ID, $total);
-        $this->invoiceServices->updateInvoiceBalance($this->INVOICE_ID);
+        $invoiceList = $this->invoiceServices->getInvoiceByPatientDateRange($this->PH_DATE_ADMITTED, $this->PH_DATE_DISCHARGED, $this->CUSTOMER_ID, $this->LOCATION_ID);
+
+        foreach ($invoiceList as $inv) {
+            $tax = $this->taxServices->get($this->TAX_ID);
+            if ($tax) {
+                $myEWT_RATE           = $tax->RATE ?? 0;
+                $myAMOUNT_WITHHELD    = $inv->BALANCE_DUE * ($myEWT_RATE / 100);
+                $this->EWT_ACCOUNT_ID = $tax->ASSET_ACCOUNT_ID ?? 0;
+                $acctData             = $this->accountServices->Get($this->EWT_ACCOUNT_ID);
+                if ($acctData) {
+                    $this->TAX_DESCRIPTION = $acctData->NAME ?? '';
+                }
+                $this->taxCreditServices->StoreInvoice(
+                    $ID,
+                    $inv->ID,
+                    $myAMOUNT_WITHHELD,
+                    $this->ACCOUNTS_RECEIVABLE_ID
+                );
+
+                $total = $this->taxCreditServices->GetTotal($ID);
+                $this->taxCreditServices->setTotal($ID, $total);
+                $this->invoiceServices->updateInvoiceBalance($inv->ID);
+            }
+
+        }
 
         $isGood = $this->taxCreditServices->getPosted($ID, $this->DATE, $this->LOCATION_ID);
-
         return $isGood;
     }
     public function AddPayment()
     {
+        $TOTAL_AMOUNT = 0;
+        $invoiceList  = $this->invoiceServices->getInvoiceByPatientDateRange($this->PH_DATE_ADMITTED,
+            $this->PH_DATE_DISCHARGED,
+            $this->CUSTOMER_ID,
+            $this->LOCATION_ID);
 
-        if ($this->paymentServices->PaymenIsOver($this->INVOICE_ID, $this->PAYMENT_AMOUNT) == true) {
+        // Check first
+        foreach ($invoiceList as $invChk) {
+            $TOTAL_AMOUNT += $invChk->BALANCE_DUE;
+        }
+
+        if ($this->PAYMENT_AMOUNT > $TOTAL_AMOUNT) {
             session()->flash('error', 'The payment exceeds the available balance');
             return false;
         }
@@ -250,17 +263,19 @@ class QuickPhilhealthPaidPanel extends Component
 
         if ($period) {
 
-            $ID = $this->paymentServices->Store("", $this->DATE, $this->CUSTOMER_ID, $this->LOCATION_ID, $this->PAYMENT_AMOUNT, $this->PAYMENT_AMOUNT, $this->PAYMENT_METHOD_ID, '', null, $period->RECEIPT_NO, null, '', $period->BANK_ACCOUNT_ID, 0, true, $this->ACCOUNTS_RECEIVABLE_ID, $this->PAYMENT_PERIOD_ID);
+            $ID     = $this->paymentServices->Store("", $this->DATE, $this->CUSTOMER_ID, $this->LOCATION_ID, $this->PAYMENT_AMOUNT, $this->PAYMENT_AMOUNT, $this->PAYMENT_METHOD_ID, '', null, $period->RECEIPT_NO, null, '', $period->BANK_ACCOUNT_ID, 0, true, $this->ACCOUNTS_RECEIVABLE_ID, $this->PAYMENT_PERIOD_ID);
+            $isGood = false;
+            foreach ($invoiceList as $inv) {
+                $this->paymentServices->PaymentInvoiceStore($ID, $inv->ID, 0, $inv->BALANCE_DUE, 0, $this->ACCOUNTS_RECEIVABLE_ID);
+                $this->invoiceServices->updateInvoiceBalance($inv->ID);
+                
+            }
 
-            $this->paymentServices->PaymentInvoiceStore($ID, $this->INVOICE_ID, 0, $this->PAYMENT_AMOUNT, 0, $this->ACCOUNTS_RECEIVABLE_ID);
-            $this->invoiceServices->updateInvoiceBalance($this->INVOICE_ID);
             $isGood = $this->paymentServices->getPosted($ID, $this->DATE, $this->LOCATION_ID);
             if ($isGood) {
-                $PHILHEALTH_ID = $this->philHealthServices->Get_ID_by_INVOICE_ID($this->INVOICE_ID);
-                if ($PHILHEALTH_ID > 0) {
-                    $this->philHealthServices->makePayableForDoctor($PHILHEALTH_ID, $this->LOCATION_ID, $this->DATE);
-                }
+                $this->philHealthServices->makePayableForDoctor($this->PHIC_ID, $this->LOCATION_ID, $this->DATE);
                 return true;
+
             }
 
             return false;
@@ -315,7 +330,7 @@ class QuickPhilhealthPaidPanel extends Component
                 return;
             }
 
-            $this->invoiceServices->ReComputed($this->INVOICE_ID);
+
             $this->setUpdateForPhilhealthPayment();
             DB::commit();
             $this->closeModal();

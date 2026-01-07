@@ -53,12 +53,12 @@ class QuickPhilhealthPaid extends Component
     {
         $this->dispatch('ar-form-show', result: ['PHILHEALTH_ID' => $PHILHEALTH_ID]);
     }
-    public function makePaid(int $INVOICE_ID)
+    public function makePaidNew(int $PHIC_ID)
     {
         $data = [
-            'INVOICE_ID' => $INVOICE_ID,
+            'PHIC_ID' => $PHIC_ID,
         ];
-        $this->dispatch('quick-paid', result: $data);
+        $this->dispatch('quick-paid-new', result: $data);
     }
     #[On('quick-paid-reload', 'ar-form-data')]
     public function render()

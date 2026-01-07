@@ -796,4 +796,29 @@ public function getActiveList($search, int $LOCATION_ID): object
 
         return $result;
     }
+    public function getInvoiceByPatientDateRange($dateFrom, $dateTo, int $CONTACT_ID, int $LOCATION_ID, float $FIX_AMOUNT = 6350.00)
+    {
+        $result = Invoice::query()
+            ->select([
+                'invoice.ID',
+                'invoice.CODE',
+                'invoice.DATE',
+                'invoice.AMOUNT',
+                'invoice.BALANCE_DUE',
+                'invoice.NOTES',
+                'l.NAME as LOCATION_NAME',
+                's.DESCRIPTION as STATUS',
+
+            ])
+            ->join('location as l', 'l.ID', '=', 'invoice.LOCATION_ID')
+            ->join('document_status_map as s', 's.ID', '=', 'invoice.STATUS')
+            ->where('invoice.CUSTOMER_ID', '=', $CONTACT_ID)
+            ->whereBetween('invoice.DATE', [$dateFrom, $dateTo])
+            ->where('invoice.LOCATION_ID', '=', $LOCATION_ID)
+            ->where('invoice.AMOUNT', '=', $FIX_AMOUNT  )
+            ->orderBy('invoice.DATE', 'desc')
+            ->get();
+
+        return $result;
+    }
 }
