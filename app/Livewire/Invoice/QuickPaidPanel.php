@@ -251,7 +251,6 @@ class QuickPaidPanel extends Component
         if ($period) {
 
             $ID = $this->paymentServices->Store("", $this->DATE, $this->CUSTOMER_ID, $this->LOCATION_ID, $this->PAYMENT_AMOUNT, $this->PAYMENT_AMOUNT, $this->PAYMENT_METHOD_ID, '', null, $period->RECEIPT_NO, null, '', $period->BANK_ACCOUNT_ID, 0, true, $this->ACCOUNTS_RECEIVABLE_ID, $this->PAYMENT_PERIOD_ID);
-
             $this->paymentServices->PaymentInvoiceStore($ID, $this->INVOICE_ID, 0, $this->PAYMENT_AMOUNT, 0, $this->ACCOUNTS_RECEIVABLE_ID);
             $this->invoiceServices->updateInvoiceBalance($this->INVOICE_ID);
             $isGood = $this->paymentServices->getPosted($ID, $this->DATE, $this->LOCATION_ID);
@@ -259,6 +258,7 @@ class QuickPaidPanel extends Component
                 $PHILHEALTH_ID = $this->philHealthServices->Get_ID_by_INVOICE_ID($this->INVOICE_ID);
                 if ($PHILHEALTH_ID > 0) {
                     $this->philHealthServices->makePayableForDoctor($PHILHEALTH_ID, $this->LOCATION_ID, $this->DATE);
+                    $this->setUpdateForPhilhealthPayment($ID);
                 }
                 return true;
             }
@@ -316,7 +316,7 @@ class QuickPaidPanel extends Component
             }
 
             $this->invoiceServices->ReComputed($this->INVOICE_ID);
-            $this->setUpdateForPhilhealthPayment();
+
             DB::commit();
             $this->closeModal();
             $this->dispatch('quick-paid-reload');
@@ -326,13 +326,13 @@ class QuickPaidPanel extends Component
             session()->flash('error', $errorMessage);
         }
     }
-    private function setUpdateForPhilhealthPayment()
+    private function setUpdateForPhilhealthPayment(int $PAYMENT_ID = 0)
     {
 
         $data = $this->invoiceServices->get($this->INVOICE_ID);
         if ($data) {
             $total = $this->invoiceServices->getPaid($this->INVOICE_ID);
-            $Stats = $this->philHealthServices->UpdatePayment($data->TRANSACTION_REF_ID, $total);
+            $Stats = $this->philHealthServices->UpdatePayment($data->TRANSACTION_REF_ID, $total, $PAYMENT_ID);
             if ($Stats == 11) {
                 $PAYMENT_ID = $this->invoiceServices->getPaymentIdVIaInvoice($this->INVOICE_ID);
                 if ($PAYMENT_ID > 0) {

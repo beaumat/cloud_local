@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Services;
 
 use App\Models\PaymentPeriod;
@@ -7,7 +6,6 @@ use Illuminate\Support\Facades\DB;
 
 class PaymentPeriodServices
 {
-
 
     private $object;
 
@@ -30,7 +28,7 @@ class PaymentPeriodServices
                 'RECEIPT_NO',
                 'DATE_FROM',
                 'DATE_TO',
-                'DATE'
+                'DATE',
             ])
             ->where('LOCATION_ID', '=', $LOCATION_ID)
             ->when($DATE_FROM, function ($query) use (&$DATE_FROM) {
@@ -52,7 +50,7 @@ class PaymentPeriodServices
                 'RECEIPT_NO',
                 'DATE_FROM',
                 'DATE_TO',
-                'DATE'
+                'DATE',
             ])
             ->where('LOCATION_ID', '=', $LOCATION_ID)
             ->whereYear('DATE_FROM', '=', $YEAR)
@@ -75,18 +73,18 @@ class PaymentPeriodServices
         int $BANK_ACCOUNT_ID,
         string $DATE
     ) {
-        $ID = (int) $this->object->ObjectNextID(TABLE_NAME: 'PAYMENT_PERIOD');
 
+        $ID = (int) $this->object->ObjectNextID(TABLE_NAME: 'PAYMENT_PERIOD');
         PaymentPeriod::create([
-            'ID' => $ID,
-            'RECEIPT_NO' => $RECEIPT_NO,
-            'LOCATION_ID' => $LOCATION_ID,
-            'DATE_FROM' => $DATE_FROM,
-            'DATE_TO' => $DATE_TO,
-            'TOTAL_PAYMENT' => $TOTAL_PAYMENT,
-            'TOTAL_WTAX' => $TOTAL_WTAX,
+            'ID'              => $ID,
+            'RECEIPT_NO'      => $RECEIPT_NO,
+            'LOCATION_ID'     => $LOCATION_ID,
+            'DATE_FROM'       => $DATE_FROM,
+            'DATE_TO'         => $DATE_TO,
+            'TOTAL_PAYMENT'   => $TOTAL_PAYMENT,
+            'TOTAL_WTAX'      => $TOTAL_WTAX,
             'BANK_ACCOUNT_ID' => $BANK_ACCOUNT_ID,
-            'DATE' => $DATE
+            'DATE'            => $DATE,
         ]);
     }
     public function dateExists(int $ID, string $DATE): bool
@@ -102,16 +100,16 @@ class PaymentPeriodServices
     {
         return (bool) PaymentPeriod::where('ID', '=', $ID)->where('BANK_ACCOUNT_ID', '=', $BANK_ACCOUNT_ID)->exists();
     }
-    public function Update(int $ID, string $RECEIPT_NO, string $DATE_FROM, string $DATE_TO, string $DATE, float $TOTAL_PAYMENT,int $BANK_ACCOUNT_ID)
+    public function Update(int $ID, string $RECEIPT_NO, string $DATE_FROM, string $DATE_TO, string $DATE, float $TOTAL_PAYMENT, int $BANK_ACCOUNT_ID)
     {
         PaymentPeriod::where('ID', '=', $ID)
             ->update([
-                'RECEIPT_NO' => $RECEIPT_NO,
-                'DATE_FROM' => $DATE_FROM,
-                'DATE_TO' => $DATE_TO,
-                'DATE' => $DATE,
-                'TOTAL_PAYMENT' => $TOTAL_PAYMENT,
-                'BANK_ACCOUNT_ID' => $BANK_ACCOUNT_ID
+                'RECEIPT_NO'      => $RECEIPT_NO,
+                'DATE_FROM'       => $DATE_FROM,
+                'DATE_TO'         => $DATE_TO,
+                'DATE'            => $DATE,
+                'TOTAL_PAYMENT'   => $TOTAL_PAYMENT,
+                'BANK_ACCOUNT_ID' => $BANK_ACCOUNT_ID,
             ]);
     }
     public function Delete(int $ID)
@@ -129,7 +127,7 @@ class PaymentPeriodServices
                 'payment_period.DATE',
                 'TOTAL_PAYMENT as AMOUNT',
                 'l.NAME as LOCATION_NAME',
-                'a.NAME as BANK_ACCOUNT_NAME'
+                'a.NAME as BANK_ACCOUNT_NAME',
             ])
             ->join('location as l', function ($join) use (&$locationId) {
                 $join->on('l.ID', '=', 'payment_period.LOCATION_ID');
@@ -145,7 +143,7 @@ class PaymentPeriodServices
 
         return $result;
     }
-    public function List(int $LOCATION_ID)
+    public function list(int $LOCATION_ID)
     {
         $result = PaymentPeriod::query()
             ->select([
@@ -153,7 +151,7 @@ class PaymentPeriodServices
                 'RECEIPT_NO',
                 'DATE_FROM',
                 'DATE_TO',
-                'DATE'
+                'DATE',
             ])
             ->where('LOCATION_ID', '=', $LOCATION_ID)
             ->orderBy('ID', 'desc')
@@ -195,7 +193,7 @@ class PaymentPeriodServices
             ->select(
                 [
                     'c.ID as DOCTOR_ID',
-                    'c.NAME as DOCTOR_NAME'
+                    'c.NAME as DOCTOR_NAME',
                 ]
             )
             ->join('payment as p', 'p.PAYMENT_PERIOD_ID', '=', 'payment_period.ID')
@@ -219,7 +217,7 @@ class PaymentPeriodServices
             ->select(
                 [
                     'c.ID as DOCTOR_ID',
-                    'c.NAME as DOCTOR_NAME'
+                    'c.NAME as DOCTOR_NAME',
                 ]
             )
             ->join('payment as p', 'p.PAYMENT_PERIOD_ID', '=', 'payment_period.ID')
@@ -247,7 +245,7 @@ class PaymentPeriodServices
             ->select(
                 [
                     'ID',
-                    DB::raw("CONCAT(RECEIPT_NO,' [', DATE_FORMAT(DATE_FROM,'%b %d'),' - ', DATE_FORMAT(DATE_TO,'%b %d'),'] '  )  as DESCRIPTION")
+                    DB::raw("CONCAT(RECEIPT_NO,' [', DATE_FORMAT(DATE_FROM,'%b %d'),' - ', DATE_FORMAT(DATE_TO,'%b %d'),'] '  )  as DESCRIPTION"),
                 ]
             )
             ->where('LOCATION_ID', '=', $LOCATION_ID)
@@ -262,7 +260,7 @@ class PaymentPeriodServices
         $result = PaymentPeriod::query()
             ->select(
                 [
-                    DB::raw('IFNULL(SUM(b.AMOUNT),0) as TOTAL')
+                    DB::raw('IFNULL(SUM(b.AMOUNT),0) as TOTAL'),
                 ]
             )
             ->join('payment as p', 'p.PAYMENT_PERIOD_ID', '=', 'payment_period.ID')
@@ -287,13 +285,12 @@ class PaymentPeriodServices
         return 0.00;
     }
 
-
     public function getDoctorFeeRemainingBalance(int $LOCATION_ID, string $DATE, int $DOCTOR_ID): float
     {
         $result = PaymentPeriod::query()
             ->select(
                 [
-                    DB::raw('IFNULL(SUM(b.AMOUNT),0) as TOTAL')
+                    DB::raw('IFNULL(SUM(b.AMOUNT),0) as TOTAL'),
                 ]
             )
             ->join('payment as p', 'p.PAYMENT_PERIOD_ID', '=', 'payment_period.ID')

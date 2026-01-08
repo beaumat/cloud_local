@@ -877,7 +877,7 @@ class PhilHealthServices
         return $result;
     }
 
-    public function UpdatePayment(int $PHILHEALTH_ID, float $TOTAL_PAY): int
+    public function UpdatePayment(int $PHILHEALTH_ID, float $TOTAL_PAY, int $PAYMENT_ID = 0): int
     {
         $STATUS_ID = 1; //PENDING
         $data      = $this->get($PHILHEALTH_ID);
@@ -894,6 +894,7 @@ class PhilHealthServices
                 ->update([
                     'PAYMENT_AMOUNT' => $TOTAL_PAY,
                     'STATUS_ID'      => $STATUS_ID,
+                    'PAYMENT_ID'     => $PAYMENT_ID,
                 ]);
         }
 
