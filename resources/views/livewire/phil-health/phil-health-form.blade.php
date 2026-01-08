@@ -249,13 +249,6 @@
                                             aria-controls="custom-tabs-four-drugNmed" aria-selected="true">CF Form</a>
                                     </li>
 
-                                    <li class="nav-item">
-                                        <a class="nav-link @if ($tab == 'payment') active @endif"
-                                            id="custom-tabs-four-payment-tab" wire:click="SelectTab('payment')"
-                                            data-toggle="pill" href="#custom-tabs-four-payment" role="tab"
-                                            aria-controls="custom-tabs-four-payment" aria-selected="true">Transmittal
-                                            Records</a>
-                                    </li>
                                     <li wire:loading.delay>
                                         <span class='spinner'></span>
                                     </li>
@@ -303,19 +296,11 @@
                                         </div>
                                     </div>
 
-                                    <div class="tab-pane fade @if ($tab == 'payment') show active @endif"
-                                        id="custom-tabs-four-payment" role="tabpanel"
-                                        aria-labelledby="custom-tabs-four-payment-tab">
-                                        <div class="row"
-                                            @if ($ID === 0) style="opacity: 0.5;pointer-events: none;" @endif>
-                                            <div class="col-md-12">
-                                                @if ($tab == 'payment')
-                                                    @livewire('PhilHealth.Transmittal', ['PHILHEALTH_ID' => $ID])
-                                                @endif
-                                            </div>
-                                        </div>
-                                    </div>
+
                                 </div>
+                            </div>
+                            <div class="card-footer h6 bg-light text-right">
+                                PAYMENT COLLECTION : <strong class="text-danger">{{ number_format($PAYMENT_AMOUNT, 2) }}</strong>
                             </div>
                         </div>
                     </div>

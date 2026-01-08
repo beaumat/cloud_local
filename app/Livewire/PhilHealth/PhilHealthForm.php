@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Livewire\PhilHealth;
 
 use App\Services\ContactServices;
@@ -8,12 +7,10 @@ use App\Services\LocationServices;
 use App\Services\PhilHealthServices;
 use App\Services\PhilHealthSoaCustomServices;
 use App\Services\UserServices;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Redirect;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
 use Livewire\Component;
-
 
 #[Title('Philhealth')]
 
@@ -22,13 +19,14 @@ class PhilHealthForm extends Component
     public bool $Modify = false;
     public string $STATUS_DESCRIPTION;
     public int $STATUS;
-    public int $ID = 0;
-    public string $tab = "soa";
-    public $patientList = [];
+    public int $ID       = 0;
+    public string $tab   = "soa";
+    public $patientList  = [];
     public $locationList = [];
     public int $LOCATION_ID;
     public int $CONTACT_ID;
     public string $CODE;
+    public float $PAYMENT_AMOUNT = 0.00;
     public $DATE;
     public $DATE_ADMITTED;
     public $TIME_ADMITTED;
@@ -59,7 +57,7 @@ class PhilHealthForm extends Component
     public function arForm($ar)
     {
         $this->AR_DATE = $ar['AR_DATE'];
-        $this->AR_NO = $ar['AR_NO'];
+        $this->AR_NO   = $ar['AR_NO'];
     }
     public function boot(
         PhilHealthServices $philHealthServices,
@@ -69,11 +67,11 @@ class PhilHealthForm extends Component
         UserServices $userServices,
         PhilHealthSoaCustomServices $philHealthSoaCustomServices
     ) {
-        $this->philHealthServices = $philHealthServices;
-        $this->hemoServices = $hemoServices;
-        $this->contactServices = $contactServices;
-        $this->locationServices = $locationServices;
-        $this->userServices = $userServices;
+        $this->philHealthServices          = $philHealthServices;
+        $this->hemoServices                = $hemoServices;
+        $this->contactServices             = $contactServices;
+        $this->locationServices            = $locationServices;
+        $this->userServices                = $userServices;
         $this->philHealthSoaCustomServices = $philHealthSoaCustomServices;
     }
     public function UpdatedContactId()
@@ -83,22 +81,22 @@ class PhilHealthForm extends Component
 
         if ($data) {
 
-            $this->DATE_ADMITTED = $data['FIRST_DATE'];
-            $this->TIME_ADMITTED = $data['FIRST_TIME'];
+            $this->DATE_ADMITTED   = $data['FIRST_DATE'];
+            $this->TIME_ADMITTED   = $data['FIRST_TIME'];
             $this->DATE_DISCHARGED = $data['LAST_DATE'];
             $this->TIME_DISCHARGED = $data['LAST_TIME'];
 
             return;
         }
-        $this->DATE_ADMITTED = '';
-        $this->TIME_ADMITTED = '';
+        $this->DATE_ADMITTED   = '';
+        $this->TIME_ADMITTED   = '';
         $this->DATE_DISCHARGED = '';
         $this->TIME_DISCHARGED = '';
     }
     private function LoadDropDown()
     {
         $this->locationList = $this->locationServices->getList();
-        $this->patientList = $this->contactServices->getList(3);
+        $this->patientList  = $this->contactServices->getList(3);
     }
     private function GotHide()
     {
@@ -121,23 +119,24 @@ class PhilHealthForm extends Component
 
                 $this->isPaid = $this->philHealthServices->isPaid($this->ID);
 
-                $this->CODE = $data->CODE;
-                $this->DATE = $data->DATE;
+                $this->CODE        = $data->CODE;
+                $this->DATE        = $data->DATE;
                 $this->LOCATION_ID = $data->LOCATION_ID;
                 $this->GotHide();
-                $this->CONTACT_ID = $data->CONTACT_ID;
-                $this->DATE_ADMITTED = $data->DATE_ADMITTED;
-                $this->TIME_ADMITTED = $data->TIME_ADMITTED;
-                $this->DATE_DISCHARGED = $data->DATE_DISCHARGED;
-                $this->TIME_DISCHARGED = $data->TIME_DISCHARGED;
-                $this->TIME_HIDE = $data->TIME_HIDE ?? '';
-                $this->FINAL_DIAGNOSIS = $data->FINAL_DIAGNOSIS;
-                $this->OTHER_DIAGNOSIS = $data->OTHER_DIAGNOSIS;
-                $this->FIRST_CASE_RATE = $data->FIRST_CASE_RATE;
+                $this->CONTACT_ID       = $data->CONTACT_ID;
+                $this->DATE_ADMITTED    = $data->DATE_ADMITTED;
+                $this->TIME_ADMITTED    = $data->TIME_ADMITTED;
+                $this->DATE_DISCHARGED  = $data->DATE_DISCHARGED;
+                $this->TIME_DISCHARGED  = $data->TIME_DISCHARGED;
+                $this->TIME_HIDE        = $data->TIME_HIDE ?? '';
+                $this->FINAL_DIAGNOSIS  = $data->FINAL_DIAGNOSIS;
+                $this->OTHER_DIAGNOSIS  = $data->OTHER_DIAGNOSIS;
+                $this->FIRST_CASE_RATE  = $data->FIRST_CASE_RATE;
                 $this->SECOND_CASE_RATE = $data->SECOND_CASE_RATE;
-                $this->STATUS_ID = $data->STATUS_ID;
-                $this->AR_DATE = $data->AR_DATE ?? '';
-                $this->AR_NO = $data->AR_NO ?? '';
+                $this->STATUS_ID        = $data->STATUS_ID;
+                $this->AR_DATE          = $data->AR_DATE ?? '';
+                $this->AR_NO            = $data->AR_NO ?? '';
+                $this->PAYMENT_AMOUNT   = $data->PAYMENT_AMOUNT ?? 0.00;
                 return;
             }
 
@@ -145,32 +144,33 @@ class PhilHealthForm extends Component
             return Redirect::route('patientsphic')->with('error', $errorMessage);
         }
         $this->LoadDropDown();
-        $this->ID = 0;
-        $this->CODE = '';
-        $this->DATE = $this->userServices->getTransactionDateDefault();
+        $this->ID          = 0;
+        $this->CODE        = '';
+        $this->DATE        = $this->userServices->getTransactionDateDefault();
         $this->LOCATION_ID = $this->userServices->getLocationDefault();
         $this->GotHide();
-        $this->CONTACT_ID = 0;
-        $this->DATE_ADMITTED = null;
-        $this->TIME_ADMITTED = null;
-        $this->DATE_DISCHARGED = null;
-        $this->TIME_DISCHARGED = null;
-        $this->TIME_HIDE = null;
-        $this->FINAL_DIAGNOSIS = '';
-        $this->OTHER_DIAGNOSIS = '';
-        $this->FIRST_CASE_RATE = '';
+        $this->CONTACT_ID       = 0;
+        $this->DATE_ADMITTED    = null;
+        $this->TIME_ADMITTED    = null;
+        $this->DATE_DISCHARGED  = null;
+        $this->TIME_DISCHARGED  = null;
+        $this->TIME_HIDE        = null;
+        $this->FINAL_DIAGNOSIS  = '';
+        $this->OTHER_DIAGNOSIS  = '';
+        $this->FIRST_CASE_RATE  = '';
         $this->SECOND_CASE_RATE = '';
-        $this->AR_DATE = '';
-        $this->AR_NO = '';
-        $this->STATUS_ID = 0;
-        $this->Modify = true;
+        $this->AR_DATE          = '';
+        $this->AR_NO            = '';
+        $this->STATUS_ID        = 0;
+        $this->Modify           = true;
+        $this->PAYMENT_AMOUNT   = 0.00;
     }
     public function print()
     {
 
         $ds = $this->philHealthServices->get($this->ID);
         if ($ds) {
-            if (!empty($ds->AR_NO)) {
+            if (! empty($ds->AR_NO)) {
                 session()->flash('error', 'cannot be print. this document already set AR info');
                 return;
             }
@@ -179,10 +179,9 @@ class PhilHealthForm extends Component
                 return;
             }
 
-
             // restriction end
             $data = [
-                'PHILHEALTH_ID' => $this->ID
+                'PHILHEALTH_ID' => $this->ID,
             ];
 
             $this->dispatch('philhealth-print-data', result: $data);
@@ -197,23 +196,23 @@ class PhilHealthForm extends Component
 
         $this->validate(
             [
-                'CONTACT_ID' => 'required|not_in:0|exists:contact,id',
-                'DATE' => 'required|date',
-                'LOCATION_ID' => 'required|exists:location,id',
-                'DATE_ADMITTED' => 'required|date',
-                'TIME_ADMITTED' => 'required',
+                'CONTACT_ID'      => 'required|not_in:0|exists:contact,id',
+                'DATE'            => 'required|date',
+                'LOCATION_ID'     => 'required|exists:location,id',
+                'DATE_ADMITTED'   => 'required|date',
+                'TIME_ADMITTED'   => 'required',
                 'DATE_DISCHARGED' => 'required|date',
-                'TIME_DISCHARGED' => 'required'
+                'TIME_DISCHARGED' => 'required',
             ],
             [],
             [
-                'CONTACT_ID' => 'Patient',
-                'DATE' => 'Date',
-                'LOCATION_ID' => 'Location',
-                'DATE_ADMITTED' => 'Date Admitted',
-                'TIME_ADMITTED' => 'Time Admiited',
+                'CONTACT_ID'      => 'Patient',
+                'DATE'            => 'Date',
+                'LOCATION_ID'     => 'Location',
+                'DATE_ADMITTED'   => 'Date Admitted',
+                'TIME_ADMITTED'   => 'Time Admiited',
                 'DATE_DISCHARGED' => 'Date Discharged',
-                'TIME_DISCHARGED' => 'Time Discharged'
+                'TIME_DISCHARGED' => 'Time Discharged',
             ]
         );
 
@@ -254,7 +253,6 @@ class PhilHealthForm extends Component
                 $this->SECOND_CASE_RATE
             );
 
-
             $this->philHealthServices->DefaultEntry($this->ID);
             $this->Modify = false;
             return Redirect::route('patientsphic_edit', ['id' => $this->ID])->with('message', 'Successfully updated');
@@ -267,7 +265,7 @@ class PhilHealthForm extends Component
     public function getARForm()
     {
         $data = [
-            'PHILHEALTH_ID' => $this->ID
+            'PHILHEALTH_ID' => $this->ID,
         ];
 
         $this->dispatch('ar-form-show', result: $data);
@@ -281,7 +279,7 @@ class PhilHealthForm extends Component
     {
         $this->philHealthServices->DefaultEntry($this->ID);
         return Redirect::route('patientsphic_edit', ['id' => $this->ID])->with('message', 'Successfully updated');
-    
+
     }
     #[On('clear-alert')]
     public function clearAlert()
@@ -290,7 +288,8 @@ class PhilHealthForm extends Component
         session()->forget('message');
         session()->forget('error');
     }
-    public function finder() {
+    public function finder()
+    {
         $this->dispatch('open-finder');
     }
     public function render()

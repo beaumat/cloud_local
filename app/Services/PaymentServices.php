@@ -54,6 +54,19 @@ class PaymentServices
 
         return 0;
     }
+
+    public function getTotalPayOrignal(int $PAYMENT_ID): float
+    {
+        $data = PaymentInvoices::query()
+            ->selectRaw('ifnull(sum(AMOUNT_APPLIED),0) as total')
+            ->where('PAYMENT_ID', $PAYMENT_ID)
+            ->first();
+        if ($data) {
+            return $data->total;
+        }
+
+        return 0;
+    }
     public function getUpdateUndeposit(int $ID, int $UNDEPOSITED_FUNDS_ACCOUNT_ID)
     {
         $data = $this->get($ID);
@@ -540,7 +553,7 @@ class PaymentServices
 
     //     return $result;
     // }
-public function getListInvoicePaymentTaxBillPhic(int $PAYMENT_PERIOD_ID): object
+    public function getListInvoicePaymentTaxBillPhic(int $PAYMENT_PERIOD_ID): object
     {
 
         $result = Payment::query()
