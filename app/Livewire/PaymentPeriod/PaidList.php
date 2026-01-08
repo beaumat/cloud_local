@@ -35,6 +35,16 @@ class PaidList extends Component
     {
         $this->dataList = $this->paymentServices->getListInvoicePaymentTaxBillPhic($this->PAYMENT_PERIOD_ID);
     }
+    public function callTaxCreditByPaymentID(int $PAYMENT_ID)
+    {
+
+
+        // call URL and new TAB
+
+
+
+
+    }
     public function DeletePaid(int $INVOICE_ID)
     {
 

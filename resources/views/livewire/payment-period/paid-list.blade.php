@@ -41,13 +41,14 @@ use App\Services\OtherServices;
 
                     <td class=""> {{ OtherServices::formatDates($list->CONFINE_PERIOD) }}</td>
                     <td class="text-right">{{ number_format($list->INVOICE_AMOUNT, 2) }} </td>
-                    <td class="text-right"><a target="_blank"
+                    <td class="text-right"><a  style="cursor: pointer;color:rgb(255, 0, 221);text-decoration:underline;" target="_blank"
                             href="{{ route('customerspayment_edit', ['id' => $list->PAYMENT_ID]) }}">{{ number_format($list->PAYMENT_AMOUNT, 2) }}</a>
                     </td>
 
-                    <td class="text-right"><a target="_blank"
-                            href="{{ route('customerstax_credit_edit', ['id' => $list->TAX_CREDIT_ID]) }}">
-                            {{ number_format($list->TAX_AMOUNT, 2) }}</a></td>
+                    <td class="text-right"><strong wire:click='callTaxCreditByPaymentID({{ $list->PAYMENT_ID }})'
+                            style="cursor: pointer;color:blue;text-decoration:underline;">
+
+                            {{ number_format($list->TAX_AMOUNT, 2) }}</strong></td>
                     <td class="text-right text-info">{{ number_format($list->BILL_AMOUNT, 2) }}</td>
                     <td class="text-info">{{ $list->DOCTOR_NAME }}</td>
                     <td><button class="btn btn-xs btn-danger w-100" wire:confirm='Are you sure to delete this paid?'

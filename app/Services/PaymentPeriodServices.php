@@ -139,6 +139,7 @@ class PaymentPeriodServices
             ->when($search, function ($query) use (&$search) {
                 $query->where('payment_period.RECEIPT_NO', 'like', '%' . $search . '%');
             })
+            ->orderBy('payment_period.ID', 'desc')
             ->paginate($perPage);
 
         return $result;
