@@ -52,7 +52,7 @@ use App\Services\OtherServices;
                     <td class="text-right text-info">{{ number_format($list->BILL_AMOUNT, 2) }}</td>
                     <td class="text-info">{{ $list->DOCTOR_NAME }}</td>
                     <td><button class="btn btn-xs btn-danger w-100" wire:confirm='Are you sure to delete this paid?'
-                            wire:click='DeletePaid({{ $list->INVOICE_ID }})'>
+                            wire:click='DeletePaid({{ $list->PAYMENT_ID }})'>
                             <i class="fa fa-trash" aria-hidden="true"></i>
                         </button></td>
                     @php

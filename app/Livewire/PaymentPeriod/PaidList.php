@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Livewire\PaymentPeriod;
 
 use App\Services\AccountJournalServices;
@@ -7,7 +6,6 @@ use App\Services\InvoiceServices;
 use App\Services\PaymentServices;
 use App\Services\TaxCreditServices;
 use App\Services\UserServices;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Reactive;
 use Livewire\Component;
@@ -26,10 +24,10 @@ class PaidList extends Component
     private $taxCreditServices;
     public function boot(PaymentServices $paymentServices, AccountJournalServices $accountJournalServices, InvoiceServices $invoiceServices, TaxCreditServices $taxCreditServices)
     {
-        $this->paymentServices = $paymentServices;
+        $this->paymentServices        = $paymentServices;
         $this->accountJournalServices = $accountJournalServices;
-        $this->invoiceServices = $invoiceServices;
-        $this->taxCreditServices = $taxCreditServices;
+        $this->invoiceServices        = $invoiceServices;
+        $this->taxCreditServices      = $taxCreditServices;
     }
     private function loadData()
     {
@@ -38,33 +36,30 @@ class PaidList extends Component
     public function callTaxCreditByPaymentID(int $PAYMENT_ID)
     {
 
-
         // call URL and new TAB
 
-
-
-
     }
-    public function DeletePaid(int $INVOICE_ID)
+    public function DeletePaid(int $PAYMENT_ID)
     {
-
-        if (!UserServices::GetUserRightAccess('customer.received-payment.delete')) {
+        if (! UserServices::GetUserRightAccess('customer.received-payment.delete')) {
             session()->flash('error', 'You don`t have permission to delete');
             return;
         }
+
         DB::beginTransaction();
         try {
-            $PAYMENT_ID = $this->paymentServices->getPaymentIdViaInvoiceID($INVOICE_ID);
+
             if ($PAYMENT_ID > 0) {
-                if (!$this->PaymentdeleteEntry($PAYMENT_ID)) {
+                if (! $this->PaymentdeleteEntry($PAYMENT_ID)) {
                     session()->flash('error', 'this payment already deposited');
                     DB::rollBack();
                     return;
                 }
-
-                $TAX_CREDIT_ID = $this->taxCreditServices->getTaxCreditIdViaInvoiceID($INVOICE_ID);
-                if ($TAX_CREDIT_ID > 0) {
-                    $this->TaxCreditdeleteEntry($TAX_CREDIT_ID);
+                $taxCredit = $this->taxCreditServices->GetListViaPayments($PAYMENT_ID);
+                foreach ($taxCredit as $tax) {
+                    if ($tax->TAX_CREDIT_ID > 0) {
+                        $this->TaxCreditdeleteEntry($tax->TAX_CREDIT_ID);
+                    }
                 }
 
                 DB::commit();
@@ -103,7 +98,7 @@ class PaidList extends Component
     {
 
         $JOURNAL_NO = (int) $this->accountJournalServices->getRecord($this->paymentServices->object_type_payment, $id);
-        $payData = $this->paymentServices->PaymentInvoiceList($id);
+        $payData    = $this->paymentServices->PaymentInvoiceList($id);
 
         foreach ($payData as $list) {
 
@@ -195,7 +190,7 @@ class PaidList extends Component
                 $this->TaxCreditdeleteJournal($data, $id);
             }
             $invoiceList = $this->taxCreditServices->GetInvoiceList($id); // get first invoice Tax Credit
-            $this->taxCreditServices->Delete($id); // Delete Main and Invoice tax credit
+            $this->taxCreditServices->Delete($id);                        // Delete Main and Invoice tax credit
             foreach ($invoiceList as $list) {
                 $this->invoiceServices->updateInvoiceBalance($list->INVOICE_ID);
             }
