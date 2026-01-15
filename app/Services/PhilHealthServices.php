@@ -389,7 +389,7 @@ class PhilHealthServices
 
             $useDisc = false;
 
-            if (in_array((int) $data->LOCATION_ID, [1, 31, 32, 33, 35, 36, 38, 39, 40, 44])) {
+            if (in_array((int) $data->LOCATION_ID, [1, 31, 32, 33, 35, 36, 38, 39, 40, 44,51])) {
                 // how will allowed
                 $useDisc = true;
             }
