@@ -1027,4 +1027,12 @@ class ServiceChargeServices
                 'INVOICE_ID' => $INVOICE_ID,
             ]);
     }
+
+    public function RemovingUpdateInvoiceID(int $INVOICE_ID)
+    {
+        ServiceChargesItems::where('INVOICE_ID', '=', $INVOICE_ID)
+            ->update([
+                'INVOICE_ID' => 0,
+            ]);
+    }
 }

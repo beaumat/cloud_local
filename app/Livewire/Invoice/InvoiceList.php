@@ -6,6 +6,7 @@ use App\Services\AccountJournalServices;
 use App\Services\InvoiceServices;
 use App\Services\ItemInventoryServices;
 use App\Services\LocationServices;
+use App\Services\ServiceChargeServices;
 use App\Services\UserServices;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\On;
@@ -28,18 +29,21 @@ class InvoiceList extends Component
     private $accountJournalServices;
 
     private $itemInventoryServices;
+    private $serviceChargeServices;
     public function boot(
         InvoiceServices $invoiceServices,
         LocationServices $locationServices,
         UserServices $userServices,
         AccountJournalServices $accountJournalServices,
-        ItemInventoryServices $itemInventoryServices
+        ItemInventoryServices $itemInventoryServices,
+        ServiceChargeServices $serviceChargeServices
     ) {
         $this->invoiceServices = $invoiceServices;
         $this->locationServices = $locationServices;
         $this->userServices = $userServices;
         $this->accountJournalServices = $accountJournalServices;
         $this->itemInventoryServices = $itemInventoryServices;
+        $this->serviceChargeServices = $serviceChargeServices;
     }
     public function mount()
     {
@@ -115,7 +119,7 @@ class InvoiceList extends Component
             DB::beginTransaction();
             $data = $this->invoiceServices->get($INVOICE_ID);
             if ($data) {
-                if ($data->STATUS == 15) {
+                if ($data->STATUS == 15 || $data->STATUS == 16) {
                     //Main
                     $JOURNAL_NO = $this->accountJournalServices->getRecord($this->invoiceServices->object_type_invoice, $INVOICE_ID);
                     $this->accountJournalServices->DeleteJournal(
@@ -152,8 +156,8 @@ class InvoiceList extends Component
 
 
             // Delete main
-
             $this->invoiceServices->Delete($INVOICE_ID);
+            $this->serviceChargeServices->RemovingUpdateInvoiceID($INVOICE_ID);
             DB::commit();
             session()->flash('message', 'Successfully deleted.');
         } catch (\Exception $e) {

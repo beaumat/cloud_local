@@ -85,45 +85,53 @@
                             {{ ' ' }}
                         @endif
                     <td class="text-center">
-                        @if ($editItemId === $list->ID)
-                            <button title="Update" id="updatebtn" wire:click="updateItem({{ $list->ID }})"
-                                class="btn btn-xs btn-success">
-                                <i class="fas fa-check" aria-hidden="true"></i>
-                            </button>
-                            <button title="Cancel" id="cancelbtn" href="#" wire:click="cancelItem()"
-                                class="btn btn-xs btn-warning">
-                                <i class="fas fa-ban" aria-hidden="true"></i>
-                            </button>
-                        @else
-                            @if (($list->count_pay == 0 || $isAdmin == true || $alowedEdit == true) && $list->INVOICE_ID == 0)
-                                <button title="Edit Active" id="editbtn"
-                                    wire:click='editItem( {{ $list->ID }}, {{ $list->QUANTITY }} ,{{ $list->UNIT_ID ? $list->UNIT_ID : 0 }},{{ $list->RATE }},{{ $list->AMOUNT }},{{ $list->TAXABLE }},{{ $list->ITEM_ID }})'
-                                    class="btn btn-xs btn-info">
-                                    <i class="fas fa-edit" aria-hidden="true"></i>
+                        @if ($list->INVOICE_ID == 0)
+                            @if ($editItemId === $list->ID)
+                                <button title="Update" id="updatebtn" wire:click="updateItem({{ $list->ID }})"
+                                    class="btn btn-xs btn-success">
+                                    <i class="fas fa-check" aria-hidden="true"></i>
                                 </button>
-
-                                <button title="Delete Active" id="deletebtn"
-                                    wire:click='deleteItem({{ $list->ID }})'
-                                    wire:confirm="Are you sure you want to delete this?" class="btn btn-xs btn-danger">
-                                    <i class="fas fa-trash" aria-hidden="true"></i>
+                                <button title="Cancel" id="cancelbtn" href="#" wire:click="cancelItem()"
+                                    class="btn btn-xs btn-warning">
+                                    <i class="fas fa-ban" aria-hidden="true"></i>
                                 </button>
                             @else
-                                {{-- Disabled buttons --}}
-                                <button type="button" title="Edit Disabled" id="editbtn"
-                                    class="btn btn-xs btn-secondary">
-                                    <i class="fas fa-edit" aria-hidden="true"></i>
-                                </button>
-                                <button type="button" title="Delete Disabled" id="deletebtn"
-                                    class="btn btn-xs btn-secondary">
-                                    <i class="fas fa-trash" aria-hidden="true"></i>
-                                </button>
+                                @if ($list->count_pay == 0 || $isAdmin == true || $alowedEdit == true)
+                                    <button title="Edit Active" id="editbtn"
+                                        wire:click='editItem( {{ $list->ID }}, {{ $list->QUANTITY }} ,{{ $list->UNIT_ID ? $list->UNIT_ID : 0 }},{{ $list->RATE }},{{ $list->AMOUNT }},{{ $list->TAXABLE }},{{ $list->ITEM_ID }})'
+                                        class="btn btn-xs btn-info">
+                                        <i class="fas fa-edit" aria-hidden="true"></i>
+                                    </button>
+
+                                    <button title="Delete Active" id="deletebtn"
+                                        wire:click='deleteItem({{ $list->ID }})'
+                                        wire:confirm="Are you sure you want to delete this?"
+                                        class="btn btn-xs btn-danger">
+                                        <i class="fas fa-trash" aria-hidden="true"></i>
+                                    </button>
+                                @else
+                                    {{-- Disabled buttons --}}
+                                    <button type="button" title="Edit Disabled" id="editbtn"
+                                        class="btn btn-xs btn-secondary">
+                                        <i class="fas fa-edit" aria-hidden="true"></i>
+                                    </button>
+                                    <button type="button" title="Delete Disabled" id="deletebtn"
+                                        class="btn btn-xs btn-secondary">
+                                        <i class="fas fa-trash" aria-hidden="true"></i>
+                                    </button>
+                                @endif
+                                <button class="btn btn-xs btn-primary" title="Cash Payment"
+                                    wire:click="cashPayment({{ $list->ID }}, {{ $list->AMOUNT }})">
+                                    <i class="fa fa-money" aria-hidden="true"></i>
+                                    </button>
+                                <button class="btn btn-xs btn-success" title="Open Payment"
+                                    wire:click="openPayment({{ $list->ID }}, {{ $list->AMOUNT }})"> <i
+                                        class="fa fa-paypal" aria-hidden="true"></i> </button>
                             @endif
-                            <button class="btn btn-xs btn-primary" title="Cash Payment"
-                                wire:click="cashPayment({{ $list->ID }}, {{ $list->AMOUNT }})"> <i
-                                    class="fa fa-money" aria-hidden="true"></i> </button>
-                            <button class="btn btn-xs btn-success" title="Open Payment"
-                                wire:click="openPayment({{ $list->ID }}, {{ $list->AMOUNT }})"> <i
-                                    class="fa fa-paypal" aria-hidden="true"></i> </button>
+                        @else
+                            <a target="_blank" class="btn btn-xs btn-success w-100"
+                                href="{{ route('customersinvoice_edit', ['id' => $list->INVOICE_ID]) }}">View
+                                Invoice</a>
                         @endif
                     </td>
                     {{-- @endif --}}

@@ -1,3 +1,6 @@
+@php
+    use App\Services\UserServices;
+@endphp
 <div class="@if (!$IS_MODAL) content-wrapper @endif ">
     <div class="content-header">
         <div class="container-fluid">
@@ -23,7 +26,7 @@
                                 </div>
                             </div>
                         </div>
-                        <form id="quickForm" wire:submit.prevent='save'>
+
                             <div class="card-body bg-light">
                                 <div class="form-group">
                                     <div class="row">
@@ -140,7 +143,7 @@
                                     <div class="col-md-6 col-6">
                                         @if ($STATUS == 0 || $STATUS == 16)
                                             @if ($Modify)
-                                                <button type="submit" class="btn btn-sm btn-primary"> <i
+                                                <button wire:click='save' class="btn btn-sm btn-primary"> <i
                                                         class="fa fa-floppy-o" aria-hidden="true"></i>
                                                     {{ $ID === 0 ? 'Pre-save' : 'Update' }}</button>
                                                 @if ($ID > 0)
@@ -160,6 +163,14 @@
                                                     <i class="fa fa-cloud-upload" aria-hidden="true"></i> Posted
                                                 </button>
                                             @endif
+                                        @endif
+
+                                        @if (UserServices::GetUserRightAccess('customer.invoice.delete') && $STATUS == 16)
+                                            <button wire:click='delete()'
+                                                wire:confirm="Are you sure you want to delete this?"
+                                                class="btn btn-sm btn-danger">
+                                                <i class="fas fa-trash" aria-hidden="true"></i> Delete
+                                            </button>
                                         @endif
 
                                         @if ($STATUS == 15)
@@ -198,7 +209,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </form>
+
 
                     </div>
                 </div>

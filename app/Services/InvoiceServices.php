@@ -222,6 +222,9 @@ class InvoiceServices
     {
         InvoiceItems::where('INVOICE_ID', $ID)->delete();
         Invoice::where('ID', $ID)->delete();
+
+        
+
     }
     public function Search($search, int $locationId, int $perPage)
     {

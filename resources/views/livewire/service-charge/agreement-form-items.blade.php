@@ -82,8 +82,6 @@
                                  </td>
                              </tr>
                          @endforeach
-
-
                          <tr>
                              <td><input type="text" name="descripton" wire:model='DESCRIPTION' class="w-100" />
                              </td>

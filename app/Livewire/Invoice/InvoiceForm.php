@@ -681,7 +681,7 @@ class InvoiceForm extends Component
             $this->invoiceServices->StatusUpdate($this->ID, 16);
             $this->removeJournal();
             DB::commit();
-            Redirect::route('customersinvoice_edit', $this->ID)->with('message', 'Successfully posted');
+            Redirect::route('customersinvoice_edit', $this->ID)->with('message', 'Successfully Unposted');
         } catch (\Throwable $th) {
             DB::rollBack();
             $errorMessage = 'Error occurred: ' . $th->getMessage();
@@ -695,6 +695,123 @@ class InvoiceForm extends Component
             $this->accountJournalServices->UpdatedJournalAmountZero($JOURNAL_NO);
         }
 
+    }
+
+    private function deleteItem(int $Id, $INVOICE_ID, $JOURNAL_NO)
+    {
+        $invoiceDate = $this->invoiceServices->get($INVOICE_ID);
+        if ($invoiceDate) {
+            $invoiceItemData = $this->invoiceServices->ItemGet($Id, $INVOICE_ID);
+            if ($invoiceItemData) {
+                // Inventory
+                $this->itemInventoryServices->InventoryModify(
+                    $invoiceItemData->ITEM_ID,
+                    $invoiceDate->LOCATION_ID,
+                    $Id,
+                    $this->invoiceServices->document_type_id,
+                    $invoiceDate->DATE,
+                    0,
+                    0,
+                    0
+                );
+
+                $this->itemInventoryServices->RecomputedOnhand(
+                    $invoiceItemData->ITEM_ID,
+                    $invoiceDate->LOCATION_ID,
+                    $invoiceDate->DATE
+                );
+
+                // INCOME_ACCOUNT_ID
+                $this->accountJournalServices->DeleteJournal(
+                    $invoiceItemData->INCOME_ACCOUNT_ID ?? 0,
+                    $invoiceDate->LOCATION_ID,
+                    $JOURNAL_NO,
+                    $invoiceItemData->ITEM_ID,
+                    $Id,
+                    $this->invoiceServices->object_type_invoice_item,
+                    $invoiceDate->DATE,
+                    1,
+
+                );
+                // COGS_ACCOUNT_ID
+                $this->accountJournalServices->DeleteJournal(
+                    $invoiceItemData->COGS_ACCOUNT_ID ?? 0,
+                    $invoiceDate->LOCATION_ID,
+                    $JOURNAL_NO,
+                    $invoiceItemData->ITEM_ID,
+                    $Id,
+                    $this->invoiceServices->object_type_invoice_item,
+                    $invoiceDate->DATE,
+                    0,
+
+                );
+                // ASSET_ACCOUNT_ID
+                $this->accountJournalServices->DeleteJournal(
+                    $invoiceItemData->ASSET_ACCOUNT_ID ?? 0,
+                    $invoiceDate->LOCATION_ID,
+                    $JOURNAL_NO,
+                    $invoiceItemData->ITEM_ID,
+                    $Id,
+                    $this->invoiceServices->object_type_invoice_item,
+                    $invoiceDate->DATE,
+                    1,
+
+                );
+            }
+        }
+    }
+    public function delete()
+    {
+        try {
+            DB::beginTransaction();
+            $data = $this->invoiceServices->get($this->ID);
+            if ($data) {
+                if ($data->STATUS == 15 || $data->STATUS == 16) {
+                    //Main
+                    $JOURNAL_NO = $this->accountJournalServices->getRecord($this->invoiceServices->object_type_invoice, $this->ID);
+                    $this->accountJournalServices->DeleteJournal(
+                        $data->ACCOUNTS_RECEIVABLE_ID ?? 0,
+                        $data->LOCATION_ID,
+                        $JOURNAL_NO,
+                        $data->CUSTOMER_ID,
+                        $this->ID,
+                        $this->invoiceServices->object_type_invoice,
+                        $data->DATE,
+                        0,
+
+                    );
+                    //Tax
+                    $this->accountJournalServices->DeleteJournal(
+                        $data->OUTPUT_TAX_ACCOUNT_ID ?? 0,
+                        $data->LOCATION_ID,
+                        $JOURNAL_NO,
+                        $data->CUSTOMER_ID,
+                        $this->ID,
+                        $this->invoiceServices->object_type_invoice,
+                        $data->DATE,
+                        1,
+
+                    );
+                    $dataitem = $this->invoiceServices->ItemView($this->ID);
+
+                    foreach ($dataitem as $list) {
+                        // delete Item
+                        $this->deleteItem($list->ID, $this->ID, $JOURNAL_NO);
+                    }
+                }
+            }
+
+            // Delete main
+            $this->invoiceServices->Delete($this->ID);
+            $this->serviceChargeServices->RemovingUpdateInvoiceID($this->ID);
+            DB::commit();
+            return Redirect::route('customersinvoice')->with('message', 'Successfully deleted');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            $errorMessage = 'Error occurred: ' . $e->getMessage();
+            session()->flash('error', $errorMessage);
+        }
     }
     public function render()
     {

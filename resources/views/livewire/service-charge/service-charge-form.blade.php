@@ -126,7 +126,6 @@
                                                     href="{{ route('patientsservice_charges_create') }}"
                                                     class="btn btn-primary btn-sm"> <i class="fas fa-plus"></i> New </a>
                                             @endif
-
                                         @endcan
 
                                         @if ($ID == 0)
