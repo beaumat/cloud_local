@@ -24,7 +24,7 @@
                                 wire:model.live='FIX_MON' />
                             <livewire:custom-check-box name="FIX_TUE" titleName="Tuesday" :isDisabled="false"
                                 wire:model.live='FIX_TUE' />
-                            <livewire:custom-check-box name="FIX_WEN" titleName="Wensday" :isDisabled="false"
+                            <livewire:custom-check-box name="FIX_WEN" titleName="Wednesday" :isDisabled="false"
                                 wire:model.live='FIX_WEN' />
                             <livewire:custom-check-box name="FIX_THU" titleName="Thursday" :isDisabled="false"
                                 wire:model.live='FIX_THU' />
