@@ -43,15 +43,18 @@
                             <div class="col-md-5">
                                 <div class="form-group mt-4">
                                     <div class="row">
-                                        <div class="col-6">
+                                        <div class="col-8">
                                             <div wire:loading.delay>
                                                 <span class="spinner"></span>
                                             </div>
                                             <button class="btn btn-sm btn-primary" wire:click='generate()'
                                                 wire:loading.attr='disabled'>Generate</button>
 
+                                            <button class="btn btn-sm btn-success" wire:click='generateExcel()'
+                                                wire:loading.attr='disabled'>Export</button>
+
                                         </div>
-                                        <div class="col-6">
+                                        <div class="col-4">
                                         </div>
                                     </div>
                                 </div>
@@ -127,7 +130,8 @@
                                     <td></td>
                                     <td></td>
                                     <td></td>
-                                    <td class="text-right font-weight-bold text-sm text-danger">{{ number_format($TOTAL, 2) }}</td>
+                                    <td class="text-right font-weight-bold text-sm text-danger">
+                                        {{ number_format($TOTAL, 2) }}</td>
 
                                     <td></td>
                                 </tr>
