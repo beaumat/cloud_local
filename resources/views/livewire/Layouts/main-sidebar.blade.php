@@ -196,6 +196,7 @@
                                     UserServices::GetUserRightAccess('location.view') ||
                                     UserServices::GetUserRightAccess('location-group.view') ||
                                     UserServices::GetUserRightAccess('option'))
+
                                 @livewire('Layouts.MaintenanceSettings')
                             @endif
                         </ul>
