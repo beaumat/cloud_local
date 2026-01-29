@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Livewire\Invoice;
 
 use App\Services\AccountJournalServices;
@@ -19,8 +18,8 @@ class InvoiceList extends Component
 {
     use WithPagination;
     protected $paginationTheme = 'bootstrap';
-    public $search = '';
-    public int $perPage = 15;
+    public $search             = '';
+    public int $perPage        = 15;
     public int $locationid;
     public $locationList = [];
     private $invoiceServices;
@@ -38,17 +37,17 @@ class InvoiceList extends Component
         ItemInventoryServices $itemInventoryServices,
         ServiceChargeServices $serviceChargeServices
     ) {
-        $this->invoiceServices = $invoiceServices;
-        $this->locationServices = $locationServices;
-        $this->userServices = $userServices;
+        $this->invoiceServices        = $invoiceServices;
+        $this->locationServices       = $locationServices;
+        $this->userServices           = $userServices;
         $this->accountJournalServices = $accountJournalServices;
-        $this->itemInventoryServices = $itemInventoryServices;
-        $this->serviceChargeServices = $serviceChargeServices;
+        $this->itemInventoryServices  = $itemInventoryServices;
+        $this->serviceChargeServices  = $serviceChargeServices;
     }
     public function mount()
     {
         $this->locationList = $this->locationServices->getList();
-        $this->locationid = $this->userServices->getLocationDefault();
+        $this->locationid   = $this->userServices->getLocationDefault();
     }
     private function deleteItem(int $Id, $INVOICE_ID, $JOURNAL_NO)
     {
@@ -153,7 +152,6 @@ class InvoiceList extends Component
                     }
                 }
             }
-
 
             // Delete main
             $this->invoiceServices->Delete($INVOICE_ID);

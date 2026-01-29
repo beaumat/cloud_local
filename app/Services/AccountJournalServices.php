@@ -348,7 +348,61 @@ class AccountJournalServices
             ''
         );
     }
+ private function UpdateEntry(
+        int $ACCOUNT_ID,
+        int $LOCATION_ID,
+        int $SUBSIDIARY_ID,
+        int $SEQUENCE_GROUP,
+        int $OBJECT_TYPE,
+        int $OBJECT_ID,
+        string $OBJECT_DATE,
+        int $ENTRY_TYPE,
+        float $AMOUNT,
+        $EXTENDED_OPTIONS = null
+    ) {
 
+        if ($ACCOUNT_ID > 0) {
+
+            $source = AccountJournal::where('LOCATION_ID', $LOCATION_ID)
+                ->where('ACCOUNT_ID', $ACCOUNT_ID)
+                ->where('OBJECT_TYPE', $OBJECT_TYPE)
+                ->where('OBJECT_ID', $OBJECT_ID)
+                ->where('OBJECT_DATE', $OBJECT_DATE)
+                ->where('SUBSIDIARY_ID', $SUBSIDIARY_ID)
+                ->where('ENTRY_TYPE', $ENTRY_TYPE)
+                ->first();
+
+            if ($source) {
+                $ID = $source->ID;
+                $source->update([
+                    'AMOUNT'     => $AMOUNT,
+                    'ENTRY_TYPE' => $ENTRY_TYPE,
+                ]);
+                $this->accountJournalEndingServices->Recount($ID);
+            }
+
+        } else {
+
+            $source = AccountJournal::where('LOCATION_ID', $LOCATION_ID)
+                ->where('OBJECT_TYPE', $OBJECT_TYPE)
+                ->where('OBJECT_ID', $OBJECT_ID)
+                ->where('OBJECT_DATE', $OBJECT_DATE)
+                ->where('SUBSIDIARY_ID', $SUBSIDIARY_ID)
+                ->where('ENTRY_TYPE', $ENTRY_TYPE)
+                ->first();
+
+            if ($source) {
+                $ID = $source->ID;
+                $source->update([
+                    'SEQUENCE_GROUP' => $SEQUENCE_GROUP,
+                    'ENTRY_TYPE'     => $ENTRY_TYPE,
+                    'AMOUNT'         => $AMOUNT,
+                ]);
+                $this->accountJournalEndingServices->Recount($ID);
+
+            }
+        }
+    }
     private function Update(
         int $ACCOUNT_ID,
         int $LOCATION_ID,
@@ -651,6 +705,22 @@ class AccountJournalServices
                 $ENTRY_TYPE,
                 $AMOUNT,
                 $ENDING_BALANCE,
+                $EXTENDED_OPTIONS
+            );
+            return;
+        }
+
+        if($OBJECT_TYPE == 93) {
+            $this->UpdateEntry(
+                $ACCOUNT_ID,
+                $LOCATION_ID,
+                $SUBSIDIARY_ID,
+                $SEQUENCE_GROUP,
+                $OBJECT_TYPE,
+                $OBJECT_ID,
+                $OBJECT_DATE,
+                $ENTRY_TYPE,
+                $AMOUNT,
                 $EXTENDED_OPTIONS
             );
             return;

@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Services;
 
 use App\Models\FundTransfer;
@@ -8,14 +7,14 @@ use Illuminate\Support\Facades\DB;
 
 class FundTransferServices
 {
-    public int $object_type_id = 93; // 
+    public int $object_type_id = 93; //
     private $object;
     private $dateServices;
     private $systemSettingServices;
     public function __construct(ObjectServices $objectServices, DateServices $dateServices, SystemSettingServices $systemSettingServices)
     {
-        $this->object = $objectServices;
-        $this->dateServices = $dateServices;
+        $this->object                = $objectServices;
+        $this->dateServices          = $dateServices;
         $this->systemSettingServices = $systemSettingServices;
     }
     public function Get(int $ID)
@@ -26,9 +25,9 @@ class FundTransferServices
     public function Store($DATE, string $CODE, int $FROM_ACCOUNT_ID, int $TO_ACCOUNT_ID, int $FROM_NAME_ID, int $TO_NAME_ID, int $FROM_LOCATION_ID, int $TO_LOCATION_ID, int $INTER_LOCATION_ACCOUNT_ID, string $NOTES, float $AMOUNT): int
     {
 
-        $ID = (int) $this->object->ObjectNextID('FUND_TRANSFER');
+        $ID          = (int) $this->object->ObjectNextID('FUND_TRANSFER');
         $OBJECT_TYPE = (int) $this->object->ObjectTypeID('FUND_TRANSFER');
-        $isLocRef = boolval($this->systemSettingServices->GetValue('IncRefNoByLocation'));
+        $isLocRef    = boolval($this->systemSettingServices->GetValue('IncRefNoByLocation'));
 
         FundTransfer::create([
             'ID'                        => $ID,
@@ -44,7 +43,7 @@ class FundTransferServices
             'INTER_LOCATION_ACCOUNT_ID' => $INTER_LOCATION_ACCOUNT_ID > 0 ? $INTER_LOCATION_ACCOUNT_ID : null,
             'CLASS_ID'                  => null,
             'AMOUNT'                    => $AMOUNT,
-            'NOTES'                     => $NOTES
+            'NOTES'                     => $NOTES,
         ]);
 
         return $ID;
@@ -65,7 +64,7 @@ class FundTransferServices
                 'INTER_LOCATION_ACCOUNT_ID' => $INTER_LOCATION_ACCOUNT_ID > 0 ? $INTER_LOCATION_ACCOUNT_ID : null,
                 'CLASS_ID'                  => null,
                 'NOTES'                     => $NOTES,
-                'AMOUNT'                    => $AMOUNT
+                'AMOUNT'                    => $AMOUNT,
             ]);
     }
     public function Delete(int $ID)
@@ -85,7 +84,9 @@ class FundTransferServices
                 DB::raw("(select contact.PRINT_NAME_AS from contact  where ID = fund_transfer.FROM_NAME_ID) as FROM_NAME"),
                 DB::raw("(select contact.PRINT_NAME_AS from contact  where ID = fund_transfer.TO_NAME_ID) as TO_NAME"),
                 'fund_transfer.NOTES',
-                'fund_transfer.AMOUNT'
+                'fund_transfer.AMOUNT',
+                's.DESCRIPTION as STATUS',
+                'fund_transfer.STATUS as STATUS_ID',
             ])
             ->join('location as l', function ($join) use (&$locationId) {
                 $join->on('l.ID', '=', 'fund_transfer.FROM_LOCATION_ID');
@@ -93,6 +94,7 @@ class FundTransferServices
                     $join->where('l.ID', $locationId);
                 }
             })
+            ->join('document_status_map as s', 's.ID', '=', 'fund_transfer.STATUS')
             ->when($search, function ($query) use (&$search) {
                 $query->where(function ($q) use (&$search) {
                     $q->where('fund_transfer.CODE', 'like', '%' . $search . '%')
@@ -109,8 +111,8 @@ class FundTransferServices
     {
         FundTransfer::where('ID', $ID)
             ->update([
-                'STATUS'        => $STATUS,
-                'STATUS_DATE'   => $this->dateServices->NowDate()
+                'STATUS'      => $STATUS,
+                'STATUS_DATE' => $this->dateServices->NowDate(),
             ]);
     }
     public function getJournalTo(int $ID, bool $isDebit, bool $useInter)
@@ -118,10 +120,10 @@ class FundTransferServices
         $result = FundTransfer::query()
             ->select([
                 'ID',
-                ($useInter ? 'INTER_LOCATION_ACCOUNT_ID' : 'TO_ACCOUNT_ID') .  ' as ACCOUNT_ID',
+                ($useInter ? 'INTER_LOCATION_ACCOUNT_ID' : 'TO_ACCOUNT_ID') . ' as ACCOUNT_ID',
                 DB::raw(' IFNULL(TO_NAME_ID,0) as SUBSIDIARY_ID'),
                 'AMOUNT',
-                DB::raw(($isDebit ? '0' : '1') . ' as ENTRY_TYPE')
+                DB::raw(($isDebit ? '0' : '1') . ' as ENTRY_TYPE'),
             ])
             ->where('ID', '=', $ID)
             ->get();
@@ -136,7 +138,7 @@ class FundTransferServices
                 ($useInter ? 'INTER_LOCATION_ACCOUNT_ID' : 'FROM_ACCOUNT_ID') . ' as ACCOUNT_ID',
                 DB::raw(' IFNULL(FROM_NAME_ID,0) as SUBSIDIARY_ID'),
                 'AMOUNT',
-                DB::raw(($isDebit ? '0' : '1') . ' as ENTRY_TYPE')
+                DB::raw(($isDebit ? '0' : '1') . ' as ENTRY_TYPE'),
             ])
             ->where('ID', '=', $ID)
             ->get();

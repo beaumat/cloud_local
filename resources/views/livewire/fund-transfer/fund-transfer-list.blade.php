@@ -64,6 +64,7 @@ use App\Services\UserServices;
                                         <th class="col-1">To Location</th>
                                         <th class="col-3">Notes</th>
                                         <th class="col-1">Amount</th>
+                                        <th class="col-1 text-center">Status</th>
                                         <th class="text-center bg-success col-1">
                                             @can('banking.fund-transfer.create')
                                                 <a href="{{ route('bankingfund_transfer_credit') }}"
@@ -89,6 +90,16 @@ use App\Services\UserServices;
                                             <td> {{ $list->NOTES }}</td>
                                             <td class="text-right"> {{ number_format($list->AMOUNT, 2) }}</td>
                                             <td class="text-center">
+                                                @if ($list->STATUS_ID == 15)
+                                                    <span class="badge bg-success"> {{ $list->STATUS }} </span>
+                                                @elseif ($list->STATUS_ID == 16)
+                                                    <span class="badge bg-secondary"> {{ $list->STATUS }} </span>
+                                                @else
+                                                    <span class="badge bg-warning"> {{ $list->STATUS }} </span>
+                                                @endif
+                                            </td>
+
+                                            <td class="text-center">
 
                                                 <a title="View"
                                                     href="{{ route('bankingfund_transfer_edit', ['id' => $list->ID]) }}"
@@ -96,7 +107,9 @@ use App\Services\UserServices;
                                                     <i class="fas fa-eye" aria-hidden="true"></i>
                                                 </a>
 
-                                                @if (UserServices::GetUserRightAccess('banking.fund-transfer.delete'))
+                                                @if (
+                                                    (UserServices::GetUserRightAccess('banking.fund-transfer.delete') && $list->STATUS_ID == 0) ||
+                                                        (UserServices::GetUserRightAccess('banking.fund-transfer.delete') && $list->STATUS_ID == 16))
                                                     <button title="delete" wire:click='delete({{ $list->ID }})'
                                                         wire:confirm="Are you sure you want to delete this?"
                                                         class="btn btn-danger btn-xs">

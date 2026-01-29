@@ -385,10 +385,7 @@ class FundTransferForm extends Component
             session()->flash('error', $errorMessage);
         }
     }
-    public function print()
-    {
 
-    }
     public function OpenJournal()
     {
 
