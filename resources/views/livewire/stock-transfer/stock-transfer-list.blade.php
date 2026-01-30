@@ -61,8 +61,8 @@
                                         <th class="col-1">Amount</th>
                                         <th class="col-1">Status</th>
                                         <th class="text-center bg-success col-1">
-                                            <a href="{{ route('companystock_transfer_create') }}" class="text-white">
-                                                <i class="fas fa-plus"></i></a>
+                                            <a href="{{ route('companystock_transfer_create') }}" class="btn btn-xs w-100 text-white">
+                                                <i class="fas fa-plus"></i> New</a>
                                         </th>
                                     </tr>
                                 </thead>

@@ -61,15 +61,15 @@ use App\Services\UserServices;
                                             <tr>
                                                 <th class="col-1">Ref No.</th>
                                                 <th class="col-1">Date</th>
-                                                <th class="col-1">Adustment Type</th>
+                                                <th class="col-2">Adustment Type</th>
                                                 <th class="col-1">Location</th>
                                                 <th class="col-1">Status</th>
                                                 <th class="text-center bg-success col-1">
 
                                                     @can('company.inventory-adjustment.create')
                                                         <a href="{{ route('companyinventory_adjustment_create') }}"
-                                                            class="text-white">
-                                                            <i class="fas fa-plus"></i></a>
+                                                            class="text-white btn btn-xs w-100">
+                                                            <i class="fas fa-plus"></i> New </a>
                                                     @endcan
                                                 </th>
                                             </tr>
