@@ -983,10 +983,10 @@ class HemoServices
                 'hemodialysis.STATUS_ID',
                 'hemodialysis.FILE_PATH',
                 'hemodialysis.IS_INCOMPLETE',
-                DB::raw('1 as IS_SC'),
                 'e.NAME as NURSE_NAME',
+                DB::raw(value: "(SELECT IF(COUNT(*) = 2, 'BOTH', MAX(t.DESCRIPTION)) FROM hemodialysis_items AS i JOIN item AS t ON t.id = i.ITEM_ID WHERE i.HEMO_ID = hemodialysis.ID AND i.ITEM_ID IN (6, 7) GROUP BY i.HEMO_ID) AS ACCESS_TYPE"),
+
                 // DB::raw('(SELECT IF(count(*) > 0,true,false) from hemodialysis_items as i where i.HEMO_ID = hemodialysis.ID and i.IS_JUSTIFY = 1  ) as JUSTIFY'),
-                // DB::raw(value: "(SELECT IF(COUNT(*) = 2, 'BOTH', MAX(t.DESCRIPTION)) FROM hemodialysis_items AS i JOIN item AS t ON t.id = i.ITEM_ID WHERE i.HEMO_ID = hemodialysis.ID AND i.ITEM_ID IN (6, 7) GROUP BY i.HEMO_ID) AS ACCESS_TYPE"),
             ])
             ->leftJoin('contact as c', 'c.ID', '=', 'hemodialysis.CUSTOMER_ID')
             ->leftJoin('hemo_status as s', 's.ID', '=', 'hemodialysis.STATUS_ID')
@@ -1759,7 +1759,7 @@ class HemoServices
     public function GetNoTreatment(int $CUSTOMER_ID, int $LOCATION_ID, string $DATE): int
     {
 
-    
+
        $year = date('Y', strtotime($DATE)); // Extract the year from the provided date
        $trtNo = (int) Hemodialysis::where('CUSTOMER_ID', '=', $CUSTOMER_ID)
             ->join('service_charges as s', function ($join) {
@@ -1780,7 +1780,7 @@ class HemoServices
             ->where('YEAR', '=', $year)
             ->sum('NO_OF_USED');
 
-        $number = $trtNo + $sc;        
+        $number = $trtNo + $sc;
         return $number;
     }
     //  public function GetNoTreatmentPrint(int $CUSTOMER_ID, int $LOCATION_ID, string $DATE): int

@@ -38,8 +38,6 @@
     </div>
     <section class="content">
         <div class="container-fluid">
-            {{-- agreement_form_print --}}
-
             <div class="row">
                 @livewire('alert-layout', ['errors' => $errors->any() ? $errors->all() : '', 'message' => session('message'), 'error' => session('error')])
                 <div class="col-12">
@@ -119,7 +117,7 @@
                                                 {{-- <th class="text-center">JTF</th> --}}
                                                 <th>Location</th>
                                                 <th class="text-center">S</th>
-                                                <th class="text-center"> SC</th>
+
                                                 <th class="text-center text-center">
                                                     Action
                                                 </th>
@@ -185,14 +183,7 @@
                                                     <td
                                                         class="text-center @if ($list->STATUS_ID == 1) bg-warning  @elseif ($list->STATUS_ID == 2) bg-success  @elseif ($list->STATUS_ID == 4) bg-secondary @else bg-danger @endif ">
                                                         {{ substr($list->STATUS, 0, 1) }} </td>
-                                                    <td class="text-center">
-                                                        @if ($list->IS_SC)
-                                                            <i class="fa fa-check text-success"
-                                                                aria-hidden="true"></i>
-                                                        @else
-                                                            <i class="fa fa-times text-danger" aria-hidden="true"></i>
-                                                        @endif
-                                                    </td>
+
                                                     <td class="text-center">
                                                         <a type="button" title="View Details"
                                                             href="{{ route('patientshemo_edit', ['id' => $list->ID]) }}"
