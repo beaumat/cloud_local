@@ -102,6 +102,7 @@ class HemoList extends Component
             $this->DATE_FROM == '' ? $this->dateServices->NowDate() : $this->DATE_FROM
 
         );
+        $this->dispatch('refresh-list');
         return Excel::download(new TreatmentListExport($dataList), 'hemo-treatment-.xlsx');
 
     }
