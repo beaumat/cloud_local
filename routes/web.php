@@ -77,6 +77,7 @@ use App\Livewire\InventoryAdjustmentTypePage\InventoryAdjustmentTypeForm;
 use App\Livewire\InventoryAdjustmentTypePage\InventoryAdjustmentTypeList;
 use App\Livewire\InventoryAdjustment\InventoryAdjustmentForm;
 use App\Livewire\InventoryAdjustment\InventoryAdjustmentList;
+use App\Livewire\InventoryReport\UsageReport;
 use App\Livewire\InventoryReport\ValidationSummaryReport;
 use App\Livewire\Invoice\InvoiceForm;
 use App\Livewire\Invoice\InvoiceList;
@@ -708,6 +709,7 @@ Route::middleware(['auth'])->group(function () {
             });
             Route::prefix('/inventory')->group(function () {
                 Route::get('/', PatientInventoryReport::class)->name('patient_inventory_report')->middleware(['permission:report.patient.sales']);
+                Route::get('/usage', UsageReport::class)->name('inventory_usage_report');
             });
             Route::prefix('/treatment')->group(function () {
                 Route::get('/', PatientTreatmentReport::class)->name('patient_treatment_report')

@@ -112,9 +112,9 @@
                                 @livewire('Layouts.ReportsPayables')
                             @endif
 
-                            {{-- @if (UserServices::GetUserRightAccess('report.inventory.validation-summary'))
+                             @if (UserServices::GetUserRightAccess('report.inventory.validation-summary'))
                                 @livewire('Layouts.ReportsInventory')
-                            @endif --}}
+                            @endif
 
                         </ul>
                     </li>

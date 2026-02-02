@@ -14,5 +14,12 @@
                      </li>
                  @endcan
 
+                 <li class="nav-item">
+                     <a href="{{ route('reportsinventory_usage_report') }}"
+                         class="nav-link {{ request()->is('reports/inventory/usage') ? 'text-warning font-weight-bold' : '' }}">
+                         <i class="fa fa-print  nav-icon"></i>
+                         <p>Usage Report</p>
+                     </a>
+                 </li>
              </ul>
          </li>

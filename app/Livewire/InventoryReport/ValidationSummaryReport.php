@@ -31,7 +31,7 @@ class ValidationSummaryReport extends Component
     }
     public function generate()
     {
-        $this->dataList =  $this->itemInventoryServices->ValidationSummary($this->DATE, $this->LOCATION_ID);
+        $this->dataList =  $this->itemInventoryServices->ValidationSummaryReport($this->DATE, $this->LOCATION_ID);
     }
     public function mount()
     {
