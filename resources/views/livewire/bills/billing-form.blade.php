@@ -22,7 +22,7 @@
                                 </div>
                             </div>
                         </div>
-                        <form id="quickForm" wire:submit.prevent='save'>
+
                             <div class="card-body bg-light">
                                 <div class="form-group">
                                     <div class="row">
@@ -137,7 +137,7 @@
                                     <div class="col-md-6 col-6">
                                         @if ($STATUS == $openStatus || $STATUS == 16)
                                             @if ($Modify)
-                                                <button type="submit" class="btn btn-sm btn-primary"> <i
+                                                <button type="button" wire:click='save()' class="btn btn-sm btn-primary"> <i
                                                         class="fa fa-floppy-o" aria-hidden="true"></i>
                                                     {{ $ID === 0 ? 'Pre-save' : 'Update' }}</button>
 
@@ -163,7 +163,6 @@
                                                         <i class="fa fa-trash" aria-hidden="true"></i> Delete
                                                     </button>
                                                 @endcan
-
                                             @endif
                                         @endif
                                         @if ($STATUS == 15)
@@ -229,7 +228,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </form>
+
                     </div>
                 </div>
             </div>
