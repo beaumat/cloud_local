@@ -1,6 +1,8 @@
 <?php
 namespace App\Services;
 
+use App\Enums\LogEntity;
+use App\Enums\TransType;
 use App\Models\HemoJournal;
 use App\Models\PullOut;
 use App\Models\PullOutItems;
@@ -13,18 +15,24 @@ class PullOutServices
     public int $object_type_map_pull_out_items = 114;
     public int $document_type_id               = 31;
     public int $default_debit_account_id       = 245; // Default Debit Account ID, set to 0 if not applicable
-    private $object;
+    private $objectService;
     private $dateServices;
     private $systemSettingServices;
     private $accountJournalServices;
     private $accountServices;
+    private $usersLogServices;
 
-    public function __construct(ObjectServices $objectService, SystemSettingServices $systemSettingServices, DateServices $dateServices, AccountJournalServices $accountJournalServices, AccountServices $accountServices)
-    {
-        $this->object                 = $objectService;
+    public function __construct(ObjectServices $objectService,
+        SystemSettingServices $systemSettingServices,
+        DateServices $dateServices,
+        AccountJournalServices $accountJournalServices,
+        AccountServices $accountServices,
+        UsersLogServices $usersLogServices) {
+        $this->objectService          = $objectService;
         $this->dateServices           = $dateServices;
         $this->systemSettingServices  = $systemSettingServices;
         $this->accountJournalServices = $accountJournalServices;
+        $this->usersLogServices       = $usersLogServices;
         $this->accountServices        = $accountServices;
 
     }
@@ -34,15 +42,15 @@ class PullOutServices
     }
     public function Store(string $CODE, string $DATE, int $LOCATION_ID, string $NOTES, int $PREPARED_BY_ID, int $ACCOUNT_ID): int
     {
-        $ID          = (int) $this->object->ObjectNextID('PULL_OUT');
-        $OBJECT_TYPE = (int) $this->object->ObjectTypeID('PULL_OUT');
+        $ID          = (int) $this->objectService->ObjectNextID('PULL_OUT');
+        $OBJECT_TYPE = (int) $this->objectService->ObjectTypeID('PULL_OUT');
         $isLocRef    = boolval($this->systemSettingServices->GetValue('IncRefNoByLocation'));
 
         PullOut::create(
             [
                 'ID'             => $ID,
                 'RECORDED_ON'    => $this->dateServices->Now(),
-                'CODE'           => $CODE !== '' ? $CODE : $this->object->GetSequence($OBJECT_TYPE, $isLocRef ? $LOCATION_ID : null),
+                'CODE'           => $CODE !== '' ? $CODE : $this->objectService->GetSequence($OBJECT_TYPE, $isLocRef ? $LOCATION_ID : null),
                 'DATE'           => $DATE,
                 'LOCATION_ID'    => $LOCATION_ID,
                 'AMOUNT'         => 0,
@@ -53,6 +61,8 @@ class PullOutServices
                 'ACCOUNT_ID'     => $ACCOUNT_ID,
             ]
         );
+
+        $this->usersLogServices->AddLogs(TransType::INSERT, LogEntity::PULL_OUT, $ID);
 
         return $ID;
     }
@@ -65,6 +75,7 @@ class PullOutServices
                 'PREPARED_BY_ID' => $PREPARED_BY_ID > 0 ? $PREPARED_BY_ID : null,
                 'ACCOUNT_ID'     => $ACCOUNT_ID,
             ]);
+        $this->usersLogServices->AddLogs(TransType::INSERT, LogEntity::PULL_OUT, $ID);
     }
     public function StatusUpdate(int $ID, int $STATUS)
     {
@@ -73,11 +84,14 @@ class PullOutServices
                 'STATUS'      => $STATUS,
                 'STATUS_DATE' => $this->dateServices->NowDate(),
             ]);
+
+        $this->usersLogServices->StatusLog($STATUS, LogEntity::PULL_OUT, $ID);
     }
     public function Delete(int $ID)
     {
         PullOutItems::where('PULL_OUT_ID', $ID)->delete();
         PullOut::where('ID', $ID)->delete();
+        $this->usersLogServices->AddLogs(TransType::DELETE, LogEntity::PULL_OUT, $ID);
     }
     public function PostedToCanceld(int $ID)
     {
@@ -138,8 +152,10 @@ class PullOutServices
     }
     public function ItemStore(int $PULL_OUT_ID, int $ITEM_ID, float $QUANTITY, int $UNIT_ID, float $UNIT_BASE_QUANTITY, float $RATE, int $BATCH_ID, int $ASSET_ACCOUNT_ID)
     {
-        $ID      = $this->object->ObjectNextID('PULL_OUT');
+        $ID = $this->objectService->ObjectNextID('PULL_OUT');
+
         $LINE_NO = $this->getLine($PULL_OUT_ID) + 1;
+
         PullOutItems::create([
             'ID'                 => $ID,
             'PULL_OUT_ID'        => $PULL_OUT_ID,
@@ -155,6 +171,7 @@ class PullOutServices
             'ASSET_ACCOUNT_ID'   => $ASSET_ACCOUNT_ID > 0 ? $ASSET_ACCOUNT_ID : null,
         ]);
 
+        $this->usersLogServices->AddLogs(TransType::INSERT, LogEntity::PULL_OUT_ITEMS, $PULL_OUT_ID);
         $this->UpdateTotal($PULL_OUT_ID);
     }
     public function GetItem(int $ID, int $PULL_OUT_ID)
@@ -178,7 +195,7 @@ class PullOutServices
                 'AMOUNT'             => $RATE * $QUANTITY,
                 'BATCH_ID'           => $BATCH_ID > 0 ? $BATCH_ID : null,
             ]);
-
+        $this->usersLogServices->AddLogs(TransType::UPDATE, LogEntity::PULL_OUT_ITEMS, $PULL_OUT_ID);
         $this->UpdateTotal($PULL_OUT_ID);
     }
     public function ItemDelete(int $ID, int $PULL_OUT_ID, )
@@ -186,7 +203,7 @@ class PullOutServices
         PullOutItems::where('ID', $ID)
             ->where('PULL_OUT_ID', $PULL_OUT_ID)
             ->delete();
-
+        $this->usersLogServices->AddLogs(TransType::DELETE, LogEntity::PULL_OUT_ITEMS, $PULL_OUT_ID);
         $this->UpdateTotal($PULL_OUT_ID);
     }
     public function UpdateTotal(int $PULL_OUT_ID)

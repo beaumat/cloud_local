@@ -1,23 +1,26 @@
 <?php
-
 namespace App\Services;
 
+use App\Enums\LogEntity;
+use App\Enums\TransType;
 use App\Models\Items;
 use Illuminate\Support\Facades\DB;
 use Livewire\WithPagination;
 
 class ItemServices
 {
-    public int $PHIC_ITEM_ID = 2;
+    public int $PHIC_ITEM_ID    = 2;
     public int $PRIMING_ITEM_ID = 176;
 
     use WithPagination;
-    private $object;
-    public function __construct(ObjectServices $objectService)
+    private $objectService;
+    private $usersLogServices;
+    public function __construct(ObjectServices $objectService, UsersLogServices $usersLogServices)
     {
-        $this->object = $objectService;
+        $this->objectService    = $objectService;
+        $this->usersLogServices = $usersLogServices;
     }
-    public function get($ID): object|array
+    public function get($ID): object | array
     {
         $result = items::where('ID', $ID)->first();
         if ($result) {
@@ -38,7 +41,7 @@ class ItemServices
     {
         items::where('ID', $ID)
             ->update([
-                'COST' => $COST
+                'COST' => $COST,
             ]);
     }
     public function AssemblyItem()
@@ -72,7 +75,7 @@ class ItemServices
                 'a.NAME as ASSET_NAME',
                 'item.RATE',
                 'item.COST',
-                'u.NAME as UNIT_NAME'
+                'u.NAME as UNIT_NAME',
             ])
             ->leftJoin('account as a', 'a.ID', 'item.ASSET_ACCOUNT_ID')
             ->leftJoin('unit_of_measure as u', 'u.ID', '=', 'item.BASE_UNIT_ID')
@@ -144,7 +147,7 @@ class ItemServices
             ->select(
                 [
                     'item.ID',
-                    'item.DESCRIPTION'
+                    'item.DESCRIPTION',
                 ]
             )->where('INACTIVE', '0')
             ->whereIn('TYPE', [0, 1])
@@ -198,40 +201,42 @@ class ItemServices
         int $PHIC_AGREEMENT_FORM_TITLE_ID
     ): int {
 
-        $ID = $this->object->ObjectNextID('ITEM');
-        $OBJECT_TYPE = (int) $this->object->ObjectTypeID('ITEM');
+        $ID          = $this->objectService->ObjectNextID('ITEM');
+        $OBJECT_TYPE = (int) $this->objectService->ObjectTypeID('ITEM');
         Items::create([
-            'ID' => $ID,
-            'CODE' => $CODE !== '' ? $CODE : $this->object->GetSequence($OBJECT_TYPE, null),
-            'DESCRIPTION' => $DESCRIPTION,
-            'PURCHASE_DESCRIPTION' => $PURCHASE_DESCRIPTION,
-            'GROUP_ID' => $GROUP_ID > 0 ? $GROUP_ID : null,
-            'SUB_CLASS_ID' => $SUB_CLASS_ID > 0 ? $SUB_CLASS_ID : null,
-            'TYPE' => $TYPE,
-            'STOCK_TYPE' => $STOCK_TYPE > 0 ? $STOCK_TYPE : null,
-            'GL_ACCOUNT_ID' => $GL_ACCOUNT_ID > 0 ? $GL_ACCOUNT_ID : null,
-            'COGS_ACCOUNT_ID' => $COGS_ACCOUNT_ID > 0 ? $COGS_ACCOUNT_ID : null,
-            'ASSET_ACCOUNT_ID' => $ASSET_ACCOUNT_ID > 0 ? $ASSET_ACCOUNT_ID : null,
-            'TAXABLE' => $TAXABLE,
-            'PREFERRED_VENDOR_ID' => $PREFERRED_VENDOR_ID > 0 ? $PREFERRED_VENDOR_ID : null,
-            'MANUFACTURER_ID' => $MANUFACTURER_ID > 0 ? $MANUFACTURER_ID : null,
-            'RATE' => $RATE,
-            'COST' => $COST > 0 ? $COST : 0,
-            'RATE_TYPE' => $RATE_TYPE,
-            'PAYMENT_METHOD_ID' => $PAYMENT_METHOD_ID > 0 ? $PAYMENT_METHOD_ID : null,
-            'NOTES' => $NOTES,
-            'BASE_UNIT_ID' => $BASE_UNIT_ID > 0 ? $BASE_UNIT_ID : null,
-            'PURCHASES_UNIT_ID' => $PURCHASES_UNIT_ID > 0 ? $PURCHASES_UNIT_ID : null,
-            'SHIPPING_UNIT_ID' => $SHIPPING_UNIT_ID > 0 ? $SHIPPING_UNIT_ID : null,
-            'SALES_UNIT_ID' => $SALES_UNIT_ID > 0 ? $SALES_UNIT_ID : null,
-            'PRINT_INDIVIDUAL_ITEMS' => $PRINT_INDIVIDUAL_ITEMS,
-            'INACTIVE' => $INACTIVE,
-            'NON_HEMO' => $NON_HEMO,
-            'HEMO_NON_INVENTORY' => $HEMO_NON_INVENTORY,
-            'IS_KIT' => $IS_KIT,
-            'NON_PULL_OUT' => $NON_PULL_OUT,
-            'PHIC_AGREEMENT_FORM_TITLE_ID' => $PHIC_AGREEMENT_FORM_TITLE_ID > 0 ? $PHIC_AGREEMENT_FORM_TITLE_ID : null
+            'ID'                           => $ID,
+            'CODE'                         => $CODE !== '' ? $CODE : $this->objectService->GetSequence($OBJECT_TYPE, null),
+            'DESCRIPTION'                  => $DESCRIPTION,
+            'PURCHASE_DESCRIPTION'         => $PURCHASE_DESCRIPTION,
+            'GROUP_ID'                     => $GROUP_ID > 0 ? $GROUP_ID : null,
+            'SUB_CLASS_ID'                 => $SUB_CLASS_ID > 0 ? $SUB_CLASS_ID : null,
+            'TYPE'                         => $TYPE,
+            'STOCK_TYPE'                   => $STOCK_TYPE > 0 ? $STOCK_TYPE : null,
+            'GL_ACCOUNT_ID'                => $GL_ACCOUNT_ID > 0 ? $GL_ACCOUNT_ID : null,
+            'COGS_ACCOUNT_ID'              => $COGS_ACCOUNT_ID > 0 ? $COGS_ACCOUNT_ID : null,
+            'ASSET_ACCOUNT_ID'             => $ASSET_ACCOUNT_ID > 0 ? $ASSET_ACCOUNT_ID : null,
+            'TAXABLE'                      => $TAXABLE,
+            'PREFERRED_VENDOR_ID'          => $PREFERRED_VENDOR_ID > 0 ? $PREFERRED_VENDOR_ID : null,
+            'MANUFACTURER_ID'              => $MANUFACTURER_ID > 0 ? $MANUFACTURER_ID : null,
+            'RATE'                         => $RATE,
+            'COST'                         => $COST > 0 ? $COST : 0,
+            'RATE_TYPE'                    => $RATE_TYPE,
+            'PAYMENT_METHOD_ID'            => $PAYMENT_METHOD_ID > 0 ? $PAYMENT_METHOD_ID : null,
+            'NOTES'                        => $NOTES,
+            'BASE_UNIT_ID'                 => $BASE_UNIT_ID > 0 ? $BASE_UNIT_ID : null,
+            'PURCHASES_UNIT_ID'            => $PURCHASES_UNIT_ID > 0 ? $PURCHASES_UNIT_ID : null,
+            'SHIPPING_UNIT_ID'             => $SHIPPING_UNIT_ID > 0 ? $SHIPPING_UNIT_ID : null,
+            'SALES_UNIT_ID'                => $SALES_UNIT_ID > 0 ? $SALES_UNIT_ID : null,
+            'PRINT_INDIVIDUAL_ITEMS'       => $PRINT_INDIVIDUAL_ITEMS,
+            'INACTIVE'                     => $INACTIVE,
+            'NON_HEMO'                     => $NON_HEMO,
+            'HEMO_NON_INVENTORY'           => $HEMO_NON_INVENTORY,
+            'IS_KIT'                       => $IS_KIT,
+            'NON_PULL_OUT'                 => $NON_PULL_OUT,
+            'PHIC_AGREEMENT_FORM_TITLE_ID' => $PHIC_AGREEMENT_FORM_TITLE_ID > 0 ? $PHIC_AGREEMENT_FORM_TITLE_ID : null,
         ]);
+
+        $this->usersLogServices->AddLogs(TransType::INSERT, LogEntity::ITEM, $ID);
 
         return $ID;
     }
@@ -271,41 +276,44 @@ class ItemServices
 
         Items::where('ID', $ID)
             ->update([
-                'CODE' => $CODE,
-                'DESCRIPTION' => $DESCRIPTION,
-                'PURCHASE_DESCRIPTION' => $PURCHASE_DESCRIPTION,
-                'GROUP_ID' => $GROUP_ID > 0 ? $GROUP_ID : null,
-                'SUB_CLASS_ID' => $SUB_CLASS_ID > 0 ? $SUB_CLASS_ID : null,
-                'TYPE' => $TYPE,
-                'STOCK_TYPE' => $STOCK_TYPE > 0 ? $STOCK_TYPE : null,
-                'GL_ACCOUNT_ID' => $GL_ACCOUNT_ID > 0 ? $GL_ACCOUNT_ID : null,
-                'COGS_ACCOUNT_ID' => $COGS_ACCOUNT_ID > 0 ? $COGS_ACCOUNT_ID : null,
-                'ASSET_ACCOUNT_ID' => $ASSET_ACCOUNT_ID > 0 ? $ASSET_ACCOUNT_ID : null,
-                'TAXABLE' => $TAXABLE,
-                'PREFERRED_VENDOR_ID' => $PREFERRED_VENDOR_ID > 0 ? $PREFERRED_VENDOR_ID : null,
-                'MANUFACTURER_ID' => $MANUFACTURER_ID > 0 ? $MANUFACTURER_ID : null,
-                'RATE' => $RATE,
-                'COST' => $COST > 0 ? $COST : null,
-                'RATE_TYPE' => $RATE_TYPE,
-                'PAYMENT_METHOD_ID' => $PAYMENT_METHOD_ID > 0 ? $PAYMENT_METHOD_ID : null,
-                'NOTES' => $NOTES,
-                'BASE_UNIT_ID' => $BASE_UNIT_ID > 0 ? $BASE_UNIT_ID : null,
-                'PURCHASES_UNIT_ID' => $PURCHASES_UNIT_ID > 0 ? $PURCHASES_UNIT_ID : null,
-                'SHIPPING_UNIT_ID' => $SHIPPING_UNIT_ID > 0 ? $SHIPPING_UNIT_ID : null,
-                'SALES_UNIT_ID' => $SALES_UNIT_ID > 0 ? $SALES_UNIT_ID : null,
-                'PRINT_INDIVIDUAL_ITEMS' => $PRINT_INDIVIDUAL_ITEMS,
-                'INACTIVE' => $INACTIVE,
-                'NON_HEMO' => $NON_HEMO,
-                'HEMO_NON_INVENTORY' => $HEMO_NON_INVENTORY,
-                'IS_KIT' => $IS_KIT,
-                'NON_PULL_OUT' => $NON_PULL_OUT,
-                'PHIC_AGREEMENT_FORM_TITLE_ID' => $PHIC_AGREEMENT_FORM_TITLE_ID > 0 ? $PHIC_AGREEMENT_FORM_TITLE_ID : null
+                'CODE'                         => $CODE,
+                'DESCRIPTION'                  => $DESCRIPTION,
+                'PURCHASE_DESCRIPTION'         => $PURCHASE_DESCRIPTION,
+                'GROUP_ID'                     => $GROUP_ID > 0 ? $GROUP_ID : null,
+                'SUB_CLASS_ID'                 => $SUB_CLASS_ID > 0 ? $SUB_CLASS_ID : null,
+                'TYPE'                         => $TYPE,
+                'STOCK_TYPE'                   => $STOCK_TYPE > 0 ? $STOCK_TYPE : null,
+                'GL_ACCOUNT_ID'                => $GL_ACCOUNT_ID > 0 ? $GL_ACCOUNT_ID : null,
+                'COGS_ACCOUNT_ID'              => $COGS_ACCOUNT_ID > 0 ? $COGS_ACCOUNT_ID : null,
+                'ASSET_ACCOUNT_ID'             => $ASSET_ACCOUNT_ID > 0 ? $ASSET_ACCOUNT_ID : null,
+                'TAXABLE'                      => $TAXABLE,
+                'PREFERRED_VENDOR_ID'          => $PREFERRED_VENDOR_ID > 0 ? $PREFERRED_VENDOR_ID : null,
+                'MANUFACTURER_ID'              => $MANUFACTURER_ID > 0 ? $MANUFACTURER_ID : null,
+                'RATE'                         => $RATE,
+                'COST'                         => $COST > 0 ? $COST : null,
+                'RATE_TYPE'                    => $RATE_TYPE,
+                'PAYMENT_METHOD_ID'            => $PAYMENT_METHOD_ID > 0 ? $PAYMENT_METHOD_ID : null,
+                'NOTES'                        => $NOTES,
+                'BASE_UNIT_ID'                 => $BASE_UNIT_ID > 0 ? $BASE_UNIT_ID : null,
+                'PURCHASES_UNIT_ID'            => $PURCHASES_UNIT_ID > 0 ? $PURCHASES_UNIT_ID : null,
+                'SHIPPING_UNIT_ID'             => $SHIPPING_UNIT_ID > 0 ? $SHIPPING_UNIT_ID : null,
+                'SALES_UNIT_ID'                => $SALES_UNIT_ID > 0 ? $SALES_UNIT_ID : null,
+                'PRINT_INDIVIDUAL_ITEMS'       => $PRINT_INDIVIDUAL_ITEMS,
+                'INACTIVE'                     => $INACTIVE,
+                'NON_HEMO'                     => $NON_HEMO,
+                'HEMO_NON_INVENTORY'           => $HEMO_NON_INVENTORY,
+                'IS_KIT'                       => $IS_KIT,
+                'NON_PULL_OUT'                 => $NON_PULL_OUT,
+                'PHIC_AGREEMENT_FORM_TITLE_ID' => $PHIC_AGREEMENT_FORM_TITLE_ID > 0 ? $PHIC_AGREEMENT_FORM_TITLE_ID : null,
             ]);
+
+        $this->usersLogServices->AddLogs(TransType::UPDATE, LogEntity::ITEM, $ID);
     }
 
     public function Delete(int $ID): void
     {
         Items::where('ID', $ID)->delete();
+        $this->usersLogServices->AddLogs(TransType::DELETE, LogEntity::ITEM, $ID);
     }
     public function Search($search, int $perPage, int $LOCATION_ID)
     {
@@ -326,7 +334,7 @@ class ItemServices
                 'stock_type_map.DESCRIPTION as STOCK_TYPE',
                 'unit_of_measure.NAME as UNIT_BASE',
                 'item.NON_HEMO',
-                'item.HEMO_NON_INVENTORY'
+                'item.HEMO_NON_INVENTORY',
             ])
             ->join('item_type_map', 'item_type_map.ID', '=', 'item.TYPE')
             ->leftJoin('item_sub_class', 'item_sub_class.ID', '=', 'item.SUB_CLASS_ID')
@@ -371,7 +379,7 @@ class ItemServices
                 'stock_type_map.DESCRIPTION as STOCK_TYPE',
                 'unit_of_measure.NAME as UNIT_BASE',
                 'item.NON_HEMO',
-                'item.HEMO_NON_INVENTORY'
+                'item.HEMO_NON_INVENTORY',
             ])
             ->join('item_type_map', 'item_type_map.ID', '=', 'item.TYPE')
             ->leftJoin('item_sub_class', 'item_sub_class.ID', '=', 'item.SUB_CLASS_ID')
@@ -416,7 +424,7 @@ class ItemServices
                 'stock_type_map.DESCRIPTION as STOCK_TYPE',
                 'unit_of_measure.NAME as UNIT_BASE',
                 'item.NON_HEMO',
-                'item.HEMO_NON_INVENTORY'
+                'item.HEMO_NON_INVENTORY',
             ])
             ->join('item_type_map', 'item_type_map.ID', '=', 'item.TYPE')
             ->leftJoin('item_sub_class', 'item_sub_class.ID', '=', 'item.SUB_CLASS_ID')
@@ -483,7 +491,7 @@ class ItemServices
                     'g.DESCRIPTION as GROUP_NAME',
                     'c.DESCRIPTION as CLASS_NAME',
                     's.DESCRIPTION as SUB_NAME',
-                    'u.SYMBOL'
+                    'u.SYMBOL',
                 ]
             )
             ->selectSub(function ($query) use (&$locationId) {
@@ -534,7 +542,7 @@ class ItemServices
                     'g.DESCRIPTION as GROUP_NAME',
                     'c.DESCRIPTION as CLASS_NAME',
                     's.DESCRIPTION as SUB_NAME',
-                    'u.SYMBOL'
+                    'u.SYMBOL',
                 ]
             )
             ->selectSub(function ($query) use (&$locationId, &$dateAsof) {
@@ -563,8 +571,8 @@ class ItemServices
                         ->orWhere('c.DESCRIPTION', 'like', '%' . $search . '%');
                 });
             })->when($showOutofStock, function ($query) {
-                $query->having('QTY_ON_HAND', '<=', 0);
-            })
+            $query->having('QTY_ON_HAND', '<=', 0);
+        })
             ->whereExists(function ($query) use (&$locationId) {
                 $query->select(DB::raw(1))
                     ->from('price_level_lines as l')
@@ -582,7 +590,7 @@ class ItemServices
             ->select([
                 'ID',
                 'DESCRIPTION',
-                'RATE'
+                'RATE',
             ])
             ->where('INACTIVE', 0)
             ->where('NON_HEMO', 0)
@@ -616,7 +624,7 @@ class ItemServices
                 'sc.DESCRIPTION as SUB_CLASS',
                 'c.DESCRIPTION as CLASS',
                 'plx.CUSTOM_PRICE',
-                'plx.CUSTOM_COST'
+                'plx.CUSTOM_COST',
             ])
             ->leftJoin('item_sub_class as sc', 'sc.ID', '=', 'item.SUB_CLASS_ID')
             ->leftJoin('item_class as c', 'c.ID', '=', 'sc.CLASS_ID')
@@ -653,7 +661,7 @@ class ItemServices
                 'sc.DESCRIPTION as SUB_CLASS',
                 'c.DESCRIPTION as CLASS',
                 DB::raw(' (select IFNULL(pll.CUSTOM_PRICE,0) from price_level_lines as pll inner join location as l on l.PRICE_LEVEL_ID =  pll.PRICE_LEVEL_ID where pll.ITEM_ID = item.ID and l.ID = ' . $LOCATION_ID . ' ) as PRICE'),
-                DB::raw(' (select IFNULL(pll.CUSTOM_COST,0) from price_level_lines as pll inner join location as l on l.PRICE_LEVEL_ID =  pll.PRICE_LEVEL_ID where pll.ITEM_ID = item.ID and l.ID = ' . $LOCATION_ID . ' ) as COST')
+                DB::raw(' (select IFNULL(pll.CUSTOM_COST,0) from price_level_lines as pll inner join location as l on l.PRICE_LEVEL_ID =  pll.PRICE_LEVEL_ID where pll.ITEM_ID = item.ID and l.ID = ' . $LOCATION_ID . ' ) as COST'),
             ])
             ->leftJoin('item_sub_class as sc', 'sc.ID', '=', 'item.SUB_CLASS_ID')
             ->leftJoin('item_class as c', 'c.ID', '=', 'sc.CLASS_ID')

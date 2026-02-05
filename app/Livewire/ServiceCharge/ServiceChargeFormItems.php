@@ -23,8 +23,10 @@ use Livewire\Component;
 
 class ServiceChargeFormItems extends Component
 {
+
     #[Reactive]
     public int $SERVICE_CHARGES_ID;
+
     #[Reactive]
     public int $STATUS;
     #[Reactive]
@@ -41,6 +43,7 @@ class ServiceChargeFormItems extends Component
 
     #[Reactive]
     public bool $HEMO_ID;
+
     public bool $isAdmin = false;
     public bool $alowedEdit = false;
     public int $openStatus = 0;
@@ -325,9 +328,9 @@ class ServiceChargeFormItems extends Component
 
             $getResult = $this->serviceChargeServices->ReComputed($this->SERVICE_CHARGES_ID);
             $this->dispatch('update-amount', result: $getResult);
-
+            $this->countRefresh();
             // Philhealth Purpose
-            $prime_item_id = $this->ITEM_ID;
+            $prime_item_id           = $this->ITEM_ID;
             $this->ITEM_ID           = 0;
             $this->QUANTITY          = 0;
             $this->UNIT_ID           = 0;
@@ -456,7 +459,7 @@ class ServiceChargeFormItems extends Component
 
         DB::beginTransaction();
         try {
-            $taxRate = $this->taxServices->getRate($this->TAX_ID);
+            $taxRate    = $this->taxServices->getRate($this->TAX_ID);
             $tax_result = $this->computeServices->ItemComputeTax($this->lineAmount, $this->lineTax, $this->TAX_ID, $taxRate);
             if ($tax_result) {
                 $this->lineTaxable   = $tax_result['TAXABLE_AMOUNT'];
@@ -507,6 +510,7 @@ class ServiceChargeFormItems extends Component
             $this->lineAmount = 0;
             $this->lineTax    = false;
             $this->lineItemId = 0;
+                        $this->countRefresh();
         } catch (\Exception $e) {
             DB::rollBack();
             $errorMessage = 'Error occurred: ' . $e->getMessage();
@@ -559,6 +563,7 @@ class ServiceChargeFormItems extends Component
             DB::commit();
             $getResult = $this->serviceChargeServices->ReComputed($this->SERVICE_CHARGES_ID);
             $this->dispatch('update-amount', result: $getResult);
+            $this->countRefresh();
         } catch (\Exception $e) {
             DB::rollBack();
             $errorMessage = 'Error occurred: ' . $e->getMessage();
@@ -578,6 +583,12 @@ class ServiceChargeFormItems extends Component
         $this->editUnitList = $this->unitOfMeasureServices->ItemUnit($this->lineItemId);
         $this->unitList     = $this->unitOfMeasureServices->ItemUnit($this->ITEM_ID);
         $this->itemList     = $this->serviceChargeServices->ItemView($this->SERVICE_CHARGES_ID);
+
+    }
+    public function countRefresh()
+    {
+
+        $this->dispatch('update-item-count', count: $this->serviceChargeServices->getItemCount($this->SERVICE_CHARGES_ID));
     }
     public function OpenMultiPayment()
     {

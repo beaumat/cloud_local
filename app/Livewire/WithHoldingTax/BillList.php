@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Livewire\WithHoldingTax;
 
 use App\Services\AccountJournalServices;
@@ -31,7 +30,7 @@ class BillList extends Component
     public function boot(WithholdingTaxServices $withholdingTaxServices, BillingServices $billingServices, AccountJournalServices $accountJournalServices)
     {
         $this->withholdingTaxServices = $withholdingTaxServices;
-        $this->billingServices = $billingServices;
+        $this->billingServices        = $billingServices;
         $this->accountJournalServices = $accountJournalServices;
     }
     public function delete(int $ID, int $BILL_ID)
@@ -62,7 +61,7 @@ class BillList extends Component
                 }
             }
 
-            $this->withholdingTaxServices->DeleteBill($ID);
+            $this->withholdingTaxServices->DeleteBill($ID, $this->WITHHOLDING_TAX_ID);
             $this->billingServices->UpdateBalance($BILL_ID);
             $NEW_AMOUNT = $this->withholdingTaxServices->getTotal($this->WITHHOLDING_TAX_ID);
             $this->withholdingTaxServices->UpdateAMOUNT_WITHHELD($this->WITHHOLDING_TAX_ID, $NEW_AMOUNT);

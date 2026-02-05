@@ -1,7 +1,8 @@
 <?php
-
 namespace App\Services;
 
+use App\Enums\LogEntity;
+use App\Enums\TransType;
 use App\Models\Check;
 use App\Models\CheckExpenses;
 use App\Models\CheckItems;
@@ -10,30 +11,32 @@ use Illuminate\Support\Facades\DB;
 
 class WriteCheckServices
 {
-    private int $CHECK_TYPE_ID = 0;
-    public int $object_type_check = 57;
-    public int $object_type_check_items = 75;
+    private int $CHECK_TYPE_ID             = 0;
+    public int $object_type_check          = 57;
+    public int $object_type_check_items    = 75;
     public int $object_type_check_expenses = 79;
-    public int $document_type_id = 21;
+    public int $document_type_id           = 21;
 
-
-    public float $ITEM_TOTAL = 0;
+    public float $ITEM_TOTAL     = 0;
     public float $EXPENSES_TOTAL = 0;
 
     private $object;
     private $dateServices;
     private $systemSettingServices;
     private $compute;
+    private $usersLogServices;
     public function __construct(
         ObjectServices $objectServices,
         DateServices $dateServices,
         SystemSettingServices $systemSettingServices,
-        ComputeServices $computeServices
+        ComputeServices $computeServices,
+        UsersLogServices $usersLogServices
     ) {
-        $this->object = $objectServices;
-        $this->dateServices = $dateServices;
+        $this->object                = $objectServices;
+        $this->dateServices          = $dateServices;
         $this->systemSettingServices = $systemSettingServices;
-        $this->compute = $computeServices;
+        $this->compute               = $computeServices;
+        $this->usersLogServices      = $usersLogServices;
     }
     public function Get(int $ID)
     {
@@ -55,31 +58,33 @@ class WriteCheckServices
         int $INPUT_TAX_VAT_METHOD,
         int $INPUT_TAX_ACCOUNT_ID
     ): int {
-        $ID = (int) $this->object->ObjectNextID('CHECK');
+        $ID          = (int) $this->object->ObjectNextID('CHECK');
         $OBJECT_TYPE = (int) $this->object->ObjectTypeID('CHECK');
-        $isLocRef = boolval($this->systemSettingServices->GetValue('IncRefNoByLocation'));
+        $isLocRef    = boolval($this->systemSettingServices->GetValue('IncRefNoByLocation'));
 
         Check::create([
-            'ID'                    => $ID,
-            'RECORDED_ON'           => $this->dateServices->Now(),
-            'CODE'                  => $CODE !== '' ? $CODE : $this->object->GetSequence($OBJECT_TYPE, $isLocRef ? $LOCATION_ID : null),
-            'DATE'                  => $DATE,
-            'TYPE'                  => $this->CHECK_TYPE_ID,
-            'BANK_ACCOUNT_ID'       => $BANK_ACCOUNT_ID,
-            'PAY_TO_ID'             => $PAY_TO_ID,
-            'LOCATION_ID'           => $LOCATION_ID,
-            'AMOUNT'                => 0,
-            'NOTES'                 => $NOTES,
-            'PRINTED'               => false,
-            'STATUS'                => 0,
-            'STATUS_DATE'           => $this->dateServices->NowDate(),
-            'ACCOUNTS_PAYABLE_ID'   => $ACCOUNTS_PAYABLE_ID > 0 ?  $ACCOUNTS_PAYABLE_ID :  null,
-            'INPUT_TAX_ID'          => $INPUT_TAX_ID,
-            'INPUT_TAX_RATE'        => $INPUT_TAX_RATE,
-            'INPUT_TAX_AMOUNT'      => $INPUT_TAX_AMOUNT,
-            'INPUT_TAX_VAT_METHOD'  => $INPUT_TAX_VAT_METHOD,
-            'INPUT_TAX_ACCOUNT_ID'  => $INPUT_TAX_ACCOUNT_ID
+            'ID'                   => $ID,
+            'RECORDED_ON'          => $this->dateServices->Now(),
+            'CODE'                 => $CODE !== '' ? $CODE : $this->object->GetSequence($OBJECT_TYPE, $isLocRef ? $LOCATION_ID : null),
+            'DATE'                 => $DATE,
+            'TYPE'                 => $this->CHECK_TYPE_ID,
+            'BANK_ACCOUNT_ID'      => $BANK_ACCOUNT_ID,
+            'PAY_TO_ID'            => $PAY_TO_ID,
+            'LOCATION_ID'          => $LOCATION_ID,
+            'AMOUNT'               => 0,
+            'NOTES'                => $NOTES,
+            'PRINTED'              => false,
+            'STATUS'               => 0,
+            'STATUS_DATE'          => $this->dateServices->NowDate(),
+            'ACCOUNTS_PAYABLE_ID'  => $ACCOUNTS_PAYABLE_ID > 0 ? $ACCOUNTS_PAYABLE_ID : null,
+            'INPUT_TAX_ID'         => $INPUT_TAX_ID,
+            'INPUT_TAX_RATE'       => $INPUT_TAX_RATE,
+            'INPUT_TAX_AMOUNT'     => $INPUT_TAX_AMOUNT,
+            'INPUT_TAX_VAT_METHOD' => $INPUT_TAX_VAT_METHOD,
+            'INPUT_TAX_ACCOUNT_ID' => $INPUT_TAX_ACCOUNT_ID,
         ]);
+
+        $this->usersLogServices->AddLogs(TransType::INSERT, LogEntity::CHECK, $ID);
 
         return $ID;
     }
@@ -88,9 +93,11 @@ class WriteCheckServices
         Check::where('ID', '=', $ID)
             ->where('TYPE', '=', $this->CHECK_TYPE_ID)
             ->update([
-                'STATUS'        => $STATUS,
-                'STATUS_DATE'   => $this->dateServices->NowDate()
+                'STATUS'      => $STATUS,
+                'STATUS_DATE' => $this->dateServices->NowDate(),
             ]);
+
+        $this->usersLogServices->StatusLog($STATUS, LogEntity::CHECK, $ID);
     }
     public function Update(
         int $ID,
@@ -109,25 +116,30 @@ class WriteCheckServices
         Check::where('ID', $ID)
             ->where('TYPE', '=', $this->CHECK_TYPE_ID)
             ->update([
-                'CODE'                  => $CODE,
-                'BANK_ACCOUNT_ID'       => $BANK_ACCOUNT_ID,
-                'PAY_TO_ID'             => $PAY_TO_ID,
-                'LOCATION_ID'           => $LOCATION_ID,
-                'AMOUNT'                => $AMOUNT,
-                'NOTES'                 => $NOTES,
-                'PRINTED'               => false,
-                'INPUT_TAX_ID'          => $INPUT_TAX_ID,
-                'INPUT_TAX_RATE'        => $INPUT_TAX_RATE,
-                'INPUT_TAX_AMOUNT'      => $INPUT_TAX_AMOUNT,
-                'INPUT_TAX_VAT_METHOD'  => $INPUT_TAX_VAT_METHOD,
-                'INPUT_TAX_ACCOUNT_ID'  => $INPUT_TAX_ACCOUNT_ID
+                'CODE'                 => $CODE,
+                'BANK_ACCOUNT_ID'      => $BANK_ACCOUNT_ID,
+                'PAY_TO_ID'            => $PAY_TO_ID,
+                'LOCATION_ID'          => $LOCATION_ID,
+                'AMOUNT'               => $AMOUNT,
+                'NOTES'                => $NOTES,
+                'PRINTED'              => false,
+                'INPUT_TAX_ID'         => $INPUT_TAX_ID,
+                'INPUT_TAX_RATE'       => $INPUT_TAX_RATE,
+                'INPUT_TAX_AMOUNT'     => $INPUT_TAX_AMOUNT,
+                'INPUT_TAX_VAT_METHOD' => $INPUT_TAX_VAT_METHOD,
+                'INPUT_TAX_ACCOUNT_ID' => $INPUT_TAX_ACCOUNT_ID,
             ]);
+
+        $this->usersLogServices->AddLogs(TransType::UPDATE, LogEntity::CHECK, $ID);
     }
     public function Delete(int $ID)
     {
         Check::where('ID', $ID)
             ->where('TYPE', '=', $this->CHECK_TYPE_ID)
             ->delete();
+
+        $this->usersLogServices->AddLogs(TransType::DELETE, LogEntity::CHECK, $ID);
+
     }
     public function Search($search, $locationId, $perPage)
     {
@@ -141,7 +153,7 @@ class WriteCheckServices
                 'c.NAME as CONTACT_NAME',
                 'l.NAME as LOCATION_NAME',
                 's.DESCRIPTION as STATUS',
-                'a.NAME as BANK_ACCOUNT_NAME'
+                'a.NAME as BANK_ACCOUNT_NAME',
             ])
             ->join('contact as c', 'c.ID', '=', 'check.PAY_TO_ID')
             ->join('account as a', 'a.ID', '=', 'check.BANK_ACCOUNT_ID')
@@ -183,7 +195,7 @@ class WriteCheckServices
     }
     public function isItemTab($CHECK_ID): bool
     {
-        $ItemCount = $this->getLine($CHECK_ID, true);
+        $ItemCount    = $this->getLine($CHECK_ID, true);
         $AccountCount = $this->getLine($CHECK_ID, false);
         if ($ItemCount >= $AccountCount) {
             return true;
@@ -202,7 +214,7 @@ class WriteCheckServices
                         'check_items.AMOUNT',
                         'check_items.TAX_AMOUNT',
                         'check_items.TAXABLE_AMOUNT',
-                        'check_items.TAXABLE'
+                        'check_items.TAXABLE',
                     ]
                 )
                 ->where('check_items.CHECK_ID', '=', $ID)
@@ -215,21 +227,21 @@ class WriteCheckServices
                         'check_expenses.AMOUNT',
                         'check_expenses.TAX_AMOUNT',
                         'check_expenses.TAXABLE_AMOUNT',
-                        'check_expenses.TAXABLE'
+                        'check_expenses.TAXABLE',
                     ]
                 )
                 ->where('check_expenses.CHECK_ID', '=', $ID)
                 ->orderBy('check_expenses.LINE_NO', 'asc')
                 ->get();
 
-            $result = $this->compute->taxComputeWithExpenses($itemResult, $expensesResult, $TAX_ID,0);
+            $result = $this->compute->taxComputeWithExpenses($itemResult, $expensesResult, $TAX_ID, 0);
 
             foreach ($result as $list) {
                 Check::where('ID', '=', $ID)
                     ->where('TYPE', '=', $this->CHECK_TYPE_ID)
                     ->update([
-                        'AMOUNT'            => $list['AMOUNT'],
-                        'INPUT_TAX_AMOUNT'  => $list['TAX_AMOUNT']
+                        'AMOUNT'           => $list['AMOUNT'],
+                        'INPUT_TAX_AMOUNT' => $list['TAX_AMOUNT'],
                     ]);
             }
 
@@ -241,12 +253,12 @@ class WriteCheckServices
     public function getUpdateTaxItem(int $CHECK_ID, int $TAX_ID)
     {
         $taxRate = (float) Tax::where('ID', $TAX_ID)->first()->RATE ?? 0;
-        $items = CheckItems::query()
+        $items   = CheckItems::query()
             ->select([
                 'check_items.ID',
                 'check_items.ITEM_ID',
                 'check_items.AMOUNT',
-                'check_items.TAXABLE'
+                'check_items.TAXABLE',
             ])
             ->where('check_items.CHECK_ID', '=', $CHECK_ID)
             ->orderBy('check_items.LINE_NO', 'asc')
@@ -258,8 +270,8 @@ class WriteCheckServices
                 CheckItems::where('ID', '=', $list->ID)
                     ->where('CHECK_ID', '=', $CHECK_ID)
                     ->update([
-                        'TAXABLE_AMOUNT'    => $tax_result['TAXABLE_AMOUNT'],
-                        'TAX_AMOUNT'        => $tax_result['TAX_AMOUNT']
+                        'TAXABLE_AMOUNT' => $tax_result['TAXABLE_AMOUNT'],
+                        'TAX_AMOUNT'     => $tax_result['TAX_AMOUNT'],
                     ]);
             }
         }
@@ -268,7 +280,7 @@ class WriteCheckServices
             ->select([
                 'check_expenses.ID',
                 'check_expenses.AMOUNT',
-                'check_expenses.TAXABLE'
+                'check_expenses.TAXABLE',
             ])
             ->where('check_expenses.CHECK_ID', '=', $CHECK_ID)
             ->orderBy('check_expenses.LINE_NO', 'asc')
@@ -280,8 +292,8 @@ class WriteCheckServices
             CheckExpenses::where('ID', '=', $list->ID)
                 ->where('CHECK_ID', '=', $CHECK_ID)
                 ->update([
-                    'TAXABLE_AMOUNT'        => $tax_result['TAXABLE_AMOUNT'],
-                    'TAX_AMOUNT'            => $tax_result['TAX_AMOUNT']
+                    'TAXABLE_AMOUNT' => $tax_result['TAXABLE_AMOUNT'],
+                    'TAX_AMOUNT'     => $tax_result['TAX_AMOUNT'],
                 ]);
         }
     }
@@ -304,28 +316,29 @@ class WriteCheckServices
     ): int {
 
         $LINE_NO = $this->getLine($CHECK_ID, true) + 1;
-        $ID = $this->object->ObjectNextID('CHECK_ITEMS');
+        $ID      = $this->object->ObjectNextID('CHECK_ITEMS');
 
         CheckItems::create([
-            'ID'                    => $ID,
-            'CHECK_ID'              => $CHECK_ID,
-            'LINE_NO'               => $LINE_NO,
-            'ITEM_ID'               => $ITEM_ID,
-            'DESCRIPTION'           => null,
-            'QUANTITY'              => $QUANTITY,
-            'UNIT_ID'               => $UNIT_ID > 0 ? $UNIT_ID : null,
-            'UNIT_BASE_QUANTITY'    => $UNIT_BASE_QUANTITY,
-            'RATE'                  => $RATE,
-            'RATE_TYPE'             => $RATE_TYPE,
-            'AMOUNT'                => $AMOUNT,
-            'BATCH_ID'              => $BATCH_ID > 0 ? $BATCH_ID : null,
-            'ACCOUNT_ID'            => $ACCOUNT_ID,
-            'TAXABLE'               => $TAXABLE,
-            'TAXABLE_AMOUNT'        => $TAXABLE_AMOUNT,
-            'TAX_AMOUNT'            => $TAX_AMOUNT,
-            'CLASS_ID'              => $CLASS_ID > 0 ? $CLASS_ID : null,
+            'ID'                 => $ID,
+            'CHECK_ID'           => $CHECK_ID,
+            'LINE_NO'            => $LINE_NO,
+            'ITEM_ID'            => $ITEM_ID,
+            'DESCRIPTION'        => null,
+            'QUANTITY'           => $QUANTITY,
+            'UNIT_ID'            => $UNIT_ID > 0 ? $UNIT_ID : null,
+            'UNIT_BASE_QUANTITY' => $UNIT_BASE_QUANTITY,
+            'RATE'               => $RATE,
+            'RATE_TYPE'          => $RATE_TYPE,
+            'AMOUNT'             => $AMOUNT,
+            'BATCH_ID'           => $BATCH_ID > 0 ? $BATCH_ID : null,
+            'ACCOUNT_ID'         => $ACCOUNT_ID,
+            'TAXABLE'            => $TAXABLE,
+            'TAXABLE_AMOUNT'     => $TAXABLE_AMOUNT,
+            'TAX_AMOUNT'         => $TAX_AMOUNT,
+            'CLASS_ID'           => $CLASS_ID > 0 ? $CLASS_ID : null,
         ]);
 
+        $this->usersLogServices->AddLogs(TransType::INSERT, LogEntity::CHECK_ITEMS, $CHECK_ID);
         return $ID;
     }
     public function ItemUpdate(
@@ -346,20 +359,22 @@ class WriteCheckServices
             ->where('CHECK_ID', '=', $CHECK_ID)
             ->where('ITEM_ID', '=', $ITEM_ID)
             ->update([
-                'QUANTITY'              => $QUANTITY,
-                'UNIT_ID'               => $UNIT_ID > 0 ? $UNIT_ID : null,
-                'UNIT_BASE_QUANTITY'    => $UNIT_BASE_QUANTITY,
-                'RATE'                  => $RATE,
-                'AMOUNT'                => $AMOUNT,
-                'TAXABLE'               => $TAXABLE,
-                'TAXABLE_AMOUNT'        => $TAXABLE_AMOUNT,
-                'TAX_AMOUNT'            => $TAX_AMOUNT
+                'QUANTITY'           => $QUANTITY,
+                'UNIT_ID'            => $UNIT_ID > 0 ? $UNIT_ID : null,
+                'UNIT_BASE_QUANTITY' => $UNIT_BASE_QUANTITY,
+                'RATE'               => $RATE,
+                'AMOUNT'             => $AMOUNT,
+                'TAXABLE'            => $TAXABLE,
+                'TAXABLE_AMOUNT'     => $TAXABLE_AMOUNT,
+                'TAX_AMOUNT'         => $TAX_AMOUNT,
             ]);
+
+        $this->usersLogServices->AddLogs(TransType::UPDATE, LogEntity::CHECK_ITEMS, $CHECK_ID);
     }
 
     public function ItemGet(int $ID, int $CHECK_ID)
     {
-        $result =  CheckItems::where('ID', '=', $ID)
+        $result = CheckItems::where('ID', '=', $ID)
             ->where('CHECK_ID', '=', $CHECK_ID)
             ->first();
 
@@ -370,6 +385,7 @@ class WriteCheckServices
         CheckItems::where('ID', '=', $ID)
             ->where('CHECK_ID', '=', $CHECK_ID)
             ->delete();
+        $this->usersLogServices->AddLogs(TransType::DELETE, LogEntity::CHECK_ITEMS, $CHECK_ID);
     }
     public function ItemView(int $CHECK_ID)
     {
@@ -388,7 +404,7 @@ class WriteCheckServices
                 'i.CODE',
                 'i.DESCRIPTION',
                 'u.NAME as UNIT_NAME',
-                'u.SYMBOL'
+                'u.SYMBOL',
             ])
             ->leftJoin('item as i', 'i.ID', '=', 'check_items.ITEM_ID')
             ->leftJoin('unit_of_measure as u', 'u.ID', '=', 'check_items.UNIT_ID')
@@ -407,19 +423,19 @@ class WriteCheckServices
         int $CLASS_ID = 0
     ): int {
         $LINE_NO = $this->getLine($CHECK_ID, false) + 1;
-        $ID = (int)  $this->object->ObjectNextID('CHECK_EXPENSES');
+        $ID      = (int) $this->object->ObjectNextID('CHECK_EXPENSES');
 
         CheckExpenses::create([
-            'ID'                => $ID,
-            'CHECK_ID'          => $CHECK_ID,
-            'LINE_NO'           => $LINE_NO,
-            'ACCOUNT_ID'        => $ACCOUNT_ID,
-            'AMOUNT'            => $AMOUNT,
-            'TAXABLE'           => $TAXABLE,
-            'TAXABLE_AMOUNT'    => $TAXABLE_AMOUNT,
-            'TAX_AMOUNT'        => $TAX_AMOUNT,
-            'PARTICULARS'       => $PARTICULARS,
-            'CLASS_ID'          => $CLASS_ID > 0 ? $CLASS_ID : null
+            'ID'             => $ID,
+            'CHECK_ID'       => $CHECK_ID,
+            'LINE_NO'        => $LINE_NO,
+            'ACCOUNT_ID'     => $ACCOUNT_ID,
+            'AMOUNT'         => $AMOUNT,
+            'TAXABLE'        => $TAXABLE,
+            'TAXABLE_AMOUNT' => $TAXABLE_AMOUNT,
+            'TAX_AMOUNT'     => $TAX_AMOUNT,
+            'PARTICULARS'    => $PARTICULARS,
+            'CLASS_ID'       => $CLASS_ID > 0 ? $CLASS_ID : null,
 
         ]);
 
@@ -430,21 +446,21 @@ class WriteCheckServices
         CheckExpenses::where('ID', $ID)
             ->where('CHECK_ID', $CHECK_ID)
             ->update([
-                'AMOUNT'            => $AMOUNT,
-                'TAXABLE'           => $TAXABLE,
-                'TAXABLE_AMOUNT'    => $TAXABLE_AMOUNT,
-                'TAX_AMOUNT'        => $TAX_AMOUNT,
-                'PARTICULARS'       => $PARTICULARS,
-                'CLASS_ID'          => $CLASS_ID > 0 ? $CLASS_ID : null
+                'AMOUNT'         => $AMOUNT,
+                'TAXABLE'        => $TAXABLE,
+                'TAXABLE_AMOUNT' => $TAXABLE_AMOUNT,
+                'TAX_AMOUNT'     => $TAX_AMOUNT,
+                'PARTICULARS'    => $PARTICULARS,
+                'CLASS_ID'       => $CLASS_ID > 0 ? $CLASS_ID : null,
             ]);
     }
-    public function ExpenseDelete(int $ID, int $CHECK_ID,)
+    public function ExpenseDelete(int $ID, int $CHECK_ID, )
     {
         CheckExpenses::where('ID', $ID)->where('CHECK_ID', $CHECK_ID)->delete();
     }
     public function ExpenseGet(int $ID, $CHECK_ID)
     {
-        $data =  CheckExpenses::where('ID', '=', $ID)
+        $data = CheckExpenses::where('ID', '=', $ID)
             ->where('CHECK_ID', '=', $CHECK_ID)
             ->first();
 
@@ -466,7 +482,7 @@ class WriteCheckServices
                 'check_expenses.CLASS_ID',
                 'check_expenses.ACCOUNT_ID',
                 'a.NAME',
-                'a.TAG as CODE'
+                'a.TAG as CODE',
             ])
             ->leftJoin('account as a', 'a.ID', '=', 'check_expenses.ACCOUNT_ID')
             ->where('check_expenses.CHECK_ID', '=', $CHECK_ID)
@@ -475,7 +491,6 @@ class WriteCheckServices
 
         return $result;
     }
-
 
     public function ItemInventory(int $CHECK_ID)
     {
@@ -487,7 +502,7 @@ class WriteCheckServices
                 'check_items.QUANTITY',
                 'check_items.UNIT_BASE_QUANTITY',
                 'check_items.RATE',
-                'item.COST'
+                'item.COST',
             ])
             ->join('item', 'item.ID', '=', 'check_items.ITEM_ID')
             ->whereIn('item.TYPE', ['0', '1'])
@@ -504,7 +519,7 @@ class WriteCheckServices
                 'INPUT_TAX_ACCOUNT_ID as ACCOUNT_ID',
                 'PAY_TO_ID as SUBSIDIARY_ID',
                 'INPUT_TAX_AMOUNT as AMOUNT',
-                Check::raw(' 0 as ENTRY_TYPE')
+                Check::raw(' 0 as ENTRY_TYPE'),
 
             ])
             ->where('ID', '=', $CHECK_ID)
@@ -520,7 +535,7 @@ class WriteCheckServices
                 'BANK_ACCOUNT_ID as ACCOUNT_ID',
                 'PAY_TO_ID as SUBSIDIARY_ID',
                 'AMOUNT',
-                DB::raw(' 1 as ENTRY_TYPE')
+                DB::raw(' 1 as ENTRY_TYPE'),
             ])
             ->where('ID', '=', $CHECK_ID)
             ->get();
@@ -535,7 +550,7 @@ class WriteCheckServices
                 'ACCOUNT_ID',
                 'ITEM_ID as SUBSIDIARY_ID',
                 DB::raw('IF(TAXABLE_AMOUNT > 0, TAXABLE_AMOUNT, AMOUNT) as AMOUNT'),
-                DB::raw('IF(AMOUNT >= 0, 0, 1)  as ENTRY_TYPE')
+                DB::raw('IF(AMOUNT >= 0, 0, 1)  as ENTRY_TYPE'),
             ])
             ->where('CHECK_ID', '=', $CHECK_ID)
             ->orderBy('LINE_NO', 'asc')
@@ -551,7 +566,7 @@ class WriteCheckServices
                 'ACCOUNT_ID',
                 'ACCOUNT_ID as SUBSIDIARY_ID',
                 DB::raw('IF(TAXABLE_AMOUNT > 0, TAXABLE_AMOUNT, AMOUNT) as AMOUNT'),
-                DB::raw('IF(AMOUNT >= 0, 0, 1) as ENTRY_TYPE')
+                DB::raw('IF(AMOUNT >= 0, 0, 1) as ENTRY_TYPE'),
             ])
             ->where('CHECK_ID', '=', $CHECK_ID)
             ->orderBy('LINE_NO', 'asc')

@@ -1,5 +1,7 @@
 <div>
-    @livewire('alert-layout', ['errors' => $errors->any() ? $errors->all() : '', 'message' => session('message'), 'error' => session('error')])
+    @if ($itemList->count() > 0)
+        @livewire('alert-layout', ['errors' => $errors->any() ? $errors->all() : '', 'message' => session('message'), 'error' => session('error')])
+    @endif
     <table class="table table-sm table-bordered table-hover">
         <thead class="text-xs bg-sky">
             <tr>
@@ -123,7 +125,7 @@
                                 <button class="btn btn-xs btn-primary" title="Cash Payment"
                                     wire:click="cashPayment({{ $list->ID }}, {{ $list->AMOUNT }})">
                                     <i class="fa fa-money" aria-hidden="true"></i>
-                                    </button>
+                                </button>
                                 <button class="btn btn-xs btn-success" title="Open Payment"
                                     wire:click="openPayment({{ $list->ID }}, {{ $list->AMOUNT }})"> <i
                                         class="fa fa-paypal" aria-hidden="true"></i> </button>

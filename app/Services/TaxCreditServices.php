@@ -1,6 +1,8 @@
 <?php
 namespace App\Services;
 
+use App\Enums\LogEntity;
+use App\Enums\TransType;
 use App\Models\TaxCredit;
 use App\Models\TaxCreditInvoices;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -17,18 +19,21 @@ class TaxCreditServices
     private $systemSettingServices;
     private $invoiceServices;
     private $accountJournalServices;
+    private $usersLogServices;
     public function __construct(
         ObjectServices $objectServices,
         DateServices $dateServices,
         SystemSettingServices $systemSettingServices,
         InvoiceServices $invoiceServices,
-        AccountJournalServices $accountJournalServices
+        AccountJournalServices $accountJournalServices,
+        UsersLogServices $usersLogServices
     ) {
         $this->object                 = $objectServices;
         $this->dateServices           = $dateServices;
         $this->systemSettingServices  = $systemSettingServices;
         $this->invoiceServices        = $invoiceServices;
         $this->accountJournalServices = $accountJournalServices;
+        $this->usersLogServices       = $usersLogServices;
     }
     public function Get(int $ID)
     {
@@ -66,7 +71,7 @@ class TaxCreditServices
             'STATUS_DATE'            => $this->dateServices->NowDate(),
             'ACCOUNTS_RECEIVABLE_ID' => $ACCOUNTS_RECEIVABLE_ID > 0 ? $ACCOUNTS_RECEIVABLE_ID : null,
         ]);
-
+        $this->usersLogServices->AddLogs(TransType::INSERT, LogEntity::TAX_CREDIT, $ID);
         return $ID;
     }
     public function Update(
@@ -90,12 +95,15 @@ class TaxCreditServices
                 'AMOUNT'                 => $AMOUNT,
                 'ACCOUNTS_RECEIVABLE_ID' => $ACCOUNTS_RECEIVABLE_ID > 0 ? $ACCOUNTS_RECEIVABLE_ID : null,
             ]);
+
+        $this->usersLogServices->AddLogs(TransType::UPDATE, LogEntity::TAX_CREDIT, $ID);
     }
 
     public function Delete(int $ID)
     {
         TaxCreditInvoices::where('TAX_CREDIT_ID', '=', $ID)->delete();
         TaxCredit::where('ID', '=', $ID)->delete();
+        $this->usersLogServices->AddLogs(TransType::INSERT, LogEntity::TAX_CREDIT, $ID);
     }
     public function setTotal(int $TAX_CREDIT_ID, float $AMOUNT)
     {
@@ -154,6 +162,8 @@ class TaxCreditServices
                 'STATUS'      => $STATUS,
                 'STATUS_DATE' => $this->dateServices->NowDate(),
             ]);
+
+        $this->usersLogServices->StatusLog($STATUS, LogEntity::TAX_CREDIT, $ID);
     }
     public function StoreInvoice(int $TAX_CREDIT_ID, int $INVOICE_ID, float $AMOUNT_WITHHELD, int $ACCOUNTS_RECEIVABLE_ID): int
     {
@@ -168,7 +178,7 @@ class TaxCreditServices
                 'ACCOUNTS_RECEIVABLE_ID' => $ACCOUNTS_RECEIVABLE_ID > 0 ? $ACCOUNTS_RECEIVABLE_ID : null,
             ]
         );
-
+        $this->usersLogServices->AddLogs(TransType::INSERT, LogEntity::TAX_CREDIT_INVOICES, $TAX_CREDIT_ID);
         return $ID;
     }
     public function UpdateInvoice(int $ID, int $TAX_CREDIT_ID, int $INVOICE_ID, float $AMOUNT_WITHHELD)
@@ -182,6 +192,8 @@ class TaxCreditServices
                     'AMOUNT_WITHHELD' => $AMOUNT_WITHHELD,
                 ]
             );
+
+             $this->usersLogServices->AddLogs(TransType::UPDATE, LogEntity::TAX_CREDIT_INVOICES, $TAX_CREDIT_ID);
     }
     public function TaxCreditInvoiceExists(int $TAX_CREDIT_ID, int $INVOICE_ID): bool
     {
@@ -203,9 +215,11 @@ class TaxCreditServices
         return [];
     }
 
-    public function DeleteInvoice(int $ID)
+    public function DeleteInvoice(int $ID, int $TAX_CREDIT_ID)
     {
         TaxCreditInvoices::where('ID', '=', $ID)->delete();
+
+         $this->usersLogServices->AddLogs(TransType::DELETE, LogEntity::TAX_CREDIT_INVOICES, $TAX_CREDIT_ID);
     }
     public function GetTaxCreditInvoice(int $ID)
     {
@@ -249,9 +263,9 @@ class TaxCreditServices
             ->get();
 
         foreach ($result as $row) {
-            $INVOICE_AMOUNT = (float) $row->AMOUNT ?? 0;
-            $AMT_WITHHELD   = (float) $INVOICE_AMOUNT * ($EWT_RATE / 100);
-            $TOTAL += $AMT_WITHHELD;
+            $INVOICE_AMOUNT  = (float) $row->AMOUNT ?? 0;
+            $AMT_WITHHELD    = (float) $INVOICE_AMOUNT * ($EWT_RATE / 100);
+            $TOTAL          += $AMT_WITHHELD;
             $this->UpdateInvoice($row->ID, $TAX_CREDIT_ID, $row->INVOICE_ID, $AMT_WITHHELD);
             $this->invoiceServices->updateInvoiceBalance($row->INVOICE_ID);
         }
@@ -270,8 +284,8 @@ class TaxCreditServices
             ->get();
 
         foreach ($result as $row) {
-            $AMOUNT_WITHHELD = (float) $row->AMOUNT_WITHHELD ?? 0;
-            $TOTAL += $AMOUNT_WITHHELD;
+            $AMOUNT_WITHHELD  = (float) $row->AMOUNT_WITHHELD ?? 0;
+            $TOTAL           += $AMOUNT_WITHHELD;
         }
 
         return $TOTAL;

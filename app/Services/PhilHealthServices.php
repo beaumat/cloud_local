@@ -1,6 +1,8 @@
 <?php
 namespace App\Services;
 
+use App\Enums\LogEntity;
+use App\Enums\TransType;
 use App\Models\Hemodialysis;
 use App\Models\PatientDoctor;
 use App\Models\PhilHealth;
@@ -55,6 +57,7 @@ class PhilHealthServices
     private $itemSoaItemizedServices;
     private $itemSoaServices;
     private $philHealthProfFeeServices;
+    private $usersLogServices;
     public function __construct(
         ObjectServices $objectService,
         DateServices $dateServices,
@@ -67,7 +70,8 @@ class PhilHealthServices
         AccountJournalServices $accountJournalServices,
         ItemSoaItemizedServices $itemSoaItemizedServices,
         ItemSoaServices $itemSoaServices,
-        PhilHealthProfFeeServices $philHealthProfFeeServices
+        PhilHealthProfFeeServices $philHealthProfFeeServices,
+        UsersLogServices $usersLogServices
 
     ) {
         $this->object                      = $objectService;
@@ -82,6 +86,7 @@ class PhilHealthServices
         $this->itemSoaItemizedServices     = $itemSoaItemizedServices;
         $this->itemSoaServices             = $itemSoaServices;
         $this->philHealthProfFeeServices   = $philHealthProfFeeServices;
+        $this->usersLogServices            = $usersLogServices;
     }
     public function get($ID)
     {
@@ -389,7 +394,7 @@ class PhilHealthServices
 
             $useDisc = false;
 
-            if (in_array((int) $data->LOCATION_ID, [1, 31, 32, 33, 35, 36, 38, 39, 40, 44,51])) {
+            if (in_array((int) $data->LOCATION_ID, [1, 31, 32, 33, 35, 36, 38, 39, 40, 44, 51])) {
                 // how will allowed
                 $useDisc = true;
             }
@@ -557,6 +562,8 @@ class PhilHealthServices
             'STATUS_ID'        => 1,
             'STATUS_DATETIME'  => $this->dateServices->Now(),
         ]);
+
+        $this->usersLogServices->AddLogs(TransType::INSERT, LogEntity::PHILHEALTH, $ID);
 
         $this->setCF4Update($ID, 20);
         return $ID;
@@ -730,6 +737,7 @@ class PhilHealthServices
         PhilhealthDrugsMedicines::where('PHILHEALTH_ID', $ID)->delete();
         PhilHealthProfFee::where('PHIC_ID', $ID)->delete();
         PhilHealth::where('ID', $ID)->delete();
+        $this->usersLogServices->AddLogs(TransType::DELETE, LogEntity::PHILHEALTH, $ID);
     }
     public function Search($search, int $locationId, int $perPage, $ADMITTED, $DISCHARGED)
     {

@@ -1,29 +1,32 @@
 <?php
-
 namespace App\Services;
 
+use App\Enums\LogEntity;
+use App\Enums\TransType;
 use App\Models\PurchaseOrder;
 use App\Models\PurchaseOrderItems;
 use App\Models\Tax;
-use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class PurchaseOrderServices
 {
-    private $object;
+    private $objectService;
     private $compute;
     private $dateServices;
     private $systemSettingServices;
+    private $usersLogServices;
     public function __construct(
         ObjectServices $objectService,
         ComputeServices $computeServices,
         DateServices $dateServices,
-        SystemSettingServices $systemSettingServices
+        SystemSettingServices $systemSettingServices,
+        UsersLogServices $usersLogServices
     ) {
-        $this->object = $objectService;
-        $this->compute = $computeServices;
-        $this->dateServices = $dateServices;
+        $this->objectService         = $objectService;
+        $this->compute               = $computeServices;
+        $this->dateServices          = $dateServices;
         $this->systemSettingServices = $systemSettingServices;
+        $this->usersLogServices      = $usersLogServices;
     }
     public function get(int $ID): object
     {
@@ -48,38 +51,40 @@ class PurchaseOrderServices
 
     ): int {
 
-
-        $ID = (int) $this->object->ObjectNextID('PURCHASE_ORDER');
-        $OBJECT_TYPE = (int) $this->object->ObjectTypeID('PURCHASE_ORDER');
-        $isLocRef = boolval($this->systemSettingServices->GetValue('IncRefNoByLocation'));
+        $ID          = (int) $this->objectService->ObjectNextID('PURCHASE_ORDER');
+        $OBJECT_TYPE = (int) $this->objectService->ObjectTypeID('PURCHASE_ORDER');
+        $isLocRef    = boolval($this->systemSettingServices->GetValue('IncRefNoByLocation'));
 
         PurchaseOrder::create([
-            'ID'                => $ID,
-            'RECORDED_ON'       => $this->dateServices->Now(),
-            'CODE'              => $CODE !== '' ? $CODE : $this->object->GetSequence($OBJECT_TYPE, $isLocRef ? $LOCATION_ID : null),
-            'DATE'              => $DATE,
-            'VENDOR_ID'         => $VENDOR_ID,
-            'LOCATION_ID'       => $LOCATION_ID,
-            'CLASS_ID'          => $CLASS_ID > 0 ? $CLASS_ID : null,
-            'DATE_EXPECTED'     => $DATE_EXPECTED ? $DATE_EXPECTED : null,
-            'SHIP_TO'           => $SHIP_TO ? $SHIP_TO : null,
-            'SHIP_VIA_ID'       => $SHIP_VIA_ID ? $SHIP_VIA_ID : null,
-            'PAYMENT_TERMS_ID'  => $PAYMENT_TERMS_ID ? $PAYMENT_TERMS_ID : null,
-            'NOTES'             => $NOTES,
-            'AMOUNT'            => 0,
-            'STATUS'            => $STATUS,
-            'INPUT_TAX_ID'      => $INPUT_TAX_ID ? $INPUT_TAX_ID : null,
-            'INPUT_TAX_RATE'    => $INPUT_TAX_RATE,
+            'ID'                   => $ID,
+            'RECORDED_ON'          => $this->dateServices->Now(),
+            'CODE'                 => $CODE !== '' ? $CODE : $this->objectService->GetSequence($OBJECT_TYPE, $isLocRef ? $LOCATION_ID : null),
+            'DATE'                 => $DATE,
+            'VENDOR_ID'            => $VENDOR_ID,
+            'LOCATION_ID'          => $LOCATION_ID,
+            'CLASS_ID'             => $CLASS_ID > 0 ? $CLASS_ID : null,
+            'DATE_EXPECTED'        => $DATE_EXPECTED ? $DATE_EXPECTED : null,
+            'SHIP_TO'              => $SHIP_TO ? $SHIP_TO : null,
+            'SHIP_VIA_ID'          => $SHIP_VIA_ID ? $SHIP_VIA_ID : null,
+            'PAYMENT_TERMS_ID'     => $PAYMENT_TERMS_ID ? $PAYMENT_TERMS_ID : null,
+            'NOTES'                => $NOTES,
+            'AMOUNT'               => 0,
+            'STATUS'               => $STATUS,
+            'INPUT_TAX_ID'         => $INPUT_TAX_ID ? $INPUT_TAX_ID : null,
+            'INPUT_TAX_RATE'       => $INPUT_TAX_RATE,
             'INPUT_TAX_VAT_METHOD' => $INPUT_TAX_VAT_METHOD,
             'INPUT_TAX_ACCOUNT_ID' => $INPUT_TAX_ACCOUNT_ID > 0 ? $INPUT_TAX_ACCOUNT_ID : null,
         ]);
 
+        $this->usersLogServices->AddLogs(TransType::INSERT, LogEntity::PURCHASE_ORDER, $ID);
         return $ID;
     }
 
     public function StatusUpdate(int $ID, int $STATUS)
     {
-        PurchaseOrder::where('ID', $ID)->update(['STATUS' => $STATUS]);
+        PurchaseOrder::where('ID', $ID)
+            ->update(['STATUS' => $STATUS]);
+        $this->usersLogServices->StatusLog($STATUS, LogEntity::PURCHASE_ORDER, $ID);
     }
     public function Update(
         int $ID,
@@ -102,28 +107,30 @@ class PurchaseOrderServices
 
         PurchaseOrder::where('ID', $ID)
             ->update([
-                'CODE'                  => $CODE,
-                'DATE'                  => $DATE,
-                'VENDOR_ID'             => $VENDOR_ID,
-                'LOCATION_ID'           => $LOCATION_ID,
-                'CLASS_ID'              => $CLASS_ID > 0 ? $CLASS_ID : null,
-                'DATE_EXPECTED'         => $DATE_EXPECTED ? $DATE_EXPECTED : null,
-                'SHIP_TO'               => $SHIP_TO ? $SHIP_TO : null,
-                'SHIP_VIA_ID'           => $SHIP_VIA_ID ? $SHIP_VIA_ID : null,
-                'PAYMENT_TERMS_ID'      => $PAYMENT_TERMS_ID ? $PAYMENT_TERMS_ID : null,
-                'NOTES'                 => $NOTES,
-                'STATUS'                => $STATUS,
-                'INPUT_TAX_ID'          => $INPUT_TAX_ID ? $INPUT_TAX_ID : null,
-                'INPUT_TAX_RATE'        => $INPUT_TAX_RATE,
-                'INPUT_TAX_VAT_METHOD'  => $INPUT_TAX_VAT_METHOD,
-                'INPUT_TAX_ACCOUNT_ID'  => $INPUT_TAX_ACCOUNT_ID > 0 ? $INPUT_TAX_ACCOUNT_ID : null,
+                'CODE'                 => $CODE,
+                'DATE'                 => $DATE,
+                'VENDOR_ID'            => $VENDOR_ID,
+                'LOCATION_ID'          => $LOCATION_ID,
+                'CLASS_ID'             => $CLASS_ID > 0 ? $CLASS_ID : null,
+                'DATE_EXPECTED'        => $DATE_EXPECTED ? $DATE_EXPECTED : null,
+                'SHIP_TO'              => $SHIP_TO ? $SHIP_TO : null,
+                'SHIP_VIA_ID'          => $SHIP_VIA_ID ? $SHIP_VIA_ID : null,
+                'PAYMENT_TERMS_ID'     => $PAYMENT_TERMS_ID ? $PAYMENT_TERMS_ID : null,
+                'NOTES'                => $NOTES,
+                'STATUS'               => $STATUS,
+                'INPUT_TAX_ID'         => $INPUT_TAX_ID ? $INPUT_TAX_ID : null,
+                'INPUT_TAX_RATE'       => $INPUT_TAX_RATE,
+                'INPUT_TAX_VAT_METHOD' => $INPUT_TAX_VAT_METHOD,
+                'INPUT_TAX_ACCOUNT_ID' => $INPUT_TAX_ACCOUNT_ID > 0 ? $INPUT_TAX_ACCOUNT_ID : null,
             ]);
+        $this->usersLogServices->AddLogs(TransType::UPDATE, LogEntity::PURCHASE_ORDER, $ID);
     }
 
     public function Delete(int $ID): void
     {
         PurchaseOrderItems::where('PO_ID', $ID)->delete();
         PurchaseOrder::where('ID', $ID)->delete();
+        $this->usersLogServices->AddLogs(TransType::DELETE, LogEntity::PURCHASE_ORDER, $ID);
     }
 
     public function Search($search, int $LOCATION_ID, int $perPage): object
@@ -139,7 +146,7 @@ class PurchaseOrderServices
                 'c.NAME as CONTACT_NAME',
                 'l.NAME as LOCATION_NAME',
                 't.NAME as TAX_NAME',
-                's.DESCRIPTION as STATUS'
+                's.DESCRIPTION as STATUS',
             ])
             ->join('contact as c', 'c.ID', '=', 'purchase_order.VENDOR_ID')
             ->join('location as l', function ($join) use (&$LOCATION_ID) {
@@ -167,7 +174,7 @@ class PurchaseOrderServices
         PurchaseOrderItems::where('ID', $ID)
             ->update([
                 'RECEIVED_QTY' => $QTY,
-                'CLOSED' => $CLOSED
+                'CLOSED'       => $CLOSED,
             ]);
     }
 
@@ -196,26 +203,27 @@ class PurchaseOrderServices
     ): int {
 
         $LINE_NO = $this->getLine($PO_ID) + 1;
-        $ID = $this->object->ObjectNextID('PURCHASE_ORDER_LINES');
+        $ID      = $this->objectService->ObjectNextID('PURCHASE_ORDER_LINES');
         PurchaseOrderItems::create([
-            'ID' => $ID,
-            'PO_ID' => $PO_ID,
-            'LINE_NO' => $LINE_NO,
-            'ITEM_ID' => $ITEM_ID,
-            'DESCRIPTION' => null,
-            'QUANTITY' => $QUANTITY,
-            'UNIT_ID' => $UNIT_ID > 0 ? $UNIT_ID : null,
+            'ID'                 => $ID,
+            'PO_ID'              => $PO_ID,
+            'LINE_NO'            => $LINE_NO,
+            'ITEM_ID'            => $ITEM_ID,
+            'DESCRIPTION'        => null,
+            'QUANTITY'           => $QUANTITY,
+            'UNIT_ID'            => $UNIT_ID > 0 ? $UNIT_ID : null,
             'UNIT_BASE_QUANTITY' => $UNIT_BASE_QUANTITY,
-            'RATE' => $RATE,
-            'RATE_TYPE' => $RATE_TYPE,
-            'AMOUNT' => $AMOUNT,
-            'RECEIVED_QTY' => $RECEIVED_QTY > 0 ? $RECEIVED_QTY : 0,
-            'CLOSED' => $CLOSED,
-            'TAXABLE' => $TAXABLE,
-            'TAXABLE_AMOUNT' => $TAXABLE_AMOUNT,
-            'TAX_AMOUNT' => $TAX_AMOUNT,
+            'RATE'               => $RATE,
+            'RATE_TYPE'          => $RATE_TYPE,
+            'AMOUNT'             => $AMOUNT,
+            'RECEIVED_QTY'       => $RECEIVED_QTY > 0 ? $RECEIVED_QTY : 0,
+            'CLOSED'             => $CLOSED,
+            'TAXABLE'            => $TAXABLE,
+            'TAXABLE_AMOUNT'     => $TAXABLE_AMOUNT,
+            'TAX_AMOUNT'         => $TAX_AMOUNT,
 
         ]);
+        $this->usersLogServices->AddLogs(TransType::INSERT, LogEntity::PURCHASE_ORDER_LINES, $PO_ID);
         return $ID;
     }
     public function ItemUpdate(
@@ -232,24 +240,27 @@ class PurchaseOrderServices
         float $TAX_AMOUNT
     ) {
         PurchaseOrderItems::where('ID', $ID)->where('PO_ID', $PO_ID)->where('ITEM_ID', $ITEM_ID)->update([
-            'QUANTITY' => $QUANTITY,
-            'UNIT_ID' => $UNIT_ID > 0 ? $UNIT_ID : null,
+            'QUANTITY'           => $QUANTITY,
+            'UNIT_ID'            => $UNIT_ID > 0 ? $UNIT_ID : null,
             'UNIT_BASE_QUANTITY' => $UNIT_BASE_QUANTITY,
-            'RATE' => $RATE,
-            'AMOUNT' => $AMOUNT,
-            'TAXABLE' => $TAXABLE,
-            'TAXABLE_AMOUNT' => $TAXABLE_AMOUNT,
-            'TAX_AMOUNT' => $TAX_AMOUNT
+            'RATE'               => $RATE,
+            'AMOUNT'             => $AMOUNT,
+            'TAXABLE'            => $TAXABLE,
+            'TAXABLE_AMOUNT'     => $TAXABLE_AMOUNT,
+            'TAX_AMOUNT'         => $TAX_AMOUNT,
         ]);
+
+        $this->usersLogServices->AddLogs(TransType::UPDATE, LogEntity::PURCHASE_ORDER_LINES, $PO_ID);
     }
     public function ItemDelete(int $ID, int $PO_ID)
     {
         PurchaseOrderItems::where('ID', $ID)->where('PO_ID', $PO_ID)->delete();
+        $this->usersLogServices->AddLogs(TransType::DELETE, LogEntity::PURCHASE_ORDER_LINES, $PO_ID);
     }
 
     public function ItemGet(int $ID, int $PO_ID)
     {
-        $result =  PurchaseOrderItems::where('ID', $ID)->where('PO_ID', $PO_ID)->first();
+        $result = PurchaseOrderItems::where('ID', $ID)->where('PO_ID', $PO_ID)->first();
         if ($result) {
             return $result;
         }
@@ -272,7 +283,7 @@ class PurchaseOrderServices
                 'i.CODE',
                 'i.PURCHASE_DESCRIPTION',
                 'u.NAME as UNIT_NAME',
-                'u.SYMBOL'
+                'u.SYMBOL',
             ])
             ->leftJoin('item as i', 'i.ID', '=', 'purchase_order_items.ITEM_ID')
             ->leftJoin('unit_of_measure as u', 'u.ID', '=', 'purchase_order_items.UNIT_ID')
@@ -284,7 +295,7 @@ class PurchaseOrderServices
     {
         $PO = PurchaseOrder::where('ID', $ID)->first();
         if ($PO) {
-            $TAX_ID = (int) $PO->INPUT_TAX_ID;
+            $TAX_ID     = (int) $PO->INPUT_TAX_ID;
             $itemResult = PurchaseOrderItems::query()
                 ->select(
                     [
@@ -292,7 +303,7 @@ class PurchaseOrderServices
                         'purchase_order_items.TAX_AMOUNT',
                         'purchase_order_items.TAXABLE_AMOUNT',
                         'purchase_order_items.TAXABLE',
-                        'item.TYPE'
+                        'item.TYPE',
                     ]
                 )
                 ->join('item', 'item.ID', '=', 'purchase_order_items.ITEM_ID')
@@ -305,13 +316,12 @@ class PurchaseOrderServices
 
             foreach ($result as $list) {
                 PurchaseOrder::where('ID', $ID)->update([
-                    'AMOUNT' => $list['AMOUNT'],
-                    'INPUT_TAX_AMOUNT' => $list['TAX_AMOUNT'],
-                    'TAXABLE_AMOUNT' => $list['TAXABLE_AMOUNT'],
-                    'NONTAXABLE_AMOUNT' => $list['NONTAXABLE_AMOUNT']
+                    'AMOUNT'            => $list['AMOUNT'],
+                    'INPUT_TAX_AMOUNT'  => $list['TAX_AMOUNT'],
+                    'TAXABLE_AMOUNT'    => $list['TAXABLE_AMOUNT'],
+                    'NONTAXABLE_AMOUNT' => $list['NONTAXABLE_AMOUNT'],
                 ]);
             }
-
 
             return $result;
         }
@@ -325,7 +335,7 @@ class PurchaseOrderServices
             ->select([
                 'purchase_order_items.ID',
                 'purchase_order_items.AMOUNT',
-                'purchase_order_items.TAXABLE'
+                'purchase_order_items.TAXABLE',
             ])
             ->join('item', 'item.ID', '=', 'purchase_order_items.ITEM_ID')
             ->where('purchase_order_items.PO_ID', $PO_ID)
@@ -340,7 +350,7 @@ class PurchaseOrderServices
                 PurchaseOrderItems::where('ID', $list->ID)
                     ->update([
                         'TAXABLE_AMOUNT' => $tax_result['TAXABLE_AMOUNT'],
-                        'TAX_AMOUNT' => $tax_result['TAX_AMOUNT']
+                        'TAX_AMOUNT'     => $tax_result['TAX_AMOUNT'],
                     ]);
             }
         }
@@ -389,7 +399,7 @@ class PurchaseOrderServices
     public function isPOAlreadyBill(int $PO_ID): bool
     {
 
-        $result =  DB::table('purchase_order as po')
+        $result = DB::table('purchase_order as po')
             ->join('purchase_order_items as po_item', 'po_item.PO_ID', '=', 'po.ID')
             ->where('po.ID', '=', $PO_ID)
             ->whereExists(function ($query) {
@@ -399,7 +409,7 @@ class PurchaseOrderServices
                     ->whereColumn('b_item.PO_ITEM_ID', '=', 'po_item.ID');
             })
             ->exists();
-            
+
         return $result;
     }
 }

@@ -1,6 +1,8 @@
 <?php
 namespace App\Services;
 
+use App\Enums\LogEntity;
+use App\Enums\TransType;
 use App\Models\Invoice;
 use App\Models\Payment;
 use App\Models\PaymentInvoices;
@@ -17,16 +19,19 @@ class PaymentServices
     private $dateServices;
     private $systemSettingServices;
     private $accountJournalServices;
+    private $usersLogServices;
     public function __construct(
         ObjectServices $objectService,
         DateServices $dateServices,
         SystemSettingServices $systemSettingServices,
-        AccountJournalServices $accountJournalServices
+        AccountJournalServices $accountJournalServices,
+        UsersLogServices $usersLogServices
     ) {
         $this->object                 = $objectService;
         $this->dateServices           = $dateServices;
         $this->systemSettingServices  = $systemSettingServices;
         $this->accountJournalServices = $accountJournalServices;
+        $this->usersLogServices       = $usersLogServices;
     }
     public function get($ID)
     {
@@ -136,6 +141,8 @@ class PaymentServices
             'PAYMENT_PERIOD_ID'            => $PAYMENT_PERIOD_ID > 0 ? $PAYMENT_PERIOD_ID : null,
         ]);
 
+        $this->usersLogServices->AddLogs(TransType::INSERT, LogEntity::PAYMENT, $ID);
+
         return $ID;
     }
     public function Update(
@@ -174,6 +181,8 @@ class PaymentServices
                 'DEPOSITED'                    => $DEPOSITED,
                 'ACCOUNTS_RECEIVABLE_ID'       => $ACCOUNTS_RECEIVABLE_ID,
             ]);
+
+        $this->usersLogServices->AddLogs(TransType::UPDATE, LogEntity::PAYMENT, $ID);
     }
     public function StatusUpdate(int $ID, int $STATUS)
     {
@@ -182,11 +191,15 @@ class PaymentServices
                 'STATUS'      => $STATUS,
                 'STATUS_DATE' => $this->dateServices->NowDate(),
             ]);
+
+        $this->usersLogServices->StatusLog($STATUS, LogEntity::PAYMENT, $ID);
     }
     public function Delete(int $ID)
     {
         PaymentInvoices::where('PAYMENT_ID', $ID)->delete();
         Payment::where('ID', $ID)->delete();
+
+        $this->usersLogServices->AddLogs(TransType::DELETE, LogEntity::PAYMENT, $ID);
     }
     public function Search($search, int $locationId, int $perPage)
     {
@@ -248,6 +261,8 @@ class PaymentServices
             'ACCOUNTS_RECEIVABLE_ID' => $ACCOUNTS_RECEIVABLE_ID > 0 ? $ACCOUNTS_RECEIVABLE_ID : null,
         ]);
 
+        $this->usersLogServices->AddLogs(TransType::INSERT, LogEntity::PAYMENT_INVOICES, $PAYMENT_ID);
+
         return $ID;
     }
     public function PaymentInvoiceExist(int $PAYMENT_ID, int $INVOICE_ID): int
@@ -270,6 +285,8 @@ class PaymentServices
                 'DISCOUNT'       => $DISCOUNT,
                 'AMOUNT_APPLIED' => $AMOUNT_APPLIED,
             ]);
+
+        $this->usersLogServices->AddLogs(TransType::UPDATE, LogEntity::PAYMENT_INVOICES, $PAYMENT_ID);
     }
     public function PaymentInvoiceDelete(int $ID, int $PAYMENT_ID, int $INVOICE_ID)
     {
@@ -277,6 +294,8 @@ class PaymentServices
             ->where('PAYMENT_ID', '=', $PAYMENT_ID)
             ->where('INVOICE_ID', '=', $INVOICE_ID)
             ->delete();
+
+        $this->usersLogServices->AddLogs(TransType::DELETE, LogEntity::PAYMENT_INVOICES, $PAYMENT_ID);
     }
     public function getPaymentInvoiceDetails(int $ID)
     {

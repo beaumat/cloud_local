@@ -61,7 +61,7 @@ class InvoiceList extends Component
                 }
             }
 
-            $this->taxCreditServices->DeleteInvoice($ID);
+            $this->taxCreditServices->DeleteInvoice($ID, $this->TAX_CREDIT_ID);
             $this->invoiceServices->updateInvoiceBalance($INVOICE_ID);
             $NEW_AMOUNT = $this->taxCreditServices->getTotal($this->TAX_CREDIT_ID);
             $this->taxCreditServices->UpdateAMOUNT_WITHHELD($this->TAX_CREDIT_ID, $NEW_AMOUNT);

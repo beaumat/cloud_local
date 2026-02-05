@@ -70,8 +70,6 @@
                                                 :isDisabled="false" />
                                         </div>
                                         <div class="col-md-12">
-
-
                                             <livewire:custom-check-box name="date_enabled"
                                                 isDisabled="{{ false }}" titleName="Date Enabled"
                                                 wire:model='date_enabled' />
@@ -79,6 +77,10 @@
                                         <div class="col-md-12">
                                             <livewire:custom-check-box name="inactive" titleName="Inactive"
                                                 isDisabled="{{ false }}" wire:model='inactive' />
+                                        </div>
+                                        <div class="col-md-12">
+                                            <livewire:custom-check-box name="logs_disabled" titleName="Logs Disabled"
+                                                isDisabled="{{ false }}" wire:model='logs_disabled' />
                                         </div>
                                     </div>
                                 </div>

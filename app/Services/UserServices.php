@@ -44,8 +44,15 @@ class UserServices
     {
         return (int) Auth::user()->id;
     }
-    public function Store(string $Username, string $Password, int $Contact_id, bool $Inactive, int $Location_id, string $trans_date, bool $locked_location, bool $date_enabled): int
-    {
+    public function Store(string $Username,
+        string $Password,
+        int $Contact_id,
+        bool $Inactive,
+        int $Location_id,
+        string $trans_date,
+        bool $locked_location,
+        bool $date_enabled,
+        bool $logs_disabled): int {
 
         $user = User::create([
             'name'              => $Username,
@@ -59,6 +66,7 @@ class UserServices
             'trans_date'        => $trans_date == '' ? null : $trans_date,
             'locked_location'   => $locked_location,
             'date_enabled'      => $date_enabled,
+            'logs_disabled'     => $logs_disabled,
         ]);
 
         return $user->id;
@@ -67,19 +75,30 @@ class UserServices
 
     }
 
-    public function Update(int $id, string $Username, string $Password, int $Contact_id, bool $Inactive, int $Location_id, string $trans_date, bool $locked_location, bool $date_enabled): void
-    {
+    public function Update(int $id,
+        string $Username,
+        string $Password,
+        int $Contact_id,
+        bool $Inactive,
+        int $Location_id,
+        string $trans_date,
+        bool $locked_location,
+        bool $date_enabled,
+        bool $logs_disabled): void {
+
         if ($Password) {
-            User::where('id', $id)->update([
-                'name'            => $Username,
-                'password'        => Hash::make($Password),
-                'contact_id'      => $Contact_id ? $Contact_id : null,
-                'inactive'        => $Inactive,
-                'location_id'     => $Location_id > 0 ? $Location_id : 0,
-                'trans_date'      => $trans_date == '' ? null : $trans_date,
-                'locked_location' => $locked_location,
-                'date_enabled'    => $date_enabled,
-            ]);
+            User::where('id', $id)
+                ->update([
+                    'name'            => $Username,
+                    'password'        => Hash::make($Password),
+                    'contact_id'      => $Contact_id ? $Contact_id : null,
+                    'inactive'        => $Inactive,
+                    'location_id'     => $Location_id > 0 ? $Location_id : 0,
+                    'trans_date'      => $trans_date == '' ? null : $trans_date,
+                    'locked_location' => $locked_location,
+                    'date_enabled'    => $date_enabled,
+                    'logs_disabled'   => $logs_disabled,
+                ]);
 
             return;
         }
@@ -93,6 +112,7 @@ class UserServices
                 'trans_date'      => $trans_date == '' ? null : $trans_date,
                 'locked_location' => $locked_location,
                 'date_enabled'    => $date_enabled,
+                'logs_disabled'   => $logs_disabled,
             ]);
     }
     public function IsPasswordCorrect(int $userID, string $Password): bool
@@ -138,6 +158,7 @@ class UserServices
                     'users.trans_date',
                     'users.locked_location as locked',
                     'users.date_enabled as date_edit',
+                    'users.logs_disabled as logs_disabled',
                 ]
             )
             ->leftJoin('contact', 'contact.id', '=', 'users.contact_id')
@@ -209,6 +230,13 @@ class UserServices
     {
         $userName = auth()->user()->name;
         return $userName;
+
+    }
+
+       public function LogsDisabled(): bool
+    {
+        return (bool) auth()->user()->logs_disabled;
+
 
     }
 }

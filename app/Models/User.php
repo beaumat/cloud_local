@@ -26,7 +26,8 @@ class User extends Authenticatable
         'location_id',
         'trans_date',
         'locked_location',
-        'date_enabled'
+        'date_enabled',
+        'logs_disabled',
     ];
 
     /**

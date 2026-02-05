@@ -23,6 +23,7 @@ use Livewire\Component;
 #[Title('Service Charge')]
 class ServiceChargeForm extends Component
 {
+
     public int $ID = 0;
     public int $PATIENT_ID;
     public int $SALES_REP_ID;
@@ -49,6 +50,8 @@ class ServiceChargeForm extends Component
     public bool $WALK_IN = false;
 
     public int $HEMO_ID;
+
+    public int $ITEM_COUNT  = 0;
     public int $HEMO_STATUS = 0;
     public $patientList     = [];
     public $locationList    = [];
@@ -111,7 +114,11 @@ class ServiceChargeForm extends Component
     {
         $this->contactLoad();
     }
-
+    #[On('update-item-count')]
+    public function checkUpdatedItemCount($count)
+    {
+        $this->ITEM_COUNT = $count;
+    }
     private function contactLoad()
     {
         if ($this->WALK_IN) {
@@ -165,6 +172,8 @@ class ServiceChargeForm extends Component
         $this->NONTAXABLE_AMOUNT      = $Data->NONTAXABLE_AMOUNT ? $Data->NONTAXABLE_AMOUNT : 0;
         $this->STATUS_DESCRIPTION     = $this->documentStatusServices->getDesc($this->STATUS);
         $this->WALK_IN                = $Data->WALK_IN ?? false;
+
+        $this->ITEM_COUNT = $this->serviceChargeServices->getItemCount($this->ID);
     }
     public function updatedPAYMENTTERMSID()
     {
@@ -405,6 +414,20 @@ class ServiceChargeForm extends Component
         ];
 
         $this->dispatch('open-agreement-form', data: $data);
+    }
+    public function delete()
+    {
+
+        try {
+            DB::beginTransaction();
+            $this->serviceChargeServices->Delete($this->ID);
+            DB::commit();
+            return Redirect::route('patientsservice_charges')->with('message', 'Successfully deleted');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            $errorMessage = 'Error occurred: ' . $e->getMessage();
+            session()->flash('error', $errorMessage);
+        }
     }
     public function render()
     {

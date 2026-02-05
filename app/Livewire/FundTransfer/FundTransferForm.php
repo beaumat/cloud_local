@@ -211,13 +211,14 @@ class FundTransferForm extends Component
                     $this->AMOUNT
                 );
 
-                $this->fundTransferServices->StatusUpdate($this->ID, 0);
+
                 DB::commit();
                 return Redirect::route('bankingfund_transfer_edit', ['id' => $this->ID])->with('message', 'Successfully created');
             } else {
                 if ($this->STATUS == 16) {
                     $this->editJournal();
                 }
+
                 $this->fundTransferServices->Update(
                     $this->ID,
                     $this->CODE,
@@ -428,7 +429,7 @@ class FundTransferForm extends Component
     }
     public function SetReverse()
     {
-        
+
     }
     public function render()
     {

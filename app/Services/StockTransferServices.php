@@ -1,25 +1,30 @@
 <?php
-
 namespace App\Services;
 
+use App\Enums\LogEntity;
+use App\Enums\TransType;
 use App\Models\StockTransfer;
 use App\Models\StockTransferItems;
 use Illuminate\Support\Facades\DB;
 
 class StockTransferServices
 {
-    public int $object_type_stock_transfer = 38;
+    public int $object_type_stock_transfer       = 38;
     public int $object_type_stock_transfer_items = 39;
-    public int $document_type_id = 7;
+    public int $document_type_id                 = 7;
 
     private $dateServices;
     private $systemSettingServices;
     private $object;
-    public function __construct(ObjectServices $objectServices, SystemSettingServices $systemSettingServices, DateServices $dateServices)
+
+    private $usersLogServices;
+
+    public function __construct(ObjectServices $objectServices, SystemSettingServices $systemSettingServices, DateServices $dateServices, UsersLogServices $usersLogServices)
     {
-        $this->object = $objectServices;
+        $this->object                = $objectServices;
         $this->systemSettingServices = $systemSettingServices;
-        $this->dateServices = $dateServices;
+        $this->dateServices          = $dateServices;
+        $this->usersLogServices      = $usersLogServices;
     }
     public function Get(int $ID)
     {
@@ -28,26 +33,26 @@ class StockTransferServices
     public function Store(string $CODE, string $DATE, int $LOCATION_ID, int $TRANSFER_TO_ID, string $NOTES, int $PREPARED_BY_ID, int $ACCOUNT_ID): int
     {
 
-        $ID = $this->object->ObjectNextID('STOCK_TRANSFER');
+        $ID          = $this->object->ObjectNextID('STOCK_TRANSFER');
         $OBJECT_TYPE = (int) $this->object->ObjectTypeID('STOCK_TRANSFER');
-        $isLocRef = boolval($this->systemSettingServices->GetValue('IncRefNoByLocation'));
+        $isLocRef    = boolval($this->systemSettingServices->GetValue('IncRefNoByLocation'));
 
         StockTransfer::create([
-            'ID' => $ID,
-            'RECORDED_ON' => $this->dateServices->Now(),
-            'CODE' => $CODE !== '' ? $CODE : $this->object->GetSequence($OBJECT_TYPE, $isLocRef ? $LOCATION_ID : null),
-            'DATE' => $DATE,
-            'LOCATION_ID' => $LOCATION_ID,
+            'ID'             => $ID,
+            'RECORDED_ON'    => $this->dateServices->Now(),
+            'CODE'           => $CODE !== '' ? $CODE : $this->object->GetSequence($OBJECT_TYPE, $isLocRef ? $LOCATION_ID : null),
+            'DATE'           => $DATE,
+            'LOCATION_ID'    => $LOCATION_ID,
             'TRANSFER_TO_ID' => $TRANSFER_TO_ID > 0 ? $TRANSFER_TO_ID : null,
-            'AMOUNT' => 0,
-            'RETAIL_VALUE' => 0,
-            'NOTES' => $NOTES,
+            'AMOUNT'         => 0,
+            'RETAIL_VALUE'   => 0,
+            'NOTES'          => $NOTES,
             'PREPARED_BY_ID' => $PREPARED_BY_ID > 0 ? $PREPARED_BY_ID : null,
-            'STATUS' => 0,
-            'STATUS_DATE' => $this->dateServices->NowDate(),
-            'ACCOUNT_ID' => $ACCOUNT_ID
+            'STATUS'         => 0,
+            'STATUS_DATE'    => $this->dateServices->NowDate(),
+            'ACCOUNT_ID'     => $ACCOUNT_ID,
         ]);
-
+        $this->usersLogServices->AddLogs(TransType::INSERT, LogEntity::STOCK_TRANSFER, $ID);
         return $ID;
     }
 
@@ -55,25 +60,29 @@ class StockTransferServices
     {
         StockTransfer::where('ID', $ID)
             ->update([
-                'STATUS' => $STATUS,
-                'STATUS_DATE' => $this->dateServices->NowDate()
+                'STATUS'      => $STATUS,
+                'STATUS_DATE' => $this->dateServices->NowDate(),
             ]);
+
+        $this->usersLogServices->StatusLog($STATUS, LogEntity::STOCK_TRANSFER, $ID);
     }
     public function Update(int $ID, string $CODE, int $TRANSFER_TO_ID, string $NOTES, int $PREPARED_BY_ID)
     {
         StockTransfer::where('ID', $ID)
             ->update([
-                'CODE' => $CODE,
+                'CODE'           => $CODE,
                 'TRANSFER_TO_ID' => $TRANSFER_TO_ID,
-                'NOTES' => $NOTES,
+                'NOTES'          => $NOTES,
                 'PREPARED_BY_ID' => $PREPARED_BY_ID > 0 ? $PREPARED_BY_ID : null,
             ]);
+        $this->usersLogServices->AddLogs(TransType::UPDATE, LogEntity::STOCK_TRANSFER, $ID);
     }
 
     public function Delete(int $ID)
     {
         StockTransferItems::where('STOCK_TRANSFER_ID', $ID)->delete();
         StockTransfer::where('ID', $ID)->delete();
+        $this->usersLogServices->AddLogs(TransType::DELETE, LogEntity::STOCK_TRANSFER, $ID);
     }
 
     public function Search($search, int $LOCATION_ID, int $perPage)
@@ -89,7 +98,7 @@ class StockTransferServices
                 'l.NAME as LOCATION_NAME',
                 's.DESCRIPTION as STATUS',
                 't.NAME as TRANSFER_TO',
-                'c.NAME as PREPARED_BY'
+                'c.NAME as PREPARED_BY',
             ])
             ->leftJoin('contact as c', 'c.ID', '=', 'stock_transfer.PREPARED_BY_ID')
             ->join('location as t', 't.ID', '=', 'stock_transfer.TRANSFER_TO_ID')
@@ -139,22 +148,22 @@ class StockTransferServices
         $LINE_NO = $this->getLine($STOCK_TRANSFER_ID) + 1;
 
         StockTransferItems::create([
-            'ID' => $ID,
-            'STOCK_TRANSFER_ID' => $STOCK_TRANSFER_ID,
-            'LINE_NO' => $LINE_NO,
-            'ITEM_ID' => $ITEM_ID,
-            'DESCRIPTION' => null,
-            'QUANTITY' => $QUANTITY,
-            'UNIT_ID' => $UNIT_ID > 0 ? $UNIT_ID : null,
+            'ID'                 => $ID,
+            'STOCK_TRANSFER_ID'  => $STOCK_TRANSFER_ID,
+            'LINE_NO'            => $LINE_NO,
+            'ITEM_ID'            => $ITEM_ID,
+            'DESCRIPTION'        => null,
+            'QUANTITY'           => $QUANTITY,
+            'UNIT_ID'            => $UNIT_ID > 0 ? $UNIT_ID : null,
             'UNIT_BASE_QUANTITY' => $UNIT_BASE_QUANTITY,
-            'UNIT_COST' => $UNIT_COST,
-            'UNIT_PRICE' => $UNIT_PRICE,
-            'AMOUNT' => $UNIT_COST * $QUANTITY,
-            'RETAIL_VALUE' => $UNIT_PRICE * $QUANTITY,
-            'BATCH_ID' => $BATCH_ID > 0 ? $BATCH_ID : null,
-            'ASSET_ACCOUNT_ID' => $ASSET_ACCOUNT_ID > 0 ? $ASSET_ACCOUNT_ID : null
+            'UNIT_COST'          => $UNIT_COST,
+            'UNIT_PRICE'         => $UNIT_PRICE,
+            'AMOUNT'             => $UNIT_COST * $QUANTITY,
+            'RETAIL_VALUE'       => $UNIT_PRICE * $QUANTITY,
+            'BATCH_ID'           => $BATCH_ID > 0 ? $BATCH_ID : null,
+            'ASSET_ACCOUNT_ID'   => $ASSET_ACCOUNT_ID > 0 ? $ASSET_ACCOUNT_ID : null,
         ]);
-
+        $this->usersLogServices->AddLogs(TransType::INSERT, LogEntity::STOCK_TRANSFER_ITEMS, $STOCK_TRANSFER_ID);
         $this->UpdateTotal($STOCK_TRANSFER_ID);
     }
     public function GetItem(int $ID, int $STOCK_TRANSFER_ID)
@@ -178,18 +187,18 @@ class StockTransferServices
             ->where('STOCK_TRANSFER_ID', $STOCK_TRANSFER_ID)
             ->where('ITEM_ID', $ITEM_ID)
             ->update([
-                'ID' => $ID,
-                'ITEM_ID' => $ITEM_ID,
-                'QUANTITY' => $QUANTITY,
-                'UNIT_ID' => $UNIT_ID > 0 ? $UNIT_ID : null,
+                'ID'                 => $ID,
+                'ITEM_ID'            => $ITEM_ID,
+                'QUANTITY'           => $QUANTITY,
+                'UNIT_ID'            => $UNIT_ID > 0 ? $UNIT_ID : null,
                 'UNIT_BASE_QUANTITY' => $UNIT_BASE_QUANTITY,
-                'UNIT_COST' => $UNIT_COST,
-                'UNIT_PRICE' => $UNIT_PRICE,
-                'AMOUNT' => $UNIT_COST * $QUANTITY,
-                'RETAIL_VALUE' => $UNIT_PRICE * $QUANTITY,
-                'BATCH_ID' => $BATCH_ID > 0 ? $BATCH_ID : null
+                'UNIT_COST'          => $UNIT_COST,
+                'UNIT_PRICE'         => $UNIT_PRICE,
+                'AMOUNT'             => $UNIT_COST * $QUANTITY,
+                'RETAIL_VALUE'       => $UNIT_PRICE * $QUANTITY,
+                'BATCH_ID'           => $BATCH_ID > 0 ? $BATCH_ID : null,
             ]);
-
+        $this->usersLogServices->AddLogs(TransType::UPDATE, LogEntity::STOCK_TRANSFER_ITEMS, $STOCK_TRANSFER_ID);
         $this->UpdateTotal($STOCK_TRANSFER_ID);
     }
     public function ItemDelete(int $ID, int $STOCK_TRANSFER_ID)
@@ -197,7 +206,7 @@ class StockTransferServices
         StockTransferItems::where('ID', $ID)
             ->where('STOCK_TRANSFER_ID', $STOCK_TRANSFER_ID)
             ->delete();
-
+        $this->usersLogServices->AddLogs(TransType::DELETE, LogEntity::STOCK_TRANSFER_ITEMS, $STOCK_TRANSFER_ID);
         $this->UpdateTotal($STOCK_TRANSFER_ID);
     }
 
@@ -228,7 +237,7 @@ class StockTransferServices
                 'item.DESCRIPTION',
                 'u.NAME as UNIT_NAME',
                 'u.SYMBOL',
-                'stock_transfer_items.ASSET_ACCOUNT_ID'
+                'stock_transfer_items.ASSET_ACCOUNT_ID',
             ])
             ->leftJoin('item', 'item.ID', '=', 'stock_transfer_items.ITEM_ID')
             ->leftJoin('unit_of_measure as u', 'u.ID', '=', 'stock_transfer_items.UNIT_ID')
@@ -251,14 +260,14 @@ class StockTransferServices
 
         if ($result) {
             return [
-                'AMOUNT' => $result->AMOUNT,
-                'RETAIL_VALUE' => $result->RETAIL_VALUE
+                'AMOUNT'       => $result->AMOUNT,
+                'RETAIL_VALUE' => $result->RETAIL_VALUE,
             ];
         }
 
         return [
-            'AMOUNT' => 0,
-            'RETAIL_VALUE' => 0
+            'AMOUNT'       => 0,
+            'RETAIL_VALUE' => 0,
         ];
     }
     public function GetSum(int $STOCK_TRANSFER_ID)
@@ -266,21 +275,20 @@ class StockTransferServices
         $result = StockTransfer::query()
             ->select([
                 'AMOUNT',
-                'RETAIL_VALUE'
+                'RETAIL_VALUE',
             ])
             ->where('ID', $STOCK_TRANSFER_ID)
             ->first();
 
         if ($result) {
             return [
-                'AMOUNT' => $result->AMOUNT,
+                'AMOUNT'       => $result->AMOUNT,
                 'RETAIL_VALUE' => $result->RETAIL_VALUE,
             ];
         }
 
-
         return [
-            'AMOUNT' => 0,
+            'AMOUNT'       => 0,
             'RETAIL_VALUE' => 0,
         ];
     }
@@ -290,7 +298,7 @@ class StockTransferServices
         StockTransfer::where('ID', $STOCK_TRANSFER_ID)
             ->update(
                 [
-                    'AMOUNT' => $result['AMOUNT'],
+                    'AMOUNT'       => $result['AMOUNT'],
                     'RETAIL_VALUE' => $result['RETAIL_VALUE'],
                 ]
             );
@@ -303,7 +311,7 @@ class StockTransferServices
                 'stock_transfer_items.ITEM_ID',
                 'stock_transfer_items.QUANTITY',
                 'stock_transfer_items.UNIT_BASE_QUANTITY',
-                'item.COST'
+                'item.COST',
             ])
             ->join('item', 'item.ID', '=', 'stock_transfer_items.ITEM_ID')
             ->whereIn('item.TYPE', ['0', '1'])
@@ -322,7 +330,7 @@ class StockTransferServices
                 'AMOUNT',
                 DB::raw(" 0 as ENTRY_TYPE"),
                 DB::raw("'SOURCEACCOUNT' as EXTENDED_OPTIONS"),
-                DB::raw("YEAR(DATE) as SEQUENCE_GROUP")
+                DB::raw("YEAR(DATE) as SEQUENCE_GROUP"),
             ])
             ->where('ID', $STOCK_TRANSFER_ID)->get();
 
@@ -338,7 +346,7 @@ class StockTransferServices
                 'AMOUNT',
                 DB::raw("1 as ENTRY_TYPE"),
                 DB::raw("'DESTACCOUNT' as EXTENDED_OPTIONS"),
-                DB::raw("YEAR(DATE) as SEQUENCE_GROUP")
+                DB::raw("YEAR(DATE) as SEQUENCE_GROUP"),
 
             ])
             ->where('ID', $STOCK_TRANSFER_ID)->get();
@@ -355,7 +363,7 @@ class StockTransferServices
                 'ITEM_ID as SUBSIDIARY_ID',
                 'AMOUNT',
                 DB::raw('0 as ENTRY_TYPE'),
-                DB::raw("'DESTACCOUNT' as EXTENDED_OPTIONS")
+                DB::raw("'DESTACCOUNT' as EXTENDED_OPTIONS"),
             ])
             ->where('STOCK_TRANSFER_ID', $STOCK_TRANSFER_ID)
             ->orderBy('LINE_NO', 'asc')
@@ -372,7 +380,7 @@ class StockTransferServices
                 'ITEM_ID as SUBSIDIARY_ID',
                 'AMOUNT',
                 DB::raw('1 as ENTRY_TYPE'),
-                DB::raw("'SOURCEACCOUNT' as EXTENDED_OPTIONS")
+                DB::raw("'SOURCEACCOUNT' as EXTENDED_OPTIONS"),
             ])
             ->where('STOCK_TRANSFER_ID', $STOCK_TRANSFER_ID)
             ->orderBy('LINE_NO', 'asc')

@@ -116,6 +116,18 @@
                                                     @if ($STATUS > 0) style="opacity: 0.5;pointer-events: none;" @endif>
                                                     <i class="fa fa-wrench" aria-hidden="true"></i> Modify
                                                 </button>
+                                                @if ($ITEM_COUNT == 0)
+                                                    <button type="button" wire:click='delete()'
+                                                        class="btn btn-sm btn-danger"
+                                                        wire:confirm="Are you sure you want to delete this?"
+                                                        @if ($STATUS > 0) style="opacity: 0.5;pointer-events: none;" @endif>
+                                                        <i class="fa fa-trash" aria-hidden="true"></i> Delete
+                                                    </button>
+                                                @else
+                                                    <button type="button" class="btn btn-sm btn-secondary" disabled>
+                                                        <i class="fa fa-trash" aria-hidden="true"></i> Delete
+                                                    </button>
+                                                @endif
                                             @endif
                                         @endif
                                     </div>

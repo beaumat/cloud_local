@@ -39,7 +39,9 @@ class InventoryAdjustmentServices
     public function Store(string $CODE, string $DATE, int $LOCATION_ID, int $ADJUSTMENT_TYPE_ID, int $ACCOUNT_ID, string $NOTES): int
     {
         $ID          = (int) $this->object->ObjectNextID('INVENTORY_ADJUSTMENT');
+
         $OBJECT_TYPE = (int) $this->object->ObjectTypeID('INVENTORY_ADJUSTMENT');
+
         $isLocRef    = (bool) boolval($this->systemSettingServices->GetValue('IncRefNoByLocation'));
 
         InventoryAdjustment::create([
@@ -56,6 +58,7 @@ class InventoryAdjustmentServices
         ]);
 
         $this->usersLogServices->AddLogs(TransType::INSERT, LogEntity::INVENTORY_ADJUSTMENT, $ID);
+
         return $ID;
     }
     public function StatusUpdate(int $ID, int $STATUS)

@@ -1,6 +1,8 @@
 <?php
 namespace App\Services;
 
+use App\Enums\LogEntity;
+use App\Enums\TransType;
 use App\Models\PatientPaymentCharges;
 use App\Models\ServiceCharges;
 use App\Models\ServiceChargesItems;
@@ -18,13 +20,14 @@ class ServiceChargeServices
     private $locationReference;
     private $systemSettingServices;
     private $dateServices;
-
+    private $usersLogServices;
     public function __construct(
         ObjectServices $objectService,
         ComputeServices $computeServices,
         LocationReferenceServices $locationReferenceServices,
         SystemSettingServices $systemSettingServices,
-        DateServices $dateServices
+        DateServices $dateServices,
+        UsersLogServices $usersLogServices
 
     ) {
         $this->object                = $objectService;
@@ -32,6 +35,7 @@ class ServiceChargeServices
         $this->locationReference     = $locationReferenceServices;
         $this->systemSettingServices = $systemSettingServices;
         $this->dateServices          = $dateServices;
+        $this->usersLogServices      = $usersLogServices;
 
     }
     public function getItemBalance(int $SERVICE_CHARGES_ITEM_ID): float
@@ -236,6 +240,8 @@ class ServiceChargeServices
             'USE_PHIC'               => $USE_PHIC,
         ]);
 
+        $this->usersLogServices->AddLogs(TransType::INSERT, LogEntity::SERVICE_CHARGES, $ID);
+
         return $ID;
     }
 
@@ -275,12 +281,15 @@ class ServiceChargeServices
                 'OUTPUT_TAX_VAT_METHOD'  => $OUTPUT_TAX_VAT_METHOD,
                 'OUTPUT_TAX_ACCOUNT_ID'  => $OUTPUT_TAX_ACCOUNT_ID > 0 ? $OUTPUT_TAX_ACCOUNT_ID : null,
             ]);
+
+        $this->usersLogServices->AddLogs(TransType::UPDATE, LogEntity::SERVICE_CHARGES, $ID);
     }
 
     public function Delete(int $ID): void
     {
         ServiceChargesItems::where('SERVICE_CHARGES_ID', $ID)->delete();
         ServiceCharges::where('ID', $ID)->delete();
+        $this->usersLogServices->AddLogs(TransType::DELETE, LogEntity::SERVICE_CHARGES, $ID);
     }
     public function ServicesChargesExists(string $DATE, int $PATIENT_ID, int $LOCATION_ID): bool
     {
@@ -440,6 +449,7 @@ class ServiceChargeServices
             'DATE_LOG'           => $this->dateServices->NowDate(),
         ]);
 
+        $this->usersLogServices->AddLogs(TransType::INSERT, LogEntity::SERVICE_CHARGES_ITEMS, $SERVICE_CHARGES_ID);
         return $ID;
     }
     public function ItemUpdate(
@@ -473,10 +483,13 @@ class ServiceChargeServices
                 'PRICE_LEVEL_ID'     => $PRICE_LEVEL_ID > 0 ? $PRICE_LEVEL_ID : null,
                 'INCOME_ACCOUNT_ID'  => $INCOME_ACCOUNT_ID > 0 ? $INCOME_ACCOUNT_ID : null,
             ]);
+
+        $this->usersLogServices->AddLogs(TransType::UPDATE, LogEntity::SERVICE_CHARGES_ITEMS, $SERVICE_CHARGES_ID);
     }
     public function ItemDelete(int $ID, int $SERVICE_CHARGES_ID)
     {
         ServiceChargesItems::where('ID', $ID)->where('SERVICE_CHARGES_ID', $SERVICE_CHARGES_ID)->delete();
+        $this->usersLogServices->AddLogs(TransType::DELETE, LogEntity::SERVICE_CHARGES_ITEMS, $SERVICE_CHARGES_ID);
     }
     public function GetCountByYear(int $ITEM_ID, int $YEAR, int $PATIENT_ID, int $LOCATION_ID): int
     {
@@ -506,6 +519,10 @@ class ServiceChargeServices
             return $result->RATE ?? 0;
         }
         return 0;
+    }
+    public function getItemCount(int $SERVICE_CHARGES_ID): int
+    {
+        return ServiceChargesItems::where('SERVICE_CHARGES_ID', $SERVICE_CHARGES_ID)->count();
     }
     public function ItemView(int $SERVICE_CHARGES_ID, bool $isNotZero = false)
     {
@@ -995,7 +1012,6 @@ class ServiceChargeServices
         return (int) $result;
     }
 
-
     public function GetItemPhic156UnInvoice(string $transDate, int $PHIL_HEALTH_ITEM_ID)
     {
         $result = ServiceChargesItems::query()
@@ -1012,10 +1028,9 @@ class ServiceChargeServices
             ->where('sc.DATE', '<=', $transDate)
             ->whereYear('sc.DATE', '>=', 2026)
             ->where('service_charges_items.ITEM_ID', $PHIL_HEALTH_ITEM_ID)
-            ->where('service_charges_items.INVOICE_ID','=', 0)
+            ->where('service_charges_items.INVOICE_ID', '=', 0)
             ->whereNotNull('service_charges_items.AMOUNT')
             ->get();
-
 
         return $result;
     }

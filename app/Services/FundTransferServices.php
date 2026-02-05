@@ -124,7 +124,9 @@ class FundTransferServices
                 'STATUS_DATE' => $this->dateServices->NowDate(),
             ]);
 
+
         $this->usersLogServices->StatusLog($STATUS, LogEntity::FUND_TRANSFER, $ID);
+    ;
 
     }
     public function getJournalTo(int $ID, bool $isDebit, bool $useInter)

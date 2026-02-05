@@ -1,6 +1,8 @@
 <?php
 namespace App\Services;
 
+use App\Enums\LogEntity;
+use App\Enums\TransType;
 use App\Models\PatientPaymentCharges;
 use App\Models\PatientPayments;
 use Illuminate\Support\Facades\DB;
@@ -22,13 +24,17 @@ class PatientPaymentServices
     private $philHealthServices;
     private $accountServices;
     private $paymentMethodServices;
+
+    private $usersLogServices;
+
     public function __construct(
         ObjectServices $objectService,
         DateServices $dateServices,
         SystemSettingServices $systemSettingServices,
         PhilHealthServices $philHealthServices,
         AccountServices $accountServices,
-        PaymentMethodServices $paymentMethodServices
+        PaymentMethodServices $paymentMethodServices,
+        UsersLogServices $usersLogServices
     ) {
         $this->object                = $objectService;
         $this->dateServices          = $dateServices;
@@ -36,6 +42,7 @@ class PatientPaymentServices
         $this->philHealthServices    = $philHealthServices;
         $this->accountServices       = $accountServices;
         $this->paymentMethodServices = $paymentMethodServices;
+        $this->usersLogServices      = $usersLogServices;
     }
     public function gotHaveItemBalance($dataList = [], int $ID, int $Init_AMOUNT)
     {
@@ -127,6 +134,7 @@ class PatientPaymentServices
             'LESS_AMOUNT'                  => $LESS_AMOUNT,
         ]);
 
+        $this->usersLogServices->AddLogs(TransType::INSERT, LogEntity::PATIENT_PAYMENT, $ID);
         return $ID;
     }
     public function Update(
@@ -172,6 +180,8 @@ class PatientPaymentServices
                 'WTAX_ACCOUNT_ID'              => $WTAX_ACCOUNT_ID > 0 ? $WTAX_ACCOUNT_ID : null,
                 'LESS_AMOUNT'                  => $LESS_AMOUNT,
             ]);
+
+        $this->usersLogServices->AddLogs(TransType::UPDATE, LogEntity::PATIENT_PAYMENT, $ID);
     }
     public function StatusUpdate(int $ID, int $STATUS)
     {
@@ -204,6 +214,7 @@ class PatientPaymentServices
     {
         PatientPaymentCharges::where('PATIENT_PAYMENT_ID', '=', $ID)->delete();
         PatientPayments::where('ID', '=', $ID)->delete();
+        $this->usersLogServices->AddLogs(TransType::DELETE, LogEntity::PATIENT_PAYMENT, $ID);
     }
     public function getSumOnPhilHealth(int $PATIENT_ID, float $LOCATION_ID, int $PHILHEALTH_ID): float
     {
@@ -445,6 +456,7 @@ class PatientPaymentServices
     ): int {
 
         $ID = $this->object->ObjectNextID('PATIENT_PAYMENT_CHARGES');
+
         PatientPaymentCharges::create([
             'ID'                      => $ID,
             'PATIENT_PAYMENT_ID'      => $PATIENT_PAYMENT_ID,
@@ -455,15 +467,20 @@ class PatientPaymentServices
             'ACCOUNTS_RECEIVABLE_ID'  => $ACCOUNTS_RECEIVABLE_ID > 0 ? $ACCOUNTS_RECEIVABLE_ID : null,
         ]);
 
+        $this->usersLogServices->AddLogs(TransType::INSERT, LogEntity::PATIENT_PAYMENT_CHARGES, $PATIENT_PAYMENT_ID);
+
         return $ID;
     }
 
     public function UpdateFile(int $ID, $FILE_NAME, $FILE_PATH)
     {
-        PatientPayments::where('ID', $ID)->update([
-            'FILE_NAME' => $FILE_NAME,
-            'FILE_PATH' => $FILE_PATH,
-        ]);
+        PatientPayments::where('ID', $ID)
+            ->update([
+                'FILE_NAME' => $FILE_NAME,
+                'FILE_PATH' => $FILE_PATH,
+            ]);
+
+        $this->usersLogServices->AddLogs(TransType::UPLOAD, LogEntity::PATIENT_PAYMENT, $ID);
     }
     public function CustomerRef(int $PATIENT_PAY_ID, bool $IS_INVOICE, int $REF_ID = 0)
     {
@@ -473,6 +490,8 @@ class PatientPaymentServices
                 'IS_INVOICE' => $IS_INVOICE,
                 'REF_ID'     => $REF_ID > 0 ? $REF_ID : null,
             ]);
+
+        $this->usersLogServices->AddLogs(TransType::UPDATE, LogEntity::PATIENT_PAYMENT, $PATIENT_PAY_ID);
     }
     public function GetCustomerRef(bool $IS_INVOICE, int $REF_ID)
     {
@@ -505,6 +524,7 @@ class PatientPaymentServices
                 'DISCOUNT'       => $DISCOUNT,
                 'AMOUNT_APPLIED' => $AMOUNT_APPLIED,
             ]);
+
     }
     public function PaymentChargesDelete(int $ID, int $PATIENT_PAYMENT_ID, int $SERVICE_CHARGES_ITEM_ID)
     {
@@ -513,6 +533,8 @@ class PatientPaymentServices
             ->where('PATIENT_PAYMENT_ID', $PATIENT_PAYMENT_ID)
             ->where('SERVICE_CHARGES_ITEM_ID', $SERVICE_CHARGES_ITEM_ID)
             ->delete();
+
+        $this->usersLogServices->AddLogs(TransType::DELETE, LogEntity::PATIENT_PAYMENT_CHARGES, $PATIENT_PAYMENT_ID);
     }
     public function PaymentChargesList(int $PATIENT_PAYMENT_ID, int $PHILHEALTH_ID = 0): object
     {
@@ -638,7 +660,7 @@ class PatientPaymentServices
             ->leftJoin('payment_method', 'payment_method.ID', '=', 'patient_payment.PAYMENT_METHOD_ID')
             ->where('patient_payment.PATIENT_ID', $PATIENT_ID)
             ->where('patient_payment.LOCATION_ID', $LOCATION_ID)
-            ->where('payment_method.ID','!=', 91)
+            ->where('payment_method.ID', '!=', 91)
             ->whereRaw('(patient_payment.AMOUNT - patient_payment.AMOUNT_APPLIED) > 0')
             ->orderBy('patient_payment.DATE')
             ->get();
@@ -703,7 +725,7 @@ class PatientPaymentServices
         $DATE                         = $RECEIPT_DATE;
         $phData                       = $this->philHealthServices->get($PHILHEALTH_ID);
         $UNDEPOSITED_FUNDS_ACCOUNT_ID = 0;
-        $ACCOUNTS_RECEIVABLE_ID = (int) $this->accountServices->getByName('Accounts Receivables');
+        $ACCOUNTS_RECEIVABLE_ID       = (int) $this->accountServices->getByName('Accounts Receivables');
 
         $ID = $this->Store(
             "",

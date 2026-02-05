@@ -1,6 +1,8 @@
 <?php
 namespace App\Services;
 
+use App\Enums\LogEntity;
+use App\Enums\TransType;
 use App\Models\SalesOrder;
 use App\Models\SalesOrderItems;
 use App\Models\Tax;
@@ -10,24 +12,28 @@ class SalesOrderServices
 {
 
     use WithPagination;
-    private $object;
+    private $objectService;
     private $compute;
     private $locationReference;
     private $systemSettingServices;
     private $dateServices;
+
+    private $usersLogServices;
     public function __construct(
         ObjectServices $objectService,
         ComputeServices $computeServices,
         LocationReferenceServices $locationReferenceServices,
         SystemSettingServices $systemSettingServices,
-        DateServices $dateServices
+        DateServices $dateServices,
+        UsersLogServices $usersLogServices
 
     ) {
-        $this->object                = $objectService;
+        $this->objectService         = $objectService;
         $this->compute               = $computeServices;
         $this->locationReference     = $locationReferenceServices;
         $this->systemSettingServices = $systemSettingServices;
         $this->dateServices          = $dateServices;
+        $this->usersLogServices      = $usersLogServices;
     }
 
     public function get(int $ID)
@@ -54,16 +60,14 @@ class SalesOrderServices
         int $OUTPUT_TAX_VAT_METHOD
     ): int {
 
-        $ID = (int) $this->object->ObjectNextID('SALES_ORDER');
-
-        $OBJECT_TYPE = (int) $this->object->ObjectTypeID('SALES_ORDER');
-
-        $isLocRef = boolval($this->systemSettingServices->GetValue('IncRefNoByLocation'));
+        $ID          = (int) $this->objectService->ObjectNextID('SALES_ORDER');
+        $OBJECT_TYPE = (int) $this->objectService->ObjectTypeID('SALES_ORDER');
+        $isLocRef    = boolval($this->systemSettingServices->GetValue('IncRefNoByLocation'));
 
         SalesOrder::create([
             'ID'                    => $ID,
             'RECORDED_ON'           => $this->dateServices->Now(),
-            'CODE'                  => $CODE !== '' ? $CODE : $this->object->GetSequence($OBJECT_TYPE, $isLocRef ? $LOCATION_ID : null),
+            'CODE'                  => $CODE !== '' ? $CODE : $this->objectService->GetSequence($OBJECT_TYPE, $isLocRef ? $LOCATION_ID : null),
             'DATE'                  => $DATE,
             'CUSTOMER_ID'           => $CUSTOMER_ID,
             'LOCATION_ID'           => $LOCATION_ID,
@@ -84,7 +88,7 @@ class SalesOrderServices
             'OUTPUT_TAX_VAT_METHOD' => $OUTPUT_TAX_VAT_METHOD,
 
         ]);
-
+        $this->usersLogServices->AddLogs(TransType::INSERT, LogEntity::SALES_ORDER, $ID);
         return $ID;
     }
     public function Update(
@@ -109,29 +113,33 @@ class SalesOrderServices
 
     ) {
 
-        SalesOrder::where('ID', $ID)->update([
-            'CODE'                  => $CODE,
-            'DATE'                  => $DATE,
-            'CUSTOMER_ID'           => $CUSTOMER_ID,
-            'LOCATION_ID'           => $LOCATION_ID,
-            'CLASS_ID'              => $CLASS_ID > 0 ? $CLASS_ID : null,
-            'SALES_REP_ID'          => $SALES_REP_ID > 0 ? $SALES_REP_ID : null,
-            'DATE_NEEDED'           => $DATE_NEEDED ?? null,
-            'PO_NUMBER'             => $PO_NUMBER ?? '',
-            'SHIP_TO'               => $SHIP_TO ? $SHIP_TO : null,
-            'SHIP_VIA_ID'           => $SHIP_VIA_ID ? $SHIP_VIA_ID : null,
-            'PAYMENT_TERMS_ID'      => $PAYMENT_TERMS_ID ? $PAYMENT_TERMS_ID : null,
-            'NOTES'                 => $NOTES ?? null,
-            'OUTPUT_TAX_ID'         => $OUTPUT_TAX_ID ? $OUTPUT_TAX_ID : null,
-            'OUTPUT_TAX_RATE'       => $OUTPUT_TAX_RATE,
-            'OUTPUT_TAX_AMOUNT'     => $OUTPUT_TAX_AMOUNT,
-            'OUTPUT_TAX_VAT_METHOD' => $OUTPUT_TAX_VAT_METHOD,
-        ]);
+        SalesOrder::where('ID', $ID)
+            ->update([
+                'CODE'                  => $CODE,
+                'DATE'                  => $DATE,
+                'CUSTOMER_ID'           => $CUSTOMER_ID,
+                'LOCATION_ID'           => $LOCATION_ID,
+                'CLASS_ID'              => $CLASS_ID > 0 ? $CLASS_ID : null,
+                'SALES_REP_ID'          => $SALES_REP_ID > 0 ? $SALES_REP_ID : null,
+                'DATE_NEEDED'           => $DATE_NEEDED ?? null,
+                'PO_NUMBER'             => $PO_NUMBER ?? '',
+                'SHIP_TO'               => $SHIP_TO ? $SHIP_TO : null,
+                'SHIP_VIA_ID'           => $SHIP_VIA_ID ? $SHIP_VIA_ID : null,
+                'PAYMENT_TERMS_ID'      => $PAYMENT_TERMS_ID ? $PAYMENT_TERMS_ID : null,
+                'NOTES'                 => $NOTES ?? null,
+                'OUTPUT_TAX_ID'         => $OUTPUT_TAX_ID ? $OUTPUT_TAX_ID : null,
+                'OUTPUT_TAX_RATE'       => $OUTPUT_TAX_RATE,
+                'OUTPUT_TAX_AMOUNT'     => $OUTPUT_TAX_AMOUNT,
+                'OUTPUT_TAX_VAT_METHOD' => $OUTPUT_TAX_VAT_METHOD,
+            ]);
+
+        $this->usersLogServices->AddLogs(TransType::UPDATE, LogEntity::SALES_ORDER, $ID);
     }
     public function Delete(int $ID)
     {
         SalesOrderItems::where('SALES_ORDER_ID', $ID)->delete();
         SalesOrder::where('ID', $ID)->delete();
+        $this->usersLogServices->AddLogs(TransType::DELETE, LogEntity::SALES_ORDER, $ID);
     }
     public function Search($search, int $locationId, int $perPage)
     {
@@ -175,6 +183,8 @@ class SalesOrderServices
             'STATUS'      => $STATUS,
             'STATUS_DATE' => $this->dateServices->NowDate(),
         ]);
+
+        $this->usersLogServices->StatusLog($STATUS, LogEntity::SALES_ORDER, $ID);
     }
     private function getLine($Id): int
     {
@@ -200,7 +210,7 @@ class SalesOrderServices
     ): int {
 
         $LINE_NO = $this->getLine($SALES_ORDER_ID) + 1;
-        $ID      = $this->object->ObjectNextID('SALES_ORDER_ITEMS');
+        $ID      = $this->objectService->ObjectNextID('SALES_ORDER_ITEMS');
 
         SalesOrderItems::create([
             'ID'                 => $ID,
@@ -225,6 +235,8 @@ class SalesOrderServices
             'ESTIMATE_LINE_ID'   => null,
             'CLOSED'             => 0,
         ]);
+
+        $this->usersLogServices->AddLogs(TransType::INSERT, LogEntity::SALES_ORDER_ITEMS, $SALES_ORDER_ID);
         return $ID;
     }
     public function ItemUpdate(
@@ -255,10 +267,13 @@ class SalesOrderServices
             'BATCH_ID'           => $BATCH_ID > 0 ? $BATCH_ID : null,
             'PRICE_LEVEL_ID'     => $PRICE_LEVEL_ID > 0 ? $PRICE_LEVEL_ID : null,
         ]);
+
+        $this->usersLogServices->AddLogs(TransType::UPDATE, LogEntity::SALES_ORDER_ITEMS, $SALES_ORDER_ID);
     }
     public function ItemDelete(int $ID, int $SALES_ORDER_ID)
     {
         SalesOrderItems::where('ID', $ID)->where('SALES_ORDER_ID', $SALES_ORDER_ID)->delete();
+        $this->usersLogServices->AddLogs(TransType::DELETE, LogEntity::SALES_ORDER_ITEMS, $SALES_ORDER_ID);
     }
     public function UpdateItemInvoice(int $ID, int $INVOICED_QTY, bool $CLOSED)
     {

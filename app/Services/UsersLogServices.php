@@ -17,10 +17,17 @@ class UsersLogServices
     }
     public function AddLogs(TransType $TRANS_TYPE, LogEntity $LOG_TYPE, int $LOG_ID)
     {
+
         try {
 
             $USERNAME = $this->userServices->GetUsername();
-            if ($USERNAME !== "") { // USERNAME MUST BE REQUIRED
+
+            if ($USERNAME != "") { // USERNAME MUST BE REQUIRED
+
+                if ($this->userServices->LogsDisabled()) {
+                    return; // if true make no log entry
+                }
+
                 UsersLog::create([
                     'USERNAME'     => $USERNAME,
                     'TRANS_TYPE'   => $TRANS_TYPE,
@@ -31,20 +38,24 @@ class UsersLogServices
             }
 
         } catch (\Throwable $th) {
-            throw $th;
+
         }
     }
     public function StatusLog(int $STATUS, LogEntity $LOG_TYPE, int $LOG_ID)
     {
-        switch ($STATUS) {
-            case DocStatus::POSTED:
-                $this->AddLogs(TransType::POST, $LOG_TYPE, $LOG_ID);
-                break;
+        $POSTED_ID = DocStatus::POSTED->value;
 
-            case DocStatus::UNPOSTED:
-                $this->AddLogs(TransType::UNPOST, $LOG_TYPE, $LOG_ID);
-                break;
+        $UNPOSTED_ID = DocStatus::UNPOSTED->value;
+
+        if ($POSTED_ID === $STATUS) {
+
+            $this->AddLogs(TransType::POST, $LOG_TYPE, $LOG_ID);
+
+        } elseif ($UNPOSTED_ID === $STATUS) {
+
+            $this->AddLogs(TransType::UNPOST, $LOG_TYPE, $LOG_ID);
         }
+
     }
 
 }

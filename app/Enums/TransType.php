@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace App\Enums;
 
@@ -10,4 +10,5 @@ namespace App\Enums;
     case POST = 4;
     case UNPOST = 5;
     case REVERSE = 6;
+    case UPLOAD = 7;
 }

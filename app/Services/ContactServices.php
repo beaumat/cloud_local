@@ -1,6 +1,8 @@
 <?php
 namespace App\Services;
 
+use App\Enums\LogEntity;
+use App\Enums\TransType;
 use App\Models\Contacts;
 use App\Models\DoctorLocation;
 use App\Models\ServiceChargesItems;
@@ -14,11 +16,13 @@ class ContactServices
     private $objectService;
     private $itemServices;
     private $dateServices;
-    public function __construct(ObjectServices $objectService, ItemServices $itemServices, DateServices $dateServices)
+    private $usersLogServices;
+    public function __construct(ObjectServices $objectService, ItemServices $itemServices, DateServices $dateServices, UsersLogServices $usersLogServices)
     {
-        $this->objectService = $objectService;
-        $this->itemServices  = $itemServices;
-        $this->dateServices  = $dateServices;
+        $this->objectService    = $objectService;
+        $this->itemServices     = $itemServices;
+        $this->dateServices     = $dateServices;
+        $this->usersLogServices = $usersLogServices;
     }
     public function is12CharRequired(string $value): bool
     {
@@ -574,6 +578,8 @@ class ContactServices
             "CUSTOM_FIELD5"           => $CUSTOM_FIELD5,
         ]);
 
+        $this->usersLogServices->AddLogs(TransType::INSERT, LogEntity::CONTACT, $ID);
+
         return $ID;
     }
 
@@ -662,15 +668,20 @@ class ContactServices
                 "CUSTOM_FIELD4"           => $CUSTOM_FIELD4,
                 "CUSTOM_FIELD5"           => $CUSTOM_FIELD5,
             ]);
+
+        $this->usersLogServices->AddLogs(TransType::UPDATE, LogEntity::CONTACT, $ID);
     }
 
     public function Delete(int $ID): void
     {
         Contacts::where('ID', '=', $ID)->delete();
+        $this->usersLogServices->AddLogs(TransType::DELETE, LogEntity::CONTACT, $ID);
     }
     public function UpdatePatientType(int $ID, int $TYPE)
     {
         Contacts::where('ID', $ID)->update(['PATIENT_TYPE_ID' => $TYPE]);
+
+        $this->usersLogServices->AddLogs(TransType::UPDATE, LogEntity::CONTACT, $ID);
     }
     public function Search($search, int $TYPE, int $perPage, int $locationId = 0)
     {
@@ -986,6 +997,9 @@ class ContactServices
                     'PIN' => $PIN,
                 ]
             );
+
+        $this->usersLogServices->AddLogs(TransType::UPDATE, LogEntity::CONTACT, $ID);
+
     }
     public function UpdateIsCompleted(int $CONTACT_ID, bool $VALUE)
     {

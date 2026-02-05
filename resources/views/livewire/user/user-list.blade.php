@@ -37,6 +37,7 @@
                                         <th class="text-center">Locked</th>
                                         <th class="text-center">Trans Date</th>
                                         <th class="text-center">Inactive</th>
+                                        <th class ="text-center ">Logs Disabled</th>
                                         <th class="text-center bg-success col-1">
                                             <a href="{{ route('maintenancesettingsusers_create') }}" class="text-white">
                                                 <i class="fas fa-plus"></i></a>
@@ -66,7 +67,12 @@
                                                 @endif
                                             </td>
                                             <td class="text-center">
-                                                <a type="button" title="View" href="{{ route('maintenancesettingsusers_edit', ['id' => $list->id]) }}"
+                                                @if ($list->logs_disabled)
+                                                    <strong class="text-danger">Yes</strong>
+                                                @endif
+                                            <td class="text-center">
+                                                <a type="button" title="View"
+                                                    href="{{ route('maintenancesettingsusers_edit', ['id' => $list->id]) }}"
                                                     class="btn btn-xs btn-info">
                                                     <i class="fas fa-eye" aria-hidden="true"></i>
                                                 </a>
