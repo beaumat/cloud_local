@@ -1,6 +1,7 @@
 <?php
 namespace App\Livewire\Bills;
 
+use App\Enums\DocStatus;
 use App\Services\AccountJournalServices;
 use App\Services\AccountServices;
 use App\Services\BillingServices;
@@ -82,6 +83,7 @@ class BillingForm extends Component
     private $uploadServices;
     private $dateServices;
     private $philHealthProfFeeServices;
+ 
     public function boot(
         ItemInventoryServices $itemInventoryServices,
         DocumentTypeServices $documentTypeServices,
@@ -98,7 +100,8 @@ class BillingForm extends Component
         AccountServices $accountServices,
         UploadServices $uploadServices,
         DateServices $dateServices,
-        PhilHealthProfFeeServices $philHealthProfFeeServices
+        PhilHealthProfFeeServices $philHealthProfFeeServices,
+
     ) {
         $this->billingServices           = $billingServices;
         $this->locationServices          = $locationServices;
@@ -116,6 +119,7 @@ class BillingForm extends Component
         $this->uploadServices            = $uploadServices;
         $this->dateServices              = $dateServices;
         $this->philHealthProfFeeServices = $philHealthProfFeeServices;
+   
     }
     private function getInfoPF()
     {
@@ -614,7 +618,7 @@ class BillingForm extends Component
                 return;
             }
 
-            $this->billingServices->StatusUpdate($this->ID, 15);
+            $this->billingServices->StatusUpdate($this->ID, (int)DocStatus::POSTED);
             DB::commit();
             $data = $this->billingServices->get($this->ID);
             if ($data) {
@@ -633,7 +637,7 @@ class BillingForm extends Component
     {
         try {
             DB::beginTransaction();
-            $this->billingServices->StatusUpdate($this->ID, 16);
+            $this->billingServices->StatusUpdate($this->ID, (int)DocStatus::UNPOSTED);
             $this->removeJournal();
             DB::commit();
             Redirect::route('vendorsbills_edit', $this->ID)->with('message', 'Successfully unposted');

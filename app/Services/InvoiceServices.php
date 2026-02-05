@@ -1,6 +1,8 @@
 <?php
 namespace App\Services;
 
+use App\Enums\LogEntity;
+use App\Enums\TransType;
 use App\Models\CreditMemoInvoices;
 use App\Models\Invoice;
 use App\Models\InvoiceItems;
@@ -21,17 +23,22 @@ class InvoiceServices
     private $compute;
     private $systemSettingServices;
     private $dateServices;
+
+    private $usersLogServices;
+
     public function __construct(
         ObjectServices $objectService,
         ComputeServices $computeServices,
         SystemSettingServices $systemSettingServices,
-        DateServices $dateServices
+        DateServices $dateServices,
+        UsersLogServices $usersLogServices
 
     ) {
         $this->object                = $objectService;
         $this->compute               = $computeServices;
         $this->systemSettingServices = $systemSettingServices;
         $this->dateServices          = $dateServices;
+        $this->usersLogServices      = $usersLogServices;
     }
     public function getBalance(int $INVOICE_ID): float
     {
@@ -177,6 +184,9 @@ class InvoiceServices
             'TRANSACTION_REF_ID'     => $TRANSACTION_REF_ID,
 
         ]);
+
+        $this->usersLogServices->AddLogs(TransType::INSERT, LogEntity::INVOICE, $ID);
+
         return $ID;
     }
 
@@ -186,6 +196,8 @@ class InvoiceServices
             'STATUS'      => $STATUS,
             'STATUS_DATE' => $this->dateServices->NowDate(),
         ]);
+
+        $this->usersLogServices->StatusLog($STATUS, LogEntity::INVOICE, $ID);
     }
     public function UpdateParameter(int $ID, $param = [])
     {
@@ -217,14 +229,14 @@ class InvoiceServices
                 'OUTPUT_TAX_VAT_METHOD'  => $OUTPUT_TAX_VAT_METHOD,
                 'OUTPUT_TAX_ACCOUNT_ID'  => $OUTPUT_TAX_ACCOUNT_ID > 0 ? $OUTPUT_TAX_ACCOUNT_ID : null,
             ]);
+
+        $this->usersLogServices->AddLogs(TransType::UPDATE, LogEntity::INVOICE, $ID);
     }
     public function Delete(int $ID): void
     {
         InvoiceItems::where('INVOICE_ID', $ID)->delete();
         Invoice::where('ID', $ID)->delete();
-
-        
-
+        $this->usersLogServices->AddLogs(TransType::DELETE, LogEntity::INVOICE, $ID);
     }
     public function Search($search, int $locationId, int $perPage)
     {
@@ -323,6 +335,8 @@ class InvoiceServices
             'DEPOSITED'          => $DEPOSITED,
             'PRICE_LEVEL_ID'     => $PRICE_LEVEL_ID > 0 ? $PRICE_LEVEL_ID : null,
         ]);
+
+        $this->usersLogServices->AddLogs(TransType::INSERT, LogEntity::INVOICE_ITEMS, $INVOICE_ID);
         return $ID;
     }
     public function ItemGet(int $ID, int $INVOICE_ID, int $ITEM_ID = 0)
@@ -375,11 +389,14 @@ class InvoiceServices
                         'INVOICED_QTY' => $QUANTITY,
                     ]);
             }
+
+            $this->usersLogServices->AddLogs(TransType::UPDATE, LogEntity::INVOICE_ITEMS, $INVOICE_ID);
         }
     }
     public function ItemDelete(int $ID, int $INVOICE_ID)
     {
         InvoiceItems::where('ID', $ID)->where('INVOICE_ID', $INVOICE_ID)->delete();
+        $this->usersLogServices->AddLogs(TransType::DELETE, LogEntity::INVOICE_ITEMS, $INVOICE_ID);
     }
     public function ItemView(int $INVOICE_ID)
     {
@@ -679,7 +696,7 @@ class InvoiceServices
 
         return $result;
     }
-public function getActiveList($search, int $LOCATION_ID): object
+    public function getActiveList($search, int $LOCATION_ID): object
     {
         $result = Invoice::query()
             ->select([
@@ -818,7 +835,7 @@ public function getActiveList($search, int $LOCATION_ID): object
             ->where('invoice.CUSTOMER_ID', '=', $CONTACT_ID)
             ->whereBetween('invoice.DATE', [$dateFrom, $dateTo])
             ->where('invoice.LOCATION_ID', '=', $LOCATION_ID)
-            ->where('invoice.AMOUNT', '=', $FIX_AMOUNT  )
+            ->where('invoice.AMOUNT', '=', $FIX_AMOUNT)
             ->orderBy('invoice.DATE', 'desc')
             ->get();
 

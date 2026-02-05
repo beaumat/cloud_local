@@ -1,7 +1,8 @@
 <?php
-
 namespace App\Services;
 
+use App\Enums\LogEntity;
+use App\Enums\TransType;
 use App\Models\BuildAssembly;
 use App\Models\BuildAssemblyItems;
 use App\Models\ItemComponents;
@@ -11,26 +12,29 @@ use Illuminate\Support\Facades\DB;
 class BuildAssemblyServices
 {
 
-    public int $object_type_build_assembly = 70;
+    public int $object_type_build_assembly       = 70;
     public int $object_type_build_assembly_items = 71;
-    public int $document_type_id = 19;
+    public int $document_type_id                 = 19;
     private $object;
     private $systemSettingServices;
     private $dateServices;
     private $locationServices;
     private $itemServices;
+    private $UsersLogServices;
     public function __construct(
         ObjectServices $objectService,
         SystemSettingServices $systemSettingServices,
         DateServices $dateServices,
         LocationServices $locationServices,
-        ItemServices $itemServices
+        ItemServices $itemServices,
+        UsersLogServices $usersLogServices
     ) {
-        $this->object = $objectService;
+        $this->object                = $objectService;
         $this->systemSettingServices = $systemSettingServices;
-        $this->dateServices = $dateServices;
-        $this->locationServices = $locationServices;
-        $this->itemServices = $itemServices;
+        $this->dateServices          = $dateServices;
+        $this->locationServices      = $locationServices;
+        $this->itemServices          = $itemServices;
+        $this->UsersLogServices      = $usersLogServices;
     }
     public function Get(int $ID)
     {
@@ -49,25 +53,25 @@ class BuildAssemblyServices
         int $ASSET_ACCOUNT_ID
     ): int {
 
-        $ID = (int) $this->object->ObjectNextID('BUILD_ASSEMBLY');
+        $ID          = (int) $this->object->ObjectNextID('BUILD_ASSEMBLY');
         $OBJECT_TYPE = (int) $this->object->ObjectTypeID('BUILD_ASSEMBLY');
-        $isLocRef = boolval($this->systemSettingServices->GetValue('IncRefNoByLocation'));
+        $isLocRef    = boolval($this->systemSettingServices->GetValue('IncRefNoByLocation'));
 
         BuildAssembly::create([
-            'ID'                    => $ID,
-            'RECORDED_ON'           => $this->dateServices->Now(),
-            'CODE'                  => $CODE !== '' ? $CODE : $this->object->GetSequence($OBJECT_TYPE, $isLocRef ? $LOCATION_ID : null),
-            'DATE'                  => $DATE,
-            'LOCATION_ID'           => $LOCATION_ID,
-            'ASSEMBLY_ITEM_ID'      => $ASSEMBLY_ITEM_ID,
-            'QUANTITY'              => $QUANTITY,
-            'AMOUNT'                => 0,
-            'BATCH_ID'              => $BATCH_ID > 0 ? $BATCH_ID : null,
-            'UNIT_ID'               => $UNIT_ID > 0 ? $UNIT_ID : null,
-            'UNIT_BASE_QUANTITY'    => $UNIT_BASE_QUANTITY,
-            'NOTES'                 => $NOTES,
-            'ASSET_ACCOUNT_ID'      => $ASSET_ACCOUNT_ID > 0 ? $ASSET_ACCOUNT_ID : null,
-            'STATUS'                => 0
+            'ID'                 => $ID,
+            'RECORDED_ON'        => $this->dateServices->Now(),
+            'CODE'               => $CODE !== '' ? $CODE : $this->object->GetSequence($OBJECT_TYPE, $isLocRef ? $LOCATION_ID : null),
+            'DATE'               => $DATE,
+            'LOCATION_ID'        => $LOCATION_ID,
+            'ASSEMBLY_ITEM_ID'   => $ASSEMBLY_ITEM_ID,
+            'QUANTITY'           => $QUANTITY,
+            'AMOUNT'             => 0,
+            'BATCH_ID'           => $BATCH_ID > 0 ? $BATCH_ID : null,
+            'UNIT_ID'            => $UNIT_ID > 0 ? $UNIT_ID : null,
+            'UNIT_BASE_QUANTITY' => $UNIT_BASE_QUANTITY,
+            'NOTES'              => $NOTES,
+            'ASSET_ACCOUNT_ID'   => $ASSET_ACCOUNT_ID > 0 ? $ASSET_ACCOUNT_ID : null,
+            'STATUS'             => 0,
         ]);
 
         $newAmount = (float) $this->AutoCreateComponent(
@@ -76,7 +80,11 @@ class BuildAssemblyServices
             $QUANTITY,
             $LOCATION_ID
         );
+
         BuildAssembly::where('ID', $ID)->update(['AMOUNT' => $newAmount]);
+
+        $this->UsersLogServices->AddLogs(TransType::INSERT, LogEntity::BUILD_ASSEMBLY, $ID);
+
         return (int) $ID;
     }
 
@@ -85,12 +93,12 @@ class BuildAssemblyServices
         BuildAssembly::where('ID', $ID)
             ->where('ASSEMBLY_ITEM_ID', $ASSEMBLY_ITEM_ID)
             ->update([
-                'CODE'                  => $CODE,
-                'QUANTITY'              => $QUANTITY,
-                'BATCH_ID'              => $BATCH_ID > 0 ? $BATCH_ID : null,
-                'UNIT_ID' => $UNIT_ID > 0 ? $UNIT_ID : null,
-                'UNIT_BASE_QUANTITY'    => $UNIT_BASE_QUANTITY,
-                'NOTES'                 => $NOTES
+                'CODE'               => $CODE,
+                'QUANTITY'           => $QUANTITY,
+                'BATCH_ID'           => $BATCH_ID > 0 ? $BATCH_ID : null,
+                'UNIT_ID'            => $UNIT_ID > 0 ? $UNIT_ID : null,
+                'UNIT_BASE_QUANTITY' => $UNIT_BASE_QUANTITY,
+                'NOTES'              => $NOTES,
             ]);
 
         $newAmount = (float) $this->AutoUpdateComponent(
@@ -99,20 +107,29 @@ class BuildAssemblyServices
             $QUANTITY,
             $LOCATION_ID
         );
+        
         BuildAssembly::where('ID', $ID)->update(['AMOUNT' => $newAmount]);
+
+        $this->UsersLogServices->AddLogs(TransType::UPDATE, LogEntity::BUILD_ASSEMBLY, $ID);
+
         return $newAmount;
     }
     public function Delete(int $ID)
     {
         BuildAssemblyItems::where('BUILD_ASSEMBLY_ID', '=', $ID)->delete();
         BuildAssembly::where('ID', '=', $ID)->delete();
+
+        $this->UsersLogServices->AddLogs(TransType::DELETE, LogEntity::BUILD_ASSEMBLY, $ID);
     }
     public function StatusUpdate(int $ID, int $STATUS)
     {
         BuildAssembly::where('ID', $ID)
             ->update([
-                'STATUS' => $STATUS
+                'STATUS' => $STATUS,
             ]);
+
+        $this->UsersLogServices->StatusLog($STATUS, LogEntity::BUILD_ASSEMBLY, $ID);
+
     }
     public function Search($search, int $LOCATION_ID, int $perPage)
     {
@@ -125,7 +142,7 @@ class BuildAssemblyServices
                 'build_assembly.NOTES',
                 'l.NAME as LOCATION_NAME',
                 's.DESCRIPTION as STATUS',
-                'i.DESCRIPTION as ITEM_NAME'
+                'i.DESCRIPTION as ITEM_NAME',
             ])
             ->join('item as i', 'i.ID', '=', 'build_assembly.ASSEMBLY_ITEM_ID')
             ->join('document_status_map as s', 's.ID', '=', 'build_assembly.STATUS')
@@ -148,13 +165,13 @@ class BuildAssemblyServices
     public function AutoCreateComponent(int $ASSEMBLY_ITEM_ID, int $BUILD_ASSEMBLY_ID, float $QUANTITY, int $LOCATION_ID): float
     {
         $IS_KIT = false;
-        $data = $this->itemServices->get($ASSEMBLY_ITEM_ID);
+        $data   = $this->itemServices->get($ASSEMBLY_ITEM_ID);
         if ($data) {
             $IS_KIT = $data->IS_KIT ?? false;
         }
 
         $PRICE_LEVEL_ID = 0;
-        $locData =  $this->locationServices->get($LOCATION_ID);
+        $locData        = $this->locationServices->get($LOCATION_ID);
         if ($locData) {
             $PRICE_LEVEL_ID = $locData->PRICE_LEVEL_ID;
         }
@@ -168,7 +185,7 @@ class BuildAssemblyServices
                     'item_kits.COMPONENT_ID',
                     'item_kits.QUANTITY',
                     'item.ASSET_ACCOUNT_ID',
-                    DB::raw(" (select  IFNULL(price_level_lines.CUSTOM_COST,0) from price_level_lines join price_level on price_level.ID = price_level_lines.PRICE_LEVEL_ID where price_level.ID = ' . $PRICE_LEVEL_ID . ' and price_level_lines.ITEM_ID = item_kits.COMPONENT_ID ) as RATE ")
+                    DB::raw(" (select  IFNULL(price_level_lines.CUSTOM_COST,0) from price_level_lines join price_level on price_level.ID = price_level_lines.PRICE_LEVEL_ID where price_level.ID = ' . $PRICE_LEVEL_ID . ' and price_level_lines.ITEM_ID = item_kits.COMPONENT_ID ) as RATE "),
                 ])
                 ->join('item', 'item.ID', '=', 'item_kits.COMPONENT_ID')
                 ->where('item_kits.ITEM_ID', '=', $ASSEMBLY_ITEM_ID)
@@ -185,7 +202,7 @@ class BuildAssemblyServices
                     DB::raw(" (if
                 (item_components.RATE > 0, item_components.RATE,
                     (select  IFNULL(price_level_lines.CUSTOM_COST,0) from price_level_lines join price_level on price_level.ID = price_level_lines.PRICE_LEVEL_ID where price_level.ID = ' . $PRICE_LEVEL_ID . ' and price_level_lines.ITEM_ID = item_components.COMPONENT_ID )
-                )) as RATE")
+                )) as RATE"),
                 ])
                 ->join('item', 'item.ID', '=', 'item_components.COMPONENT_ID')
                 ->where('item_components.ITEM_ID', '=', $ASSEMBLY_ITEM_ID)
@@ -193,12 +210,10 @@ class BuildAssemblyServices
                 ->get();
         }
 
-
-
         foreach ($result as $item) {
-            $QTY = (float) $item->QUANTITY * $QUANTITY;
+            $QTY    = (float) $item->QUANTITY * $QUANTITY;
             $AMOUNT = (float) ($item->RATE * $item->QUANTITY) * $QUANTITY;
-            $TOTAL = $TOTAL + $AMOUNT;
+            $TOTAL  = $TOTAL + $AMOUNT;
 
             $this->ComponentStore($BUILD_ASSEMBLY_ID, $item->COMPONENT_ID, $QTY, $AMOUNT, 0, $item->ASSET_ACCOUNT_ID ?? 0);
         }
@@ -209,14 +224,13 @@ class BuildAssemblyServices
     {
 
         $IS_KIT = false;
-        $data = $this->itemServices->get($ASSEMBLY_ITEM_ID);
+        $data   = $this->itemServices->get($ASSEMBLY_ITEM_ID);
         if ($data) {
             $IS_KIT = $data->IS_KIT ?? false;
         }
 
-
         $PRICE_LEVEL_ID = 0;
-        $locData =  $this->locationServices->get($LOCATION_ID);
+        $locData        = $this->locationServices->get($LOCATION_ID);
         if ($locData) {
             $PRICE_LEVEL_ID = $locData->PRICE_LEVEL_ID;
         }
@@ -249,13 +263,11 @@ class BuildAssemblyServices
                 ->get();
         }
 
-
-
         foreach ($result as $item) {
 
-            $QTY = (float) $item->QUANTITY * $QUANTITY;
+            $QTY    = (float) $item->QUANTITY * $QUANTITY;
             $AMOUNT = (float) ($item->RATE * $item->QUANTITY) * $QUANTITY;
-            $TOTAL = $TOTAL + $AMOUNT;
+            $TOTAL  = $TOTAL + $AMOUNT;
 
             $this->ComponentUpdate(
                 $item->ID,
@@ -274,14 +286,15 @@ class BuildAssemblyServices
         $ID = (int) $this->object->ObjectNextID('BUILD_ASSEMBLY_ITEMS');
 
         BuildAssemblyItems::create([
-            'ID'                    => $ID,
-            'BUILD_ASSEMBLY_ID'     => $BUILD_ASSEMBLY_ID,
-            'ITEM_ID'               => $ITEM_ID,
-            'QUANTITY'              => $QUANTITY,
-            'AMOUNT'                => $AMOUNT,
-            'BATCH_ID'              => $BATCH_ID > 0 ? $BATCH_ID : 0,
-            'ASSET_ACCOUNT_ID'      => $ASSET_ACCOUNT_ID > 0 ? $ASSET_ACCOUNT_ID : 0,
+            'ID'                => $ID,
+            'BUILD_ASSEMBLY_ID' => $BUILD_ASSEMBLY_ID,
+            'ITEM_ID'           => $ITEM_ID,
+            'QUANTITY'          => $QUANTITY,
+            'AMOUNT'            => $AMOUNT,
+            'BATCH_ID'          => $BATCH_ID > 0 ? $BATCH_ID : 0,
+            'ASSET_ACCOUNT_ID'  => $ASSET_ACCOUNT_ID > 0 ? $ASSET_ACCOUNT_ID : 0,
         ]);
+
     }
     public function ComponentUpdate(int $ID, int $BUILD_ASSEMBLY_ID, int $ITEM_ID, float $QUANTITY, float $AMOUNT)
     {
@@ -289,8 +302,8 @@ class BuildAssemblyServices
             ->where('BUILD_ASSEMBLY_ID', $BUILD_ASSEMBLY_ID)
             ->where('ITEM_ID', $ITEM_ID)
             ->update([
-                'QUANTITY'      => $QUANTITY,
-                'AMOUNT'        => $AMOUNT
+                'QUANTITY' => $QUANTITY,
+                'AMOUNT'   => $AMOUNT,
             ]);
     }
     public function ComponentDelete(int $ID)
@@ -313,7 +326,7 @@ class BuildAssemblyServices
                 'item.DESCRIPTION',
                 'item.CODE',
                 'build_assembly_items.ID',
-                'u.NAME as UNIT_BASE'
+                'u.NAME as UNIT_BASE',
             ])
             ->selectSub(function ($query) use (&$locationId) {
                 $query->from('item_inventory')
@@ -329,7 +342,6 @@ class BuildAssemblyServices
             ->where('build_assembly_items.BUILD_ASSEMBLY_ID', $BUILD_ASSEMBLY_ID)
             ->get();
 
-
         return $result;
     }
     public function AssemblyItemInventory(int $BUILD_ASSEMBLY_ID)
@@ -340,7 +352,7 @@ class BuildAssemblyServices
                 'build_assembly.ASSEMBLY_ITEM_ID as ITEM_ID',
                 'build_assembly.QUANTITY',
                 DB::raw(' 1 as UNIT_BASE_QUANTITY'),
-                'item.COST'
+                'item.COST',
             ])
             ->join('item', 'item.ID', '=', 'build_assembly.ASSEMBLY_ITEM_ID')
             ->whereIn('item.TYPE', ['0', '1'])
@@ -357,7 +369,7 @@ class BuildAssemblyServices
                 'build_assembly_items.ITEM_ID',
                 'build_assembly_items.QUANTITY',
                 DB::raw(' 1 as UNIT_BASE_QUANTITY'),
-                'item.COST'
+                'item.COST',
             ])
             ->join('item', 'item.ID', '=', 'build_assembly_items.ITEM_ID')
             ->whereIn('item.TYPE', ['0', '1'])
@@ -375,7 +387,7 @@ class BuildAssemblyServices
                 'ASSET_ACCOUNT_ID as ACCOUNT_ID',
                 'ASSEMBLY_ITEM_ID as SUBSIDIARY_ID',
                 'AMOUNT',
-                DB::raw(' 0 as ENTRY_TYPE')
+                DB::raw(' 0 as ENTRY_TYPE'),
 
             ])
             ->where('ID', $BUILD_ASSEMBLY_ID)->get();
@@ -390,7 +402,7 @@ class BuildAssemblyServices
                 'ASSET_ACCOUNT_ID as ACCOUNT_ID',
                 'ITEM_ID as SUBSIDIARY_ID',
                 'AMOUNT',
-                DB::raw('1 as ENTRY_TYPE')
+                DB::raw('1 as ENTRY_TYPE'),
             ])
             ->where('BUILD_ASSEMBLY_ID', $BUILD_ASSEMBLY_ID)
             ->orderBy('ID', 'asc')

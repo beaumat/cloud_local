@@ -199,10 +199,16 @@ class UserServices
     {
         try {
             User::whereNotNull('trans_date')
-            ->update(['trans_date' => null]);
+                ->update(['trans_date' => null]);
         } catch (\Throwable $th) {
             //throw $th;
         }
+
+    }
+    public function GetUsername(): string
+    {
+        $userName = auth()->user()->name;
+        return $userName;
 
     }
 }

@@ -1,6 +1,8 @@
 <?php
 namespace App\Services;
 
+use App\Enums\LogEntity;
+use App\Enums\TransType;
 use App\Models\Check;
 use App\Models\DoctorBatch;
 use App\Models\DoctorBatchPaid;
@@ -11,11 +13,14 @@ class DoctorBatchServices
     private $object;
     private $systemSettingServices;
     private $billPaymentServices;
-    public function __construct(ObjectServices $objectServices, SystemSettingServices $systemSettingServices, BillPaymentServices $billPaymentServices)
+
+    private $usersLogServices;
+    public function __construct(ObjectServices $objectServices, SystemSettingServices $systemSettingServices, BillPaymentServices $billPaymentServices, UsersLogServices $usersLogServices)
     {
-        $this->object = $objectServices;
+        $this->object                = $objectServices;
         $this->systemSettingServices = $systemSettingServices;
-        $this->billPaymentServices = $billPaymentServices;
+        $this->billPaymentServices   = $billPaymentServices;
+        $this->usersLogServices      = $usersLogServices;
     }
 
     public function Get(int $ID)
@@ -29,25 +34,30 @@ class DoctorBatchServices
         $ID = $this->object->ObjectNextID("DOCTOR_BATCH");
 
         $OBJECT_TYPE = (int) $this->object->ObjectTypeID('DOCTOR_BATCH');
-        $isLocRef = boolval($this->systemSettingServices->GetValue('IncRefNoByLocation'));
+        $isLocRef    = boolval($this->systemSettingServices->GetValue('IncRefNoByLocation'));
         DoctorBatch::create([
-            'ID' => $ID,
-            'CODE' => $this->object->GetSequence($OBJECT_TYPE, $isLocRef ? $LOCATION_ID : null),
-            'DOCTOR_ID' => $DOCTOR_ID,
+            'ID'          => $ID,
+            'CODE'        => $this->object->GetSequence($OBJECT_TYPE, $isLocRef ? $LOCATION_ID : null),
+            'DOCTOR_ID'   => $DOCTOR_ID,
             'LOCATION_ID' => $LOCATION_ID,
         ]);
 
+        $this->usersLogServices->AddLogs(TransType::INSERT, LogEntity::DOCTOR_BATCH, $ID);
         return (int) $ID;
     }
     public function Update(int $ID, int $DOCTOR_ID)
     {
         DoctorBatch::where('ID', '=', $ID)
             ->update(['DOCTOR_ID' => $DOCTOR_ID]);
+
+        $this->usersLogServices->AddLogs(TransType::UPDATE, LogEntity::DOCTOR_BATCH, $ID);
     }
     public function Delete(int $ID)
-    {   
-        DoctorBatchPaid::where('DOCTOR_BATCH_ID','=', $ID)->delete();
+    {
+        DoctorBatchPaid::where('DOCTOR_BATCH_ID', '=', $ID)->delete();
         DoctorBatch::where('ID', '=', $ID)->delete();
+
+        $this->usersLogServices->AddLogs(TransType::DELETE, LogEntity::DOCTOR_BATCH, $ID);
     }
     public function Search($search, int $locationId)
     {
@@ -79,20 +89,23 @@ class DoctorBatchServices
         return $result;
     }
 
-
     public function StorePaid(int $DOCTOR_BATCH_ID, int $PAYMENT_PERIOD_ID, int $CHECK_ID)
     {
         $ID = $this->object->ObjectNextID("DOCTOR_BATCH_PAID");
         DoctorBatchPaid::create([
-            'ID' => $ID,
+            'ID'                => $ID,
             'PAYMENT_PERIOD_ID' => $PAYMENT_PERIOD_ID,
-            'CHECK_ID' => $CHECK_ID,
-            'DOCTOR_BATCH_ID' => $DOCTOR_BATCH_ID,
+            'CHECK_ID'          => $CHECK_ID,
+            'DOCTOR_BATCH_ID'   => $DOCTOR_BATCH_ID,
         ]);
+
+        $this->usersLogServices->AddLogs(TransType::INSERT, LogEntity::DOCTOR_BATCH_PAID, $DOCTOR_BATCH_ID);
     }
-    public function DeletePaid(int $ID)
+    public function DeletePaid(int $ID, int $DOCTOR_BATCH_ID)
     {
-        DoctorBatchPaid::where('ID', '=', $ID)->delete();
+        DoctorBatchPaid::where('ID', '=', $ID)->where('DOCTOR_BATCH_ID', '=', $DOCTOR_BATCH_ID)->delete();
+        
+        $this->usersLogServices->AddLogs(TransType::DELETE, LogEntity::DOCTOR_BATCH_PAID, $DOCTOR_BATCH_ID);
     }
     public function PaidList(int $DOCTOR_BATCH_ID)
     {
@@ -111,7 +124,7 @@ class DoctorBatchServices
                 'check.STATUS as STATUS_ID',
                 'check.PF_PERIOD_ID',
                 DB::raw("(select count(*) from check_bills where check_bills.CHECK_ID = check.ID) as TOTAL_COUNT"),
-                DB::raw( "(select sum(t.AMOUNT_WITHHELD) from withholding_tax_bills  as t inner join check_bills as cb on cb.BILL_ID = t.BILL_ID  where   cb.CHECK_ID = check.ID  LIMIT 1) as TAX_AMOUNT"),
+                DB::raw("(select sum(t.AMOUNT_WITHHELD) from withholding_tax_bills  as t inner join check_bills as cb on cb.BILL_ID = t.BILL_ID  where   cb.CHECK_ID = check.ID  LIMIT 1) as TAX_AMOUNT"),
                 'pp.RECEIPT_NO as OR_NO',
                 'pp.DATE as OR_DATE',
                 'pp.DATE_FROM',

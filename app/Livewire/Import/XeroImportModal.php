@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Import;
 
+use App\Enums\DocStatus;
 use App\Models\ReceiveMoney;
 use App\Services\AccountJournalServices;
 use App\Services\AccountServices;
@@ -235,7 +236,7 @@ class XeroImportModal extends Component
 
             }
 
-            $this->billingServices->StatusUpdate($this->ID, 15);
+            $this->billingServices->StatusUpdate($this->ID, (int)DocStatus::POSTED);
             return true;
         } catch (\Exception $e) {
 

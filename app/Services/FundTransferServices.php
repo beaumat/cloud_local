@@ -1,6 +1,8 @@
 <?php
 namespace App\Services;
 
+use App\Enums\LogEntity;
+use App\Enums\TransType;
 use App\Models\FundTransfer;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
@@ -11,15 +13,19 @@ class FundTransferServices
     private $object;
     private $dateServices;
     private $systemSettingServices;
-    public function __construct(ObjectServices $objectServices, DateServices $dateServices, SystemSettingServices $systemSettingServices)
+    private $usersLogServices;
+    public function __construct(ObjectServices $objectServices, DateServices $dateServices, SystemSettingServices $systemSettingServices, UsersLogServices $usersLogServices)
     {
         $this->object                = $objectServices;
         $this->dateServices          = $dateServices;
         $this->systemSettingServices = $systemSettingServices;
+        $this->usersLogServices      = $usersLogServices;
+
     }
     public function Get(int $ID)
     {
         $result = FundTransfer::where('ID', '=', $ID)->first();
+
         return $result;
     }
     public function Store($DATE, string $CODE, int $FROM_ACCOUNT_ID, int $TO_ACCOUNT_ID, int $FROM_NAME_ID, int $TO_NAME_ID, int $FROM_LOCATION_ID, int $TO_LOCATION_ID, int $INTER_LOCATION_ACCOUNT_ID, string $NOTES, float $AMOUNT): int
@@ -46,6 +52,7 @@ class FundTransferServices
             'NOTES'                     => $NOTES,
         ]);
 
+        $this->usersLogServices->AddLogs(TransType::INSERT, LogEntity::FUND_TRANSFER, $ID);
         return $ID;
     }
     public function Update(int $ID, string $CODE, int $FROM_ACCOUNT_ID, int $TO_ACCOUNT_ID, int $FROM_NAME_ID, int $TO_NAME_ID, int $FROM_LOCATION_ID, int $TO_LOCATION_ID, int $INTER_LOCATION_ACCOUNT_ID, string $NOTES, float $AMOUNT)
@@ -66,10 +73,12 @@ class FundTransferServices
                 'NOTES'                     => $NOTES,
                 'AMOUNT'                    => $AMOUNT,
             ]);
+        $this->usersLogServices->AddLogs(TransType::UPDATE, LogEntity::FUND_TRANSFER, $ID);
     }
     public function Delete(int $ID)
     {
         FundTransfer::where('ID', '=', $ID)->delete();
+        $this->usersLogServices->AddLogs(TransType::DELETE, LogEntity::FUND_TRANSFER, $ID);
     }
     public function Search($search, int $locationId): LengthAwarePaginator
     {
@@ -114,6 +123,9 @@ class FundTransferServices
                 'STATUS'      => $STATUS,
                 'STATUS_DATE' => $this->dateServices->NowDate(),
             ]);
+
+        $this->usersLogServices->StatusLog($STATUS, LogEntity::FUND_TRANSFER, $ID);
+
     }
     public function getJournalTo(int $ID, bool $isDebit, bool $useInter)
     {

@@ -1,6 +1,8 @@
 <?php
 namespace App\Services;
 
+use App\Enums\LogEntity;
+use App\Enums\TransType;
 use App\Models\AccountJournal;
 use App\Models\Bill;
 use App\Models\BillCreditBills;
@@ -24,12 +26,18 @@ class BillingServices
     private $systemSettingServices;
     private $dateServices;
     private $paymentTermServices;
+    private $usersLogServices;
+    public function __invoke()
+    {
+        throw new \Exception('Not implemented');
+    }
     public function __construct(
         ObjectServices $objectService,
         ComputeServices $computeServices,
         SystemSettingServices $systemSettingServices,
         DateServices $dateServices,
-        PaymentTermServices $paymentTermServices
+        PaymentTermServices $paymentTermServices,
+        UsersLogServices $usersLogServices
 
     ) {
         $this->object                = $objectService;
@@ -37,6 +45,7 @@ class BillingServices
         $this->systemSettingServices = $systemSettingServices;
         $this->dateServices          = $dateServices;
         $this->paymentTermServices   = $paymentTermServices;
+        $this->usersLogServices      = $usersLogServices;
     }
     public function ConfirmProccess(int $ID)
     {
@@ -94,6 +103,8 @@ class BillingServices
             'STATUS_DATE'          => $this->dateServices->NowDate(),
         ]);
 
+        $this->usersLogServices->AddLogs(TransType::INSERT, LogEntity::BILL, $ID);
+
         return $ID;
     }
     public function Update(int $ID, string $CODE, int $VENDOR_ID, int $PAYMENT_TERMS_ID, string $DUE_DATE, string $NOTES, int $ACCOUNTS_PAYABLE_ID, int $INPUT_TAX_ID, float $INPUT_TAX_RATE, float $INPUT_TAX_AMOUNT, int $INPUT_TAX_VAT_METHOD, int $INPUT_TAX_ACCOUNT_ID, string $DATE, )
@@ -114,6 +125,8 @@ class BillingServices
                 'INPUT_TAX_ACCOUNT_ID' => $INPUT_TAX_ACCOUNT_ID,
                 'DATE'                 => $DATE,
             ]);
+
+        $this->usersLogServices->AddLogs(TransType::UPDATE, LogEntity::BILL, $ID);
     }
 
     public function Delete(int $ID)
@@ -123,6 +136,9 @@ class BillingServices
             BillItems::where('BILL_ID', $ID)->delete();
             BillExpenses::where('BILL_ID', $ID)->delete();
             Bill::where('ID', $ID)->delete();
+
+            $this->usersLogServices->AddLogs(TransType::DELETE, LogEntity::BILL, $ID);
+
             return true;
         }
         return false;
@@ -134,6 +150,8 @@ class BillingServices
                 'STATUS'      => $STATUS,
                 'STATUS_DATE' => $this->dateServices->NowDate(),
             ]);
+
+        $this->usersLogServices->StatusLog($STATUS, LogEntity::BILL, $ID);
     }
     public function Search($search, int $LOCATION_ID, int $perPage)
     {
@@ -216,6 +234,8 @@ class BillingServices
             'CLASS_ID'           => $CLASS_ID > 0 ? $CLASS_ID : null,
         ]);
 
+        $this->usersLogServices->AddLogs(TransType::INSERT, LogEntity::BILL_ITEMS, $BILL_ID);
+
         return $ID;
     }
     public function ItemUpdate(int $ID, int $BILL_ID, int $ITEM_ID, float $QUANTITY, int $UNIT_ID, float $UNIT_BASE_QUANTITY, float $RATE, float $AMOUNT, bool $TAXABLE, float $TAXABLE_AMOUNT, float $TAX_AMOUNT)
@@ -232,6 +252,8 @@ class BillingServices
                 'TAXABLE_AMOUNT'     => $TAXABLE_AMOUNT,
                 'TAX_AMOUNT'         => $TAX_AMOUNT,
             ]);
+
+        $this->usersLogServices->AddLogs(TransType::UPDATE, LogEntity::BILL_ITEMS, $BILL_ID);
     }
 
     public function ItemGet(int $ID, int $BILL_ID)
@@ -247,6 +269,8 @@ class BillingServices
         BillItems::where('ID', $ID)
             ->where('BILL_ID', $BILL_ID)
             ->delete();
+
+        $this->usersLogServices->AddLogs(TransType::DELETE, LogEntity::BILL_ITEMS, $BILL_ID);
     }
     public function ItemView(int $BILL_ID)
     {
@@ -299,7 +323,7 @@ class BillingServices
             'CLASS_ID'       => $CLASS_ID > 0 ? $CLASS_ID : null,
 
         ]);
-
+        $this->usersLogServices->AddLogs(TransType::INSERT, LogEntity::BILL_EXPENSES, $BILL_ID);
         return $ID;
     }
     public function ExpenseUpdate(int $ID, int $BILL_ID, float $AMOUNT, bool $TAXABLE, float $TAXABLE_AMOUNT, float $TAX_AMOUNT, string $PARTICULARS, int $CLASS_ID = 0)
@@ -314,10 +338,13 @@ class BillingServices
                 'PARTICULARS'    => $PARTICULARS,
                 'CLASS_ID'       => $CLASS_ID > 0 ? $CLASS_ID : null,
             ]);
+
+        $this->usersLogServices->AddLogs(TransType::UPDATE, LogEntity::BILL_EXPENSES, $BILL_ID);
     }
     public function ExpenseDelete(int $ID, int $BILL_ID, )
     {
         BillExpenses::where('ID', $ID)->where('BILL_ID', $BILL_ID)->delete();
+        $this->usersLogServices->AddLogs(TransType::DELETE, LogEntity::BILL_EXPENSES, $BILL_ID);
     }
     public function ExpenseGet(int $ID, $BILL_ID)
     {
@@ -802,23 +829,6 @@ class BillingServices
 
         return 0;
 
-    }
-    public function isXero(int $BILL_ID): bool
-    {
-        $result = Bill::query()->select(['IS_XERO'])
-            ->where('ID', '=', $BILL_ID)
-            ->first();
-
-        if ($result) {
-            return (bool) $result->IS_XERO;
-        }
-
-        return false;
-    }
-    public function updateXero(int $BILL_ID, bool $IS_XERO)
-    {
-        Bill::where('ID', '=', $BILL_ID)
-            ->update(['IS_XERO' => $IS_XERO]);
     }
 
     public function listViaContact(int $CONTACT_ID)

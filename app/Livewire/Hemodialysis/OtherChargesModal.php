@@ -121,9 +121,7 @@ class OtherChargesModal extends Component
             ]
         );
 
-
         $unitRelated = $this->unitOfMeasureServices->GetItemUnitDetails($this->ITEM_ID, $this->UNIT_ID ?? 0);
-
         $data = $this->itemServices->get($this->ITEM_ID);
         if ($data) {
             $QTY_BASED = (float) $unitRelated['QUANTITY'] ?? 1;

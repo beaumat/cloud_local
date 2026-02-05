@@ -1,6 +1,8 @@
 <?php
 namespace App\Services;
 
+use App\Enums\LogEntity;
+use App\Enums\TransType;
 use App\Models\Check;
 use App\Models\CheckBills;
 use Illuminate\Support\Facades\DB;
@@ -15,16 +17,20 @@ class BillPaymentServices
     private $compute;
     private $systemSettingServices;
     private $dateServices;
+
+    private $usersLogServices;
     public function __construct(
         ObjectServices $objectService,
         ComputeServices $computeServices,
         DateServices $dateServices,
-        SystemSettingServices $systemSettingServices
+        SystemSettingServices $systemSettingServices,
+        UsersLogServices $usersLogServices
     ) {
         $this->object                = $objectService;
         $this->compute               = $computeServices;
         $this->dateServices          = $dateServices;
         $this->systemSettingServices = $systemSettingServices;
+        $this->usersLogServices      = $usersLogServices;
     }
     public function Get(int $ID)
     {
@@ -59,6 +65,8 @@ class BillPaymentServices
 
         ]);
 
+        $this->usersLogServices->AddLogs(TransType::INSERT, LogEntity::CHECK, $ID);
+
         return $ID;
     }
     public function StatusUpdate(int $ID, int $STATUS)
@@ -68,6 +76,9 @@ class BillPaymentServices
                 'STATUS'      => $STATUS,
                 'STATUS_DATE' => $this->dateServices->NowDate(),
             ]);
+
+        $this->usersLogServices->StatusLog($STATUS, LogEntity::CHECK, $ID);
+
     }
     public function UpdateAmount(int $ID, float $AMOUNT)
     {
@@ -91,6 +102,9 @@ class BillPaymentServices
                 'NOTES'           => $NOTES,
                 'PRINTED'         => false,
             ]);
+
+        $this->usersLogServices->AddLogs(TransType::UPDATE, LogEntity::CHECK, $ID);
+
     }
     public function UpdateBillPaymentApplied(int $CHECK_ID): float
     {
@@ -120,6 +134,8 @@ class BillPaymentServices
         Check::where('ID', $ID)
             ->where('TYPE', '=', $this->CHECK_TYPE_ID)
             ->delete();
+
+        $this->usersLogServices->AddLogs(TransType::DELETE, LogEntity::CHECK, $ID);
     }
     public function getDoctorPaidList(int $DOCTOR_ID, int $LOCATION_ID)
     {
@@ -310,6 +326,8 @@ class BillPaymentServices
             ->where('CHECK_ID', $CHECK_ID)
             ->where('BILL_ID', $BILL_ID)
             ->delete();
+
+        $this->usersLogServices->AddLogs(TransType::DELETE, LogEntity::CHECK_BILLS, $CHECK_ID);
     }
     public function billPaymentBills_Get(int $ID, int $CHECK_ID, int $BILL_ID): object
     {
@@ -322,6 +340,7 @@ class BillPaymentServices
     {
 
         $ID = (int) $this->object->ObjectNextID('CHECK_BILLS');
+
         CheckBills::create([
             'ID'                  => $ID,
             'CHECK_ID'            => $CHECK_ID,
@@ -331,6 +350,8 @@ class BillPaymentServices
             'DISCOUNT_ACCOUNT_ID' => $DISCOUNT_ACCOUNT_ID > 0 ? $DISCOUNT_ACCOUNT_ID : null,
             'ACCOUNTS_PAYABLE_ID' => $ACCOUNTS_PAYABLE_ID > 0 ? $ACCOUNTS_PAYABLE_ID : null,
         ]);
+
+        $this->usersLogServices->AddLogs(TransType::INSERT, LogEntity::CHECK_BILLS, $CHECK_ID);
 
         return $ID;
     }
@@ -357,6 +378,8 @@ class BillPaymentServices
                 'DISCOUNT'    => $DISCOUNT,
                 'AMOUNT_PAID' => $AMOUNT_PAID,
             ]);
+
+        $this->usersLogServices->AddLogs(TransType::UPDATE, LogEntity::CHECK_BILLS, $CHECK_ID);
     }
 
     public function billPaymentJournal(int $CHECK_ID): object

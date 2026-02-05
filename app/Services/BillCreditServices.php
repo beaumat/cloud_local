@@ -1,7 +1,8 @@
 <?php
-
 namespace App\Services;
 
+use App\Enums\LogEntity;
+use App\Enums\TransType;
 use App\Models\BillCredit;
 use App\Models\BillCreditBills;
 use App\Models\BillCreditExpenses;
@@ -16,13 +17,18 @@ class BillCreditServices
     private $compute;
     private $systemSettingServices;
     private $dateServices;
-
-    public function __construct(ObjectServices $objectService, ComputeServices $computeServices, SystemSettingServices $systemSettingServices, DateServices $dateServices)
-    {
-        $this->object = $objectService;
-        $this->compute = $computeServices;
+    private $usersLogServices;
+    public function __construct(ObjectServices $objectService,
+        ComputeServices $computeServices,
+        SystemSettingServices $systemSettingServices,
+        DateServices $dateServices,
+        UsersLogServices $usersLogServices
+    ) {
+        $this->object                = $objectService;
+        $this->compute               = $computeServices;
         $this->systemSettingServices = $systemSettingServices;
-        $this->dateServices = $dateServices;
+        $this->dateServices          = $dateServices;
+        $this->usersLogServices      = $usersLogServices;
     }
 
     public function get(int $ID): object
@@ -32,9 +38,9 @@ class BillCreditServices
 
     public function Store(string $CODE, string $DATE, int $VENDOR_ID, int $LOCATION_ID, string $NOTES, int $ACCOUNTS_PAYABLE_ID, int $INPUT_TAX_ID, float $INPUT_TAX_RATE, float $INPUT_TAX_AMOUNT, int $INPUT_TAX_VAT_METHOD, int $INPUT_TAX_ACCOUNT_ID): int
     {
-        $ID = (int) $this->object->ObjectNextID('BILL_CREDIT');
+        $ID          = (int) $this->object->ObjectNextID('BILL_CREDIT');
         $OBJECT_TYPE = (int) $this->object->ObjectTypeID('BILL_CREDIT');
-        $isLocRef = boolval($this->systemSettingServices->GetValue('IncRefNoByLocation'));
+        $isLocRef    = boolval($this->systemSettingServices->GetValue('IncRefNoByLocation'));
 
         BillCredit::create([
             'ID'                   => $ID,
@@ -53,26 +59,29 @@ class BillCreditServices
             'INPUT_TAX_VAT_METHOD' => $INPUT_TAX_VAT_METHOD,
             'INPUT_TAX_ACCOUNT_ID' => $INPUT_TAX_ACCOUNT_ID,
             'STATUS'               => 0,
-            'STATUS_DATE'          => $this->dateServices->NowDate()
+            'STATUS_DATE'          => $this->dateServices->NowDate(),
         ]);
+
+        $this->usersLogServices->AddLogs(TransType::INSERT, LogEntity::BILL_CREDIT, $ID);
 
         return $ID;
     }
 
-
     public function Update(int $ID, string $CODE, string $DATE, int $VENDOR_ID, int $LOCATION_ID, string $NOTES, int $ACCOUNTS_PAYABLE_ID, int $INPUT_TAX_ID, float $INPUT_TAX_RATE, float $INPUT_TAX_AMOUNT, int $INPUT_TAX_VAT_METHOD, int $INPUT_TAX_ACCOUNT_ID)
     {
         BillCredit::where('ID', $ID)->update([
-            'CODE'                  => $CODE,
-            'VENDOR_ID'             => $VENDOR_ID,
-            'NOTES'                 => $NOTES,
-            'ACCOUNTS_PAYABLE_ID'   => $ACCOUNTS_PAYABLE_ID,
-            'INPUT_TAX_ID'          => $INPUT_TAX_ID,
-            'INPUT_TAX_RATE'        => $INPUT_TAX_RATE,
-            'INPUT_TAX_AMOUNT'      => $INPUT_TAX_AMOUNT,
-            'INPUT_TAX_VAT_METHOD'  => $INPUT_TAX_VAT_METHOD,
-            'INPUT_TAX_ACCOUNT_ID'  => $INPUT_TAX_ACCOUNT_ID,
+            'CODE'                 => $CODE,
+            'VENDOR_ID'            => $VENDOR_ID,
+            'NOTES'                => $NOTES,
+            'ACCOUNTS_PAYABLE_ID'  => $ACCOUNTS_PAYABLE_ID,
+            'INPUT_TAX_ID'         => $INPUT_TAX_ID,
+            'INPUT_TAX_RATE'       => $INPUT_TAX_RATE,
+            'INPUT_TAX_AMOUNT'     => $INPUT_TAX_AMOUNT,
+            'INPUT_TAX_VAT_METHOD' => $INPUT_TAX_VAT_METHOD,
+            'INPUT_TAX_ACCOUNT_ID' => $INPUT_TAX_ACCOUNT_ID,
         ]);
+
+        $this->usersLogServices->AddLogs(TransType::UPDATE, LogEntity::BILL_CREDIT, $ID);
     }
 
     public function Delete(int $ID)
@@ -80,17 +89,20 @@ class BillCreditServices
         BillCreditItems::where('BILL_CREDIT_ID', $ID)->delete();
         BillCreditExpenses::where('BILL_CREDIT_ID', $ID)->delete();
         BillCredit::where('ID', $ID)->delete();
+
+        $this->usersLogServices->AddLogs(TransType::DELETE, LogEntity::BILL_CREDIT, $ID);
     }
 
     public function StatusUpdate(int $ID, int $STATUS)
     {
         BillCredit::where('ID', $ID)
             ->update([
-                'STATUS'        => $STATUS,
-                'STATUS_DATE'   => $this->dateServices->NowDate()
+                'STATUS'      => $STATUS,
+                'STATUS_DATE' => $this->dateServices->NowDate(),
             ]);
-    }
 
+        $this->usersLogServices->StatusLog($STATUS, LogEntity::BILL_CREDIT, $ID);
+    }
 
     public function Search($search, int $LOCATION_ID, int $perPage)
     {
@@ -105,7 +117,7 @@ class BillCreditServices
                 'c.NAME as CONTACT_NAME',
                 'l.NAME as LOCATION_NAME',
                 't.NAME as TAX_NAME',
-                's.DESCRIPTION as STATUS'
+                's.DESCRIPTION as STATUS',
             ])
             ->join('contact as c', 'c.ID', '=', 'bill_credit.VENDOR_ID')
             ->join('location as l', function ($join) use (&$LOCATION_ID) {
@@ -131,7 +143,6 @@ class BillCreditServices
         return $result;
     }
 
-
     private function getLine(int $BILL_CREDIT_ID, bool $isItem): int
     {
         if ($isItem) {
@@ -144,7 +155,7 @@ class BillCreditServices
     {
 
         $LINE_NO = $this->getLine($BILL_CREDIT_ID, true) + 1;
-        $ID = $this->object->ObjectNextID('BILL_CREDIT_ITEMS');
+        $ID      = $this->object->ObjectNextID('BILL_CREDIT_ITEMS');
 
         BillCreditItems::create([
             'ID'                 => $ID,
@@ -165,6 +176,8 @@ class BillCreditServices
             'TAX_AMOUNT'         => $TAX_AMOUNT,
             'CLASS_ID'           => $CLASS_ID > 0 ? $CLASS_ID : null,
         ]);
+
+        $this->usersLogServices->AddLogs(TransType::INSERT, LogEntity::BILL_CREDIT_ITEMS, $BILL_CREDIT_ID);
     }
     public function ItemUpdate(int $ID, int $BILL_CREDIT_ID, int $ITEM_ID, float $QUANTITY, int $UNIT_ID, float $UNIT_BASE_QUANTITY, float $RATE, float $AMOUNT, bool $TAXABLE, float $TAXABLE_AMOUNT, float $TAX_AMOUNT)
     {
@@ -173,20 +186,23 @@ class BillCreditServices
             ->where('BILL_CREDIT_ID', $BILL_CREDIT_ID)
             ->where('ITEM_ID', $ITEM_ID)
             ->update([
-                'QUANTITY'              => $QUANTITY,
-                'UNIT_ID'               => $UNIT_ID > 0 ? $UNIT_ID : null,
-                'UNIT_BASE_QUANTITY'    => $UNIT_BASE_QUANTITY,
-                'RATE'                  => $RATE,
-                'AMOUNT'                => $AMOUNT,
-                'TAXABLE'               => $TAXABLE,
-                'TAXABLE_AMOUNT'        => $TAXABLE_AMOUNT,
-                'TAX_AMOUNT'            => $TAX_AMOUNT
+                'QUANTITY'           => $QUANTITY,
+                'UNIT_ID'            => $UNIT_ID > 0 ? $UNIT_ID : null,
+                'UNIT_BASE_QUANTITY' => $UNIT_BASE_QUANTITY,
+                'RATE'               => $RATE,
+                'AMOUNT'             => $AMOUNT,
+                'TAXABLE'            => $TAXABLE,
+                'TAXABLE_AMOUNT'     => $TAXABLE_AMOUNT,
+                'TAX_AMOUNT'         => $TAX_AMOUNT,
             ]);
+
+        $this->usersLogServices->AddLogs(TransType::UPDATE, LogEntity::BILL_CREDIT_ITEMS, $BILL_CREDIT_ID);
     }
 
     public function ItemDelete(int $ID, int $BILL_CREDIT_ID)
     {
         BillCreditItems::where('ID', $ID)->where('BILL_CREDIT_ID', $BILL_CREDIT_ID)->delete();
+        $this->usersLogServices->AddLogs(TransType::DELETE, LogEntity::BILL_CREDIT_ITEMS, $BILL_CREDIT_ID);
     }
 
     public function ItemView(int $BILL_CREDIT_ID)
@@ -205,7 +221,7 @@ class BillCreditServices
                 'i.CODE',
                 'i.PURCHASE_DESCRIPTION',
                 'u.NAME as UNIT_NAME',
-                'u.SYMBOL'
+                'u.SYMBOL',
             ])
             ->leftJoin('item as i', 'i.ID', '=', 'bill_credit_items.ITEM_ID')
             ->leftJoin('unit_of_measure as u', 'u.ID', '=', 'bill_credit_items.UNIT_ID')
@@ -217,21 +233,23 @@ class BillCreditServices
     public function ExpenseStore(int $BILL_CREDIT_ID, int $ACCOUNT_ID, float $AMOUNT, bool $TAXABLE, float $TAXABLE_AMOUNT, float $TAX_AMOUNT, string $PARTICULARS, int $CLASS_ID)
     {
         $LINE_NO = $this->getLine($BILL_CREDIT_ID, false) + 1;
-        $ID = $this->object->ObjectNextID('BILL_CREDIT_EXPENSES');
+        $ID      = $this->object->ObjectNextID('BILL_CREDIT_EXPENSES');
 
         BillCreditExpenses::create([
-            'ID'                => $ID,
-            'BILL_CREDIT_ID'    => $BILL_CREDIT_ID,
-            'LINE_NO'           => $LINE_NO,
-            'ACCOUNT_ID'        => $ACCOUNT_ID,
-            'AMOUNT'            => $AMOUNT,
-            'TAXABLE'           => $TAXABLE,
-            'TAXABLE_AMOUNT'    => $TAXABLE_AMOUNT,
-            'TAX_AMOUNT'        => $TAX_AMOUNT,
-            'PARTICULARS'       => $PARTICULARS,
-            'CLASS_ID'          => $CLASS_ID > 0 ? $CLASS_ID : null
+            'ID'             => $ID,
+            'BILL_CREDIT_ID' => $BILL_CREDIT_ID,
+            'LINE_NO'        => $LINE_NO,
+            'ACCOUNT_ID'     => $ACCOUNT_ID,
+            'AMOUNT'         => $AMOUNT,
+            'TAXABLE'        => $TAXABLE,
+            'TAXABLE_AMOUNT' => $TAXABLE_AMOUNT,
+            'TAX_AMOUNT'     => $TAX_AMOUNT,
+            'PARTICULARS'    => $PARTICULARS,
+            'CLASS_ID'       => $CLASS_ID > 0 ? $CLASS_ID : null,
 
         ]);
+
+        $this->usersLogServices->AddLogs(TransType::INSERT, LogEntity::BILL_CREDIT_EXPENSES, $BILL_CREDIT_ID);
     }
 
     public function ExpenseUpdate(int $ID, int $BILL_CREDIT_ID, float $AMOUNT, bool $TAXABLE, float $TAXABLE_AMOUNT, float $TAX_AMOUNT, string $PARTICULARS, int $CLASS_ID)
@@ -239,20 +257,24 @@ class BillCreditServices
         BillCreditExpenses::where('ID', $ID)
             ->where('BILL_CREDIT_ID', $BILL_CREDIT_ID)
             ->update([
-                'AMOUNT'            => $AMOUNT,
-                'TAXABLE'           => $TAXABLE,
-                'TAXABLE_AMOUNT'    => $TAXABLE_AMOUNT,
-                'TAX_AMOUNT'        => $TAX_AMOUNT,
-                'PARTICULARS'       => $PARTICULARS,
-                'CLASS_ID'          => $CLASS_ID > 0 ? $CLASS_ID : null
+                'AMOUNT'         => $AMOUNT,
+                'TAXABLE'        => $TAXABLE,
+                'TAXABLE_AMOUNT' => $TAXABLE_AMOUNT,
+                'TAX_AMOUNT'     => $TAX_AMOUNT,
+                'PARTICULARS'    => $PARTICULARS,
+                'CLASS_ID'       => $CLASS_ID > 0 ? $CLASS_ID : null,
             ]);
+
+        $this->usersLogServices->AddLogs(TransType::UPDATE, LogEntity::BILL_CREDIT_EXPENSES, $BILL_CREDIT_ID);
     }
 
-    public function ExpenseDelete(int $ID, int $BILL_CREDIT_ID,)
+    public function ExpenseDelete(int $ID, int $BILL_CREDIT_ID, )
     {
         BillCreditExpenses::where('ID', $ID)
             ->where('BILL_CREDIT_ID', $BILL_CREDIT_ID)
             ->delete();
+
+        $this->usersLogServices->AddLogs(TransType::DELETE, LogEntity::BILL_CREDIT_EXPENSES, $BILL_CREDIT_ID);
     }
     public function ExpenseView(int $BILL_CREDIT_ID)
     {
@@ -265,7 +287,7 @@ class BillCreditServices
                 'bill_credit_expenses.TAXABLE',
                 'bill_credit_expenses.CLASS_ID',
                 'a.NAME',
-                'a.TAG as CODE'
+                'a.TAG as CODE',
             ])
             ->leftJoin('account as a', 'a.ID', '=', 'bill_credit_expenses.ACCOUNT_ID')
             ->where('bill_credit_expenses.BILL_CREDIT_ID', $BILL_CREDIT_ID)
@@ -277,7 +299,7 @@ class BillCreditServices
 
     public function isItemTab($BILL_CREDIT_ID): bool
     {
-        $ItemCount = $this->getLine($BILL_CREDIT_ID, true);
+        $ItemCount    = $this->getLine($BILL_CREDIT_ID, true);
         $AccountCount = $this->getLine($BILL_CREDIT_ID, false);
 
         if ($ItemCount >= $AccountCount) {
@@ -291,15 +313,14 @@ class BillCreditServices
         $billCredit = BillCredit::where('ID', $ID)->first();
 
         if ($billCredit) {
-            $TAX_ID = (int) $billCredit->INPUT_TAX_ID;
-
+            $TAX_ID     = (int) $billCredit->INPUT_TAX_ID;
             $itemResult = BillCreditItems::query()
                 ->select(
                     [
                         'AMOUNT',
                         'TAX_AMOUNT',
                         'TAXABLE_AMOUNT',
-                        'TAXABLE'
+                        'TAXABLE',
                     ]
                 )
                 ->where('BILL_CREDIT_ID', $ID)
@@ -312,22 +333,21 @@ class BillCreditServices
                         'AMOUNT',
                         'TAX_AMOUNT',
                         'TAXABLE_AMOUNT',
-                        'TAXABLE'
+                        'TAXABLE',
                     ]
                 )
                 ->where('BILL_CREDIT_ID', $ID)
                 ->orderBy('LINE_NO', 'asc')
                 ->get();
 
-            $result = $this->compute->taxComputeWithExpenses($itemResult, $expensesResult, $TAX_ID,0);
+            $result = $this->compute->taxComputeWithExpenses($itemResult, $expensesResult, $TAX_ID, 0);
 
             foreach ($result as $list) {
                 BillCredit::where('ID', $ID)->update([
-                    'AMOUNT' => $list['AMOUNT'],
-                    'INPUT_TAX_AMOUNT' => $list['TAX_AMOUNT']
+                    'AMOUNT'           => $list['AMOUNT'],
+                    'INPUT_TAX_AMOUNT' => $list['TAX_AMOUNT'],
                 ]);
             }
-
 
             return $result;
         }
@@ -351,7 +371,7 @@ class BillCreditServices
             ->select([
                 'bill_credit_items.ID',
                 'bill_credit_items.AMOUNT',
-                'bill_credit_items.TAXABLE'
+                'bill_credit_items.TAXABLE',
             ])
             ->join('item', 'item.ID', '=', 'bill_credit_items.ITEM_ID')
             ->where('bill_credit_items.BILL_CREDIT_ID', $BILL_CREDIT_ID)
@@ -362,11 +382,10 @@ class BillCreditServices
         foreach ($items as $list) {
             $tax_result = $this->compute->ItemComputeTax($list->AMOUNT, $list->TAXABLE, $TAX_ID, $taxRate);
             if ($tax_result) {
-
                 BillCreditItems::where('ID', $list->ID)
                     ->update([
                         'TAXABLE_AMOUNT' => $tax_result['TAXABLE_AMOUNT'],
-                        'TAX_AMOUNT' => $tax_result['TAX_AMOUNT']
+                        'TAX_AMOUNT'     => $tax_result['TAX_AMOUNT'],
                     ]);
             }
         }
@@ -376,7 +395,7 @@ class BillCreditServices
                 [
                     'bill_credit_expenses.ID',
                     'bill_credit_expenses.AMOUNT',
-                    'bill_credit_expenses.TAXABLE'
+                    'bill_credit_expenses.TAXABLE',
                 ]
             )
             ->where('bill_credit_expenses.BILL_CREDIT_ID', $BILL_CREDIT_ID)
@@ -390,7 +409,7 @@ class BillCreditServices
             BillCreditExpenses::where('ID', $list->ID)
                 ->update([
                     'TAXABLE_AMOUNT' => $tax_result['TAXABLE_AMOUNT'],
-                    'TAX_AMOUNT' => $tax_result['TAX_AMOUNT']
+                    'TAX_AMOUNT'     => $tax_result['TAX_AMOUNT'],
                 ]);
         }
     }
@@ -400,7 +419,7 @@ class BillCreditServices
 
         BillCredit::where('ID', $BILL_CREDIT_ID)
             ->update([
-                'AMOUNT_APPLIED' => $TOTAL_APPLIED
+                'AMOUNT_APPLIED' => $TOTAL_APPLIED,
             ]);
 
         if ($TOTAL_APPLIED > 0) {
@@ -409,14 +428,14 @@ class BillCreditServices
             $this->StatusUpdate($BILL_CREDIT_ID, 0);
         }
     }
-    public function BillCreditBillsStore(int $BILL_CREDIT_ID, int $BILL_ID, float $AMOUNT_APPLIED,): int
+    public function BillCreditBillsStore(int $BILL_CREDIT_ID, int $BILL_ID, float $AMOUNT_APPLIED, ): int
     {
         $ID = $this->object->ObjectNextID('BILL_CREDIT_BILLS');
         BillCreditBills::create([
-            'ID' => $ID,
+            'ID'             => $ID,
             'BILL_CREDIT_ID' => $BILL_CREDIT_ID,
-            'BILL_ID' => $BILL_ID,
-            'AMOUNT_APPLIED' => $AMOUNT_APPLIED
+            'BILL_ID'        => $BILL_ID,
+            'AMOUNT_APPLIED' => $AMOUNT_APPLIED,
         ]);
         $this->UpdateCreditApplied($BILL_CREDIT_ID);
         return $ID;
@@ -438,7 +457,7 @@ class BillCreditServices
             ->where('BILL_CREDIT_ID', $BILL_CREDIT_ID)
             ->where('BILL_ID', $BILL_ID)
             ->update([
-                'AMOUNT_APPLIED' => $AMOUNT_APPLIED
+                'AMOUNT_APPLIED' => $AMOUNT_APPLIED,
             ]);
 
         $this->UpdateCreditApplied($BILL_CREDIT_ID);
@@ -462,7 +481,7 @@ class BillCreditServices
                 'i.CODE',
                 'i.AMOUNT',
                 'i.BALANCE_DUE',
-                'bill_credit_bills.AMOUNT_APPLIED'
+                'bill_credit_bills.AMOUNT_APPLIED',
             ])
             ->leftJoin('bill as i', 'i.ID', '=', 'bill_credit_bills.BILL_ID')
             ->where('bill_credit_bills.BILL_CREDIT_ID', $BILL_CREDIT_ID)
@@ -487,7 +506,7 @@ class BillCreditServices
                 'bill_credit_items.QUANTITY',
                 'bill_credit_items.UNIT_BASE_QUANTITY',
                 'bill_credit_items.RATE',
-                'item.COST'
+                'item.COST',
             ])
             ->join('item', 'item.ID', '=', 'bill_credit_items.ITEM_ID')
             ->whereIn('item.TYPE', ['0', '1'])
@@ -504,7 +523,7 @@ class BillCreditServices
                 'INPUT_TAX_ACCOUNT_ID as ACCOUNT_ID',
                 'VENDOR_ID as SUBSIDIARY_ID',
                 'INPUT_TAX_AMOUNT as AMOUNT',
-                DB::raw(' 1 as ENTRY_TYPE')
+                DB::raw(' 1 as ENTRY_TYPE'),
 
             ])
             ->where('ID', $BILL_CREDIT_ID)
@@ -521,7 +540,7 @@ class BillCreditServices
                 'ACCOUNTS_PAYABLE_ID as ACCOUNT_ID',
                 'VENDOR_ID as SUBSIDIARY_ID',
                 'AMOUNT',
-                DB::raw(' 0 as ENTRY_TYPE')
+                DB::raw(' 0 as ENTRY_TYPE'),
 
             ])
             ->where('ID', $BILL_CREDIT_ID)->get();
@@ -536,7 +555,7 @@ class BillCreditServices
                 'ACCOUNT_ID',
                 'ITEM_ID as SUBSIDIARY_ID',
                 DB::raw('IF(TAXABLE_AMOUNT > 0, TAXABLE_AMOUNT, AMOUNT) as AMOUNT'),
-                DB::raw('1 as ENTRY_TYPE')
+                DB::raw('1 as ENTRY_TYPE'),
             ])
             ->where('BILL_CREDIT_ID', $BILL_CREDIT_ID)
             ->orderBy('LINE_NO', 'asc')
@@ -552,7 +571,7 @@ class BillCreditServices
                 'ACCOUNT_ID',
                 'ACCOUNT_ID as SUBSIDIARY_ID',
                 DB::raw('IF(TAXABLE_AMOUNT > 0, TAXABLE_AMOUNT, AMOUNT) as AMOUNT'),
-                DB::raw('1 as ENTRY_TYPE')
+                DB::raw('1 as ENTRY_TYPE'),
             ])
             ->where('BILL_CREDIT_ID', $BILL_CREDIT_ID)
             ->orderBy('LINE_NO', 'asc')

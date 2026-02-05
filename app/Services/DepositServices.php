@@ -1,7 +1,8 @@
 <?php
-
 namespace App\Services;
 
+use App\Enums\LogEntity;
+use App\Enums\TransType;
 use App\Models\Deposit;
 use App\Models\DepositFunds;
 use App\Models\Payment;
@@ -11,20 +12,21 @@ use Illuminate\Support\Facades\DB;
 class DepositServices
 {
 
-
-    public int $object_type_deposit = 81;
+    public int $object_type_deposit      = 81;
     public int $object_type_deposit_fund = 82;
 
     private $object;
     private $dateServices;
     private $systemSettingServices;
-    private $accountJournalServices;
-    public function __construct(ObjectServices $objectServices, DateServices $dateServices, SystemSettingServices $systemSettingServices, AccountJournalServices $accountJournalServices)
+    private $usersLogServices;
+
+    public function __construct(ObjectServices $objectServices, DateServices $dateServices, SystemSettingServices $systemSettingServices, UsersLogServices $usersLogServices)
     {
-        $this->object = $objectServices;
-        $this->dateServices = $dateServices;
+        $this->object                = $objectServices;
+        $this->dateServices          = $dateServices;
         $this->systemSettingServices = $systemSettingServices;
-        $this->accountJournalServices = $accountJournalServices;
+        $this->usersLogServices      = $usersLogServices;
+
     }
     public function Get(int $ID)
     {
@@ -48,52 +50,61 @@ class DepositServices
         int $LOCATION_ID
     ): int {
 
-        $ID = $this->object->ObjectNextID('DEPOSIT');
+        $ID          = $this->object->ObjectNextID('DEPOSIT');
         $OBJECT_TYPE = (int) $this->object->ObjectTypeID('DEPOSIT');
-        $isLocRef = boolval($this->systemSettingServices->GetValue('IncRefNoByLocation'));
+        $isLocRef    = boolval($this->systemSettingServices->GetValue('IncRefNoByLocation'));
 
         Deposit::create([
-            'ID' => $ID,
-            'RECORDED_ON' => $this->dateServices->Now(),
-            'CODE' => $CODE !== '' ? $CODE : $this->object->GetSequence($OBJECT_TYPE, $isLocRef ? $LOCATION_ID : null),
-            'DATE' => $DATE,
-            'BANK_ACCOUNT_ID' => $BANK_ACCOUNT_ID > 0 ? $BANK_ACCOUNT_ID : null,
-            'AMOUNT' => 0,
-            'NOTES' => $NOTES,
+            'ID'                   => $ID,
+            'RECORDED_ON'          => $this->dateServices->Now(),
+            'CODE'                 => $CODE !== '' ? $CODE : $this->object->GetSequence($OBJECT_TYPE, $isLocRef ? $LOCATION_ID : null),
+            'DATE'                 => $DATE,
+            'BANK_ACCOUNT_ID'      => $BANK_ACCOUNT_ID > 0 ? $BANK_ACCOUNT_ID : null,
+            'AMOUNT'               => 0,
+            'NOTES'                => $NOTES,
             'CASH_BACK_ACCOUNT_ID' => $CASH_BACK_ACCOUNT_ID > 0 ? $CASH_BACK_ACCOUNT_ID : null,
-            'CASH_BACK_AMOUNT' => $CASH_BACK_AMOUNT,
-            'CASH_BACK_NOTES' => $CASH_BACK_NOTES,
-            'LOCATION_ID' => $LOCATION_ID,
-            'STATUS' => 0,
-            'STATUS_DATE' => $this->dateServices->NowDate()
+            'CASH_BACK_AMOUNT'     => $CASH_BACK_AMOUNT,
+            'CASH_BACK_NOTES'      => $CASH_BACK_NOTES,
+            'LOCATION_ID'          => $LOCATION_ID,
+            'STATUS'               => 0,
+            'STATUS_DATE'          => $this->dateServices->NowDate(),
         ]);
 
+        $this->usersLogServices->AddLogs(TransType::INSERT, LogEntity::DEPOSIT, $ID);
         return $ID;
     }
     public function Update(int $ID, string $CODE, int $BANK_ACCOUNT_ID, string $NOTES, int $CASH_BACK_ACCOUNT_ID, float $CASH_BACK_AMOUNT, string $CASH_BACK_NOTES, )
     {
         Deposit::where('ID', '=', $ID)
             ->update([
-                'CODE' => $CODE,
-                'BANK_ACCOUNT_ID' => $BANK_ACCOUNT_ID > 0 ? $BANK_ACCOUNT_ID : null,
-                'NOTES' => $NOTES,
+                'CODE'                 => $CODE,
+                'BANK_ACCOUNT_ID'      => $BANK_ACCOUNT_ID > 0 ? $BANK_ACCOUNT_ID : null,
+                'NOTES'                => $NOTES,
                 'CASH_BACK_ACCOUNT_ID' => $CASH_BACK_ACCOUNT_ID > 0 ? $CASH_BACK_ACCOUNT_ID : null,
-                'CASH_BACK_AMOUNT' => $CASH_BACK_AMOUNT,
-                'CASH_BACK_NOTES' => $CASH_BACK_NOTES,
+                'CASH_BACK_AMOUNT'     => $CASH_BACK_AMOUNT,
+                'CASH_BACK_NOTES'      => $CASH_BACK_NOTES,
             ]);
+
+        $this->usersLogServices->AddLogs(TransType::UPDATE, LogEntity::DEPOSIT, $ID);
     }
     public function Delete(int $ID)
     {
+        DepositFunds::where('DEPOSIT_ID', '=', $ID)->delete();
         Deposit::where('ID', '=', $ID)->delete();
+
+        $this->usersLogServices->AddLogs(TransType::DELETE, LogEntity::DEPOSIT, $ID);
     }
 
     public function StatusUpdate(int $ID, int $STATUS)
     {
         Deposit::where('ID', '=', $ID)
             ->update([
-                'STATUS' => $STATUS,
-                'STATUS_DATE' => $this->dateServices->NowDate()
+                'STATUS'      => $STATUS,
+                'STATUS_DATE' => $this->dateServices->NowDate(),
             ]);
+            
+        $this->usersLogServices->StatusLog($STATUS, LogEntity::DEPOSIT, $ID);
+
     }
 
     public function Search($search, int $locationId, int $perPage)
@@ -107,7 +118,7 @@ class DepositServices
                 'deposit.NOTES',
                 'l.NAME as LOCATION_NAME',
                 's.DESCRIPTION as STATUS',
-                'a.NAME as ACCOUNT_NAME'
+                'a.NAME as ACCOUNT_NAME',
             ])
             ->join('account as a', 'a.ID', '=', 'deposit.BANK_ACCOUNT_ID')
             ->join('location as l', function ($join) use (&$locationId) {
@@ -144,16 +155,18 @@ class DepositServices
         $ID = $this->object->ObjectNextID('DEPOSIT_FUNDS');
 
         DepositFunds::create([
-            'ID' => $ID,
-            'DEPOSIT_ID' => $DEPOSIT_ID,
-            'RECEIVED_FROM_ID' => $RECEIVED_FROM_ID > 0 ? $RECEIVED_FROM_ID : null,
-            'ACCOUNT_ID' => $ACCOUNT_ID,
-            'PAYMENT_METHOD_ID' => $PAYMENT_METHOD_ID > 0 ? $PAYMENT_METHOD_ID : null,
-            'CHECK_NO' => $CHECK_NO,
-            'AMOUNT' => $AMOUNT,
+            'ID'                 => $ID,
+            'DEPOSIT_ID'         => $DEPOSIT_ID,
+            'RECEIVED_FROM_ID'   => $RECEIVED_FROM_ID > 0 ? $RECEIVED_FROM_ID : null,
+            'ACCOUNT_ID'         => $ACCOUNT_ID,
+            'PAYMENT_METHOD_ID'  => $PAYMENT_METHOD_ID > 0 ? $PAYMENT_METHOD_ID : null,
+            'CHECK_NO'           => $CHECK_NO,
+            'AMOUNT'             => $AMOUNT,
             'SOURCE_OBJECT_TYPE' => $SOURCE_OBJECT_TYPE > 0 ? $SOURCE_OBJECT_TYPE : null,
-            'SOURCE_OBJECT_ID' => $SOURCE_OBJECT_ID > 0 ? $SOURCE_OBJECT_ID : null
+            'SOURCE_OBJECT_ID'   => $SOURCE_OBJECT_ID > 0 ? $SOURCE_OBJECT_ID : null,
         ]);
+
+        $this->usersLogServices->AddLogs(TransType::INSERT, LogEntity::DEPOSIT_FUNDS, $DEPOSIT_ID);
 
         return $ID;
     }
@@ -166,15 +179,18 @@ class DepositServices
         string $CHECK_NO,
         float $AMOUNT
     ) {
+
         DepositFunds::where('ID', '=', $ID)
             ->where('DEPOSIT_ID', '=', $DEPOSIT_ID)
             ->update([
-                'RECEIVED_FROM_ID' => $RECEIVED_FROM_ID > 0 ? $RECEIVED_FROM_ID : null,
-                'ACCOUNT_ID' => $ACCOUNT_ID,
+                'RECEIVED_FROM_ID'  => $RECEIVED_FROM_ID > 0 ? $RECEIVED_FROM_ID : null,
+                'ACCOUNT_ID'        => $ACCOUNT_ID,
                 'PAYMENT_METHOD_ID' => $PAYMENT_METHOD_ID > 0 ? $PAYMENT_METHOD_ID : null,
-                'CHECK_NO' => $CHECK_NO,
-                'AMOUNT' => $AMOUNT,
+                'CHECK_NO'          => $CHECK_NO,
+                'AMOUNT'            => $AMOUNT,
             ]);
+
+        $this->usersLogServices->AddLogs(TransType::UPDATE, LogEntity::DEPOSIT_FUNDS, $DEPOSIT_ID);
     }
     public function GetFund(int $ID)
     {
@@ -187,6 +203,8 @@ class DepositServices
         DepositFunds::where('ID', '=', $ID)
             ->where('DEPOSIT_ID', '=', $DEPOSIT_ID)
             ->delete();
+
+        $this->usersLogServices->AddLogs(TransType::DELETE, LogEntity::DEPOSIT_FUNDS, $DEPOSIT_ID);
     }
 
     public function UndepositedUpdate(int $OBJECT_ID, int $OBJECT_TYPE, int $DEPOSITED)
@@ -225,7 +243,7 @@ class DepositServices
                 'doc.DESCRIPTION as DOC_NAME',
                 'c.PRINT_NAME_AS as RECEIVED_FROM_NAME',
                 'p.DESCRIPTION as PAYMENT_METHOD',
-                'a.NAME as ACCOUNT_NAME'
+                'a.NAME as ACCOUNT_NAME',
             ])
             ->leftJoin('account as a', 'a.ID', '=', 'deposit_funds.ACCOUNT_ID')
             ->leftJoin('contact as c', 'c.ID', 'deposit_funds.RECEIVED_FROM_ID')
@@ -314,8 +332,6 @@ class DepositServices
             ->orderBy('collection.DATE')
             ->get();
 
-
-
         return $collection;
     }
     public function getSalesReceipt(int $SR_ID): int
@@ -356,7 +372,7 @@ class DepositServices
                 'BANK_ACCOUNT_ID as ACCOUNT_ID',
                 DB::raw('0 as SUBSIDIARY_ID'),
                 'AMOUNT',
-                DB::raw('0 as ENTRY_TYPE')
+                DB::raw('0 as ENTRY_TYPE'),
             ])
             ->where('ID', '=', $DEPOSIT_ID)
             ->get();
@@ -364,7 +380,6 @@ class DepositServices
         return $result;
     }
 
-  
     public function DepositFundJournal(int $DEPOSIT_ID)
     {
         $result = DepositFunds::query()
@@ -373,7 +388,7 @@ class DepositServices
                 'deposit_funds.ACCOUNT_ID',
                 'deposit_funds.RECEIVED_FROM_ID as SUBSIDIARY_ID',
                 'deposit_funds.AMOUNT',
-                DB::raw('1 as ENTRY_TYPE')
+                DB::raw('1 as ENTRY_TYPE'),
             ])
             ->where('deposit_funds.DEPOSIT_ID', '=', $DEPOSIT_ID)
             ->get();

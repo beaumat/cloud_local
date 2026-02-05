@@ -309,6 +309,7 @@ class FundTransferForm extends Component
 
             // Inter TO
             $fundData = $this->fundTransferServices->getJournalTo($this->ID, false, true);
+
             $this->accountJournalServices->JournalExecute(
                 $JOURNAL_NO,
                 $fundData,
@@ -424,6 +425,10 @@ class FundTransferForm extends Component
             $this->accountJournalServices->UpdatedJournalAmountZero($JOURNAL_NO);
         }
 
+    }
+    public function SetReverse()
+    {
+        
     }
     public function render()
     {

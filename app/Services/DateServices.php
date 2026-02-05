@@ -56,6 +56,11 @@ class DateServices
         // '2024-10-29'
         return Carbon::now()->format('Y-m-d');
     }
+    public function NowDateTime()
+    {
+        
+        return Carbon::now()->format('Y-m-d H:i:s');
+    }
     public function NextDate()
     {
         return Carbon::now()->addDay()->format('Y-m-d'); // Tomorrow's date

@@ -1,6 +1,8 @@
 <?php
 namespace App\Services;
 
+use App\Enums\LogEntity;
+use App\Enums\TransType;
 use App\Models\Accounts;
 use App\Models\AccountType;
 use Illuminate\Support\Facades\DB;
@@ -11,9 +13,12 @@ class AccountServices
     public int $UNDEPOSITED_ACCOUNT_ID = 5;
     public int $EXPENSE_ACCOUNT_ID     = 284;
     private $object;
-    public function __construct(ObjectServices $objectService)
+    private $usersLogServices;
+    public function __construct(ObjectServices $objectService, UsersLogServices $usersLogServices)
     {
         $this->object = $objectService;
+
+        $this->usersLogServices = $usersLogServices;
     }
     public function GetTypeList()
     {
@@ -146,6 +151,8 @@ class AccountServices
 
         ]);
 
+        $this->usersLogServices->AddLogs(TransType::INSERT, LogEntity::ACCOUNT, $ID);
+
         return $ID;
     }
 
@@ -162,17 +169,21 @@ class AccountServices
                 'TAG'              => $TAG,
                 'LINE_NO'          => $LINE_NO,
             ]);
+
+        $this->usersLogServices->AddLogs(TransType::UPDATE, LogEntity::ACCOUNT, $ID);
     }
 
     public function Delete(int $ID): void
     {
         Accounts::where('ID', $ID)->delete();
+        $this->usersLogServices->AddLogs(TransType::DELETE, LogEntity::ACCOUNT, $ID);
     }
     public function Inactive(int $ID, int $stats)
     {
         Accounts::where('ID', $ID)->update(['INACTIVE' => $stats]);
+        $this->usersLogServices->AddLogs(TransType::UPDATE, LogEntity::ACCOUNT, $ID);
     }
-    public function Search($search, int $LOCATION_ID, bool $showAll, bool $showBalance = false )
+    public function Search($search, int $LOCATION_ID, bool $showAll, bool $showBalance = false)
     {
         $EB_SQL = $showBalance == false ? "0" : "(SELECT  IFNULL( account_journal.ENDING_BALANCE, 0.00) from account_journal WHERE account_journal.ACCOUNT_ID = account.ID  and account_journal.LOCATION_ID = '$LOCATION_ID' order by account_journal.OBJECT_DATE desc, account_journal.ID desc LIMIT 1  ) ";
 
