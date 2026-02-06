@@ -65,7 +65,6 @@
                                     </div>
                                     <div class="col-md-4">
                                         <div class="mt-0">
-
                                             <select
                                                 @if (Auth::user()->locked_location) style="opacity: 0.5;pointer-events: none;" @endif
                                                 name="location" wire:model.live='LOCATION_ID'
