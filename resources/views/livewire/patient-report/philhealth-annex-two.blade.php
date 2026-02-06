@@ -4,7 +4,7 @@
             <div class="row">
                 <div class="col-sm-6">
                     <h5 class="m-0">
-                        <a href="{{ route('reportsphilhealth_annex_two_report') }}">Philhealth Annex D (IBNR)
+                        <a href="{{ route('reportsphilhealth_annex_two_report') }}">Philhealth Annex B (IBNR)
                         </a>
                     </h5>
                 </div>
