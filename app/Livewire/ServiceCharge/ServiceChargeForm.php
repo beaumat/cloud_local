@@ -378,7 +378,6 @@ class ServiceChargeForm extends Component
     #[On('prompt-item-message')]
     public function receivedMessage($result)
     {
-
         if ($result['type'] == 0) {
             session()->flash('message', $result['message']);
         } else {
