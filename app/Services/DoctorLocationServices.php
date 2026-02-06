@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\DB;
 
 class DoctorLocationServices
 {
-
+    
     public function Store(int $LOCATION_ID, int $DOCTOR_ID)
     {
 

@@ -586,11 +586,6 @@ class ServiceChargeFormItems extends Component
         $this->itemList     = $this->serviceChargeServices->ItemView($this->SERVICE_CHARGES_ID);
 
     }
-    public function countRefresh()
-    {
-
-        // $this->dispatch('update-item-count', count: $this->serviceChargeServices->getItemCount($this->SERVICE_CHARGES_ID));
-    }
     public function OpenMultiPayment()
     {
         $this->dispatch('cash-payment-prompt-multi');

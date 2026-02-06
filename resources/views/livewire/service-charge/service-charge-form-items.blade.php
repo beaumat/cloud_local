@@ -1,7 +1,7 @@
 <div>
-    @if ($itemList->count() > 0)
+    {{-- @if ($itemList->count() > 0)
         @livewire('alert-layout', ['errors' => $errors->any() ? $errors->all() : '', 'message' => session('message'), 'error' => session('error')])
-    @endif
+    @endif --}}
     <table class="table table-sm table-bordered table-hover">
         <thead class="text-xs bg-sky">
             <tr>

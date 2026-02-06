@@ -414,6 +414,12 @@ class ServiceChargeForm extends Component
     {
 
         try {
+
+            $ITEM_COUNT = $this->serviceChargeServices->getItemCount($this->ID);
+            if ($ITEM_COUNT > 0) {
+
+                return;
+            }
             DB::beginTransaction();
             $this->serviceChargeServices->Delete($this->ID);
             DB::commit();
@@ -424,15 +430,9 @@ class ServiceChargeForm extends Component
             session()->flash('error', $errorMessage);
         }
     }
-    private function loadCounting()
-    {
-        if ($this->ID > 0) {
-            $this->ITEM_COUNT = $this->serviceChargeServices->getItemCount($this->ID);
-        }
-    }
+
     public function render()
     {
-        $this->loadCounting();
 
         return view('livewire.service-charge.service-charge-form');
     }
