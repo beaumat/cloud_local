@@ -250,7 +250,6 @@
                                             </button>
                                         @endcan
 
-
                                         @can('banking.fund-transfer.update')
                                             <button type="button" wire:click='getReverse()'
                                                 class="btn btn-sm btn-success"
@@ -259,7 +258,7 @@
                                             </button>
                                         @endif
 
-                                        @endif
+                                    @endif
 
                                     </div>
                                     <div class="text-right col-6 col-md-6">
