@@ -142,4 +142,5 @@ namespace App\Enums;
     case DOCTOR_BATCH_PAID = 141;
     case COST_ADJUSTMENT = 142;
     case COST_ADJUSTMENT_ITEM = 143;
+    case FUND_TRANSFER_REVERSE = 144;
 }

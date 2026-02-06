@@ -9,14 +9,14 @@ use Illuminate\Support\Facades\DB;
 
 class FundTransferServices
 {
-    public int $object_type_id = 93; //
-    private $object;
+    public int $object_type_id = LogEntity::FUND_TRANSFER->value;
+    private $objectServices;
     private $dateServices;
     private $systemSettingServices;
     private $usersLogServices;
     public function __construct(ObjectServices $objectServices, DateServices $dateServices, SystemSettingServices $systemSettingServices, UsersLogServices $usersLogServices)
     {
-        $this->object                = $objectServices;
+        $this->objectServices        = $objectServices;
         $this->dateServices          = $dateServices;
         $this->systemSettingServices = $systemSettingServices;
         $this->usersLogServices      = $usersLogServices;
@@ -28,18 +28,24 @@ class FundTransferServices
 
         return $result;
     }
+
+    public function Exists(int $ID): bool
+    {
+        return FundTransfer::where('ID', '=', $ID)->exists();
+
+    }
     public function Store($DATE, string $CODE, int $FROM_ACCOUNT_ID, int $TO_ACCOUNT_ID, int $FROM_NAME_ID, int $TO_NAME_ID, int $FROM_LOCATION_ID, int $TO_LOCATION_ID, int $INTER_LOCATION_ACCOUNT_ID, string $NOTES, float $AMOUNT): int
     {
 
-        $ID          = (int) $this->object->ObjectNextID('FUND_TRANSFER');
-        $OBJECT_TYPE = (int) $this->object->ObjectTypeID('FUND_TRANSFER');
+        $ID          = (int) $this->objectServices->ObjectNextID('FUND_TRANSFER');
+        $OBJECT_TYPE = (int) $this->objectServices->ObjectTypeID('FUND_TRANSFER');
         $isLocRef    = boolval($this->systemSettingServices->GetValue('IncRefNoByLocation'));
 
         FundTransfer::create([
             'ID'                        => $ID,
             'RECORDED_ON'               => $this->dateServices->Now(),
             'DATE'                      => $DATE,
-            'CODE'                      => $CODE !== '' ? $CODE : $this->object->GetSequence($OBJECT_TYPE, $isLocRef ? $FROM_LOCATION_ID : null),
+            'CODE'                      => $CODE !== '' ? $CODE : $this->objectServices->GetSequence($OBJECT_TYPE, $isLocRef ? $FROM_LOCATION_ID : null),
             'FROM_ACCOUNT_ID'           => $FROM_ACCOUNT_ID,
             'TO_ACCOUNT_ID'             => $TO_ACCOUNT_ID,
             'FROM_NAME_ID'              => $FROM_NAME_ID,
@@ -123,10 +129,7 @@ class FundTransferServices
                 'STATUS'      => $STATUS,
                 'STATUS_DATE' => $this->dateServices->NowDate(),
             ]);
-
-
         $this->usersLogServices->StatusLog($STATUS, LogEntity::FUND_TRANSFER, $ID);
-    ;
 
     }
     public function getJournalTo(int $ID, bool $isDebit, bool $useInter)

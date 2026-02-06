@@ -21,8 +21,6 @@ class FileUpload extends Component
         $this->validate([
             'value' => 'file|mimes:pdf|max:10240', // PDF file, max 10MB
         ]);
-
-
     }
     public function render()
     {
