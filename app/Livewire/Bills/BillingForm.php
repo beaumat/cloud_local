@@ -83,7 +83,7 @@ class BillingForm extends Component
     private $uploadServices;
     private $dateServices;
     private $philHealthProfFeeServices;
- 
+
     public function boot(
         ItemInventoryServices $itemInventoryServices,
         DocumentTypeServices $documentTypeServices,
@@ -119,7 +119,7 @@ class BillingForm extends Component
         $this->uploadServices            = $uploadServices;
         $this->dateServices              = $dateServices;
         $this->philHealthProfFeeServices = $philHealthProfFeeServices;
-   
+
     }
     private function getInfoPF()
     {
@@ -618,7 +618,7 @@ class BillingForm extends Component
                 return;
             }
 
-            $this->billingServices->StatusUpdate($this->ID, (int)DocStatus::POSTED);
+            $this->billingServices->StatusUpdate($this->ID, (int)DocStatus::POSTED->value);
             DB::commit();
             $data = $this->billingServices->get($this->ID);
             if ($data) {
@@ -637,7 +637,7 @@ class BillingForm extends Component
     {
         try {
             DB::beginTransaction();
-            $this->billingServices->StatusUpdate($this->ID, (int)DocStatus::UNPOSTED);
+            $this->billingServices->StatusUpdate($this->ID, (int)DocStatus::UNPOSTED->value);
             $this->removeJournal();
             DB::commit();
             Redirect::route('vendorsbills_edit', $this->ID)->with('message', 'Successfully unposted');
