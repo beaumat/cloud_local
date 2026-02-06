@@ -328,7 +328,7 @@ class ServiceChargeFormItems extends Component
 
             $getResult = $this->serviceChargeServices->ReComputed($this->SERVICE_CHARGES_ID);
             $this->dispatch('update-amount', result: $getResult);
-            $this->countRefresh();
+
             // Philhealth Purpose
             $prime_item_id           = $this->ITEM_ID;
             $this->ITEM_ID           = 0;
@@ -369,6 +369,7 @@ class ServiceChargeFormItems extends Component
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
         }
+        $this->countRefresh();
     }
     #[On('phic-message')]
     public function philhealth_Item($result)
