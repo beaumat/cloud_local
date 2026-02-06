@@ -10,14 +10,14 @@ use Illuminate\Support\Facades\DB;
 
 class DoctorBatchServices
 {
-    private $object;
+    private $objectServices;
     private $systemSettingServices;
     private $billPaymentServices;
 
     private $usersLogServices;
     public function __construct(ObjectServices $objectServices, SystemSettingServices $systemSettingServices, BillPaymentServices $billPaymentServices, UsersLogServices $usersLogServices)
     {
-        $this->object                = $objectServices;
+        $this->objectServices        = $objectServices;
         $this->systemSettingServices = $systemSettingServices;
         $this->billPaymentServices   = $billPaymentServices;
         $this->usersLogServices      = $usersLogServices;
@@ -31,13 +31,13 @@ class DoctorBatchServices
     }
     public function Store(int $DOCTOR_ID, int $LOCATION_ID): int
     {
-        $ID = $this->object->ObjectNextID("DOCTOR_BATCH");
+        $ID = $this->objectServices->ObjectNextID("DOCTOR_BATCH");
 
-        $OBJECT_TYPE = (int) $this->object->ObjectTypeID('DOCTOR_BATCH');
+        $OBJECT_TYPE = (int) $this->objectServices->ObjectTypeID('DOCTOR_BATCH');
         $isLocRef    = boolval($this->systemSettingServices->GetValue('IncRefNoByLocation'));
         DoctorBatch::create([
             'ID'          => $ID,
-            'CODE'        => $this->object->GetSequence($OBJECT_TYPE, $isLocRef ? $LOCATION_ID : null),
+            'CODE'        => $this->objectServices->GetSequence($OBJECT_TYPE, $isLocRef ? $LOCATION_ID : null),
             'DOCTOR_ID'   => $DOCTOR_ID,
             'LOCATION_ID' => $LOCATION_ID,
         ]);
@@ -91,7 +91,7 @@ class DoctorBatchServices
 
     public function StorePaid(int $DOCTOR_BATCH_ID, int $PAYMENT_PERIOD_ID, int $CHECK_ID)
     {
-        $ID = $this->object->ObjectNextID("DOCTOR_BATCH_PAID");
+        $ID = $this->objectServices->ObjectNextID("DOCTOR_BATCH_PAID");
         DoctorBatchPaid::create([
             'ID'                => $ID,
             'PAYMENT_PERIOD_ID' => $PAYMENT_PERIOD_ID,
@@ -104,7 +104,7 @@ class DoctorBatchServices
     public function DeletePaid(int $ID, int $DOCTOR_BATCH_ID)
     {
         DoctorBatchPaid::where('ID', '=', $ID)->where('DOCTOR_BATCH_ID', '=', $DOCTOR_BATCH_ID)->delete();
-        
+
         $this->usersLogServices->AddLogs(TransType::DELETE, LogEntity::DOCTOR_BATCH_PAID, $DOCTOR_BATCH_ID);
     }
     public function PaidList(int $DOCTOR_BATCH_ID)
