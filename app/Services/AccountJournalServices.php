@@ -1,6 +1,7 @@
 <?php
 namespace App\Services;
 
+use App\Enums\LogEntity;
 use App\Models\AccountJournal;
 use Carbon\Carbon;
 use Illuminate\Routing\Route;
@@ -348,7 +349,7 @@ class AccountJournalServices
             ''
         );
     }
- private function UpdateEntry(
+    private function UpdateEntry(
         int $ACCOUNT_ID,
         int $LOCATION_ID,
         int $SUBSIDIARY_ID,
@@ -668,7 +669,7 @@ class AccountJournalServices
     ) {
 
         $JOURNAL_EXISTS = false;
-        if ($OBJECT_TYPE == 93) {
+        if ($OBJECT_TYPE == LogEntity::FUND_TRANSFER->value || $OBJECT_TYPE == LogEntity::FUND_TRANSFER_REVERSE->value) {
             $JOURNAL_EXISTS = $this->JournalExistsEntity($ACCOUNT_ID, $OBJECT_ID, $OBJECT_TYPE, $OBJECT_DATE, $LOCATION_ID, $SUBSIDIARY_ID, $ENTRY_TYPE);
         } else {
             $JOURNAL_EXISTS = $this->JournalExists($ACCOUNT_ID, $OBJECT_ID, $OBJECT_TYPE, $OBJECT_DATE, $LOCATION_ID, $SUBSIDIARY_ID);
@@ -710,7 +711,7 @@ class AccountJournalServices
             return;
         }
 
-        if($OBJECT_TYPE == 93) {
+        if ($OBJECT_TYPE == LogEntity::FUND_TRANSFER->value || $OBJECT_TYPE == LogEntity::FUND_TRANSFER_REVERSE->value) {
             $this->UpdateEntry(
                 $ACCOUNT_ID,
                 $LOCATION_ID,
@@ -963,7 +964,7 @@ class AccountJournalServices
 
         return $result;
     }
-      public function getTransactionJournalUnposted(string $dateFrom, string $dateTo, int $LOCATION_ID, array $account = [], array $accountType = [])
+    public function getTransactionJournalUnposted(string $dateFrom, string $dateTo, int $LOCATION_ID, array $account = [], array $accountType = [])
     {
         $result = DB::table('account_journal as aj')
             ->select([
@@ -1000,7 +1001,6 @@ class AccountJournalServices
 
         return $result;
     }
-
 
     public function getTransactionJournalErrorUpdate(string $dateFrom, string $dateTo, int $LOCATION_ID)
     {

@@ -5,6 +5,7 @@ use App\Services\AccountJournalServices;
 use App\Services\AccountServices;
 use App\Services\ContactServices;
 use App\Services\DocumentStatusServices;
+use App\Services\FundTransferReverseServices;
 use App\Services\FundTransferServices;
 use App\Services\LocationServices;
 use App\Services\SystemSettingServices;
@@ -33,7 +34,7 @@ class FundTransferForm extends Component
 
     public float $AMOUNT;
     public string $NOTES;
-
+    public bool $IS_REVERSE = false;
     public int $INTER_LOCATION_ACCOUNT_ID;
     public $interLocationAccountList = [];
     public $fromLocationList         = [];
@@ -56,6 +57,7 @@ class FundTransferForm extends Component
     private $contactServices;
     private $accountServices;
     private $systemSettingServices;
+    private $fundTransferReverseServices;
     public function boot(
         FundTransferServices $fundTransferServices,
         LocationServices $locationServices,
@@ -64,17 +66,19 @@ class FundTransferForm extends Component
         AccountJournalServices $accountJournalServices,
         ContactServices $contactServices,
         AccountServices $accountServices,
-        SystemSettingServices $systemSettingServices
+        SystemSettingServices $systemSettingServices,
+        FundTransferReverseServices $fundTransferReverseServices
     ) {
 
-        $this->fundTransferServices   = $fundTransferServices;
-        $this->locationServices       = $locationServices;
-        $this->userServices           = $userServices;
-        $this->documentStatusServices = $documentStatusServices;
-        $this->accountJournalServices = $accountJournalServices;
-        $this->contactServices        = $contactServices;
-        $this->accountServices        = $accountServices;
-        $this->systemSettingServices  = $systemSettingServices;
+        $this->fundTransferServices        = $fundTransferServices;
+        $this->locationServices            = $locationServices;
+        $this->userServices                = $userServices;
+        $this->documentStatusServices      = $documentStatusServices;
+        $this->accountJournalServices      = $accountJournalServices;
+        $this->contactServices             = $contactServices;
+        $this->accountServices             = $accountServices;
+        $this->systemSettingServices       = $systemSettingServices;
+        $this->fundTransferReverseServices = $fundTransferReverseServices;
 
     }
     public function LoadDropdown()
@@ -122,7 +126,8 @@ class FundTransferForm extends Component
                 if ($data) {
                     $this->LoadDropdown();
                     $this->getInfo($data);
-                    $this->Modify = false;
+                    $this->Modify     = false;
+                    $this->IS_REVERSE = $this->fundTransferReverseServices->ExistsByFundTransferID($id);
                     return;
                 }
 
@@ -210,7 +215,6 @@ class FundTransferForm extends Component
                     $this->NOTES,
                     $this->AMOUNT
                 );
-
 
                 DB::commit();
                 return Redirect::route('bankingfund_transfer_edit', ['id' => $this->ID])->with('message', 'Successfully created');
@@ -387,7 +391,24 @@ class FundTransferForm extends Component
             session()->flash('error', $errorMessage);
         }
     }
+    public function OpenJournalReverse()
+    {
+        $dataReverse = $this->fundTransferReverseServices->GetFundTransferReverseByFundTransferID($this->ID);
+        if ($dataReverse) {
+            $JOURNAL_NO = $this->accountJournalServices->getRecord(
+                $this->fundTransferReverseServices->object_type_id,
+                $dataReverse->ID
+            );
 
+            if ($JOURNAL_NO > 0) {
+                $data = ['JOURNAL_NO' => $JOURNAL_NO];
+                $this->dispatch('open-journal', result: $data);
+                return;
+            }
+            session()->flash('error', 'Journal entry not created');
+        }
+
+    }
     public function OpenJournal()
     {
 
@@ -404,7 +425,11 @@ class FundTransferForm extends Component
 
         session()->flash('error', 'Journal entry not created');
     }
-
+    #[On('refresh-fund-transfer')]
+    public function refreshThisForm()
+    {
+        Redirect::route('bankingfund_transfer_edit', $this->ID);
+    }
     public function getUnposted()
     {
         try {
@@ -427,9 +452,9 @@ class FundTransferForm extends Component
         }
 
     }
-    public function SetReverse()
+    public function getReverse()
     {
-
+        $this->dispatch('open-fund-transfer-reverse');
     }
     public function render()
     {

@@ -214,8 +214,11 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="card-footer">
+                        <div class="card-footer" wire:loading.class='loading-form'>
                             <div class="row">
+                                <div class="col-12" wire:loading.delay>
+                                    <span class="spinner"></span>
+                                </div>
                                 <div class="col-md-6 col-6">
                                     @if ($STATUS != 15 || $STATUS == 16)
                                         @if ($Modify)
@@ -242,54 +245,60 @@
                                     @endif
 
                                     @if ($STATUS == 15)
-                                        @can('banking.fund-transfer.update')
-                                            <button type="button" wire:click='getUnposted()'
-                                                class="btn btn-sm btn-secondary"
-                                                wire:confirm="Are you sure you want to unpost?">
-                                                <i class="fa fa-cloud-upload" aria-hidden="true"></i> Unpost
-                                            </button>
-                                        @endcan
-
-                                        @can('banking.fund-transfer.update')
-                                            <button type="button" wire:click='getReverse()'
-                                                class="btn btn-sm btn-success"
-                                                wire:confirm="Are you sure you want to Reverse?">
-                                                <i class="fa fa-cloud-upload" aria-hidden="true"></i> Reverse
-                                            </button>
-                                        @endif
-
-                                    @endif
-
-                                    </div>
-                                    <div class="text-right col-6 col-md-6">
-                                        @if ($STATUS == 15)
-                                            @can('banking.fund-transfer.print')
-                                                <a type="button" target="_BLANK"
-                                                    href="{{ route('bankingfund_transfer_print', ['id' => $ID]) }}"
-                                                    class="btn btn-sm btn-dark">
-                                                    <i class="fa fa-print" aria-hidden="true"></i> Print
-                                                </a>
-
-                                                <button type="button" wire:click='OpenJournal()'
-                                                    class="btn btn-sm btn-warning">
-                                                    <i class="fa fa-file-text-o" aria-hidden="true"></i> Journal
+                                        @if ($IS_REVERSE == false)
+                                            @can('banking.fund-transfer.update')
+                                                <button type="button" wire:click='getUnposted()'
+                                                    class="btn btn-sm btn-secondary"
+                                                    wire:confirm="Are you sure you want to unpost?">
+                                                    <i class="fa fa-cloud-upload" aria-hidden="true"></i> Unpost
                                                 </button>
                                             @endcan
-                                            @can('banking.fund-transfer.create')
-                                                <a id="new" title="Create"
-                                                    href="{{ route('bankingfund_transfer_credit') }}"
-                                                    class="btn btn-primary btn-sm"> <i class="fas fa-plus"></i> New </a>
-                                            @endcan
                                         @endif
-                                    </div>
+                                        @can('banking.fund-transfer.update')
+                                            <button type="button" wire:click='getReverse()'
+                                                class="btn btn-sm btn-success">
+                                                <i class="fa fa-cloud-upload" aria-hidden="true"></i> Reverse
+                                            </button>
+                                            @if ($IS_REVERSE)
+                                                <button type="button" wire:click='OpenJournalReverse()'
+                                                    class="btn btn-sm btn-warning">
+                                                    <i class="fa fa-file-text-o" aria-hidden="true"></i> Journal Reverse
+                                                </button>
+                                            @endif
+                                        @endcan
+                                    @endif
+                                </div>
+                                <div class="text-right col-6 col-md-6">
+                                    @if ($STATUS == 15)
+                                        @can('banking.fund-transfer.print')
+                                            <a type="button" target="_BLANK"
+                                                href="{{ route('bankingfund_transfer_print', ['id' => $ID]) }}"
+                                                class="btn btn-sm btn-dark">
+                                                <i class="fa fa-print" aria-hidden="true"></i> Print
+                                            </a>
+
+                                            <button type="button" wire:click='OpenJournal()'
+                                                class="btn btn-sm btn-warning">
+                                                <i class="fa fa-file-text-o" aria-hidden="true"></i> Journal
+                                            </button>
+                                        @endcan
+                                        @can('banking.fund-transfer.create')
+                                            <a id="new" title="Create"
+                                                href="{{ route('bankingfund_transfer_credit') }}"
+                                                class="btn btn-primary btn-sm"> <i class="fas fa-plus"></i> New </a>
+                                        @endcan
+                                    @endif
                                 </div>
                             </div>
-
                         </div>
+
                     </div>
                 </div>
             </div>
-        </section>
-
+        </div>
+    </section>
+    @if ($ID > 0)
         @livewire('AccountJournal.AccountJournalModal')
-    </div>
+        @livewire('FundTransfer.ReverseForm', ['id' => $ID])
+    @endif
+</div>

@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 
 class FundTransferServices
 {
-    public int $object_type_id = LogEntity::FUND_TRANSFER->value;
+    public int $object_type_id = 93;
     private $objectServices;
     private $dateServices;
     private $systemSettingServices;
@@ -129,6 +129,7 @@ class FundTransferServices
                 'STATUS'      => $STATUS,
                 'STATUS_DATE' => $this->dateServices->NowDate(),
             ]);
+
         $this->usersLogServices->StatusLog($STATUS, LogEntity::FUND_TRANSFER, $ID);
 
     }
