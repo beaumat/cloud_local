@@ -114,11 +114,7 @@ class ServiceChargeForm extends Component
     {
         $this->contactLoad();
     }
-    #[On('update-item-count')]
-    public function checkUpdatedItemCount($count)
-    {
-        $this->ITEM_COUNT = $count;
-    }
+
     private function contactLoad()
     {
         if ($this->WALK_IN) {
@@ -173,7 +169,6 @@ class ServiceChargeForm extends Component
         $this->STATUS_DESCRIPTION     = $this->documentStatusServices->getDesc($this->STATUS);
         $this->WALK_IN                = $Data->WALK_IN ?? false;
 
-        $this->ITEM_COUNT = $this->serviceChargeServices->getItemCount($this->ID);
     }
     public function updatedPAYMENTTERMSID()
     {
@@ -429,8 +424,16 @@ class ServiceChargeForm extends Component
             session()->flash('error', $errorMessage);
         }
     }
+    private function loadCounting()
+    {
+        if ($this->ID > 0) {
+            $this->ITEM_COUNT = $this->serviceChargeServices->getItemCount($this->ID);
+        }
+    }
     public function render()
     {
+        $this->loadCounting();
+
         return view('livewire.service-charge.service-charge-form');
     }
 }

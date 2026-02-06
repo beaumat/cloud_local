@@ -369,7 +369,7 @@ class ServiceChargeFormItems extends Component
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
         }
-        $this->countRefresh();
+        // $this->countRefresh();
     }
     #[On('phic-message')]
     public function philhealth_Item($result)
@@ -511,7 +511,7 @@ class ServiceChargeFormItems extends Component
             $this->lineAmount = 0;
             $this->lineTax    = false;
             $this->lineItemId = 0;
-                        $this->countRefresh();
+                        // $this->countRefresh();
         } catch (\Exception $e) {
             DB::rollBack();
             $errorMessage = 'Error occurred: ' . $e->getMessage();
@@ -564,7 +564,7 @@ class ServiceChargeFormItems extends Component
             DB::commit();
             $getResult = $this->serviceChargeServices->ReComputed($this->SERVICE_CHARGES_ID);
             $this->dispatch('update-amount', result: $getResult);
-            $this->countRefresh();
+            // $this->countRefresh();
         } catch (\Exception $e) {
             DB::rollBack();
             $errorMessage = 'Error occurred: ' . $e->getMessage();
@@ -589,7 +589,7 @@ class ServiceChargeFormItems extends Component
     public function countRefresh()
     {
 
-        $this->dispatch('update-item-count', count: $this->serviceChargeServices->getItemCount($this->SERVICE_CHARGES_ID));
+        // $this->dispatch('update-item-count', count: $this->serviceChargeServices->getItemCount($this->SERVICE_CHARGES_ID));
     }
     public function OpenMultiPayment()
     {
