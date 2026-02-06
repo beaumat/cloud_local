@@ -74,7 +74,6 @@ class ReverseForm extends Component
     public function saveData()
     {
         $exists = $this->fundTransferServices->Exists($this->FUND_TRANSFER_ID);
-
         if ($exists == false) {
             // not found!
             session()->flash('error', 'Fund Transfer does not exist.');
@@ -97,7 +96,8 @@ class ReverseForm extends Component
             $this->dispatch('refresh-fund-transfer');
         } catch (\Throwable $th) {
             DB::rollBack();
-            //throw $th;
+            $errorMessage = 'Error occurred: ' . $th->getMessage();
+            session()->flash('error', $errorMessage);
         }
 
     }
