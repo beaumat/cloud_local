@@ -362,25 +362,33 @@ class ServiceChargeFormItems extends Component
 
                 $totalCount  = $count + $countAdjust;
                 $resultcount = ['count' => $totalCount];
-                $this->dispatch('phic-message', result: $resultcount);
+                $this->philhealth_Item($resultcount);
+
             }
         } catch (\Exception $e) {
             DB::rollBack();
             $errorMessage = 'Error occurred: ' . $e->getMessage();
-            session()->flash('error', $errorMessage);
+            $result       = ['message' => $errorMessage, 'type' => 1];
+            $this->dispatch('prompt-item-message', result: $result);
+
         }
         // $this->countRefresh();
     }
-    #[On('phic-message')]
+
     public function philhealth_Item($result)
     {
         $total = (int) $result['count'];
         if ($total <= 156) {
-            session()->flash('message', 'PHIC 156 Treatment. The number of Used is ' . $result['count']);
+            $message = 'PHIC 156 Treatment. The number of Used is ' . $result['count'];
+            $result  = ['message' => $message, 'type' => 0];
+            $this->dispatch('prompt-item-message', result: $result);
             return;
         }
+        $message = 'PHIC 156 Treatment: The number of uses is ' . $result['count'];
+        $result  = ['message' => $message, 'type' => 1];
 
-        session()->flash('error', 'PHIC 156 Treatment: The number of uses is ' . $result['count']);
+        $this->dispatch('prompt-item-message', result: $result);
+
     }
     public function updatedlineqty()
     {
@@ -511,11 +519,12 @@ class ServiceChargeFormItems extends Component
             $this->lineAmount = 0;
             $this->lineTax    = false;
             $this->lineItemId = 0;
-                        // $this->countRefresh();
+            // $this->countRefresh();
         } catch (\Exception $e) {
             DB::rollBack();
             $errorMessage = 'Error occurred: ' . $e->getMessage();
-            session()->flash('error', $errorMessage);
+            $result       = ['message' => $errorMessage, 'type' => 1];
+            $this->dispatch('prompt-item-message', result: $result);
         }
     }
     public function cancelItem()
@@ -568,7 +577,8 @@ class ServiceChargeFormItems extends Component
         } catch (\Exception $e) {
             DB::rollBack();
             $errorMessage = 'Error occurred: ' . $e->getMessage();
-            session()->flash('error', $errorMessage);
+            $result       = ['message' => $errorMessage, 'type' => 1];
+            $this->dispatch('prompt-item-message', result: $result);
         }
     }
     #[On('clear-alert')]

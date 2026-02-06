@@ -375,6 +375,16 @@ class ServiceChargeForm extends Component
             $this->getInfo($data);
         }
     }
+    #[On('prompt-item-message')]
+    public function receivedMessage($result)
+    {
+
+        if ($result['type'] == 0) {
+            session()->flash('message', $result['message']);
+        } else {
+            session()->flash('error', $result['message']);
+        }
+    }
     public function updateCancel()
     {
         $data = $this->serviceChargeServices->get($this->ID);
@@ -417,7 +427,9 @@ class ServiceChargeForm extends Component
 
             $ITEM_COUNT = $this->serviceChargeServices->getItemCount($this->ID);
             if ($ITEM_COUNT > 0) {
-
+                $message = 'Invalid item must be empty';
+                $result  = ['message' => $message, 'type' => 1];
+                $this->dispatch('prompt-item-message', result: $result);
                 return;
             }
             DB::beginTransaction();
