@@ -83,7 +83,7 @@ class DoctorBatchServices
                     $q->where('c.NAME', 'like', '%' . $search . '%');
                     $q->orWhere('doctor_batch.CODE', 'like', '%' . $search . '%');
                 });
-            })
+            })->orderBy('doctor_batch.ID', 'desc')
             ->paginate(30);
 
         return $result;
