@@ -216,9 +216,7 @@
                         </div>
                         <div class="card-footer" wire:loading.class='loading-form'>
                             <div class="row">
-                                <div class="col-12" wire:loading.delay>
-                                    <span class="spinner"></span>
-                                </div>
+
                                 <div class="col-md-6 col-6">
                                     @if ($STATUS != 15 || $STATUS == 16)
                                         @if ($Modify)
@@ -254,18 +252,18 @@
                                                 </button>
                                             @endcan
                                         @endif
-                                        @can('banking.fund-transfer.update')
+                                        @can('banking.fund-transfer.reverse')
                                             <button type="button" wire:click='getReverse()'
                                                 class="btn btn-sm btn-success">
                                                 <i class="fa fa-cloud-upload" aria-hidden="true"></i> Reverse
                                             </button>
-                                            @if ($IS_REVERSE)
-                                                <button type="button" wire:click='OpenJournalReverse()'
-                                                    class="btn btn-sm btn-warning">
-                                                    <i class="fa fa-file-text-o" aria-hidden="true"></i> Journal Reverse
-                                                </button>
-                                            @endif
                                         @endcan
+                                        @if ($IS_REVERSE)
+                                            <button type="button" wire:click='OpenJournalReverse()'
+                                                class="btn btn-sm btn-warning">
+                                                <i class="fa fa-file-text-o" aria-hidden="true"></i> Journal Reverse
+                                            </button>
+                                        @endif
                                     @endif
                                 </div>
                                 <div class="text-right col-6 col-md-6">
@@ -288,6 +286,9 @@
                                                 class="btn btn-primary btn-sm"> <i class="fas fa-plus"></i> New </a>
                                         @endcan
                                     @endif
+                                </div>
+                                <div class="col-12" wire:loading.delay>
+                                    <span class="spinner"></span>
                                 </div>
                             </div>
                         </div>

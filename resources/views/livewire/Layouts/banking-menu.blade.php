@@ -35,6 +35,8 @@ use App\Services\UserServices;
                 </a>
             </li>
         @endif --}}
+
+
         @if (UserServices::GetUserRightAccess('banking.make-cheque.view'))
             <li class="nav-item">
                 <a href="{{ route('bankingmake_cheque') }}"
@@ -54,7 +56,17 @@ use App\Services\UserServices;
                 </a>
             </li>
         @endif
-        {{-- 
+
+        @if (UserServices::GetUserRightAccess('banking.bank-statement.view'))
+            <li class="nav-item">
+                <a href="{{ route('bankingbank_statement') }}"
+                    class="nav-link  {{ request()->is('banking/bank-statement*') ? 'text-warning font-weight-bold' : '' }}">
+                    <i class="fa fa-pencil-square nav-icon"></i>
+                    <p>Bank Statement</p>
+                </a>
+            </li>
+        @endif
+        {{--
         @if (UserServices::GetUserRightAccess('banking.spend-money.view'))
             <li class="nav-item">
                 <a href="{{ route('bankingspend_money') }}"

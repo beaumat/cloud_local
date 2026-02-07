@@ -143,4 +143,6 @@ namespace App\Enums;
     case COST_ADJUSTMENT = 142;
     case COST_ADJUSTMENT_ITEM = 143;
     case FUND_TRANSFER_REVERSE = 144;
+    case BANK_STATEMENT = 145;
+    case BANK_STATEMENT_DETAILS = 146;
 }

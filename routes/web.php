@@ -13,6 +13,8 @@ use App\Livewire\AccountingReport\TrialBalanceReport;
 use App\Livewire\BankRecon\BankReconForm;
 use App\Livewire\BankRecon\BankReconFormPrint;
 use App\Livewire\BankRecon\BankReconList;
+use App\Livewire\BankStatement\BankStatementForm;
+use App\Livewire\BankStatement\BankStatementList;
 use App\Livewire\BankTransfer\BankTransferForm;
 use App\Livewire\BankTransfer\BankTransferList;
 use App\Livewire\BillCredit\BillCreditForm;
@@ -492,6 +494,14 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/{id}/edit', BankReconForm::class)->name('bank_recon_edit')->middleware(['permission:banking.bank-recon.view']);
             Route::get('/{id}/print', BankReconFormPrint::class)->name('bank_recon_print')->middleware(['permission:banking.bank-recon.print']);
         });
+
+        Route::prefix('/bank-statement')->group(function () {
+            Route::get('/', BankStatementList::class)->name('bank_statement')->middleware(['permission:banking.bank-statement.view']);
+            Route::get('/create', BankStatementForm::class)->name('bank_statement_create')->middleware(['permission:banking.bank-statement.create']);
+            Route::get('/{id}/edit', BankStatementForm::class)->name('bank_statement_edit')->middleware(['permission:banking.bank-statement.view']);
+
+        });
+
     });
 
     Route::prefix('/maintenance')->name('maintenance')->group(function () {

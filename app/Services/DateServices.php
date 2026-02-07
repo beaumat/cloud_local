@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Services;
 
 use Carbon\Carbon;
@@ -16,7 +15,7 @@ class DateServices
     public function GetFirstDay_Year(string $BASE_DATE): string
     {
         $date = new DateTime($BASE_DATE);
-        $y = $date->format('Y');
+        $y    = $date->format('Y');
         return $this->getFirstDayViaYear($y);
     }
     public function dateToYear($date): int
@@ -41,8 +40,8 @@ class DateServices
     public function GetFirstDay_Month(string $BASE_DATE): string
     {
         $date = new DateTime($BASE_DATE);
-        $y = $date->format('Y');
-        $m = $date->format('m');
+        $y    = $date->format('Y');
+        $m    = $date->format('m');
         return "$y-$m-01";
     }
     public function GetLastDay_Month(string $BASE_DATE): string
@@ -58,8 +57,13 @@ class DateServices
     }
     public function NowDateTime()
     {
-        
+
         return Carbon::now()->format('Y-m-d H:i:s');
+    }
+    public function DateFormat(string $BASE_DATE)
+    {
+        $date = new DateTime($BASE_DATE);
+        return $date->format('Y-m-d H:i:s');
     }
     public function NextDate()
     {
@@ -101,18 +105,18 @@ class DateServices
             ['ID' => 2, 'DESCRIPTION' => '2nd week'],
             ['ID' => 3, 'DESCRIPTION' => '3rd week'],
             ['ID' => 4, 'DESCRIPTION' => '4th week'],
-            ['ID' => 5, 'DESCRIPTION' => '5th week']
+            ['ID' => 5, 'DESCRIPTION' => '5th week'],
 
         ];
     }
     public function Get7Days(int $yr, int $m, int $wk_selected)
     {
-        $month = $m;
-        $year = $yr;
-        $selectedWeek = $wk_selected;
+        $month          = $m;
+        $year           = $yr;
+        $selectedWeek   = $wk_selected;
         $firstDayOfWeek = date('N', strtotime("$year-$month-01"));
-        $startOfWeek = 1 - $firstDayOfWeek + 1;
-        $daysInMonth = cal_days_in_month(CAL_GREGORIAN, $month, $year);
+        $startOfWeek    = 1 - $firstDayOfWeek + 1;
+        $daysInMonth    = cal_days_in_month(CAL_GREGORIAN, $month, $year);
         if ($startOfWeek > 1) {
             $month--;
             if ($month == 0) {
@@ -120,11 +124,11 @@ class DateServices
                 $year--;
             }
             $firstDayOfWeek = date('N', strtotime("$year-$month-01"));
-            $startOfWeek = 1 - $firstDayOfWeek + 1;
+            $startOfWeek    = 1 - $firstDayOfWeek + 1;
         }
 
         $startDate = $startOfWeek + ($selectedWeek - 1) * 7;
-        $endDate = min($startDate + 6, $daysInMonth);
+        $endDate   = min($startDate + 6, $daysInMonth);
 
         $selectedDates = [];
 
@@ -133,7 +137,7 @@ class DateServices
             if ($day < 1) {
                 // If the day is from the previous month, calculate the day accordingly
                 $prevMonth = $month - 1;
-                $prevYear = $year;
+                $prevYear  = $year;
                 if ($prevMonth == 0) {
                     $prevMonth = 12;
                     $prevYear--;
@@ -142,7 +146,7 @@ class DateServices
             } elseif ($day > $daysInMonth) {
                 // If the day is from the next month, calculate the day accordingly
                 $nextMonth = $month + 1;
-                $nextYear = $year;
+                $nextYear  = $year;
                 if ($nextMonth == 13) {
                     $nextMonth = 1;
                     $nextYear++;
@@ -267,8 +271,8 @@ class DateServices
     public function YearList(): array
     {
         $currentYear = (int) date('Y');
-        $years = [];
-        $years[] = ['ID' => 0, 'NAME' => ''];
+        $years       = [];
+        $years[]     = ['ID' => 0, 'NAME' => ''];
         for ($year = 2024; $year <= $currentYear; $year++) {
             $years[] = ['ID' => $year, 'NAME' => (string) $year];
         }
@@ -278,10 +282,10 @@ class DateServices
     public function isNextMonthIsChange()
     {
         $todayDate = $this->NowDate();
-        $nextDate = $this->NextDate();
+        $nextDate  = $this->NextDate();
 
         $currentMonth = date('M', strtotime($todayDate));
-        $nextMonth = date('M', strtotime($nextDate));
+        $nextMonth    = date('M', strtotime($nextDate));
 
         if ($currentMonth != $nextMonth) {
             return true;
@@ -293,14 +297,14 @@ class DateServices
     {
         // Convert strings to DateTime objects
         $start = new DateTime($startDate);
-        $end = new DateTime($endDate);
+        $end   = new DateTime($endDate);
 
         // Check if the start date is the first day of the month
         if ($start->format('d') != '01') {
             return false;
         }
 
-        // Get the last day of the month for the start date
+                                        // Get the last day of the month for the start date
         $lastDay = $start->format('t'); // 't' gives the number of days in the month
 
         // Check if the end date matches the last day of the month
