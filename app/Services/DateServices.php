@@ -37,12 +37,26 @@ class DateServices
     {
         return "$YEAR-12-31";
     }
+    public function GetFirstDay_ByMonthYear(int $YEAR, int $MONTH): string
+    {
+        $date = new DateTime("$YEAR-$MONTH-1");
+        $y    = $date->format('Y');
+        $m    = $date->format('m');
+        return "$y-$m-01";
+    }
     public function GetFirstDay_Month(string $BASE_DATE): string
     {
         $date = new DateTime($BASE_DATE);
         $y    = $date->format('Y');
         $m    = $date->format('m');
         return "$y-$m-01";
+    }
+    public function GetLastDay_ByMonthYear(int $YEAR, int $MONTH): string
+    {
+        $date = new DateTime("$YEAR-$MONTH-1");
+        $date->modify('last day of this month');
+        return $date->format('Y-m-d');
+
     }
     public function GetLastDay_Month(string $BASE_DATE): string
     {

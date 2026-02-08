@@ -43,13 +43,14 @@ use App\Services\UserServices;
                             <table class="table table-sm table-bordered table-hover">
                                 <thead class="text-xs bg-sky">
                                     <tr>
-                                        <th class="col-1">DATE</th>
+                                        <th class="col-1">DATE FROM</th>
+                                        <th class="col-1">DATE TO</th>
                                         <th class="col-2">DESCRIPTION</th>
                                         <th class="col-2">BANK ACCOUNT</th>
                                         <th class="col-1">FILE TYPE</th>
-                                        <th>Notes</th>
-                                        <th class="col-1">Recon Date</th>
-                                        <th class="col-1">Recon Status</th>
+                                        <th>NOTES</th>
+                                        <th class="col-1">RECONCILE DATE</th>
+                                        <th class="col-1">RECONCILE STATUS</th>
                                         <th class="text-center col-1 bg-success">
                                             @can('banking.bank-statement.create')
                                                 <a href="{{ route('bankingbank_statement_create') }}"
@@ -63,7 +64,8 @@ use App\Services\UserServices;
                                 <tbody class="text-xs">
                                     @foreach ($dataList as $list)
                                         <tr>
-                                            <td> {{ date('m/d/Y', strtotime($list->DATE)) }}</td>
+                                            <td> {{ date('m/d/Y', strtotime($list->DATE_FROM)) }}</td>
+                                            <td> {{ date('m/d/Y', strtotime($list->DATE_TO)) }}</td>
                                             <td>{{ $list->DESCRIPTION }}</td>
                                             <td>{{ $list->BANK_NAME }}</td>
                                             <td>{{ $list->FILE_TYPE }}</td>

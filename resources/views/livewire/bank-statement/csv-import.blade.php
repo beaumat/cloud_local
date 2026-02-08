@@ -1,10 +1,6 @@
 <div wire:loading.class='loading-form'>
 
-    @livewire('alert-layout', ['errors' => $errors->any() ? $errors->all() : '', 'message' => session('message'), 'error' => session('error')])
-
-
     <input type="file" wire:model.live="file" accept=".csv">
-
     @error('file')
         <span class="error">{{ $message }}</span>
     @enderror

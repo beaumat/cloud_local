@@ -20,14 +20,15 @@ class BankStatementServices
         $data = BankStatement::where("ID", $id)->first();
         return $data;
     }
-    public function store(string $DATE, string $DESCRIPTION, int $BANK_ACCOUNT_ID, int $FILE_TYPE, string $NOTES): int
+    public function store(string $DATE_FROM, string $DATE_TO, string $DESCRIPTION, int $BANK_ACCOUNT_ID, int $FILE_TYPE, string $NOTES): int
     {
 
         $ID = (int) $this->objectServices->ObjectNextID(TableName::BANK_STATEMENT->value);
 
         BankStatement::create([
             'ID'              => $ID,
-            'DATE'            => $DATE,
+            'DATE_FROM'       => $DATE_FROM,
+            'DATE_TO'         => $DATE_TO,
             'RECORDED_ON'     => $this->dateServices->Now(),
             'DESCRIPTION'     => $DESCRIPTION,
             'BANK_ACCOUNT_ID' => $BANK_ACCOUNT_ID,
@@ -37,19 +38,12 @@ class BankStatementServices
 
         return $ID;
     }
-    public function uploadFile(int $ID, $FILE_NAME, $FILE_PATH)
+    public function update(int $ID, string $DATE_FROM, string $DATE_TO, string $DESCRIPTION, int $BANK_ACCOUNT_ID, int $FILE_TYPE, string $NOTES)
     {
         BankStatement::where('ID', '=', $ID)
             ->update([
-                'FILE_NAME' => $FILE_NAME,
-                'FILE_PATH' => $FILE_PATH,
-            ]);
-    }
-    public function update(int $ID, string $DATE, string $DESCRIPTION, int $BANK_ACCOUNT_ID, int $FILE_TYPE, string $NOTES)
-    {
-        BankStatement::where('ID', '=', $ID)
-            ->update([
-                'DATE'            => $DATE,
+                'DATE_FROM'       => $DATE_FROM,
+                'DATE_TO'         => $DATE_TO,
                 'DESCRIPTION'     => $DESCRIPTION,
                 'BANK_ACCOUNT_ID' => $BANK_ACCOUNT_ID,
                 'FILE_TYPE'       => $FILE_TYPE,
@@ -67,7 +61,8 @@ class BankStatementServices
         $result = BankStatement::query()
             ->select([
                 'bank_statement.ID',
-                'bank_statement.DATE',
+                'bank_statement.DATE_FROM',
+                'bank_statement.DATE_TO',
                 'bank_statement.RECORDED_ON',
                 'bank_statement.DESCRIPTION',
                 'bank_statement.NOTES',
@@ -150,5 +145,52 @@ class BankStatementServices
 
         return $result;
     }
+    private function GetBeginningBalance(int $BANK_STATEMENT_ID)
+    {
 
+        $data = BankStatementDetails::query()
+            ->select(['DEBIT', 'CREDIT', 'BALANCE'])
+            ->where('BANK_STATEMENT_ID', '=', $BANK_STATEMENT_ID)
+            ->first();
+        if ($data) {
+
+            $DEBIT   = $data->DEBIT ?? 0;
+            $CREDIT  = $data->CREDIT ?? 0;
+            $BALANCE = $data->BALANCE ?? 0;
+
+            if ($DEBIT > 0) {
+                return $BALANCE - $DEBIT;
+            }
+
+            if ($CREDIT > 0) {
+                return $BALANCE + $CREDIT;
+            }
+
+        }
+
+        return 0;
+    }
+    private function GetEndingBalance(int $BANK_STATEMENT_ID): float
+    {
+
+        $data = BankStatementDetails::query()->select(['BALANCE'])->where('BANK_STATEMENT_ID', '=', $BANK_STATEMENT_ID)->orderBy('ID', 'desc')->first();
+        if ($data) {
+
+            $BALANCE = $data->BALANCE ?? 0;
+            return $BALANCE;
+
+        }
+
+        return 0;
+    }
+
+    public function UpdateField(int $BANK_STATEMENT_ID)
+    {
+        $BEGIN_BALANCE = $this->GetBeginningBalance($BANK_STATEMENT_ID);
+        $END_BALANCE   = $this->GetEndingBalance($BANK_STATEMENT_ID);
+
+        BankStatement::where('ID', '=', $BANK_STATEMENT_ID)
+            ->update(['BEGINNING_BALANCE' => $BEGIN_BALANCE, 'ENDING_BALANCE' => $END_BALANCE]);
+
+    }
 }

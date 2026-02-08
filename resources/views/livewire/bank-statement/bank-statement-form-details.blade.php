@@ -23,7 +23,8 @@
                         <tbody class="text-xs">
                             @foreach ($dataList as $list)
                                 <tr>
-                                    <td>{{ $list->DATE_TRANSACTION }}</td>
+
+                                    <td> {{ date('m/d/Y H:i:s', strtotime($list->DATE_TRANSACTION)) }}</td>
                                     <td>{{ $list->REFERENCE }}</td>
                                     <td>{{ $list->DESCRIPTION }}</td>
                                     <td>{{ $list->CHECK_NUMBER }}</td>

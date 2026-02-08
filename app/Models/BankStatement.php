@@ -13,14 +13,15 @@ class BankStatement extends Model
     protected $fillable   = [
         'ID',
         'RECORDED_ON',
-        'DATE',
-        'FILE_NAME',
-        'FILE_PATH',
+        'DATE_FROM',
+        'DATE_TO',
         'DESCRIPTION',
         'BANK_ACCOUNT_ID',
         'FILE_TYPE',
         'NOTES',
         'RECON_STATUS',
         'RECON_DATE',
+        'BEGINNING_BALANCE',
+        'ENDING_BALANCE',
     ];
 }

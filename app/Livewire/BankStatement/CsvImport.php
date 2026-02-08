@@ -77,7 +77,7 @@ class CsvImport extends Component
 
                 $this->bankStatementServices->storeDetails($this->BANK_STATEMENT_ID, $DATE_TRANSACTION, $REFERENCE, $DESCRIPTION, $CHECK_NUMBER, $DEBIT, $CREDIT, $BALANCE);
             }
-
+            $this->bankStatementServices->UpdateField($this->BANK_STATEMENT_ID);
             DB::commit();
             $this->rows    = [];
             $this->headers = [];
@@ -89,7 +89,7 @@ class CsvImport extends Component
             //throw $th;
             DB::rollBack();
 
-            session()->flash("error", $th->getMessage());
+            $this->dispatch('promp', result: ['key'=> 'error', 'message' => $th->getMessage()]);
         }
 
     }

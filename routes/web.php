@@ -15,6 +15,7 @@ use App\Livewire\BankRecon\BankReconFormPrint;
 use App\Livewire\BankRecon\BankReconList;
 use App\Livewire\BankStatement\BankStatementForm;
 use App\Livewire\BankStatement\BankStatementList;
+use App\Livewire\BankStatement\BankStatementPrint;
 use App\Livewire\BankTransfer\BankTransferForm;
 use App\Livewire\BankTransfer\BankTransferList;
 use App\Livewire\BillCredit\BillCreditForm;
@@ -499,7 +500,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/', BankStatementList::class)->name('bank_statement')->middleware(['permission:banking.bank-statement.view']);
             Route::get('/create', BankStatementForm::class)->name('bank_statement_create')->middleware(['permission:banking.bank-statement.create']);
             Route::get('/{id}/edit', BankStatementForm::class)->name('bank_statement_edit')->middleware(['permission:banking.bank-statement.view']);
-
+            Route::get('/{id}/print', BankStatementPrint::class)->name('bank_statement_print')->middleware(['permission:banking.bank-statement.view']);
         });
 
     });
