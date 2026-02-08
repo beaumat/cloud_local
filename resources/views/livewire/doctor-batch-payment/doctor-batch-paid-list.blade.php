@@ -28,7 +28,7 @@
                 <tr>
                     <td>
                         <a target="_BLANK"
-                            href="{{ route('vendorsbill_payment_edit', ['id' => $list->ID]) }}">{{ $list->CODE }}</a>
+                            href="{{ route('vendorsbill_payment_edit', ['id' => $list->CHECK_ID]) }}">{{ $list->CODE }}</a>
                     </td>
 
                     <td>{{ \Carbon\Carbon::parse($list->DATE)->format('m/d/Y') }} </td>
