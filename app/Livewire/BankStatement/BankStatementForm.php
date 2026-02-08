@@ -89,8 +89,8 @@ class BankStatementForm extends Component
             $this->NOTES           = $data->NOTES ?? '';
 
             $this->BEGINNING_BALANCE = $data->BEGINNING_BALANCE ?? 0;
-            $this->ENDING_BALANCE   = $data->ENDING_BALANCE ?? 0;
-            $this->STATUS = $data->RECON_STATUS ?? 0;
+            $this->ENDING_BALANCE    = $data->ENDING_BALANCE ?? 0;
+            $this->STATUS            = $data->RECON_STATUS ?? 0;
         } else {
 
             $errorMessage = 'Error occurred: Record not found. ';
@@ -186,7 +186,7 @@ class BankStatementForm extends Component
     #[On('promp')]
     public function prompMessage($result)
     {
-                 session()->flash( $result['key'], $result['message'] );
+        session()->flash($result['key'], $result['message']);
     }
     public function render()
     {
