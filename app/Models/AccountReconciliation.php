@@ -35,6 +35,7 @@ class AccountReconciliation extends Model
         'IE_ACCOUNT_ID',
         'IE_RATE',
         'SC_DATE',
-        'IE_DATE'
+        'IE_DATE',
+        'BANK_STATEMENT_ID'
     ];
 }

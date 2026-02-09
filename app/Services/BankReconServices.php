@@ -1,9 +1,9 @@
 <?php
-
 namespace App\Services;
 
 use App\Models\AccountReconciliation;
 use App\Models\AccountReconciliationItems;
+use App\Models\BankStatementDetails;
 use Illuminate\Support\Facades\DB;
 
 class BankReconServices
@@ -18,14 +18,14 @@ class BankReconServices
         SystemSettingServices $systemSettingServices,
         AccountJournalServices $accountJournalServices
     ) {
-        $this->object = $objectServices;
-        $this->dateServices = $dateServices;
-        $this->systemSettingServices = $systemSettingServices;
+        $this->object                 = $objectServices;
+        $this->dateServices           = $dateServices;
+        $this->systemSettingServices  = $systemSettingServices;
         $this->accountJournalServices = $accountJournalServices;
     }
     public function get($ID)
     {
-        $result =   AccountReconciliation::where('ID', '=', $ID)->first();
+        $result = AccountReconciliation::where('ID', '=', $ID)->first();
         return $result;
     }
     public function Store(
@@ -46,36 +46,38 @@ class BankReconServices
         int $IE_ACCOUNT_ID,
         float $IE_RATE,
         $SC_DATE,
-        $IE_DATE
+        $IE_DATE,
+        int $BANK_STATEMENT_ID
     ): int {
 
-        $ID = $this->object->ObjectNextID('ACCOUNT_RECONCILIATION');
+        $ID          = $this->object->ObjectNextID('ACCOUNT_RECONCILIATION');
         $OBJECT_TYPE = (int) $this->object->ObjectTypeID('ACCOUNT_RECONCILIATION');
-        $isLocRef = boolval($this->systemSettingServices->GetValue('IncRefNoByLocation'));
+        $isLocRef    = boolval($this->systemSettingServices->GetValue('IncRefNoByLocation'));
         AccountReconciliation::create(
             [
-                'ID'                    => $ID,
-                'RECORDED_ON'           => $this->dateServices->Now(),
-                'DATE'                  => $DATE,
-                'CODE'                  => $CODE !== '' ? $CODE : $this->object->GetSequence($OBJECT_TYPE, $isLocRef ? $LOCATION_ID : null),
-                'ACCOUNT_ID'            => $ACCOUNT_ID,
-                'LOCATION_ID'           => $LOCATION_ID,
-                'PREVIOUS_ID'           => $PREVIOUS_ID > 0 ? $PREVIOUS_ID : null,
-                'SEQUENCE_NO'           => $SEQUENCE_NO,
-                'BEGINNING_BALANCE'     => $BEGINNING_BALANCE,
-                'CLEARED_DEPOSITS'      => $CLEARED_DEPOSITS,
-                'CLEARED_WITHDRAWALS'   => $CLEARED_WITHDRAWALS,
-                'CLEARED_BALANCE'       => $CLEARED_BALANCE,
-                'ENDING_BALANCE'        => $ENDING_BALANCE,
-                'NOTES'                 => $NOTES,
-                'STATUS'                => 0,
-                'STATUS_DATE'           => $this->dateServices->NowDate(),
-                'SC_ACCOUNT_ID'         => $SC_ACCOUNT_ID > 0  ? $SC_ACCOUNT_ID : null,
-                'SC_RATE'               => $SC_RATE,
-                'IE_ACCOUNT_ID'         => $IE_ACCOUNT_ID > 0 ? $IE_ACCOUNT_ID : null,
-                'IE_RATE'               => $IE_RATE,
-                'SC_DATE'               => $SC_DATE,
-                'IE_DATE'               => $IE_DATE
+                'ID'                  => $ID,
+                'RECORDED_ON'         => $this->dateServices->Now(),
+                'DATE'                => $DATE,
+                'CODE'                => $CODE !== '' ? $CODE : $this->object->GetSequence($OBJECT_TYPE, $isLocRef ? $LOCATION_ID : null),
+                'ACCOUNT_ID'          => $ACCOUNT_ID,
+                'LOCATION_ID'         => $LOCATION_ID,
+                'PREVIOUS_ID'         => $PREVIOUS_ID > 0 ? $PREVIOUS_ID : null,
+                'SEQUENCE_NO'         => $SEQUENCE_NO,
+                'BEGINNING_BALANCE'   => $BEGINNING_BALANCE,
+                'CLEARED_DEPOSITS'    => $CLEARED_DEPOSITS,
+                'CLEARED_WITHDRAWALS' => $CLEARED_WITHDRAWALS,
+                'CLEARED_BALANCE'     => $CLEARED_BALANCE,
+                'ENDING_BALANCE'      => $ENDING_BALANCE,
+                'NOTES'               => $NOTES,
+                'STATUS'              => 0,
+                'STATUS_DATE'         => $this->dateServices->NowDate(),
+                'SC_ACCOUNT_ID'       => $SC_ACCOUNT_ID > 0 ? $SC_ACCOUNT_ID : null,
+                'SC_RATE'             => $SC_RATE,
+                'IE_ACCOUNT_ID'       => $IE_ACCOUNT_ID > 0 ? $IE_ACCOUNT_ID : null,
+                'IE_RATE'             => $IE_RATE,
+                'SC_DATE'             => $SC_DATE,
+                'IE_DATE'             => $IE_DATE,
+                'BANK_STATEMENT_ID'   => $BANK_STATEMENT_ID,
             ]
         );
 
@@ -91,34 +93,36 @@ class BankReconServices
         int $IE_ACCOUNT_ID,
         float $IE_RATE,
         $SC_DATE,
-        $IE_DATE
+        $IE_DATE,
+        int $BANK_STATEMENT_ID
     ) {
 
         AccountReconciliation::where('ID', '=', $ID)
             ->update([
-                'DATE'                  => $DATE,
-                'CODE'                  => $CODE,
-                'NOTES'                 => $NOTES,
-                'SC_ACCOUNT_ID'         => $SC_ACCOUNT_ID > 0  ? $SC_ACCOUNT_ID : null,
-                'SC_RATE'               => $SC_RATE,
-                'IE_ACCOUNT_ID'         => $IE_ACCOUNT_ID > 0 ? $IE_ACCOUNT_ID : null,
-                'IE_RATE'               => $IE_RATE,
-                'SC_DATE'               => $SC_DATE ?? null,
-                'IE_DATE'               => $IE_DATE ?? null
+                'DATE'              => $DATE,
+                'CODE'              => $CODE,
+                'NOTES'             => $NOTES,
+                'SC_ACCOUNT_ID'     => $SC_ACCOUNT_ID > 0 ? $SC_ACCOUNT_ID : null,
+                'SC_RATE'           => $SC_RATE,
+                'IE_ACCOUNT_ID'     => $IE_ACCOUNT_ID > 0 ? $IE_ACCOUNT_ID : null,
+                'IE_RATE'           => $IE_RATE,
+                'SC_DATE'           => $SC_DATE ?? null,
+                'IE_DATE'           => $IE_DATE ?? null,
+                'BANK_STATEMENT_ID' => $BANK_STATEMENT_ID,
             ]);
     }
 
-    public function  UpdateAmount(int $ID, float $CLEARED_DEPOSITS, float $CLEARED_WITHDRAWALS, float $SC_RATE, float $IE_RATE)
+    public function UpdateAmount(int $ID, float $CLEARED_DEPOSITS, float $CLEARED_WITHDRAWALS, float $SC_RATE, float $IE_RATE)
     {
-        $CLEARED_BALANCE =  ($CLEARED_DEPOSITS -  $CLEARED_WITHDRAWALS);
-        $CLEARED_BALANCE  = $CLEARED_BALANCE + $IE_RATE;
-        $CLEARED_BALANCE  = $CLEARED_BALANCE - $SC_RATE;
+        $CLEARED_BALANCE = ($CLEARED_DEPOSITS - $CLEARED_WITHDRAWALS);
+        $CLEARED_BALANCE = $CLEARED_BALANCE + $IE_RATE;
+        $CLEARED_BALANCE = $CLEARED_BALANCE - $SC_RATE;
 
         AccountReconciliation::where('ID', '=', $ID)
             ->update([
-                'CLEARED_DEPOSITS'      => $CLEARED_DEPOSITS,
-                'CLEARED_WITHDRAWALS'   => $CLEARED_WITHDRAWALS,
-                'CLEARED_BALANCE'       => $CLEARED_BALANCE,
+                'CLEARED_DEPOSITS'    => $CLEARED_DEPOSITS,
+                'CLEARED_WITHDRAWALS' => $CLEARED_WITHDRAWALS,
+                'CLEARED_BALANCE'     => $CLEARED_BALANCE,
             ]);
     }
     public function Delete(int $ID)
@@ -128,29 +132,29 @@ class BankReconServices
     }
     public function Recomputed(int $ID)
     {
-        $CLEARED_DEPOSITS =  0;
+        $CLEARED_DEPOSITS    = 0;
         $CLEARED_WITHDRAWALS = 0;
-        $SC_RATE = 0;
-        $IE_RATE = 0;
-        $mainData = AccountReconciliation::where('ID', '=', $ID)->first();
+        $SC_RATE             = 0;
+        $IE_RATE             = 0;
+        $mainData            = AccountReconciliation::where('ID', '=', $ID)->first();
         if ($mainData) {
             $SC_RATE = $mainData->SC_RATE ?? 0;
             $IE_RATE = $mainData->IE_RATE ?? 0;
-            $item = AccountReconciliationItems::where('ACCOUNT_RECONCILIATION_ID', '=', $ID)->get();
+            $item    = AccountReconciliationItems::where('ACCOUNT_RECONCILIATION_ID', '=', $ID)->get();
             foreach ($item as $list) {
                 if ($list->ENTRY_TYPE == 0) {
                     //DEPOSIT
-                    $CLEARED_DEPOSITS  = $CLEARED_DEPOSITS +  $list->AMOUNT ?? 0;
+                    $CLEARED_DEPOSITS = $CLEARED_DEPOSITS + $list->AMOUNT ?? 0;
                 } else {
                     //WITHDRAWAL
-                    $CLEARED_WITHDRAWALS  = $CLEARED_WITHDRAWALS +  $list->AMOUNT ?? 0;
+                    $CLEARED_WITHDRAWALS = $CLEARED_WITHDRAWALS + $list->AMOUNT ?? 0;
                 }
             }
 
             $this->UpdateAmount($ID, $CLEARED_DEPOSITS, $CLEARED_WITHDRAWALS, $SC_RATE, $IE_RATE);
         }
     }
-    public function HavePreviousHistory(int  $BANK_ACCOUNT_ID, int $LOCATION_ID)
+    public function HavePreviousHistory(int $BANK_ACCOUNT_ID, int $LOCATION_ID)
     {
         $result = AccountReconciliation::query()
             ->where('ACCOUNT_ID', '=', $BANK_ACCOUNT_ID)
@@ -158,7 +162,6 @@ class BankReconServices
             ->where('STATUS', '=', 15)
             ->orderBy('ID', 'DESC')
             ->first();
-    
 
         if ($result) {
             return $result;
@@ -178,7 +181,7 @@ class BankReconServices
                 'account_reconciliation.ENDING_BALANCE',
                 'l.NAME as LOCATION_NAME',
                 's.DESCRIPTION as STATUS',
-                'account_reconciliation.NOTES'
+                'account_reconciliation.NOTES',
             ])
             ->leftJoin('account as a', 'a.ID', '=', 'account_reconciliation.ACCOUNT_ID')
             ->join('location as l', function ($join) use (&$LOCATION_ID) {
@@ -210,16 +213,16 @@ class BankReconServices
     {
         $ID = $this->object->ObjectNextID('ACCOUNT_RECONCILIATION_ITEMS');
         AccountReconciliationItems::create([
-            'ID'                => $ID,
+            'ID'                        => $ID,
             'ACCOUNT_RECONCILIATION_ID' => $ACCOUNT_RECONCILIATION_ID,
-            'LINE_NO'           => $this->GetLineNo($ACCOUNT_RECONCILIATION_ID) + 1,
-            'OBJECT_ID'         => $OBJECT_ID,
-            'OBJECT_TYPE'       => $OBJECT_TYPE,
-            'ENTRY_TYPE'        => $ENTRY_TYPE,
-            'CLEARED_DEBIT'     => $ENTRY_TYPE == 0 ? $AMOUNT : 0,
-            'CLEARED_CREDIT'    => $ENTRY_TYPE == 1 ? $AMOUNT : 0,
-            'AMOUNT'            => $AMOUNT,
-            'OBJECT_DATE'       => $OBJECT_DATE
+            'LINE_NO'                   => $this->GetLineNo($ACCOUNT_RECONCILIATION_ID) + 1,
+            'OBJECT_ID'                 => $OBJECT_ID,
+            'OBJECT_TYPE'               => $OBJECT_TYPE,
+            'ENTRY_TYPE'                => $ENTRY_TYPE,
+            'CLEARED_DEBIT'             => $ENTRY_TYPE == 0 ? $AMOUNT : 0,
+            'CLEARED_CREDIT'            => $ENTRY_TYPE == 1 ? $AMOUNT : 0,
+            'AMOUNT'                    => $AMOUNT,
+            'OBJECT_DATE'               => $OBJECT_DATE,
         ]);
 
         $this->Recomputed($ACCOUNT_RECONCILIATION_ID);
@@ -235,7 +238,7 @@ class BankReconServices
     }
     public function ItemList(int $ACCOUNT_RECONCILIATION_ID, $search): object
     {
-        $result =  DB::table('account_reconciliation_items as recon_item')
+        $result = DB::table('account_reconciliation_items as recon_item')
             ->select([
                 'recon_item.ID',
                 'aj.OBJECT_ID',
@@ -249,7 +252,7 @@ class BankReconServices
                 DB::raw($this->accountJournalServices->TX_NAME),
                 DB::raw($this->accountJournalServices->TX_NOTES),
                 DB::raw($this->accountJournalServices->TX_PO),
-                'l.NAME as LOCATION_NAME'
+                'l.NAME as LOCATION_NAME',
             ])
             ->join('account_reconciliation as recon', 'recon.ID', '=', 'recon_item.ACCOUNT_RECONCILIATION_ID')
             ->join('account_journal as aj', function ($join) {
@@ -278,10 +281,10 @@ class BankReconServices
                 $query->havingRaw(
                     '(TX_CODE like ? OR TX_NAME like ? OR TX_NOTES like ? OR TX_PO like ?)',
                     [
-                        '%' . $search . '%',  // For TX_CODE
-                        '%' . $search . '%',  // For TX_NAME
-                        '%' . $search . '%',  // For TX_NOTES
-                        '%' . $search . '%',  // For TX_PO
+                        '%' . $search . '%', // For TX_CODE
+                        '%' . $search . '%', // For TX_NAME
+                        '%' . $search . '%', // For TX_NOTES
+                        '%' . $search . '%', // For TX_PO
                     ]
                 );
             })
@@ -295,8 +298,8 @@ class BankReconServices
     {
         AccountReconciliation::where('ID', $ID)
             ->update([
-                'STATUS'        => $STATUS,
-                'STATUS_DATE'   => $this->dateServices->NowDate()
+                'STATUS'      => $STATUS,
+                'STATUS_DATE' => $this->dateServices->NowDate(),
             ]);
     }
     public function getPaymentList(int $ACCOUNT_ID, int $LOCATION_ID = 0, int $ENTRY_TYPE = 0, $search): object
@@ -314,7 +317,7 @@ class BankReconServices
                 DB::raw($this->accountJournalServices->TX_NAME),
                 DB::raw($this->accountJournalServices->TX_NOTES),
                 DB::raw($this->accountJournalServices->TX_PO),
-                'l.NAME as LOCATION_NAME'
+                'l.NAME as LOCATION_NAME',
             ])
 
             ->leftJoin('object_type_map as o', 'o.ID', '=', 'aj.OBJECT_TYPE')
@@ -340,17 +343,18 @@ class BankReconServices
                 $query->havingRaw(
                     '(TX_CODE like ? OR TX_NAME like ? OR TX_NOTES like ? OR TX_PO like ?)',
                     [
-                        '%' . $search . '%',  // For TX_CODE
-                        '%' . $search . '%',  // For TX_NAME
-                        '%' . $search . '%',  // For TX_NOTES
-                        '%' . $search . '%',  // For TX_PO
+                        '%' . $search . '%', // For TX_CODE
+                        '%' . $search . '%', // For TX_NAME
+                        '%' . $search . '%', // For TX_NOTES
+                        '%' . $search . '%', // For TX_PO
                     ]
                 );
             })
             ->orderBy('aj.OBJECT_DATE', 'asc')
             ->get();
 
-
         return $result;
     }
+
+
 }

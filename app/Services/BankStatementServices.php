@@ -20,6 +20,17 @@ class BankStatementServices
         $data = BankStatement::where("ID", $id)->first();
         return $data;
     }
+    public function getList(int $BANK_ACCOUNT_ID): array | Collection
+    {
+        $data = BankStatement::query()
+            ->select(['ID', 'DESCRIPTION'])
+            ->where("BANK_ACCOUNT_ID", '=', $BANK_ACCOUNT_ID)
+            ->orderBy('ID')
+            ->get();
+
+        return $data;
+
+    }
     public function store(string $DATE_FROM, string $DATE_TO, string $DESCRIPTION, int $BANK_ACCOUNT_ID, int $FILE_TYPE, string $NOTES): int
     {
 
@@ -192,5 +203,35 @@ class BankStatementServices
         BankStatement::where('ID', '=', $BANK_STATEMENT_ID)
             ->update(['BEGINNING_BALANCE' => $BEGIN_BALANCE, 'ENDING_BALANCE' => $END_BALANCE]);
 
+    }
+
+    public function getbankStatement(int $BANK_STATEMENT_ID, $search): array|Collection
+    {
+        $result = BankStatementDetails::query()
+            ->select([
+                'bank_statement_details.DATE_TRANSACTION',
+                'bank_statement_details.REFERENCE',
+                'bank_statement_details.DESCRIPTION',
+                'bank_statement_details.CHECK_NUMBER',
+                'bank_statement_details.DEBIT',
+                'bank_statement_details.CREDIT',
+                'bank_statement_details.BALANCE',
+                'bank_statement_details.OBJECT_TYPE',
+                'bank_statement_details.OBJECT_ID',
+                'bank_statement_details.RECON_LOG',
+            ])
+            ->join('bank_statement as bs', 'bs.ID', '=', 'bank_statement_details.BANK_STATEMENT_ID')
+            ->where('bs.ID', '=', $BANK_STATEMENT_ID)
+            ->when($search, function ($query) use (&$search) {
+                $query->where(function ($q) use (&$search) {
+                    $q->where('bank_statement_details.REFERENCE', 'like', '%' . $search . '%')
+                        ->orWhere('bank_statement_details.DESCRIPTION', 'like', '%' . $search . '%')
+                        ->orWhere('bank_statement_details.DEBIT', 'like', '%' . $search . '%')
+                        ->orWhere('bank_statement_details.CREDIT', 'like', '%' . $search . '%');
+                });
+            })
+            ->get();
+
+        return $result;
     }
 }

@@ -3,6 +3,7 @@ namespace App\Livewire\BankRecon;
 
 use App\Services\AccountServices;
 use App\Services\BankReconServices;
+use App\Services\BankStatementServices;
 use App\Services\LocationServices;
 use App\Services\UserServices;
 use Illuminate\Support\Facades\DB;
@@ -32,35 +33,47 @@ class BankReconForm extends Component
     public int $STATUS;
     public string $STATUS_DATE;
 
+
+
+    public int $BANK_STATEMENT_ID;
     public int $SC_ACCOUNT_ID;
     public int $IE_ACCOUNT_ID;
     public float $SC_RATE;
     public float $IE_RATE;
     public $SC_DATE;
     public $IE_DATE;
-    public $sc_accountList = [];
-    public $ie_accountList = [];
-
-    public $accountList  = [];
-    public $locationList = [];
-    public bool $Modify  = true;
+    public $sc_accountList        = [];
+    public $ie_accountList        = [];
+    public $bankStatementList     = [];
+    public $accountList           = [];
+    public $locationList          = [];
+    public bool $Modify           = true;
+    public bool $bankStateRefresh = false;
     private $bankReconServices;
     private $userServices;
     private $locationServices;
     private $accountServices;
+    private $bankStatementServices;
     public function boot(
         BankReconServices $bankReconServices,
         UserServices $userServices,
         LocationServices $locationServices,
-        AccountServices $accountServices
+        AccountServices $accountServices,
+        BankStatementServices $bankStatementServices
     ) {
-        $this->bankReconServices = $bankReconServices;
-        $this->userServices      = $userServices;
-        $this->accountServices   = $accountServices;
-        $this->locationServices  = $locationServices;
+        $this->bankReconServices     = $bankReconServices;
+        $this->userServices          = $userServices;
+        $this->accountServices       = $accountServices;
+        $this->locationServices      = $locationServices;
+        $this->bankStatementServices = $bankStatementServices;
     }
 
-    public string $tab = "check";
+
+    public function getBankStateRefresh()
+    {
+        $this->bankStateRefresh = $this->bankStateRefresh ? false : true;
+    }
+    public string $tab = "bank";
     #[On('select-tab')]
     public function SelectTab($tab)
     {
@@ -73,19 +86,38 @@ class BankReconForm extends Component
         $this->locationList   = $this->locationServices->getList();
         $this->sc_accountList = $this->accountServices->getExpenses();
         $this->ie_accountList = $this->accountServices->getIncome();
+
+    }
+    private function SelectBank()
+    {
+        $this->bankStatementList = $this->bankStatementServices->getList($this->ACCOUNT_ID);
     }
     public function updatedaccountid()
     {
-        $data = $this->bankReconServices->HavePreviousHistory($this->ACCOUNT_ID, $this->LOCATION_ID);
+        $this->SelectBank();
+        $this->getBankStateRefresh();
 
-        if ($data) {
-            $this->PREVIOUS_ID       = $data->ID;
-            $this->BEGINNING_BALANCE = $data->ENDING_BALANCE ?? 0;
-            return;
-        }
-        $this->PREVIOUS_ID       = 0;
-        $this->BEGINNING_BALANCE = 0;
+        // $data = $this->bankReconServices->HavePreviousHistory($this->ACCOUNT_ID, $this->LOCATION_ID);
+
+        // if ($data) {
+        //     $this->PREVIOUS_ID       = $data->ID;
+        //     $this->BEGINNING_BALANCE = $data->ENDING_BALANCE ?? 0;
+        //     return;
+        // }
+        // $this->PREVIOUS_ID       = 0;
+        // $this->BEGINNING_BALANCE = 0;
+
     }
+    public function updatedBankStatementId()
+    {
+        $data = $this->bankStatementServices->get($this->BANK_STATEMENT_ID);
+        if ($data) {
+            $this->BEGINNING_BALANCE = $data->BEGINNING_BALANCE ?? 0;
+            $this->ENDING_BALANCE    = $data->ENDING_BALANCE ?? 0;
+            $this->DATE              = $data->DATE_TO;
+        }
+    }
+
     public function openSalesCollection()
     {
         $this->dispatch('open-collection');
@@ -116,6 +148,8 @@ class BankReconForm extends Component
         $this->SC_ACCOUNT_ID       = $data->SC_ACCOUNT_ID ?? 0;
         $this->IE_ACCOUNT_ID       = $data->IE_ACCOUNT_ID ?? 0;
         $this->IE_RATE             = $data->IE_RATE ?? 0;
+        $this->updatedaccountid();
+        $this->BANK_STATEMENT_ID   = $data->BANK_STATEMENT_ID ?? 0;
     }
     public function mount($id = null)
     {
@@ -152,9 +186,10 @@ class BankReconForm extends Component
         $this->SC_ACCOUNT_ID = 0;
         $this->SC_DATE       = null;
 
-        $this->IE_ACCOUNT_ID = 0;
-        $this->IE_RATE       = 0;
-        $this->IE_DATE       = null;
+        $this->IE_ACCOUNT_ID     = 0;
+        $this->IE_RATE           = 0;
+        $this->IE_DATE           = null;
+        $this->BANK_STATEMENT_ID = 0;
     }
     public function save()
     {
@@ -173,6 +208,7 @@ class BankReconForm extends Component
                 'IE_DATE'           => $this->IE_RATE > 0 ? 'required|date' : 'nullable',
                 'BEGINNING_BALANCE' => 'required|numeric',
                 'ENDING_BALANCE'    => 'required|numeric|min:1',
+                'BANK_STATEMENT_ID' => 'required|numeric|exists:bank_statement,id',
             ],
             [],
             [
@@ -186,6 +222,7 @@ class BankReconForm extends Component
                 'IE_DATE'           => 'Interest Earn Date',
                 'BEGINNING_BALANCE' => 'Beginning Balance',
                 'ENDING_BALANCE'    => 'Ending Balance',
+                'BANK_STATEMENT_ID' => 'Bank Statement',
             ]
         );
 
@@ -211,7 +248,8 @@ class BankReconForm extends Component
                     $this->IE_ACCOUNT_ID,
                     $this->IE_RATE,
                     $this->SC_DATE,
-                    $this->IE_DATE
+                    $this->IE_DATE,
+                    $this->BANK_STATEMENT_ID
                 );
                 $this->bankReconServices->Recomputed($this->ID);
                 DB::commit();
@@ -227,7 +265,8 @@ class BankReconForm extends Component
                     $this->IE_ACCOUNT_ID,
                     $this->IE_RATE,
                     $this->SC_DATE,
-                    $this->IE_DATE
+                    $this->IE_DATE,
+                    $this->BANK_STATEMENT_ID
                 );
                 $this->bankReconServices->Recomputed($this->ID);
                 DB::commit();

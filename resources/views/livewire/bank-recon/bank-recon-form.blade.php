@@ -25,9 +25,15 @@
                         </div>
                         <form id="quickForm" wire:submit.prevent='save'>
                             <div class="card-body bg-light">
-                                <div class="form-group">
-                                    <div class="row">
-                                        <div class="col-md-6">
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="card card-body">
+                                            <label class="font-weight-bold text-sm text-primary">
+                                                Select an account to reconcile, and then enter the ending balance
+                                                from your account statement
+
+                                            </label>
                                             <div class="row">
                                                 <div class="col-md-6 col-6">
                                                     @if ($Modify && $ID == 0)
@@ -50,43 +56,38 @@
                                                         titleName="Ending Balance" isDisabled="{{ !$Modify }}"
                                                         wire:model='ENDING_BALANCE' />
                                                 </div>
-
-                                                <div class="col-md-3 col-3">
-                                                    <livewire:number-input name="SC_RATE"
-                                                        titleName="Service Charges Rate"
-                                                        isDisabled="{{ !$Modify }}" wire:model='SC_RATE' />
-                                                </div>
-                                                <div class="col-md-3 col-3">
-                                                    <livewire:date-input name="SC_DATE" titleName="Date"
-                                                        wire:model.live='SC_DATE' isDisabled="{{ !$Modify }}" />
-                                                </div>
                                                 <div class="col-md-6 col-6">
-                                                    @if ($Modify)
-                                                        <livewire:select-option name="SC_ACCOUNT_ID1"
-                                                            titleName="Account" :options="$sc_accountList" :zero="true"
-                                                            :isDisabled="false" wire:model='SC_ACCOUNT_ID' />
+                                                    @if ($Modify && $ID == 0)
+                                                        @if ($bankStateRefresh)
+                                                            <livewire:select-option name="BANK_STATEMENT_ID1"
+                                                                titleName="Bank Statement Upload" :options="$bankStatementList"
+                                                                :zero="true" :isDisabled="false"
+                                                                wire:model.live='BANK_STATEMENT_ID' />
+                                                        @else
+                                                            <livewire:select-option name="BANK_STATEMENT_ID0"
+                                                                titleName="Bank Statement Upload" :options="$bankStatementList"
+                                                                :zero="true" :isDisabled="false"
+                                                                wire:model.live='BANK_STATEMENT_ID' />
+                                                        @endif
                                                     @else
-                                                        <livewire:select-option name="SC_ACCOUNT_ID2"
-                                                            titleName="Account" :options="$sc_accountList" :zero="true"
-                                                            :isDisabled="true" wire:model='SC_ACCOUNT_ID' />
+                                                        <livewire:select-option name="BANK_STATEMENT_ID2"
+                                                            titleName="Bank Statement Upload" :options="$bankStatementList"
+                                                            :zero="true" :isDisabled="true"
+                                                            wire:model.live='BANK_STATEMENT_ID' />
                                                     @endif
                                                 </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="row">
-                                                <div class="col-md-4">
+                                                <div class="col-md-3">
                                                     @if ($ID == 0 && auth()->user()->date_enabled)
                                                         <livewire:date-input name="DATE"
-                                                            titleName="Bank Statement Date" wire:model.live='DATE'
+                                                            titleName="Statement as of date" wire:model.live='DATE'
                                                             :isDisabled="false" />
                                                     @else
                                                         <livewire:date-input name="DATE"
-                                                            titleName="Bank Statement Date" wire:model.live='DATE'
+                                                            titleName="Statement as of date" wire:model.live='DATE'
                                                             :isDisabled="true" />
                                                     @endif
                                                 </div>
-                                                <div class="col-md-4">
+                                                <div class="col-md-3">
                                                     <livewire:text-input name="Code" titleName="Reference No."
                                                         isDisabled="{{ !$Modify }}" wire:model='CODE' />
                                                 </div>
@@ -96,11 +97,46 @@
                                                         :options="$locationList" :zero="false"
                                                         isDisabled="{{ !$Modify }}" wire:model='LOCATION_ID' />
                                                 </div>
-
-                                                <div class="col-md-12">
-
-
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="card card-body">
+                                                    <label class="font-weight-bold text-sm text-purple">Enter any
+                                                        service charge or
+                                                        interest earned. (optional)</label>
                                                     <div class="row">
+                                                        {{--  SERVICE CHARGES RATE --}}
+                                                        <div class="col-md-3 col-3">
+                                                            <livewire:number-input name="SC_RATE"
+                                                                titleName="Service Charges Rate"
+                                                                isDisabled="{{ !$Modify }}" wire:model='SC_RATE' />
+                                                        </div>
+                                                        <div class="col-md-3 col-3">
+                                                            <livewire:date-input name="SC_DATE" titleName="Date"
+                                                                wire:model.live='SC_DATE'
+                                                                isDisabled="{{ !$Modify }}" />
+                                                        </div>
+                                                        <div class="col-md-6 col-6">
+                                                            @if ($Modify)
+                                                                <livewire:select-option name="SC_ACCOUNT_ID1"
+                                                                    titleName="Account" :options="$sc_accountList"
+                                                                    :zero="true" :isDisabled="false"
+                                                                    wire:model='SC_ACCOUNT_ID' />
+                                                            @else
+                                                                <livewire:select-option name="SC_ACCOUNT_ID2"
+                                                                    titleName="Account" :options="$sc_accountList"
+                                                                    :zero="true" :isDisabled="true"
+                                                                    wire:model='SC_ACCOUNT_ID' />
+                                                            @endif
+                                                        </div>
+
+                                                    </div>
+                                                    <div class="row">
+
+                                                        {{-- INTEREST EARN --}}
                                                         <div class="col-md-3 col-3">
                                                             <livewire:number-input name="IE_RATE"
                                                                 titleName="Interest Earn "
@@ -126,10 +162,13 @@
                                                         </div>
                                                     </div>
                                                 </div>
+
+
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+
                             </div>
                             <div class="card-footer">
                                 <div class="row">
@@ -203,10 +242,51 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="row">
-                            <div class="col-9">
-                                @livewire('BankRecon.BankReconFormItems', ['ACCOUNT_RECONCILIATION_ID' => $ID, 'STATUS' => $STATUS])
+                            <div class="col-12 col-md-12 ">
+                                <div class="card card-primary card-outline card-outline-tabs">
+                                    <div class="card-header p-0 border-bottom-0 text-xs"
+                                        wire:loading.class='loading-form'>
+                                        <ul class="nav text-xs nav-tabs" id="custom-tabs-four-tab" role="tablist">
+                                            <li class="nav-item">
+                                                <a class="nav-link @if ($tab == 'bank') active @endif"
+                                                    id="custom-tabs-four-bank-tab" wire:click="SelectTab('bank')"
+                                                    data-toggle="pill" href="#custom-tabs-four-bank" role="tab"
+                                                    aria-controls="custom-tabs-four-bank" aria-selected="true">Bank
+                                                    Statement</a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link @if ($tab == 'cleared') active @endif"
+                                                    id="custom-tabs-four-cleared-tab"
+                                                    wire:click="SelectTab('cleared')" data-toggle="pill"
+                                                    href="#custom-tabs-four-cleared" role="tab"
+                                                    aria-controls="custom-tabs-four-cleared"
+                                                    aria-selected="true">Cleared Entry</a>
+                                            </li>
+                                            <li wire:loading.delay>
+                                                <span class="spinner"></span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="tab-content" id="custom-tabs-four-tabContent">
+                                            <div class="tab-pane fade @if ($tab == 'bank') show active @endif "
+                                                id="custom-tabs-four-bank" role="tabpanel">
+                                                @if ($tab == 'bank')
+                                                    @livewire('BankRecon.BankStatement', ['BANK_STATEMENT_ID' => $BANK_STATEMENT_ID, 'ACCOUNT_RECONCILIATION_ID' => $ID])
+                                                @endif
+                                            </div>
+                                            <div class="tab-pane fade @if ($tab == 'cleared') show active @endif "
+                                                id="custom-tabs-four-cleared" role="tabpanel">
+                                                @if ($tab == 'cleared')
+                                                    @livewire('BankRecon.BankReconFormItems', ['ACCOUNT_RECONCILIATION_ID' => $ID, 'STATUS' => $STATUS])
+                                                @endif
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
                             </div>
-                            <div class="col-3">
+                            {{-- <div class="col-12 col-md-2">
                                 @if ($STATUS == 0 || $STATUS == 16)
                                     <div class="form-group">
                                         <button wire:click='openSalesCollection()' class="btn btn-sm btn-success">
@@ -218,7 +298,7 @@
                                     </div>
                                 @endif
                                 @livewire('BankRecon.BankReconDetails', ['ACCOUNT_RECONCILIATION_ID' => $ID])
-                            </div>
+                            </div> --}}
                         </div>
                     </div>
                 </div>
