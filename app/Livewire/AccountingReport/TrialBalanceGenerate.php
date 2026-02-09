@@ -1,9 +1,11 @@
 <?php
 namespace App\Livewire\AccountingReport;
 
+use App\Exports\TrialBalanceExport;
 use App\Services\AccountJournalServices;
 use Livewire\Attributes\Title;
 use Livewire\Component;
+use Maatwebsite\Excel\Facades\Excel;
 
 #[Title('Trial Balance - Preview')]
 
@@ -47,6 +49,23 @@ class TrialBalanceGenerate extends Component
         } catch (\Throwable $th) {
             //throw $th;
         }
+    }
+
+
+    public function export()
+    {
+
+        if (! $this->dataList) {
+            session()->flash('error', 'Please generate first');
+            return;
+        }
+
+        return Excel::download(new TrialBalanceExport(
+            $this->dataList
+        ), 'trial-balance-export.xlsx');
+
+
+
     }
     public function render()
     {

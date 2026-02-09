@@ -21,7 +21,14 @@
     <section class="content">
         <div class="container-fluid bg-light">
             <div class="row">
-                <div class="col-md-6" style="max-height: 80vh; overflow-y: auto;">
+                <div class="col-md-12">
+                    <div class="form-group bg-light">
+                          <button class="btn btn-success btn-xs" wire:click='export()'>Export</button>
+                    </div>
+                </div>
+
+                <div class="col-md-6  " style="max-height: 80vh; overflow-y: auto;">
+
                     @livewire('alert-layout', ['errors' => $errors->any() ? $errors->all() : '', 'message' => session('message'), 'error' => session('error')])
                     <table class="table table-xl table-bordered table-hover">
                         <thead class="bg-sky">

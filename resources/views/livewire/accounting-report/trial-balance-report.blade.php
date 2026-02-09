@@ -58,8 +58,7 @@
                                                 class="btn btn-danger btn-xs w-25" wire:loading.attr='disabled'>
                                                 Generate
                                             </a>
-                                            <button class="btn btn-success btn-xs w-25"
-                                                wire:click='export()'>Export</button>
+
                                         </div>
                                     </div>
                                 </div>

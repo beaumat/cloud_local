@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Livewire\BankRecon;
 
 use App\Services\AccountServices;
@@ -39,12 +38,12 @@ class BankReconForm extends Component
     public float $IE_RATE;
     public $SC_DATE;
     public $IE_DATE;
-    public $sc_accountList =  [];
+    public $sc_accountList = [];
     public $ie_accountList = [];
 
-    public $accountList = [];
+    public $accountList  = [];
     public $locationList = [];
-    public bool $Modify = true;
+    public bool $Modify  = true;
     private $bankReconServices;
     private $userServices;
     private $locationServices;
@@ -56,11 +55,10 @@ class BankReconForm extends Component
         AccountServices $accountServices
     ) {
         $this->bankReconServices = $bankReconServices;
-        $this->userServices = $userServices;
-        $this->accountServices = $accountServices;
-        $this->locationServices = $locationServices;
+        $this->userServices      = $userServices;
+        $this->accountServices   = $accountServices;
+        $this->locationServices  = $locationServices;
     }
-
 
     public string $tab = "check";
     #[On('select-tab')]
@@ -71,8 +69,8 @@ class BankReconForm extends Component
 
     private function dropDownLoad()
     {
-        $this->accountList = $this->accountServices->getBankAccount();
-        $this->locationList = $this->locationServices->getList();
+        $this->accountList    = $this->accountServices->getBankAccount();
+        $this->locationList   = $this->locationServices->getList();
         $this->sc_accountList = $this->accountServices->getExpenses();
         $this->ie_accountList = $this->accountServices->getIncome();
     }
@@ -81,11 +79,11 @@ class BankReconForm extends Component
         $data = $this->bankReconServices->HavePreviousHistory($this->ACCOUNT_ID, $this->LOCATION_ID);
 
         if ($data) {
-            $this->PREVIOUS_ID = $data->ID;
+            $this->PREVIOUS_ID       = $data->ID;
             $this->BEGINNING_BALANCE = $data->ENDING_BALANCE ?? 0;
             return;
         }
-        $this->PREVIOUS_ID = 0;
+        $this->PREVIOUS_ID       = 0;
         $this->BEGINNING_BALANCE = 0;
     }
     public function openSalesCollection()
@@ -98,26 +96,26 @@ class BankReconForm extends Component
     }
     private function getInfo($data)
     {
-        $this->ID  = $data->ID;
-        $this->DATE = $data->DATE;
-        $this->CODE = $data->CODE ?? 0;
-        $this->ACCOUNT_ID = $data->ACCOUNT_ID ?? 0;
-        $this->LOCATION_ID = $data->LOCATION_ID;
-        $this->PREVIOUS_ID = $data->PREVIOUS_ID ?? 0;
-        $this->SEQUENCE_NO = $data->SEQUENCE_NO ?? 0;
-        $this->BEGINNING_BALANCE = $data->BEGINNING_BALANCE ?? 0;
-        $this->CLEARED_DEPOSITS  = $data->CLEARED_DEPOSITS ?? 0;
-        $this->CLEARED_WITHDRAWALS  = $data->CLEARED_WITHDRAWALS ?? 0;
-        $this->CLEARED_BALANCE  = $data->CLEARED_BALANCE ?? 0;
-        $this->ENDING_BALANCE = $data->ENDING_BALANCE ?? 0;
-        $this->NOTES = $data->NOTES ?? '';
-        $this->STATUS = $data->STATUS ?? 0;
-        $this->SC_DATE = $data->SC_DATE ?? null;
-        $this->IE_DATE = $data->IE_DATE ?? null;
-        $this->SC_RATE = $data->SC_RATE ?? 0;
-        $this->SC_ACCOUNT_ID = $data->SC_ACCOUNT_ID ?? 0;
-        $this->IE_ACCOUNT_ID = $data->IE_ACCOUNT_ID ?? 0;
-        $this->IE_RATE = $data->IE_RATE ?? 0;
+        $this->ID                  = $data->ID;
+        $this->DATE                = $data->DATE;
+        $this->CODE                = $data->CODE ?? 0;
+        $this->ACCOUNT_ID          = $data->ACCOUNT_ID ?? 0;
+        $this->LOCATION_ID         = $data->LOCATION_ID;
+        $this->PREVIOUS_ID         = $data->PREVIOUS_ID ?? 0;
+        $this->SEQUENCE_NO         = $data->SEQUENCE_NO ?? 0;
+        $this->BEGINNING_BALANCE   = $data->BEGINNING_BALANCE ?? 0;
+        $this->CLEARED_DEPOSITS    = $data->CLEARED_DEPOSITS ?? 0;
+        $this->CLEARED_WITHDRAWALS = $data->CLEARED_WITHDRAWALS ?? 0;
+        $this->CLEARED_BALANCE     = $data->CLEARED_BALANCE ?? 0;
+        $this->ENDING_BALANCE      = $data->ENDING_BALANCE ?? 0;
+        $this->NOTES               = $data->NOTES ?? '';
+        $this->STATUS              = $data->STATUS ?? 0;
+        $this->SC_DATE             = $data->SC_DATE ?? null;
+        $this->IE_DATE             = $data->IE_DATE ?? null;
+        $this->SC_RATE             = $data->SC_RATE ?? 0;
+        $this->SC_ACCOUNT_ID       = $data->SC_ACCOUNT_ID ?? 0;
+        $this->IE_ACCOUNT_ID       = $data->IE_ACCOUNT_ID ?? 0;
+        $this->IE_RATE             = $data->IE_RATE ?? 0;
     }
     public function mount($id = null)
     {
@@ -134,47 +132,47 @@ class BankReconForm extends Component
         }
 
         $this->dropDownLoad();
-        $this->ID  = 0;
-        $this->DATE = null;
-        $this->CODE = '';
-        $this->ACCOUNT_ID = 0;
-        $this->LOCATION_ID = $this->userServices->getLocationDefault();
-        $this->PREVIOUS_ID = 0;
-        $this->SEQUENCE_NO = 0;
-        $this->BEGINNING_BALANCE = 0;
-        $this->CLEARED_DEPOSITS  = 0;
-        $this->CLEARED_WITHDRAWALS  = 0;
-        $this->CLEARED_BALANCE  = 0;
-        $this->ENDING_BALANCE =  0;
-        $this->NOTES =  '';
-        $this->STATUS = 0;
-        $this->Modify = true;
+        $this->ID                  = 0;
+        $this->DATE                = null;
+        $this->CODE                = '';
+        $this->ACCOUNT_ID          = 0;
+        $this->LOCATION_ID         = $this->userServices->getLocationDefault();
+        $this->PREVIOUS_ID         = 0;
+        $this->SEQUENCE_NO         = 0;
+        $this->BEGINNING_BALANCE   = 0;
+        $this->CLEARED_DEPOSITS    = 0;
+        $this->CLEARED_WITHDRAWALS = 0;
+        $this->CLEARED_BALANCE     = 0;
+        $this->ENDING_BALANCE      = 0;
+        $this->NOTES               = '';
+        $this->STATUS              = 0;
+        $this->Modify              = true;
 
-        $this->SC_RATE = 0;
+        $this->SC_RATE       = 0;
         $this->SC_ACCOUNT_ID = 0;
-        $this->SC_DATE = null;
+        $this->SC_DATE       = null;
 
         $this->IE_ACCOUNT_ID = 0;
-        $this->IE_RATE = 0;
-        $this->IE_DATE = null;
+        $this->IE_RATE       = 0;
+        $this->IE_DATE       = null;
     }
     public function save()
     {
 
         $this->validate(
             [
-                'ACCOUNT_ID'            => 'required|not_in:0|exists:account,id',
-                'CODE'                  =>  $this->ID > 0 ? 'required|max:20|unique:account_reconciliation,code,' . $this->ID : 'nullable',
-                'DATE'                  => 'required|date',
-                'LOCATION_ID'           => 'required|numeric|exists:location,id',
-                'SC_RATE'               => 'required|numeric|min:0',
-                'IE_RATE'               => 'required|numeric|min:0',
-                'SC_ACCOUNT_ID'         => $this->SC_RATE > 0 ? 'required|numeric|exists:account,id' : 'nullable',
-                'IE_ACCOUNT_ID'         => $this->IE_RATE > 0 ? 'required|numeric|exists:account,id' : 'nullable',
-                'SC_DATE'               => $this->SC_RATE > 0 ? 'required|date' : 'nullable',
-                'IE_DATE'               => $this->IE_RATE > 0 ? 'required|date' : 'nullable',
-                'BEGINNING_BALANCE'     => 'required|numeric',
-                'ENDING_BALANCE'       =>  'required|numeric|min:1',
+                'ACCOUNT_ID'        => 'required|not_in:0|exists:account,id',
+                'CODE'              => $this->ID > 0 ? 'required|max:20|unique:account_reconciliation,code,' . $this->ID : 'nullable',
+                'DATE'              => 'required|date',
+                'LOCATION_ID'       => 'required|numeric|exists:location,id',
+                'SC_RATE'           => 'required|numeric|min:0',
+                'IE_RATE'           => 'required|numeric|min:0',
+                'SC_ACCOUNT_ID'     => $this->SC_RATE > 0 ? 'required|numeric|exists:account,id' : 'nullable',
+                'IE_ACCOUNT_ID'     => $this->IE_RATE > 0 ? 'required|numeric|exists:account,id' : 'nullable',
+                'SC_DATE'           => $this->SC_RATE > 0 ? 'required|date' : 'nullable',
+                'IE_DATE'           => $this->IE_RATE > 0 ? 'required|date' : 'nullable',
+                'BEGINNING_BALANCE' => 'required|numeric',
+                'ENDING_BALANCE'    => 'required|numeric|min:1',
             ],
             [],
             [
@@ -187,7 +185,7 @@ class BankReconForm extends Component
                 'SC_DATE'           => 'Service Charge Date',
                 'IE_DATE'           => 'Interest Earn Date',
                 'BEGINNING_BALANCE' => 'Beginning Balance',
-                'ENDING_BALANCE'    => 'Ending Balance'
+                'ENDING_BALANCE'    => 'Ending Balance',
             ]
         );
 
