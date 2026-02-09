@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Livewire\FundTransfer;
 
 use App\Services\AccountJournalServices;
@@ -16,7 +15,7 @@ class FundTransferList extends Component
 {
     use WithPagination;
     protected $paginationTheme = 'bootstrap';
-    public $search = '';
+    public $search             = '';
     public int $locationid;
     public $locationList = [];
     private $fundTransferServices;
@@ -29,16 +28,16 @@ class FundTransferList extends Component
         UserServices $userServices,
         AccountJournalServices $accountJournalServices
     ) {
-        $this->fundTransferServices = $fundTransferServices;
-        $this->locationServices = $locationServices;
-        $this->userServices = $userServices;
+        $this->fundTransferServices   = $fundTransferServices;
+        $this->locationServices       = $locationServices;
+        $this->userServices           = $userServices;
         $this->accountJournalServices = $accountJournalServices;
     }
 
     public function mount()
     {
         $this->locationList = $this->locationServices->getList();
-        $this->locationid = $this->userServices->getLocationDefault();
+        $this->locationid   = $this->userServices->getLocationDefault();
     }
     public function updatedlocationid()
     {
@@ -55,7 +54,7 @@ class FundTransferList extends Component
         if ($data) {
             try {
                 DB::beginTransaction();
-                $JOURNAL_NO = $this->accountJournalServices->getRecord($this->fundTransferServices->object_type_id,  $id
+                $JOURNAL_NO = $this->accountJournalServices->getRecord($this->fundTransferServices->object_type_id, $id
                 );
 
                 if ($JOURNAL_NO > 0) {
@@ -73,7 +72,7 @@ class FundTransferList extends Component
             return;
         }
     }
-        private function removeJournal(int $JOURNAL_NO)
+    private function removeJournal(int $JOURNAL_NO)
     {
 
         if ($JOURNAL_NO > 0) {
