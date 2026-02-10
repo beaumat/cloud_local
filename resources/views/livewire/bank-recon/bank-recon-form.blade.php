@@ -25,7 +25,6 @@
                         </div>
                         <form id="quickForm" wire:submit.prevent='save'>
                             <div class="card-body bg-light">
-
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="card card-body">
@@ -168,7 +167,6 @@
                                         </div>
                                     </div>
                                 </div>
-
                             </div>
                             <div class="card-footer">
                                 <div class="row">

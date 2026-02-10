@@ -26,6 +26,10 @@ class BankStatement extends Component
     {
         $this->dataList = $this->bankStatementServices->getbankStatement($this->BANK_STATEMENT_ID, $this->search);
     }
+    public function getMatching()
+    {
+
+    }
     public function render()
     {
         $this->LoadList();
