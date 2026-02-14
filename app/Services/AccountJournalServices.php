@@ -992,15 +992,14 @@ class AccountJournalServices
             ->where('aj.AMOUNT', '>', 0)
 
         // Better than YEAR() and MONTH()
-            ->whereYear('aj.OBJECT_DATE', 2025)
-            ->whereMonth('aj.OBJECT_DATE', 10)
+            ->whereBetween('aj.OBJECT_DATE', [$dateFrom, $dateTo])
             ->when($LOCATION_ID > 0, function ($query) use (&$LOCATION_ID) {
                 $query->where('aj.LOCATION_ID', '=', $LOCATION_ID);
             })
             ->groupBy([
                 'aj.JOURNAL_NO',
                 'aj.LOCATION_ID',
-                'aj.OBJECT_DATE'
+                'aj.OBJECT_DATE',
             ])
 
             ->havingRaw('DEBIT <> CREDIT')
