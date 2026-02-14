@@ -72,6 +72,21 @@ class TransactionJournalReport extends Component
         }
     }
 
+    public function export()
+    {
+
+        $dataActual = $this->accountJournalServices->getTransactionJournal(
+            $this->DATE_FROM,
+            $this->DATE_TO,
+            $this->LOCATION_ID,
+            $this->selectedAccount,
+            $this->selectedAccountType
+        );
+
+        return Excel::download(new TransactionJournalReportExport(
+            $dataActual,
+        ), 'transaction-journal-export.xlsx');
+    }
     public function openDetails(int $JN)
     {
         $url = $this->accountJournalServices->getUrlBy($JN);
@@ -84,4 +99,3 @@ class TransactionJournalReport extends Component
         return view('livewire.accounting-report.transaction-journal-report');
     }
 }
-

@@ -34,7 +34,7 @@
                                             wire:model.live='DATE_TO' :isDisabled="false" />
                                     </div>
                                     <div class='col-md-12 mt-1'>
-                                        <div class="form-group">
+                                        <div wire:loading.class='loading-form'>
                                             <a target="_blank"
                                                 href="{{ route('reportsaccountingtransaction_journal_view', [
                                                     'from' => $DATE_FROM,
@@ -43,14 +43,18 @@
                                                     'account' => !empty($selectedAccount) ? implode(',', $selectedAccount) : 'none',
                                                     'accounttype' => !empty($selectedAccountType) ? implode(',', $selectedAccountType) : 'none',
                                                 ]) }}"
-                                                class="btn btn-danger btn-xs w-25" wire:loading.attr='disabled'>
+                                                class="btn btn-danger btn-xs w-25">
                                                 Generate
                                             </a>
-                                      
 
-                                            <div wire:loading.delay>
-                                                <span class='spinner'></span>
-                                            </div>
+                                            <button class="btn btn-success btn-xs w-25" wire:click='export()'>
+                                                Export
+                                            </button>
+
+                                        </div>
+
+                                        <div wire:loading.delay>
+                                            <span class='spinner'></span>
                                         </div>
                                     </div>
                                 </div>
