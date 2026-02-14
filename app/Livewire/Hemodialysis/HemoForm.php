@@ -187,6 +187,15 @@ class HemoForm extends Component
             return Redirect::route('patientshemo_edit', ['id' => $this->ID])->with('message', 'Successfully nurse remove');
         }
     }
+
+    private function removeJournal()
+    {
+        $JOURNAL_NO = $this->accountJournalServices->getRecord($this->hemoServices->object_type_hemo, $this->ID);
+        if ($JOURNAL_NO > 0) {
+            $this->accountJournalServices->UpdatedJournalAmountZero($JOURNAL_NO);
+        }
+
+    }
     public function mount($id = null)
     {
         $this->ActiveRequired = true;
@@ -503,20 +512,36 @@ class HemoForm extends Component
     }
     public function getCanceled()
     {
-        $this->hemoServices->StatusUpdate($this->ID, 3);
-        $this->scheduleServices->StatusUpdate($this->CUSTOMER_ID, $this->DATE, $this->LOCATION_ID, 3);
-        return Redirect::route('patientshemo_edit', ['id' => $this->ID])->with('message', 'Successfully void');
+        DB::beginTransaction();
+        try {
+            $this->hemoServices->StatusUpdate($this->ID, 3);
+            $this->scheduleServices->StatusUpdate($this->CUSTOMER_ID, $this->DATE, $this->LOCATION_ID, 3);
+            $this->removeJournal();
+            DB::commit();
+            return Redirect::route('patientshemo_edit', ['id' => $this->ID])->with('message', 'Successfully void');
+        } catch (\Throwable $th) {
+            DB::rollBack();
+        }
+
     }
     public function getUnposted()
     {
-        $this->hemoServices->StatusUpdate($this->ID, 4);
-        $this->scheduleServices->StatusUpdate(
-            $this->CUSTOMER_ID,
-            $this->DATE,
-            $this->LOCATION_ID,
-            0
-        );
-        return Redirect::route('patientshemo_edit', ['id' => $this->ID])->with('message', 'Successfully unposted');
+        DB::beginTransaction();
+        try {
+            $this->hemoServices->StatusUpdate($this->ID, 4);
+            $this->scheduleServices->StatusUpdate(
+                $this->CUSTOMER_ID,
+                $this->DATE,
+                $this->LOCATION_ID,
+                0
+            );
+            $this->removeJournal();
+            DB::commit();
+            return Redirect::route('patientshemo_edit', ['id' => $this->ID])->with('message', 'Successfully unposted');
+        } catch (\Throwable $th) {
+            DB::rollBack();
+        }
+
     }
     public function getPosted()
     {
@@ -639,8 +664,6 @@ class HemoForm extends Component
     }
     public function openForm()
     {
-
-
 
         $data = [
             'HEMO_ID'     => $this->ID,
