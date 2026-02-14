@@ -904,8 +904,6 @@ class AccountJournalServices
     public function getTransactionJournal(string $dateFrom, string $dateTo, int $LOCATION_ID, array $account = [], array $accountType = [])
     {
 
-
-
         $result = DB::table('account_journal as aj')
             ->select([
                 'aj.JOURNAL_NO',
@@ -973,6 +971,40 @@ class AccountJournalServices
                 $query->whereIn('a.TYPE', $accountType);
             })
             ->whereRaw("($this->TX_CODE_E) IS NULL")
+            ->get();
+
+        return $result;
+    }
+    public function getTransactionJournalMissing(string $dateFrom, string $dateTo, int $LOCATION_ID)
+    {
+
+        $result = DB::table('account_journal as aj')
+            ->select([
+                'aj.JOURNAL_NO',
+                'aj.OBJECT_DATE',
+
+                DB::raw('COUNT(*) as C_COUNT'),
+                DB::raw('SUM(CASE WHEN aj.ENTRY_TYPE = 0 THEN aj.AMOUNT ELSE 0 END) as DEBIT'),
+                DB::raw('SUM(CASE WHEN aj.ENTRY_TYPE = 1 THEN aj.AMOUNT ELSE 0 END) as CREDIT'),
+                'l.NAME as LOCATION',
+            ])
+            ->leftJoin('location as l', 'l.ID', '=', 'aj.LOCATION_ID')
+            ->where('aj.AMOUNT', '>', 0)
+
+        // Better than YEAR() and MONTH()
+            ->whereYear('aj.OBJECT_DATE', 2025)
+            ->whereMonth('aj.OBJECT_DATE', 10)
+            ->when($LOCATION_ID > 0, function ($query) use (&$LOCATION_ID) {
+                $query->where('aj.LOCATION_ID', '=', $LOCATION_ID);
+            })
+            ->groupBy([
+                'aj.JOURNAL_NO',
+                'aj.LOCATION_ID',
+                'aj.OBJECT_DATE'
+            ])
+
+            ->havingRaw('DEBIT <> CREDIT')
+
             ->get();
 
         return $result;

@@ -4,9 +4,8 @@ namespace App\Livewire\AccountingReport;
 use App\Services\AccountJournalServices;
 use Livewire\Attributes\Title;
 use Livewire\Component;
-
-#[Title('Transaction Journal - Error')]
-class TransactionJournalError extends Component
+#[Title('Transaction Journal - Missing')]
+class TransactionDetailsMissing extends Component
 {
 
     private $selectedAccountType;
@@ -32,20 +31,18 @@ class TransactionJournalError extends Component
     }
     public function cleanData()
     {
-        $this->accountJournalServices->getTransactionJournalErrorUpdate($this->DATE_FROM, $this->DATE_TO, $this->LOCATION_ID);
-        session()->flash('message', 'Success clean');
+        // $this->accountJournalServices->getTransactionJournalErrorUpdate($this->DATE_FROM, $this->DATE_TO, $this->LOCATION_ID);
+        // session()->flash('message', 'Success clean');
     }
     public function Generete()
     {
 
         try {
 
-            $this->dataList = $this->accountJournalServices->getTransactionJournalError(
+            $this->dataList = $this->accountJournalServices->getTransactionJournalMissing(
                 $this->DATE_FROM,
                 $this->DATE_TO,
-                $this->LOCATION_ID,
-                $this->selectedAccount,
-                $this->selectedAccountType
+                $this->LOCATION_ID
             );
         } catch (\Throwable $th) {
             dd($th->getMessage());
@@ -68,6 +65,6 @@ class TransactionJournalError extends Component
     }
     public function render()
     {
-        return view('livewire.accounting-report.transaction-journal-error');
+        return view('livewire.accounting-report.transaction-details-missing');
     }
 }

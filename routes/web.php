@@ -3,6 +3,7 @@
 use App\Livewire\AccountingReport\GeneralLedgerGenerate;
 use App\Livewire\AccountingReport\GeneralLedgerReport;
 use App\Livewire\AccountingReport\TransactionDetailsGenerate;
+use App\Livewire\AccountingReport\TransactionDetailsMissing;
 use App\Livewire\AccountingReport\TransactionDetailsReport;
 use App\Livewire\AccountingReport\TransactionJournalError;
 use App\Livewire\AccountingReport\TransactionJournalGenerate;
@@ -765,6 +766,7 @@ Route::middleware(['auth'])->group(function () {
                 Route::get('/', TransactionJournalReport::class)->name('transaction_journal_report');
                 Route::get('/view/{from}/{to?}/{location}/{account?}/{accounttype?}', TransactionJournalGenerate::class)->name('transaction_journal_view');
                 Route::get('/error/{from}/{to?}/{location}/{account?}/{accounttype?}', TransactionJournalError::class)->name('transaction_journal_error');
+                Route::get('/miss/{from}/{to?}/{location}/{account?}/{accounttype?}', TransactionDetailsMissing::class)->name('transaction_journal_miss');
                 Route::get('/unpost/{from}/{to?}/{location}/{account?}/{accounttype?}', TransactionJournalUnpost::class)->name('transaction_journal_unpost');
             });
         });
