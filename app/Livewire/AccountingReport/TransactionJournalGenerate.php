@@ -3,7 +3,6 @@ namespace App\Livewire\AccountingReport;
 
 use App\Exports\TransactionJournalReportExport;
 use App\Services\AccountJournalServices;
-use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 use Maatwebsite\Excel\Facades\Excel;
@@ -18,7 +17,7 @@ class TransactionJournalGenerate extends Component
     public $DATE_FROM;
     public $DATE_TO;
     public $LOCATION_ID;
-
+    public $dataList = [];
 
     public function boot(AccountJournalServices $accountJournalServices)
     {
@@ -31,13 +30,23 @@ class TransactionJournalGenerate extends Component
         $this->LOCATION_ID         = $location;
         $this->selectedAccount     = $account !== 'none' ? explode(',', $account) : [];
         $this->selectedAccountType = $accounttype !== 'none' ? explode(',', $accounttype) : [];
-        $this->dispatch('reload');
+        $this->Generete();
     }
 
     public function Generete()
     {
 
         try {
+
+            $this->dataList = $this->accountJournalServices->getTransactionJournal(
+                $this->DATE_FROM,
+                $this->DATE_TO,
+                $this->LOCATION_ID,
+                $this->selectedAccount,
+                $this->selectedAccountType
+            );
+
+
 
         } catch (\Throwable $th) {
             dd($th->getMessage());
@@ -46,17 +55,8 @@ class TransactionJournalGenerate extends Component
     public function export()
     {
 
-       $dataList = $this->accountJournalServices->getTransactionJournal(
-            $this->DATE_FROM,
-            $this->DATE_TO,
-            $this->LOCATION_ID,
-            $this->selectedAccount ?? [],
-            $this->selectedAccountType ?? [],
-        );
-
-
         return Excel::download(new TransactionJournalReportExport(
-            $dataList
+            $this->dataList
         ), 'transaction-journal-export.xlsx');
     }
     public function setZero(int $JOURNAL_ID)
@@ -70,17 +70,8 @@ class TransactionJournalGenerate extends Component
         $this->js("window.open('$url', '_blank')");
 
     }
-    #[On('reload')]
     public function render()
     {
-        $dataList = $this->accountJournalServices->getTransactionJournal(
-            $this->DATE_FROM,
-            $this->DATE_TO,
-            $this->LOCATION_ID,
-            $this->selectedAccount ?? [],
-            $this->selectedAccountType ?? [],
-        );
-
-        return view('livewire.accounting-report.transaction-journal-generate', ['dataList' => $dataList]);
+        return view('livewire.accounting-report.transaction-journal-generate');
     }
 }
