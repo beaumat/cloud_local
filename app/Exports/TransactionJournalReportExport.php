@@ -1,13 +1,12 @@
 <?php
-
 namespace App\Exports;
 
-use Maatwebsite\Excel\Concerns\FromCollection;
+use Maatwebsite\Excel\Concerns\FromGenerator;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 
-class TransactionJournalReportExport implements FromCollection, ShouldAutoSize
+class TransactionJournalReportExport implements FromGenerator, ShouldAutoSize
 {
-    protected  $dataList = [];
+    protected $dataList = [];
 
     public function __construct($dataList)
     {
@@ -15,75 +14,54 @@ class TransactionJournalReportExport implements FromCollection, ShouldAutoSize
     }
 
     /**
-     * @return \Illuminate\Support\Collection
+     * @return \Generator
      */
-    public function collection()
+    public function generator(): \Generator
     {
+        set_time_limit(0);
 
-        $TOTAL_DEBIT = 0;
+        $TOTAL_DEBIT  = 0;
         $TOTAL_CREDIT = 0;
-        $finalData = [];
 
-        $headers = [
-            'JOURNAL_NO'    => 'Jrnl#',
-            'DATE'          => 'Date',
-            'TYPE'          => 'Type',
-            'TX_CODE'       => 'Code',
-            'TX_NAME'       => 'Name',
-            'LOCATION'      => 'Location',
-            'ACCOUNT_TITLE' => 'Account Title',
-            'TX_NOTES'      => 'Particulars',
-            'DEBIT'         => 'Debit',
-            'CREDIT'        => 'Credit',
+        // Headers
+        yield [
+            'Jrnl#', 'Date', 'Type', 'Code', 'Name',
+            'Location', 'Account Title', 'Particulars',
+            'Debit', 'Credit',
         ];
-        $finalData[] = array_values($headers);
 
-        foreach ($this->dataList as $list) {
-            $rowData = [
-                'JOURNAL_NO'    => $list->JOURNAL_NO,
-                'DATE'          => date('m/d/Y', strtotime($list->DATE)),
-                'TYPE'          => $list->TYPE,
-                'TX_CODE'       => $list->TX_CODE,
-                'TX_NAME'       => $list->TX_NAME,
-                'LOCATION'      => $list->LOCATION,
-                'ACCOUNT_TITLE' => $list->ACCOUNT_TITLE,
-                'TX_NOTES'      => $list->TX_NOTES,
-                'DEBIT'         => $list->DEBIT > 0 ? $list->DEBIT : '',
-                'CREDIT'        => $list->CREDIT > 0 ? $list->CREDIT : '',
+        $chunkSize = 10000; // adjust based on memory
 
-            ];
-            if ($list->DEBIT > 0) {
-                $TOTAL_DEBIT = $TOTAL_DEBIT + $list->DEBIT ?? 0;
+        foreach ($this->dataList->chunk($chunkSize) as $chunk) {
+            foreach ($chunk as $list) {
+
+                if ($list->DEBIT > 0) {
+                    $TOTAL_DEBIT += $list->DEBIT;
+                }
+
+                if ($list->CREDIT > 0) {
+                    $TOTAL_CREDIT += $list->CREDIT;
+                }
+
+                yield [
+                    $list->JOURNAL_NO,
+                    date('m/d/Y', strtotime($list->DATE)),
+                    $list->TYPE,
+                    $list->TX_CODE,
+                    $list->TX_NAME,
+                    $list->LOCATION,
+                    $list->ACCOUNT_TITLE,
+                    $list->TX_NOTES,
+                    $list->DEBIT > 0 ? $list->DEBIT : '',
+                    $list->CREDIT > 0 ? $list->CREDIT : '',
+                ];
             }
 
-            if ($list->CREDIT > 0) {
-                $TOTAL_CREDIT = $TOTAL_CREDIT + $list->CREDIT ?? 0;
-            }
-
-
-            $finalData[] = array_values($rowData);
+            unset($chunk);
+            gc_collect_cycles();
         }
 
-        $rowData = [
-            'JOURNAL_NO'    => '',
-            'DATE'          => '',
-            'TYPE'          => '',
-            'TX_CODE'       => '',
-            'TX_NAME'       => '',
-            'LOCATION'      => '',
-            'ACCOUNT_TITLE' => '',
-            'TX_NOTES'      => '',
-            'DEBIT'         => $TOTAL_DEBIT,
-            'CREDIT'        => $TOTAL_CREDIT,
-
-        ];
-
-        $finalData[] = array_values($rowData);
-
-
-
-
-        return collect($finalData);
+        // Totals row
+        yield ['', '', '', '', '', '', '', '', $TOTAL_DEBIT, $TOTAL_CREDIT];
     }
 }
-
