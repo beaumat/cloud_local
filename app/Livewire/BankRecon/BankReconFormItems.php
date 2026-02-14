@@ -24,12 +24,13 @@ class BankReconFormItems extends Component
     {
         $this->bankReconServices->ItemDelete($ID, $this->ACCOUNT_RECONCILIATION_ID);
         $this->dispatch('refresh-details');
-   
+
     }
     #[On('refresh-item')]
     public function render()
     {
         $this->dataList = $this->bankReconServices->ItemList($this->ACCOUNT_RECONCILIATION_ID, $this->search);
+
         return view('livewire.bank-recon.bank-recon-form-items');
     }
 }

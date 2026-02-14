@@ -270,7 +270,7 @@
                                             <div class="tab-pane fade @if ($tab == 'bank') show active @endif "
                                                 id="custom-tabs-four-bank" role="tabpanel">
                                                 @if ($tab == 'bank')
-                                                    @livewire('BankRecon.BankStatement', ['BANK_STATEMENT_ID' => $BANK_STATEMENT_ID, 'ACCOUNT_RECONCILIATION_ID' => $ID])
+                                                    @livewire('BankRecon.BankStatement', ['BANK_STATEMENT_ID' => $BANK_STATEMENT_ID, 'ACCOUNT_RECONCILIATION_ID' => $ID, 'ACCOUNT_ID' => $ACCOUNT_ID])
                                                 @endif
                                             </div>
                                             <div class="tab-pane fade @if ($tab == 'cleared') show active @endif "
@@ -302,8 +302,8 @@
                 </div>
             </div>
         </section>
-        @livewire('BankRecon.CollectionDeposit', ['ACCOUNT_RECONCILIATION_ID' => $ID, 'ACCOUNT_ID' => $ACCOUNT_ID])
-        @livewire('BankRecon.CheckPayment', ['ACCOUNT_RECONCILIATION_ID' => $ID, 'ACCOUNT_ID' => $ACCOUNT_ID])
+        @livewire('BankRecon.CollectionDeposit', ['ACCOUNT_RECONCILIATION_ID' => $ID, 'ACCOUNT_ID' => $ACCOUNT_ID, 'BANK_STATEMENT_ID' => $BANK_STATEMENT_ID])
+        @livewire('BankRecon.CheckPayment', ['ACCOUNT_RECONCILIATION_ID' => $ID, 'ACCOUNT_ID' => $ACCOUNT_ID, 'BANK_STATEMENT_ID' => $BANK_STATEMENT_ID])
     @endif
 
 </div>

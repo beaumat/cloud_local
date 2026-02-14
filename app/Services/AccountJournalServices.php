@@ -16,7 +16,17 @@ class AccountJournalServices
         WHEN aj.OBJECT_TYPE = 75 THEN (select `check_type_map`.`NAME` from `check` inner join check_type_map on check_type_map.ID = check.TYPE inner join check_items on check_items.CHECK_ID = check.ID where  check_items.ID = aj.OBJECT_ID limit 1)
         WHEN aj.OBJECT_TYPE = 79 THEN (select `check_type_map`.`NAME` from `check` inner join check_type_map on check_type_map.ID = check.TYPE inner join check_expenses on check_expenses.CHECK_ID = check.ID where  check_expenses.ID = aj.OBJECT_ID limit 1)
         END  ";
-
+    public function GetFullDescription(): string
+    {
+        return "if(d.ID = 21, $this->CHECK_TYPE, d.DESCRIPTION) as TYPE";
+    }
+    public string $CHECK_TYPE2 = "
+        (CASE
+        WHEN aj.OBJECT_TYPE = 57 THEN (select `check_type_map`.`NAME` from `check` inner join check_type_map on check_type_map.ID = check.TYPE where check.ID = aj.OBJECT_ID limit 1 )
+        WHEN aj.OBJECT_TYPE = 58 THEN (select `check_type_map`.`NAME` from `check` inner join check_type_map on check_type_map.ID = check.TYPE inner join check_bills on check_bills.CHECK_ID = check.ID where  check_bills.ID = aj.OBJECT_ID limit 1 )
+        WHEN aj.OBJECT_TYPE = 75 THEN (select `check_type_map`.`NAME` from `check` inner join check_type_map on check_type_map.ID = check.TYPE inner join check_items on check_items.CHECK_ID = check.ID where  check_items.ID = aj.OBJECT_ID limit 1)
+        WHEN aj.OBJECT_TYPE = 79 THEN (select `check_type_map`.`NAME` from `check` inner join check_type_map on check_type_map.ID = check.TYPE inner join check_expenses on check_expenses.CHECK_ID = check.ID where  check_expenses.ID = aj.OBJECT_ID limit 1)
+        END)  ";
     public string $TX_PO = '
     CASE
         WHEN o.`ID` = 2     THEN ( select bill.`CUSTOM_FIELD1` from bill  where bill.ID = aj.OBJECT_ID and bill.DATE = aj.OBJECT_DATE  and bill.LOCATION_ID = aj.LOCATION_ID  )
@@ -893,6 +903,9 @@ class AccountJournalServices
 
     public function getTransactionJournal(string $dateFrom, string $dateTo, int $LOCATION_ID, array $account = [], array $accountType = [])
     {
+
+
+
         $result = DB::table('account_journal as aj')
             ->select([
                 'aj.JOURNAL_NO',

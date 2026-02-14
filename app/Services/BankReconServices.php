@@ -3,7 +3,6 @@ namespace App\Services;
 
 use App\Models\AccountReconciliation;
 use App\Models\AccountReconciliationItems;
-use App\Models\BankStatementDetails;
 use Illuminate\Support\Facades\DB;
 
 class BankReconServices
@@ -233,7 +232,6 @@ class BankReconServices
         AccountReconciliationItems::where('ID', '=', $ID)
             ->where('ACCOUNT_RECONCILIATION_ID', '=', $ACCOUNT_RECONCILIATION_ID)
             ->delete();
-
         $this->Recomputed($ACCOUNT_RECONCILIATION_ID);
     }
     public function ItemList(int $ACCOUNT_RECONCILIATION_ID, $search): object
@@ -255,7 +253,7 @@ class BankReconServices
                 'l.NAME as LOCATION_NAME',
             ])
             ->join('account_reconciliation as recon', 'recon.ID', '=', 'recon_item.ACCOUNT_RECONCILIATION_ID')
-            ->join('account_journal as aj', function ($join) {
+            ->leftJoin('account_journal as aj', function ($join) {
                 $join->on('aj.OBJECT_ID', '=', 'recon_item.OBJECT_ID');
                 $join->on('aj.OBJECT_TYPE', '=', 'recon_item.OBJECT_TYPE');
                 $join->on('aj.OBJECT_DATE', '=', 'recon_item.OBJECT_DATE');
@@ -302,8 +300,11 @@ class BankReconServices
                 'STATUS_DATE' => $this->dateServices->NowDate(),
             ]);
     }
-    public function getPaymentList(int $ACCOUNT_ID, int $LOCATION_ID = 0, int $ENTRY_TYPE = 0, $search): object
+    public function getPaymentList(int $ACCOUNT_ID, int $LOCATION_ID = 0, int $ENTRY_TYPE = 0, $search, $dateList = []): object
     {
+
+
+
         $result = DB::table('account_journal as aj')
             ->select([
                 'aj.OBJECT_ID',
@@ -312,7 +313,7 @@ class BankReconServices
                 'aj.ENTRY_TYPE',
                 'aj.AMOUNT',
                 'aj.OBJECT_DATE as DATE',
-                'd.DESCRIPTION as TYPE',
+                DB::raw($this->accountJournalServices->GetFullDescription()),
                 DB::raw($this->accountJournalServices->TX_CODE),
                 DB::raw($this->accountJournalServices->TX_NAME),
                 DB::raw($this->accountJournalServices->TX_NOTES),
@@ -328,6 +329,7 @@ class BankReconServices
                     $join->where('l.ID', $LOCATION_ID);
                 }
             })
+            ->whereIn('aj.OBJECT_DATE', $dateList)
             ->where('aj.ACCOUNT_ID', '=', $ACCOUNT_ID)
             ->where('aj.ENTRY_TYPE', '=', $ENTRY_TYPE)
 
@@ -355,6 +357,5 @@ class BankReconServices
 
         return $result;
     }
-
 
 }

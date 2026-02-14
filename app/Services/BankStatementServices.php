@@ -5,15 +5,19 @@ use App\Enums\TableName;
 use App\Models\BankStatement;
 use App\Models\BankStatementDetails;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 
 class BankStatementServices
 {
     private $dateServices;
     private $objectServices;
-    public function __construct(DateServices $dateServices, ObjectServices $objectServices)
+    private $accountJournalSerivces;
+    public function __construct(DateServices $dateServices, ObjectServices $objectServices, AccountJournalServices $accountJournalSerivces)
     {
-        $this->dateServices   = $dateServices;
-        $this->objectServices = $objectServices;
+        $this->dateServices           = $dateServices;
+        $this->objectServices         = $objectServices;
+        $this->accountJournalSerivces = $accountJournalSerivces;
+
     }
     public function get(int $id)
     {
@@ -156,6 +160,16 @@ class BankStatementServices
 
         return $result;
     }
+    public function listDetailsDateResult(int $BANK_STATEMENT_ID): array | Collection
+    {
+        $result = BankStatementDetails::query()
+            ->selectRaw('DATE(DATE_TRANSACTION) as DATE_TRANSACTION')
+            ->where('BANK_STATEMENT_ID', '=', $BANK_STATEMENT_ID)
+            ->groupByRaw('DATE(DATE_TRANSACTION)')
+            ->get();
+
+        return $result;
+    }
     private function GetBeginningBalance(int $BANK_STATEMENT_ID)
     {
 
@@ -184,10 +198,14 @@ class BankStatementServices
     private function GetEndingBalance(int $BANK_STATEMENT_ID): float
     {
 
-        $data = BankStatementDetails::query()->select(['BALANCE'])->where('BANK_STATEMENT_ID', '=', $BANK_STATEMENT_ID)->orderBy('ID', 'desc')->first();
+        $data = BankStatementDetails::query()->select(['BALANCE'])
+            ->where('BANK_STATEMENT_ID', '=', $BANK_STATEMENT_ID)
+            ->orderBy('ID', 'desc')
+            ->first();
         if ($data) {
 
             $BALANCE = $data->BALANCE ?? 0;
+
             return $BALANCE;
 
         }
@@ -204,11 +222,28 @@ class BankStatementServices
             ->update(['BEGINNING_BALANCE' => $BEGIN_BALANCE, 'ENDING_BALANCE' => $END_BALANCE]);
 
     }
-
-    public function getbankStatement(int $BANK_STATEMENT_ID, $search): array|Collection
+    public function updateEntryBankStatement(int $ID, int $OBJECT_TYPE, int $OBJECT_ID)
+    {
+        BankStatementDetails::where('ID', '=', $ID)->update([
+            'OBJECT_TYPE' => $OBJECT_TYPE,
+            'OBJECT_ID'   => $OBJECT_ID,
+            'RECON_LOG'   => $this->dateServices->NowDateTime(),
+        ]);
+    }
+    public function updateNullBankStatement(int $ID)
+    {
+        BankStatementDetails::where('ID', '=', $ID)
+            ->update([
+                'OBJECT_TYPE' => null,
+                'OBJECT_ID'   => null,
+                'RECON_LOG'   => null,
+            ]);
+    }
+    public function getbankStatement(int $BANK_STATEMENT_ID, $search): array | Collection
     {
         $result = BankStatementDetails::query()
             ->select([
+                'bank_statement_details.ID',
                 'bank_statement_details.DATE_TRANSACTION',
                 'bank_statement_details.REFERENCE',
                 'bank_statement_details.DESCRIPTION',
@@ -219,8 +254,19 @@ class BankStatementServices
                 'bank_statement_details.OBJECT_TYPE',
                 'bank_statement_details.OBJECT_ID',
                 'bank_statement_details.RECON_LOG',
+
             ])
             ->join('bank_statement as bs', 'bs.ID', '=', 'bank_statement_details.BANK_STATEMENT_ID')
+            ->leftJoin('account_journal as aj', function ($join) {
+                $join->on('aj.OBJECT_ID', '=', 'bank_statement_details.OBJECT_ID');
+                $join->on('aj.OBJECT_TYPE', '=', 'bank_statement_details.OBJECT_TYPE');
+                $join->on(
+                    'aj.OBJECT_DATE',
+                    '=',
+                    DB::raw('DATE(bank_statement_details.DATE_TRANSACTION)')
+                );
+
+            })
             ->where('bs.ID', '=', $BANK_STATEMENT_ID)
             ->when($search, function ($query) use (&$search) {
                 $query->where(function ($q) use (&$search) {
@@ -230,6 +276,47 @@ class BankStatementServices
                         ->orWhere('bank_statement_details.CREDIT', 'like', '%' . $search . '%');
                 });
             })
+            ->get();
+
+        return $result;
+    }
+
+    public function getbankStatementRecon(int $BANK_STATEMENT_ID, int $BANK_ACCOUNT_ID, $search): array | Collection
+    {
+        $result = BankStatementDetails::query()
+            ->select([
+                'bank_statement_details.ID',
+                'bank_statement_details.DATE_TRANSACTION',
+                'bank_statement_details.REFERENCE',
+                'bank_statement_details.DESCRIPTION',
+                'bank_statement_details.CHECK_NUMBER',
+                'bank_statement_details.DEBIT',
+                'bank_statement_details.CREDIT',
+                'bank_statement_details.BALANCE',
+                DB::raw($this->accountJournalSerivces->TX_CODE),
+                DB::raw($this->accountJournalSerivces->GetFullDescription()),
+                'aj.AMOUNT',
+                'l.NAME as LOCATION_NAME',
+            ])
+            ->leftJoin('account_journal as aj', function ($join) use (&$BANK_ACCOUNT_ID) {
+                $join->on('aj.OBJECT_ID', '=', 'bank_statement_details.OBJECT_ID');
+                $join->on('aj.OBJECT_TYPE', '=', 'bank_statement_details.OBJECT_TYPE');
+                $join->on('aj.ACCOUNT_ID', '=', DB::raw($BANK_ACCOUNT_ID));
+                $join->on('aj.AMOUNT', '!=', DB::raw(0));
+            })
+            ->leftJoin('object_type_map as o', 'o.ID', '=', 'bank_statement_details.OBJECT_TYPE')
+            ->leftJoin('document_type_map as d', 'd.ID', '=', 'o.DOCUMENT_TYPE')
+            ->leftJoin('location as l', 'l.ID', '=', 'aj.LOCATION_ID')
+            ->where('bank_statement_details.BANK_STATEMENT_ID', '=', $BANK_STATEMENT_ID)
+            ->when($search, function ($query) use (&$search) {
+                $query->where(function ($q) use (&$search) {
+                    $q->where('bank_statement_details.REFERENCE', 'like', '%' . $search . '%')
+                        ->orWhere('bank_statement_details.DESCRIPTION', 'like', '%' . $search . '%')
+                        ->orWhere('bank_statement_details.DEBIT', 'like', '%' . $search . '%')
+                        ->orWhere('bank_statement_details.CREDIT', 'like', '%' . $search . '%');
+                });
+            })
+
             ->get();
 
         return $result;

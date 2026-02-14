@@ -38,23 +38,28 @@
                        @endif
                    </td>
                    <td>
-
-
+                       {{ $list->TYPE }}
                    </td>
                    <td>
-
-
+                       {{ $list->TX_CODE }}
+                   </td>
+                   <td class="text-right">
+                       @if ($list->AMOUNT > 0)
+                           {{ number_format($list->AMOUNT, 2) }}
+                       @endif
                    </td>
                    <td>
-
-
+                       {{ $list->LOCATION_NAME }}
                    </td>
                    <td>
-
-
-                   </td>
-                   <td>
-                       <button class="btn btn-xs btn-primary"> Find</button>
+                    <div class="row">
+                        <div class="col-4"><button class="btn btn-xs btn-success w-100"
+                           wire:click='FindEntry({{ $list->DEBIT }},{{ $list->ID }})'>
+                           <i class="fa fa-plus" aria-hidden="true"></i>
+                       </button></div>
+                        <div class="col-4"></div>
+                        <div class="col-4"></div>
+                    </div>
 
                    </td>
                </tr>

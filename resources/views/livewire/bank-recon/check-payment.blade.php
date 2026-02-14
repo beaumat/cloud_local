@@ -89,8 +89,6 @@
                                         @livewire('BankRecon.BankReconDetails', ['ACCOUNT_RECONCILIATION_ID' => $ACCOUNT_RECONCILIATION_ID])
                                     </div>
                                 </div>
-
-
                             </div>
                         </div>
                         <div class="modal-footer">

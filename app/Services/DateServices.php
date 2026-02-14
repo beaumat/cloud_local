@@ -79,6 +79,11 @@ class DateServices
         $date = new DateTime($BASE_DATE);
         return $date->format('Y-m-d H:i:s');
     }
+    public function DateFormatOnly(string $BASE_DATE)
+    {
+        $date = new DateTime($BASE_DATE);
+        return $date->format('Y-m-d');
+    }
     public function NextDate()
     {
         return Carbon::now()->addDay()->format('Y-m-d'); // Tomorrow's date

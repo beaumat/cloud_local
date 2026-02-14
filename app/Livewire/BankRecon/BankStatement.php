@@ -12,7 +12,8 @@ class BankStatement extends Component
     public int $ACCOUNT_RECONCILIATION_ID;
     #[Reactive()]
     public int $BANK_STATEMENT_ID;
-
+    #[Reactive()]
+    public int $ACCOUNT_ID;
     public $search;
     private $bankRecordServices;
     private $bankStatementServices;
@@ -24,10 +25,22 @@ class BankStatement extends Component
     }
     public function LoadList()
     {
-        $this->dataList = $this->bankStatementServices->getbankStatement($this->BANK_STATEMENT_ID, $this->search);
+        $this->dataList = $this->bankStatementServices->getbankStatementRecon($this->BANK_STATEMENT_ID, $this->ACCOUNT_ID, $this->search);
     }
     public function getMatching()
     {
+
+    }
+    public function FindEntry(float $isCredit, int $ID)
+    {
+        $result = ['ID' => $ID];
+        if ($isCredit > 0) {
+
+            $this->dispatch('open-check', result: $result);
+        } else {
+
+            $this->dispatch('open-collection', result: $result);
+        }
 
     }
     public function render()
