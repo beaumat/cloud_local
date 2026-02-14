@@ -73,7 +73,6 @@ class TransactionJournalGenerate extends Component
     #[On('reload')]
     public function render()
     {
-
         $dataList = $this->accountJournalServices->getTransactionJournal(
             $this->DATE_FROM,
             $this->DATE_TO,
