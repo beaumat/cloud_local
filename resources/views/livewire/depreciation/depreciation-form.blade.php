@@ -89,7 +89,7 @@
                                                     {{ $ID === 0 ? 'Pre-save' : 'Update' }}</button>
 
                                                 @if ($ID > 0)
-                                                    <button type="button" wire:click='updateCancel'
+                                                    <button type="button" wire:click='updateCancel()'
                                                         class="btn btn-sm btn-danger">
                                                         <i class="fa fa-ban" aria-hidden="true"></i> Cancel
                                                     </button>

@@ -243,6 +243,10 @@ class DepreciationForm extends Component
             $this->accountJournalServices->UpdatedJournalAmountZero($JOURNAL_NO);
         }
     }
+    public function updateCancel()
+    {
+        Redirect::route('companydepreciation_edit', $this->ID);
+    }
     public function render()
     {
         return view('livewire.depreciation.depreciation-form');
