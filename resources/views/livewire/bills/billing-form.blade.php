@@ -218,7 +218,6 @@
                                                     </button>
                                                 @endcan
                                             @endif
-
                                             @can('vendor.bill.create')
                                                 <a id="new" title="Create"
                                                     href="{{ route('vendorsbills_create') }}"

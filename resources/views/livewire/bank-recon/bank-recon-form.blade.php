@@ -29,9 +29,7 @@
                                     <div class="col-md-6">
                                         <div class="card card-body">
                                             <label class="font-weight-bold text-sm text-primary">
-                                                Select an account to reconcile, and then enter the ending balance
-                                                from your account statement
-
+                                                Select an account to reconcile, and then enter the ending balance from your account statement
                                             </label>
                                             <div class="row">
                                                 <div class="col-md-6 col-6">

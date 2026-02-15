@@ -93,7 +93,6 @@ class TransactionJournalReport extends Component
         $this->js("window.open('$url', '_blank')");
 
     }
-
     public function render()
     {
         return view('livewire.accounting-report.transaction-journal-report');

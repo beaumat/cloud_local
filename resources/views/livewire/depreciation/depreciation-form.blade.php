@@ -47,8 +47,13 @@
                                         <div class="col-md-6">
                                             <div class="row">
                                                 <div class="col-md-4">
-                                                    <livewire:date-input name="DATE" titleName="Date"
-                                                        wire:model='DATE' :isDisabled="true" />
+                                                    @if ($ID == 0)
+                                                        <livewire:date-input name="DATE" titleName="Date"
+                                                            wire:model.live='DATE' :isDisabled="false" />
+                                                    @else
+                                                        <livewire:date-input name="DATE" titleName="Date"
+                                                            wire:model.live='DATE' :isDisabled="true" />
+                                                    @endif
                                                 </div>
                                                 <div class="col-md-4">
                                                     <livewire:text-input name="Code" titleName="Reference No."
@@ -94,17 +99,23 @@
                                                     class="btn btn-sm btn-info">
                                                     <i class="fa fa-wrench" aria-hidden="true"></i> Modify
                                                 </button>
-
-                                                {{-- <button type="button" wire:click='openPayment()'
-                                                    class="btn btn-sm btn-success">
-                                                    <i class="fa fa-money" aria-hidden="true"></i> Payment
-                                                </button> --}}
-
                                                 <button type="button" wire:click='getPosted()'
                                                     class="btn btn-sm btn-warning">
                                                     <i class="fa fa-cloud-upload" aria-hidden="true"></i> Posted
                                                 </button>
+
                                             @endif
+                                        @endif
+
+
+                                        @if (!$Modify || $STATUS == 16)
+                                            @can('company.depreciation.delete')
+                                                <button type="button" wire:click='getDelete()'
+                                                    class="btn btn-sm btn-danger"
+                                                    wire:confirm="Are you sure you want to delete?">
+                                                    <i class="fa fa-trash" aria-hidden="true"></i> Delete
+                                                </button>
+                                            @endcan
                                         @endif
                                         @if ($STATUS == 15)
                                             @can('company.depreciation.update')
@@ -124,9 +135,9 @@
                                                     <i class="fa fa-file-text-o" aria-hidden="true"></i> Journal
                                                 </button>
                                             @endcan
-
                                             @can('company.depreciation.create')
-                                                <a id="new" title="Create" href="{{ route('bankingdeposit_create') }}"
+                                                <a id="new" title="Create"
+                                                    href="{{ route('companydepreciation_create') }}"
                                                     class="btn btn-primary btn-sm"> <i class="fas fa-plus"></i> New </a>
                                             @endcan
                                         @endif

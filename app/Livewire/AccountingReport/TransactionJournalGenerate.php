@@ -35,7 +35,6 @@ class TransactionJournalGenerate extends Component
 
     public function Generete()
     {
-
         try {
 
             $this->dataList = $this->accountJournalServices->getTransactionJournal(
@@ -45,8 +44,6 @@ class TransactionJournalGenerate extends Component
                 $this->selectedAccount,
                 $this->selectedAccountType
             );
-
-
 
         } catch (\Throwable $th) {
             dd($th->getMessage());

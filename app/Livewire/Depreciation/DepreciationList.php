@@ -1,10 +1,10 @@
 <?php
-
 namespace App\Livewire\Depreciation;
 
 use App\Services\DepreciationServices;
 use App\Services\LocationServices;
 use App\Services\UserServices;
+use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
 use Livewire\Component;
@@ -15,10 +15,10 @@ class DepreciationList extends Component
 {
 
     use WithPagination;
-    public int $perPage = 30;
+    public int $perPage        = 30;
     protected $paginationTheme = 'bootstrap';
-    protected $queryString = ['search' => ['except' => '']];
-    public $search = '';
+    protected $queryString     = ['search' => ['except' => '']];
+    public $search             = '';
     public int $locationid;
     public $locationList = [];
     private $userServices;
@@ -27,23 +27,31 @@ class DepreciationList extends Component
     public function boot(DepreciationServices $depreciationServices, LocationServices $locationServices, UserServices $userServices)
     {
         $this->depreciationServices = $depreciationServices;
-        $this->locationServices = $locationServices;
-        $this->userServices = $userServices;
+        $this->locationServices     = $locationServices;
+        $this->userServices         = $userServices;
     }
     public function mount()
     {
         $this->locationList = $this->locationServices->getList();
-
-        $this->locationid = $this->userServices->getLocationDefault();
+        $this->locationid   = $this->userServices->getLocationDefault();
     }
-    public function delete(int $ID) {
-            try {
-                $this->depreciationServices->Delete($ID);
-            } catch (\Exception $e) {
-                $errorMessage = 'Error occurred: ' . $e->getMessage();
-                session()->flash('error', $errorMessage);
+    public function delete(int $ID)
+    {
+        DB::beginTransaction();
+        try {
+
+            $JOURNAL_NO = (int) $this->accountJournalServices->getRecord($this->depreciationServices->object_type_depreciation, $ID);
+            if ($JOURNAL_NO > 0) {
+                $this->accountJournalServices->UpdatedJournalAmountZero($JOURNAL_NO);
             }
-       
+            $this->depreciationServices->Delete($ID);
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            $errorMessage = 'Error occurred: ' . $e->getMessage();
+            session()->flash('error', $errorMessage);
+        }
+
     }
     public function updatedlocationid()
     {

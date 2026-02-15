@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Livewire\Depreciation;
 
 use App\Services\AccountJournalServices;
@@ -28,10 +27,10 @@ class DepreciationForm extends Component
     public float $AMOUNT;
     public int $STATUS;
     public string $STATUS_DESCRIPTION;
-    public $accountList = [];
+    public $accountList  = [];
     public $locationList = [];
 
-    public bool $Modify  = false;
+    public bool $Modify = false;
     private $depreciationServices;
     private $userServices;
     private $locationServices;
@@ -47,17 +46,17 @@ class DepreciationForm extends Component
         AccountJournalServices $accountJournalServices
     ) {
 
-        $this->depreciationServices = $depreciationServices;
-        $this->userServices = $userServices;
-        $this->locationServices = $locationServices;
-        $this->accountServices = $accountServices;
+        $this->depreciationServices   = $depreciationServices;
+        $this->userServices           = $userServices;
+        $this->locationServices       = $locationServices;
+        $this->accountServices        = $accountServices;
         $this->documentStatusServices = $documentStatusServices;
         $this->accountJournalServices = $accountJournalServices;
     }
     public function mount($id = null)
     {
         $this->locationList = $this->locationServices->getList();
-        $this->accountList = $this->accountServices->getAccount(false);
+        $this->accountList  = $this->accountServices->getAccount(false);
         if (is_numeric($id)) {
             $data = $this->depreciationServices->Get($id);
             if ($data) {
@@ -68,31 +67,30 @@ class DepreciationForm extends Component
             return Redirect::route('companydepreciation')->with('Record not found');
         }
 
-        $this->ID = 0;
-        $this->CODE = '';
-        $this->DATE = $this->userServices->getTransactionDateDefault();
-        $this->LOCATION_ID = $this->userServices->getLocationDefault();
+        $this->ID                      = 0;
+        $this->CODE                    = '';
+        $this->DATE                    = $this->userServices->getTransactionDateDefault();
+        $this->LOCATION_ID             = $this->userServices->getLocationDefault();
         $this->DEPRECIATION_ACCOUNT_ID = $this->depreciationServices->DEPRECIATION_ACCOUNT_ID;
-        $this->NOTES =  '';
-        $this->IS_AUTO = false;
-        $this->AMOUNT =   0;
-        $this->STATUS = 0;
-        $this->Modify = true;
-        $this->STATUS_DESCRIPTION = "";
+        $this->NOTES                   = '';
+        $this->IS_AUTO                 = false;
+        $this->AMOUNT                  = 0;
+        $this->STATUS                  = 0;
+        $this->Modify                  = true;
+        $this->STATUS_DESCRIPTION      = "";
     }
     public function save()
     {
 
         $this->validate([
-            'CODE'                      =>  $this->ID > 0 ? 'required|max:20|unique:depreciation,code,' . $this->ID : 'nullable',
-            'DATE'                      => 'required|date',
-            'LOCATION_ID'               => 'required|exists:location,id',
-            'DEPRECIATION_ACCOUNT_ID'   => 'required|numeric|exists:account,id'
+            'CODE'                    => $this->ID > 0 ? 'required|max:20|unique:depreciation,code,' . $this->ID : 'nullable',
+            'DATE'                    => 'required|date',
+            'LOCATION_ID'             => 'required|exists:location,id',
+            'DEPRECIATION_ACCOUNT_ID' => 'required|numeric|exists:account,id',
         ]);
 
-
         try {
-            if ($this->ID  == 0) {
+            if ($this->ID == 0) {
                 $this->ID = (int) $this->depreciationServices->Store(
                     $this->CODE,
                     $this->DATE,
@@ -116,19 +114,19 @@ class DepreciationForm extends Component
             session()->flash('error', $errorMessage);
         }
     }
-    private  function getInfo($data)
+    private function getInfo($data)
     {
 
-        $this->ID = $data->ID ?? 0;
-        $this->CODE = $data->CODE ?? '';
-        $this->DATE = $data->DATE ?? '';
-        $this->LOCATION_ID = $data->LOCATION_ID ?? 0;
+        $this->ID                      = $data->ID ?? 0;
+        $this->CODE                    = $data->CODE ?? '';
+        $this->DATE                    = $data->DATE ?? '';
+        $this->LOCATION_ID             = $data->LOCATION_ID ?? 0;
         $this->DEPRECIATION_ACCOUNT_ID = $data->DEPRECIATION_ACCOUNT_ID ?? 0;
-        $this->NOTES = $data->NOTES ?? '';
-        $this->IS_AUTO = $data->IS_AUTO ?? false;
-        $this->AMOUNT =  $data->AMOUNT ?? 0;
-        $this->STATUS = $data->STATUS ?? 0;
-        $this->STATUS_DESCRIPTION = $this->documentStatusServices->getDesc($this->STATUS);
+        $this->NOTES                   = $data->NOTES ?? '';
+        $this->IS_AUTO                 = $data->IS_AUTO ?? false;
+        $this->AMOUNT                  = $data->AMOUNT ?? 0;
+        $this->STATUS                  = $data->STATUS ?? 0;
+        $this->STATUS_DESCRIPTION      = $this->documentStatusServices->getDesc($this->STATUS);
     }
 
     #[On('refresh-amount')]
@@ -161,6 +159,11 @@ class DepreciationForm extends Component
         try {
             DB::beginTransaction();
             $this->depreciationServices->StatusUpdate($this->ID, 16);
+
+            $JOURNAL_NO = (int) $this->accountJournalServices->getRecord($this->depreciationServices->object_type_depreciation, $this->ID);
+            if ($JOURNAL_NO > 0) {
+                $this->accountJournalServices->UpdatedJournalAmountZero($JOURNAL_NO);
+            }
             DB::commit();
             Redirect::route('companydepreciation_edit', $this->ID)->with('message', 'Successfully unposted');
         } catch (\Throwable $th) {
@@ -172,7 +175,7 @@ class DepreciationForm extends Component
     public function OpenJournal()
     {
         $JOURNAL_NO = $this->accountJournalServices->getRecord($this->depreciationServices->object_type_depreciation, $this->ID);
-      
+
         if ($JOURNAL_NO > 0) {
             $data = ['JOURNAL_NO' => $JOURNAL_NO];
             $this->dispatch('open-journal', result: $data);
@@ -182,10 +185,8 @@ class DepreciationForm extends Component
     {
         try {
             DB::beginTransaction();
-
-            $JOURNAL_NO  = (int) $this->accountJournalServices->getRecord($this->depreciationServices->object_type_depreciation, $this->ID);
-         
-            if ($JOURNAL_NO  == 0) {
+            $JOURNAL_NO = (int) $this->accountJournalServices->getRecord($this->depreciationServices->object_type_depreciation, $this->ID);
+            if ($JOURNAL_NO == 0) {
                 $JOURNAL_NO = (int) $this->accountJournalServices->getJournalNo($this->depreciationServices->object_type_depreciation, $this->ID) + 1;
             }
 
@@ -211,8 +212,8 @@ class DepreciationForm extends Component
                 "ASSET"
             );
 
-            $data = $this->accountJournalServices->getSumDebitCredit($JOURNAL_NO);
-            $debit_sum = (float) $data['DEBIT'];
+            $data       = $this->accountJournalServices->getSumDebitCredit($JOURNAL_NO);
+            $debit_sum  = (float) $data['DEBIT'];
             $credit_sum = (float) $data['CREDIT'];
 
             if ($debit_sum == $credit_sum) {
@@ -232,6 +233,14 @@ class DepreciationForm extends Component
             DB::rollBack();
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
+        }
+    }
+    public function getDelete()
+    {
+
+        $JOURNAL_NO = (int) $this->accountJournalServices->getRecord($this->depreciationServices->object_type_depreciation, $this->ID);
+        if ($JOURNAL_NO > 0) {
+            $this->accountJournalServices->UpdatedJournalAmountZero($JOURNAL_NO);
         }
     }
     public function render()
