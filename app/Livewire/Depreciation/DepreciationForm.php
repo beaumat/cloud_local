@@ -237,11 +237,23 @@ class DepreciationForm extends Component
     }
     public function getDelete()
     {
+        DB::beginTransaction();
+        try {
+            //code...
+            $JOURNAL_NO = (int) $this->accountJournalServices->getRecord($this->depreciationServices->object_type_depreciation, $this->ID);
+            if ($JOURNAL_NO > 0) {
+                $this->accountJournalServices->UpdatedJournalAmountZero($JOURNAL_NO);
+            }
 
-        $JOURNAL_NO = (int) $this->accountJournalServices->getRecord($this->depreciationServices->object_type_depreciation, $this->ID);
-        if ($JOURNAL_NO > 0) {
-            $this->accountJournalServices->UpdatedJournalAmountZero($JOURNAL_NO);
+            $this->depreciationServices->Delete($this->ID);
+            DB::commit();
+        } catch (\Throwable $th) {
+            //throw $th;
+
+            DB::rollBack();
+
         }
+
     }
     public function updateCancel()
     {
