@@ -108,7 +108,7 @@
                                         @endif
 
 
-                                        @if (!$Modify || $STATUS == 16)
+                                        @if (!$Modify && $STATUS == 16 || !$Modify && $STATUS == 0)
                                             @can('company.depreciation.delete')
                                                 <button type="button" wire:click='getDelete()'
                                                     class="btn btn-sm btn-danger"
@@ -117,6 +117,7 @@
                                                 </button>
                                             @endcan
                                         @endif
+
                                         @if ($STATUS == 15)
                                             @can('company.depreciation.update')
                                                 <button type="button" wire:click='getUnposted()'
