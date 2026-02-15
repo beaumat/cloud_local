@@ -64,7 +64,7 @@ class DepreciationForm extends Component
                 $this->Modify = false;
                 return;
             }
-            return Redirect::route('companydepreciation')->with('Record not found');
+            return Redirect::route('companydepreciation')->with('error', 'Record not found');
         }
 
         $this->ID                      = 0;
@@ -247,10 +247,14 @@ class DepreciationForm extends Component
 
             $this->depreciationServices->Delete($this->ID);
             DB::commit();
-        } catch (\Throwable $th) {
+
+            return Redirect::route('companydepreciation')->with('message', 'File successfully deleted');
+        } catch (\Throwable $e) {
             //throw $th;
 
             DB::rollBack();
+            $errorMessage = 'Error occurred: ' . $e->getMessage();
+            session()->flash('error', $errorMessage);
 
         }
 
