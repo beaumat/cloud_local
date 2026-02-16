@@ -56,6 +56,10 @@
                                         <a href="{{ route('reportsphilhealth_annex_two_print', ['locationid' => $LOCATION_ID, 'year' => $YEAR,'show' => $showAll ? 1: 0]) }}"
                                             target="_blank" class="btn btn-xs btn-warning w-100"> Print </a>
                                     </div>
+                                    <div class="col-2 text-right">
+                                            <button wire:click='export()' wire:loading.attr='disabled' type="button" class=" btn btn-xs btn-success w-100"> Export</button>
+
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-md-4">

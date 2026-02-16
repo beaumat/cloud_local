@@ -58,7 +58,6 @@
                                                 <div class="col-md-4">
                                                     <livewire:text-input name="Code" titleName="Reference No."
                                                         isDisabled="{{ !$Modify }}" wire:model='CODE' />
-
                                                 </div>
                                                 <div class="col-md-4"
                                                     @if (Auth::user()->locked_location) style="opacity: 0.5;pointer-events: none;" @endif>
@@ -66,7 +65,6 @@
                                                         :options="$locationList" :zero="false"
                                                         isDisabled="{{ !$Modify }}"
                                                         wire:model.live='LOCATION_ID' />
-
                                                 </div>
                                                 <div class="col-md-12">
                                                     <livewire:text-input name="NOTES" titleName="Notes"
@@ -75,7 +73,6 @@
                                                 </div>
                                             </div>
                                         </div>
-
                                     </div>
                                 </div>
                             </div>
@@ -179,7 +176,6 @@
                                         </div>
                                     </div>
                                 </div>
-
                             </div>
                             <div class="card-footer">
                                 <div class="row">
@@ -199,5 +195,4 @@
             @livewire('AccountJournal.AccountJournalModal')
         </section>
     @endif
-
 </div>
