@@ -71,11 +71,18 @@ class CsvImport extends Component
                 $REFERENCE        = $row["Reference"];
                 $DESCRIPTION      = $row["Description"];
                 $CHECK_NUMBER     = $row["Check Number"];
-                $DEBIT            = $row["Debit"];
-                $CREDIT           = $row["Credit"];
-                $BALANCE          = $row["Running Balance"];
+                $DEBIT            = (float)$row["Debit"] ?? 0;
+                $CREDIT           = (float) $row["Credit"] ?? 0;
+                $BALANCE          = (float) $row["Running Balance"] ?? 0;
 
-                $this->bankStatementServices->storeDetails($this->BANK_STATEMENT_ID, $DATE_TRANSACTION, $REFERENCE, $DESCRIPTION, $CHECK_NUMBER, $DEBIT, $CREDIT, $BALANCE);
+                $this->bankStatementServices->storeDetails($this->BANK_STATEMENT_ID,
+                 $DATE_TRANSACTION,
+                 $REFERENCE,
+                  $DESCRIPTION,
+                  $CHECK_NUMBER,
+                   $DEBIT,
+                    $CREDIT,
+                     $BALANCE);
             }
             $this->bankStatementServices->UpdateField($this->BANK_STATEMENT_ID);
             DB::commit();

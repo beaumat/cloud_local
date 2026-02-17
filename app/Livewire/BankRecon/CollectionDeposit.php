@@ -22,6 +22,7 @@ class CollectionDeposit extends Component
     public int $BANK_STATEMENT_ID;
     public int $LOCATION_ID;
     public int $BANK_STATEMENT_DETAILS_ID;
+    public float $AMOUNT = 0;
     public $locationList = [];
     public bool $showModal = false;
     public $search;
@@ -62,6 +63,7 @@ class CollectionDeposit extends Component
     {
         $this->getAllDate();
         $this->BANK_STATEMENT_DETAILS_ID = $result['ID'];
+        $this->AMOUNT                    = (float) $result['AMOUNT'];
         $this->showModal                 = true;
     }
     public function closeModal()
@@ -87,14 +89,14 @@ class CollectionDeposit extends Component
                 $OBJECT_ID);
 
             DB::commit();
-            $this->dispatch('refresh-item');
-            $this->dispatch('refresh-details');
+            $this->render();
+            $this->dispatch('refresh-bank-statement');
+            $this->dispatch('total-summary');
         } catch (\Exception $e) {
             DB::rollBack();
             session()->flash("error", $e->getMessage());
         }
     }
-    #[On('refresh-item')]
     public function render()
     {
 
@@ -106,6 +108,7 @@ class CollectionDeposit extends Component
                 0,
                 $this->search,
                 $this->dateList,
+                $this->AMOUNT
             );
         }
         return view('livewire.bank-recon.collection-deposit');

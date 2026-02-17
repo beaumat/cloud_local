@@ -29,7 +29,8 @@
                                     <div class="col-md-6">
                                         <div class="card card-body">
                                             <label class="font-weight-bold text-sm text-primary">
-                                                Select an account to reconcile, and then enter the ending balance from your account statement
+                                                Select an account to reconcile, and then enter the ending balance from
+                                                your account statement
                                             </label>
                                             <div class="row">
                                                 <div class="col-md-6 col-6">
@@ -99,11 +100,9 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="row">
-                                            <div class="col-md-12">
+                                            <div class="col-md-12 text-xs">
                                                 <div class="card card-body">
-                                                    <label class="font-weight-bold text-sm text-purple">Enter any
-                                                        service charge or
-                                                        interest earned. (optional)</label>
+
                                                     <div class="row">
                                                         {{--  SERVICE CHARGES RATE --}}
                                                         <div class="col-md-3 col-3">
@@ -161,6 +160,38 @@
                                                 </div>
 
 
+                                            </div>
+
+                                            <div class="col-md-12">
+                                                <div class="card card-xs text-xs">
+                                                    <div class=" card-body">
+                                                        <div class="row">
+                                                            <div class="col-2">Bank Debit :</div>
+                                                            <div class="col-2 font-weight-bold ">
+                                                                {{ number_format($BANK_DEBIT, 2) }}</div>
+                                                            <div class="col-2">Bank Credit :</div>
+                                                            <div class="col-2 font-weight-bold">
+                                                                {{ number_format($BANK_CREDIT, 2) }}</div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-2 ">Cleared Debit :</div>
+                                                            <div class="col-2 font-weight-bold">
+                                                                {{ number_format($CLEARED_DEBIT, 2) }}</div>
+                                                            <div class="col-2">Cleared Credit :</div>
+                                                            <div class="col-2 font-weight-bold">
+                                                                {{ number_format($CLEARED_CREDIT, 2) }}</div>
+                                                        </div>
+
+                                                          <div class="row">
+                                                            <div class="col-2 ">Difference Debit :</div>
+                                                            <div class="col-2 font-weight-bold text-danger">
+                                                                {{ number_format($BANK_DEBIT-$CLEARED_DEBIT, 2) }}</div>
+                                                            <div class="col-2">Difference Credit :</div>
+                                                            <div class="col-2 font-weight-bold text-danger">
+                                                                {{ number_format($BANK_CREDIT-$CLEARED_CREDIT, 2) }}</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -268,7 +299,7 @@
                                             <div class="tab-pane fade @if ($tab == 'bank') show active @endif "
                                                 id="custom-tabs-four-bank" role="tabpanel">
                                                 @if ($tab == 'bank')
-                                                    @livewire('BankRecon.BankStatement', ['BANK_STATEMENT_ID' => $BANK_STATEMENT_ID, 'ACCOUNT_RECONCILIATION_ID' => $ID, 'ACCOUNT_ID' => $ACCOUNT_ID])
+                                                    @livewire('BankRecon.BankStatement', ['BANK_STATEMENT_ID' => $BANK_STATEMENT_ID, 'ACCOUNT_RECONCILIATION_ID' => $ID, 'ACCOUNT_ID' => $ACCOUNT_ID , 'STATUS' => $STATUS])
                                                 @endif
                                             </div>
                                             <div class="tab-pane fade @if ($tab == 'cleared') show active @endif "

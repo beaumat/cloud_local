@@ -152,7 +152,6 @@ class PhilhealthAnnex extends Component
                 'ICD 10/RVS code'       => '',
                 '*Claim Status'         => '',
             ];
-
             return Excel::download(new DynamicExport($headers, $rowdata), 'AnnexExport.xlsx');
         } catch (\Exception $e) {
             dd($e->getMessage());

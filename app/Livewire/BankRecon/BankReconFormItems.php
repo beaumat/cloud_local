@@ -1,8 +1,9 @@
 <?php
-
 namespace App\Livewire\BankRecon;
 
 use App\Services\BankReconServices;
+use App\Services\BankStatementServices;
+use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Reactive;
 use Livewire\Component;
@@ -16,15 +17,38 @@ class BankReconFormItems extends Component
     public $dataList = [];
     public $search;
     private $bankReconServices;
-    public function boot(BankReconServices $bankReconServices)
+    private $bankStatementServices;
+    public function boot(BankReconServices $bankReconServices, BankStatementServices $bankStatementServices)
     {
-        $this->bankReconServices = $bankReconServices;
+        $this->bankReconServices     = $bankReconServices;
+        $this->bankStatementServices = $bankStatementServices;
     }
     public function delete(int $ID)
     {
-        $this->bankReconServices->ItemDelete($ID, $this->ACCOUNT_RECONCILIATION_ID);
-        $this->dispatch('refresh-details');
 
+        DB::beginTransaction();
+        try {
+            //code...
+            $result = $this->bankReconServices->GetItem($ID);
+
+            if ($result) {
+
+                $bsResult = $this->bankStatementServices->getDetails($result->OBJECT_DATE, $result->OBJECT_TYPE, $result->OBJECT_ID);
+                if ($bsResult) {
+
+                    $this->bankStatementServices->updateNullBankStatement($bsResult->ID);
+                    $this->bankReconServices->ItemDelete($ID, $this->ACCOUNT_RECONCILIATION_ID);
+                    DB::commit();
+                }
+            }
+
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            dd($th);
+        }
+
+        // $this->dispatch('refresh-details');
+                $this->dispatch('total-summary');
     }
     #[On('refresh-item')]
     public function render()

@@ -12,7 +12,10 @@
                <th class="col-1 bg-purple">DOC REF#</th>
                <th class="col-1 bg-purple">AMOUNT</th>
                <th class="col-1 bg-purple">LOCATION</th>
-               <th class="col-1 bg-success"> <button class="btn btn-xs btn-success w-100">Auto match</button></th>
+               @if ($STATUS != 15)
+                   <th class="col-1 bg-success"> <button class="btn btn-xs btn-success w-100" wire:click='autoMatch()'
+                           wire:confirm='Are you sure ?'>Auto match</button></th>
+               @endif
            </tr>
        </thead>
        <tbody class="text-xs">
@@ -51,17 +54,19 @@
                    <td>
                        {{ $list->LOCATION_NAME }}
                    </td>
-                   <td>
-                    <div class="row">
-                        <div class="col-4"><button class="btn btn-xs btn-success w-100"
-                           wire:click='FindEntry({{ $list->DEBIT }},{{ $list->ID }})'>
-                           <i class="fa fa-plus" aria-hidden="true"></i>
-                       </button></div>
-                        <div class="col-4"></div>
-                        <div class="col-4"></div>
-                    </div>
+                   @if ($STATUS != 15)
+                       <td>
+                           <div class="row">
+                               <div class="col-4"><button class="btn btn-xs btn-success w-100"
+                                       wire:click='FindEntry({{ $list->DEBIT }},{{ $list->CREDIT }},{{ $list->ID }})'>
+                                       <i class="fa fa-plus" aria-hidden="true"></i>
+                                   </button></div>
+                               <div class="col-4"></div>
+                               <div class="col-4"></div>
+                           </div>
 
-                   </td>
+                       </td>
+                   @endif
                </tr>
            @endforeach
        </tbody>

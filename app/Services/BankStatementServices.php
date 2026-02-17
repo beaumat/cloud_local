@@ -136,6 +136,15 @@ class BankStatementServices
     {
         BankStatementDetails::where('ID', '=', $ID)->delete();
     }
+    public function getDetails(string $OBJECT_DATE, int $OBJECT_TYPE, int $OBJECT_ID)
+    {
+        return BankStatementDetails::query()
+            ->select(['ID'])
+            ->whereDate('DATE_TRANSACTION', $OBJECT_DATE)
+            ->where('OBJECT_TYPE', $OBJECT_TYPE)
+            ->where('OBJECT_ID', $OBJECT_ID)
+            ->first();
+    }
     public function listDetails(int $BANK_STATEMENT_ID): array | Collection
     {
 
@@ -320,5 +329,24 @@ class BankStatementServices
             ->get();
 
         return $result;
+    }
+
+    public function getSumDebitCredit(int $BANK_STATEMENT_ID, )
+    {
+
+        $result = BankStatementDetails::query()
+            ->select([
+                DB::raw('SUM(DEBIT) as TOTAL_DEBIT'),
+                DB::raw('SUM(CREDIT) as TOTAL_CREDIT'),
+            ])
+            ->where('BANK_STATEMENT_ID', '=', $BANK_STATEMENT_ID)
+            ->first();
+
+        if ($result) {
+             return ['DEBIT' => $result->TOTAL_DEBIT ?? 0, 'CREDIT' => $result->TOTAL_CREDIT ?? 0] ;
+        }
+
+        return ['DEBIT' => 0, 'CREDIT' => 0];
+
     }
 }

@@ -87,7 +87,7 @@
                                         </div>
                                     </div>
                                     <div class="col-3">
-                                        @livewire('BankRecon.BankReconDetails', ['ACCOUNT_RECONCILIATION_ID' => $ACCOUNT_RECONCILIATION_ID])
+                                        {{-- @livewire('BankRecon.BankReconDetails', ['ACCOUNT_RECONCILIATION_ID' => $ACCOUNT_RECONCILIATION_ID]) --}}
                                     </div>
                                 </div>
 

@@ -21,6 +21,7 @@ class CheckPayment extends Component
     public int $BANK_STATEMENT_ID;
 
     public int $LOCATION_ID;
+    public float $AMOUNT = 0;
     public int $BANK_STATEMENT_DETAILS_ID;
     public $locationList = [];
     public bool $showModal = false;
@@ -39,7 +40,6 @@ class CheckPayment extends Component
         $this->userServices          = $userServices;
         $this->dateServices          = $dateServices;
         $this->bankStatementServices = $bankStatementServices;
-
     }
     public function mount()
     {
@@ -50,7 +50,8 @@ class CheckPayment extends Component
     public function openModal($result)
     {
         $this->getAllDate();
-        $this->BANK_STATEMENT_DETAILS_ID = $result['ID'];
+        $this->BANK_STATEMENT_DETAILS_ID = (int) $result['ID'];
+        $this->AMOUNT  = (float) $result['AMOUNT'];
         $this->showModal                 = true;
     }
     public function closeModal()
@@ -64,7 +65,6 @@ class CheckPayment extends Component
         foreach ($data as $item) {
             $this->dateList[] = $this->dateServices->DateFormatOnly($item["DATE_TRANSACTION"]);
         }
-
     }
     public function AddItem(int $OBJECT_ID, int $OBJECT_TYPE, string $OBJECT_DATE, int $ENTRY_TYPE, float $AMOUNT)
     {
@@ -84,14 +84,15 @@ class CheckPayment extends Component
                 $OBJECT_TYPE,
                 $OBJECT_ID);
             DB::commit();
-            $this->dispatch('refresh-item');
-            $this->dispatch('refresh-details');
+            $this->render();
+            $this->dispatch('refresh-bank-statement');
+            $this->dispatch('total-summary');
         } catch (\Exception $e) {
             DB::rollBack();
             session()->flash("error", $e->getMessage());
         }
     }
-    #[On('refresh-item')]
+
     public function render()
     {
         if ($this->showModal) {
@@ -101,6 +102,7 @@ class CheckPayment extends Component
                 1,
                 $this->search,
                 $this->dateList,
+                $this->AMOUNT
             );
         }
         return view('livewire.bank-recon.check-payment');

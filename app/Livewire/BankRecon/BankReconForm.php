@@ -33,7 +33,10 @@ class BankReconForm extends Component
     public int $STATUS;
     public string $STATUS_DATE;
 
-
+    public float $BANK_DEBIT;
+    public float $BANK_CREDIT;
+    public float $CLEARED_DEBIT;
+    public float $CLEARED_CREDIT;
 
     public int $BANK_STATEMENT_ID;
     public int $SC_ACCOUNT_ID;
@@ -67,8 +70,19 @@ class BankReconForm extends Component
         $this->locationServices      = $locationServices;
         $this->bankStatementServices = $bankStatementServices;
     }
+#[On('total-summary')]
+    public function getMatchEntry()
+    {
+       $resultA = $this->bankReconServices->getSumDebitCredit($this->ID);
+       $resultB  = $this->bankStatementServices->getSumDebitCredit($this->BANK_STATEMENT_ID);
 
+       $this->BANK_DEBIT = $resultB['DEBIT'];
+       $this->BANK_CREDIT = $resultB['CREDIT'];
 
+       $this->CLEARED_DEBIT = $resultA['DEBIT'];
+       $this->CLEARED_CREDIT = $resultA['CREDIT'];
+
+    }
     public function getBankStateRefresh()
     {
         $this->bankStateRefresh = $this->bankStateRefresh ? false : true;
@@ -150,6 +164,9 @@ class BankReconForm extends Component
         $this->IE_RATE             = $data->IE_RATE ?? 0;
         $this->updatedaccountid();
         $this->BANK_STATEMENT_ID   = $data->BANK_STATEMENT_ID ?? 0;
+
+
+        $this->getMatchEntry();
     }
     public function mount($id = null)
     {
