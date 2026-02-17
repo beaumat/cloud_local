@@ -1,12 +1,14 @@
 <?php
 namespace App\Livewire\PatientReport;
 
+use App\Exports\DynamicExport;
 use App\Services\DateServices;
 use App\Services\LocationServices;
 use App\Services\PhilHealthServices;
 use App\Services\UserServices;
 use Livewire\Attributes\Title;
 use Livewire\Component;
+use Maatwebsite\Excel\Facades\Excel;
 
 #[Title(('Annex C Report'))]
 class PhilhealthAnnex extends Component
@@ -82,17 +84,91 @@ class PhilhealthAnnex extends Component
         }
 
     }
+    public function export()
+    {
+        if (! $this->dataList) {
+            session()->flash('error', 'Please click geenerate first ');
+            return;
+        }
+
+        try {
+            $this->dataList = $this->philHealthServices->GenerateAnnex($this->YEAR, $this->MONTH, $this->LOCATION_ID);
+            $headers        =
+                ['Item No',
+                'Claims Ref#',
+                'Patient Surname',
+                'Patient Firstname',
+                'Patient Middlename',
+                'Member Surname',
+                'Member Firstname',
+                'Member Middlename',
+                'Member`s PIN',
+                'Member`s Category',
+                'Date of Admission',
+                'Date of Discharged',
+                'Case Rate/ Claim Amt.',
+                'ICD 10/RVS code',
+                '*Claim Status']; // Could be dynamic based on UI
+
+            $rowdata = [];
+            $r       = 0;
+            $TOTAL   = 0;
+            foreach ($this->dataList as $list) {
+                $TOTAL += $list->P1_TOTAL;
+                $r++;
+                $rowdata[]  = [
+                    'Item No'               => $r,
+                    'Claims Ref#'           => $list->CLAIM_NO,
+                    'Patient Surname'       => $list->LAST_NAME,
+                    'Patient Firstname'     => $list->FIRST_NAME,
+                    'Patient Middlename'    => $list->MIDDLE_NAME,
+                    'Member Surname'        => $list->IS_PATIENT ? $list->LAST_NAME : $list->LAST_NAME,
+                    'Member Firstname'      => $list->IS_PATIENT ? $list->FIRST_NAME : $list->FIRST_NAME,
+                    'Member Middlename'     => $list->IS_PATIENT ? $list->MIDDLE_NAME : $list->MIDDLE_NAME,
+                    'Member`s PIN'          => $list->PIN_NO,
+                    'Member`s Category'     => $list->CLASS,
+                    'Date of Admission'     => date('M/d/Y', strtotime($list->DATE_ADMITTED)),
+                    'Date of Discharged'    => date('M/d/Y', strtotime($list->DATE_DISCHARGED)),
+                    'Case Rate/ Claim Amt.' => number_format($list->P1_TOTAL, 2),
+                    'ICD 10/RVS code'       => '90935',
+                    '*Claim Status'         => 'FOR FILE',
+                ];
+            }
+// total
+            $rowdata[] = [
+                'Item No'               => '',
+                'Claims Ref#'           => '',
+                'Patient Surname'       => '',
+                'Patient Firstname'     => '',
+                'Patient Middlename'    => '',
+                'Member Surname'        => '',
+                'Member Firstname'      => '',
+                'Member Middlename'     => '',
+                'Member`s PIN'          => '',
+                'Member`s Category'     => '',
+                'Date of Admission'     => '',
+                'Date of Discharged'    => 'TOTAL',
+                'Case Rate/ Claim Amt.' => number_format($TOTAL, 2),
+                'ICD 10/RVS code'       => '',
+                '*Claim Status'         => '',
+            ];
+
+            return Excel::download(new DynamicExport($headers, $rowdata), 'AnnexExport.xlsx');
+        } catch (\Exception $e) {
+            dd($e->getMessage());
+            session()->flash('error', 'Error generating Excel: ' . $e->getMessage());
+        }
+    }
     public function autoSet()
     {
         $this->autoNumber == 0;
         // Reset autoNumber to 0 before generating new data
 
-            $dataList = $this->philHealthServices->GenerateAnnex($this->YEAR, $this->MONTH, $this->LOCATION_ID);
-            foreach ($dataList as $data) {
-                $this->setData($data);
-            }
-            $this->generate();
-
+        $dataList = $this->philHealthServices->GenerateAnnex($this->YEAR, $this->MONTH, $this->LOCATION_ID);
+        foreach ($dataList as $data) {
+            $this->setData($data);
+        }
+        $this->generate();
 
     }
 

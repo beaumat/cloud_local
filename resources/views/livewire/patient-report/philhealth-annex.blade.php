@@ -57,8 +57,8 @@
 
                                     </div>
                                     <div class='col-2'>
-
-
+                                        <button wire:click='export()' class="btn btn-xs btn-success w-100"
+                                            wire:loading.attr="disabled">Export</button>
                                     </div>
                                 </div>
                             </div>
@@ -98,10 +98,12 @@
 
                                 <tr>
                                     <td class=" bg-dark">Item No.</td>
-                                    <td class=" bg-dark">Claims Ref# <button class="btn btn-xs btn-success text-xs w-100"
-                                            wire:click='autoSet()' wire:confirm='Are you sure to Auto Set?'  wire:loading.attr="disabled">
+                                    <td class=" bg-dark">Claims Ref#
+                                        <button class="btn btn-xs btn-success text-xs w-100" wire:click='autoSet()'
+                                            wire:confirm='Are you sure to Auto Set?' wire:loading.attr="disabled">
                                             <i class="fas fa-plus"></i>
-                                        </button></td>
+                                        </button>
+                                    </td>
                                     <td class=" bg-primary">Patient Surname</td>
                                     <td class=" bg-primary">Patient Firstname</td>
                                     <td class=" bg-primary">Patient Middlename</td>
