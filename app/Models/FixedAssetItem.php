@@ -29,6 +29,7 @@ class FixedAssetItem extends Model
         'QUANTITY',
         'AQ_COST',
         'USEFUL_LIFE',
-        'INACTIVE'
+        'INACTIVE',
+        'PO_DATE'
     ];
 }

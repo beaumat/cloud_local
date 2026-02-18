@@ -110,11 +110,15 @@ class DepreciationServices
     }
     private function GetCount(int $FIXED_ASSET_ITEM_ID, $LOC_ID): int
     {
+        // ACTUAL_INPUT
         $itemCount = (int) DepreciationItems::query()->join('depreciation as d', 'd.ID', '=', 'DEPRECIATION_ID')
             ->where('d.LOCATION_ID', '=', $LOC_ID)
             ->where('FIXED_ASSET_ITEM_ID', '=', $FIXED_ASSET_ITEM_ID)
             ->count();
 
+
+
+            
         return $itemCount;
     }
     private function IsExist(int $location_id): bool
