@@ -325,7 +325,6 @@ class BankReconForm extends Component
     }
     public function render()
     {
-
         return view('livewire.bank-recon.bank-recon-form');
     }
 }

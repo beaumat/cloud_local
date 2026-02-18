@@ -33,6 +33,7 @@ class CheckPayment extends Component
     private $bankStatementServices;
     private $locationServices;
     private $userServices;
+    private $dateServices;
     public function boot(BankReconServices $bankReconServices, LocationServices $locationServices, UserServices $userServices, DateServices $dateServices, BankStatementServices $bankStatementServices)
     {
         $this->bankReconServices     = $bankReconServices;

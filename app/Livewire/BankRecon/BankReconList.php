@@ -2,7 +2,6 @@
 
 namespace App\Livewire\BankRecon;
 
-use App\Services\AccountJournalServices;
 use App\Services\BankReconServices;
 use App\Services\LocationServices;
 use App\Services\UserServices;
@@ -28,8 +27,6 @@ class BankReconList extends Component
         BankReconServices $bankReconServices,
         LocationServices $locationServices,
         UserServices $userServices,
-
-
     ) {
         $this->bankReconServices = $bankReconServices;
         $this->locationServices = $locationServices;
@@ -44,7 +41,6 @@ class BankReconList extends Component
     {
         try {
             DB::beginTransaction();
-
             $this->bankReconServices->Delete($ID);
             DB::commit();
             session()->flash('message', 'Successfully deleted.');
