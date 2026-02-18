@@ -343,7 +343,7 @@ class BankStatementServices
             ->first();
 
         if ($result) {
-             return ['DEBIT' => $result->TOTAL_DEBIT ?? 0, 'CREDIT' => $result->TOTAL_CREDIT ?? 0] ;
+            return ['DEBIT' => $result->TOTAL_DEBIT ?? 0, 'CREDIT' => $result->TOTAL_CREDIT ?? 0];
         }
 
         return ['DEBIT' => 0, 'CREDIT' => 0];
