@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Livewire\BankRecon;
 
 use App\Services\BankReconServices;
@@ -30,15 +29,15 @@ class BankReconDetails extends Component
         $data = $this->bankReconServices->get($this->ACCOUNT_RECONCILIATION_ID);
 
         if ($data) {
-            $this->BEGINNING_BALANCE = $data->BEGINNING_BALANCE ?? 0;
-            $this->ENDING_BALANCE = $data->ENDING_BALANCE ?? 0;
-            $this->CLEARED_DEPOSITS = $data->CLEARED_DEPOSITS ?? 0;
+            $this->BEGINNING_BALANCE   = $data->BEGINNING_BALANCE ?? 0;
+            $this->ENDING_BALANCE      = $data->ENDING_BALANCE ?? 0;
+            $this->CLEARED_DEPOSITS    = $data->CLEARED_DEPOSITS ?? 0;
             $this->CLEARED_WITHDRAWALS = $data->CLEARED_WITHDRAWALS ?? 0;
-            $this->CLEARED_BALANCE = $data->CLEARED_BALANCE ?? 0;
-            $this->SC_RATE = $data->SC_RATE ?? 0;
-            $this->IE_RATE =  $data->IE_RATE ?? 0;
-            $this->DIFFERENCE_BALANCE = $this->ENDING_BALANCE - $this->CLEARED_BALANCE;
-    
+            $this->CLEARED_BALANCE     = $data->CLEARED_BALANCE ?? 0;
+            $this->SC_RATE             = $data->SC_RATE ?? 0;
+            $this->IE_RATE             = $data->IE_RATE ?? 0;
+            $this->DIFFERENCE_BALANCE  = $this->ENDING_BALANCE - $this->CLEARED_BALANCE;
+
         }
     }
     #[On('refresh-details')]

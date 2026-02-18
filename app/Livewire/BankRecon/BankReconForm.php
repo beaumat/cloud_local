@@ -70,17 +70,17 @@ class BankReconForm extends Component
         $this->locationServices      = $locationServices;
         $this->bankStatementServices = $bankStatementServices;
     }
-#[On('total-summary')]
+    #[On('total-summary')]
     public function getMatchEntry()
     {
-       $resultA = $this->bankReconServices->getSumDebitCredit($this->ID);
-       $resultB  = $this->bankStatementServices->getSumDebitCredit($this->BANK_STATEMENT_ID);
+        $resultA = $this->bankReconServices->getSumDebitCredit($this->ID);
+        $resultB = $this->bankStatementServices->getSumDebitCredit($this->BANK_STATEMENT_ID);
 
-       $this->BANK_DEBIT = $resultB['DEBIT'];
-       $this->BANK_CREDIT = $resultB['CREDIT'];
+        $this->BANK_DEBIT  = $resultB['DEBIT'];
+        $this->BANK_CREDIT = $resultB['CREDIT'];
 
-       $this->CLEARED_DEBIT = $resultA['DEBIT'];
-       $this->CLEARED_CREDIT = $resultA['CREDIT'];
+        $this->CLEARED_DEBIT  = $resultA['DEBIT'];
+        $this->CLEARED_CREDIT = $resultA['CREDIT'];
 
     }
     public function getBankStateRefresh()
@@ -163,8 +163,7 @@ class BankReconForm extends Component
         $this->IE_ACCOUNT_ID       = $data->IE_ACCOUNT_ID ?? 0;
         $this->IE_RATE             = $data->IE_RATE ?? 0;
         $this->updatedaccountid();
-        $this->BANK_STATEMENT_ID   = $data->BANK_STATEMENT_ID ?? 0;
-
+        $this->BANK_STATEMENT_ID = $data->BANK_STATEMENT_ID ?? 0;
 
         $this->getMatchEntry();
     }
