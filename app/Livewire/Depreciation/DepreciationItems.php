@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Livewire\Depreciation;
 
 use App\Services\DepreciationServices;
@@ -28,29 +27,53 @@ class DepreciationItems extends Component
 
     public function boot(DepreciationServices $depreciationServices, FixedAssetItemServices $fixedAssetItemServices)
     {
-        $this->depreciationServices = $depreciationServices;
+        $this->depreciationServices   = $depreciationServices;
         $this->fixedAssetItemServices = $fixedAssetItemServices;
     }
-    public function mount() {
-        
+    public function mount()
+    {
+
+    }
+    public function UpdatedFixedAssetItemId()
+    {
+        if ($this->FIXED_ASSET_ITEM_ID > 0) {
+            $result = $this->fixedAssetItemServices->Get($this->FIXED_ASSET_ITEM_ID);
+
+            if ($result) {
+                $USEFULL_LIFE = (float) $result->USEFUL_LIFE ?? 0;
+                $AQ_COST      = (float) $result->AQ_COST ?? 0;
+                if ($AQ_COST > 0) {
+                    $PER_YEAR     = (float) $AQ_COST / $USEFULL_LIFE;
+                    $PER_MONTH    = (float) $PER_YEAR / 12;
+                    $this->AMOUNT = (float) $PER_MONTH;
+                    return;
+                }
+
+            }
+
+            $this->AMOUNT = 0;
+            return;
+        }
+
+        $this->AMOUNT = 0;
     }
     public function add()
     {
 
         $this->validate(
             [
-                'FIXED_ASSET_ITEM_ID'   => 'required|numeric|exists:fixed_asset_item,id',
-                'AMOUNT'                => 'required|numeric|not_in:0',
+                'FIXED_ASSET_ITEM_ID' => 'required|numeric|exists:fixed_asset_item,id',
+                'AMOUNT'              => 'required|numeric|not_in:0',
             ],
             [],
             [
                 'FIXED_ASSET_ITEM_ID' => 'Fixed asset item',
-                'AMOUNT'              => 'Amount'
+                'AMOUNT'              => 'Amount',
             ]
         );
 
         $this->ACCOUNT_ID = 0;
-        $data = $this->fixedAssetItemServices->Get($this->FIXED_ASSET_ITEM_ID);
+        $data             = $this->fixedAssetItemServices->Get($this->FIXED_ASSET_ITEM_ID);
         if ($data) {
             $this->ACCOUNT_ID = (int) $data->ACCUMULATED_ACCOUNT_ID ?? 0;
         } else {
@@ -58,7 +81,7 @@ class DepreciationItems extends Component
             return;
         }
 
-        if ($this->ACCOUNT_ID  == 0) {
+        if ($this->ACCOUNT_ID == 0) {
             session()->flash('error', 'Accumulated Account not found.');
             return;
         }
@@ -67,7 +90,6 @@ class DepreciationItems extends Component
             session()->flash('error', 'This assist item is already exists');
             return;
         }
-
 
         try {
             $this->depreciationServices->ItemStore(
@@ -79,9 +101,9 @@ class DepreciationItems extends Component
             $this->UpdateTotal();
             // clear field to success
             $this->FIXED_ASSET_ITEM_ID = 0;
-            $this->AMOUNT  = 0;
-            $this->ACCOUNT_ID = 0;
-            $this->saveSuccess  =  $this->saveSuccess ? false : true;
+            $this->AMOUNT              = 0;
+            $this->ACCOUNT_ID          = 0;
+            $this->saveSuccess         = $this->saveSuccess ? false : true;
         } catch (\Exception $e) {
             $errorMessage = 'Error occurred: ' . $e->getMessage();
             session()->flash('error', $errorMessage);
@@ -97,9 +119,9 @@ class DepreciationItems extends Component
 
     public function edit(int $ID)
     {
-        $data =  $this->depreciationServices->ItemGet($ID);
+        $data = $this->depreciationServices->ItemGet($ID);
         if ($data) {
-            $this->editID = $data->ID ?? 0;
+            $this->editID     = $data->ID ?? 0;
             $this->editAmount = number_format($data->AMOUNT, 2);
         }
     }
@@ -107,11 +129,11 @@ class DepreciationItems extends Component
     {
         $this->validate(
             [
-                'editAmount'    => 'required|numeric|not_in:0'
+                'editAmount' => 'required|numeric|not_in:0',
             ],
             [],
             [
-                'editAmount' => 'Amount'
+                'editAmount' => 'Amount',
             ]
         );
 
@@ -136,7 +158,7 @@ class DepreciationItems extends Component
     }
     public function cancel()
     {
-        $this->editID = null;
+        $this->editID     = null;
         $this->editAmount = 0;
     }
     #[On('clear-alert')]
@@ -149,8 +171,8 @@ class DepreciationItems extends Component
     }
     public function render()
     {
-        $this->fixedAssetItemList =  $this->fixedAssetItemServices->getList($this->LOCATION_ID);
-        $this->dataList  = $this->depreciationServices->ItemList($this->DEPRECIATION_ID);
+        $this->fixedAssetItemList = $this->fixedAssetItemServices->getList($this->LOCATION_ID);
+        $this->dataList           = $this->depreciationServices->ItemList($this->DEPRECIATION_ID);
         return view('livewire.depreciation.depreciation-items');
     }
 }

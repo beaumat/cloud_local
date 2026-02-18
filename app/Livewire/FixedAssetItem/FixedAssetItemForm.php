@@ -2,21 +2,11 @@
 
 namespace App\Livewire\FixedAssetItem;
 
-use App\Models\Accounts;
-use App\Models\Contacts;
-use App\Models\ItemClass;
-use App\Models\ItemGroup;
-use App\Models\ItemSubClass;
-use App\Models\ItemType;
-use App\Models\Manufacturers;
-use App\Models\RateType;
-use App\Models\StockType;
-use App\Models\UnitOfMeasures;
+
 use App\Services\AccountServices;
 use App\Services\DepreciationServices;
 use App\Services\FixedAssetItemServices;
 use App\Services\ItemServices;
-use Illuminate\Support\Facades\Redirect;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
