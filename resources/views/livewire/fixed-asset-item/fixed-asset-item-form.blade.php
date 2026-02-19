@@ -12,7 +12,7 @@
                         </button>
                     </div>
                     @livewire('alert-layout', ['errors' => $errors->any() ? $errors->all() : '', 'message' => session('message'), 'error' => session('error')])
-                    <form id="quickForm" wire:submit.prevent='save'>
+                    <div wire:loading.class='loading-form' >
                         <div class="modal-body">
                             <div class="row">
                                 <div class="col-2">
@@ -91,7 +91,6 @@
                                         <div class="row ">
                                             <div class="col-6">
                                                 <label>Per Year</label> : {{ number_format($PER_YEAR, 2) }}
-
                                             </div>
                                             <div class="col-6">
                                                 <label>Per Month</label> : {{ number_format($PER_MONTH, 2) }}
@@ -99,7 +98,7 @@
                                         </div>
                                     </div>
                                     <div class="col-6 text-right">
-                                        <button type="submit" class="btn btn-success btn-sm">
+                                        <button type="button" wire:click="save()" class="btn btn-success btn-sm">
                                             @if ($ID > 0)
                                                 Update
                                             @else
@@ -110,12 +109,15 @@
                                             Close
                                         </button>
                                     </div>
+                                <div class="col-12" wire:loading.delay>
+                                    <span class="spinner"></span>
+                                </div>
                                 </div>
                             </div>
 
 
                         </div>
-                    </form>
+                    </div>
                 </div>
             </div>
         </div>

@@ -2,6 +2,7 @@
 namespace App\Livewire\FixedAssetItem;
 
 use App\Services\AccountServices;
+use App\Services\DateServices;
 use App\Services\DepreciationServices;
 use App\Services\FixedAssetItemServices;
 use App\Services\ItemServices;
@@ -34,6 +35,7 @@ class FixedAssetItemForm extends Component
     private $fixedAssetItemServices;
     private $accountServices;
     private $itemServices;
+    private $dateServices;
     public $accountList = [];
     public bool $INACTIVE;
     private $depreciationServices;
@@ -44,14 +46,16 @@ class FixedAssetItemForm extends Component
         FixedAssetItemServices $fixedAssetItemServices,
         AccountServices $accountServices,
         ItemServices $itemServices,
-        DepreciationServices $depreciationServices
+        DepreciationServices $depreciationServices,
+        DateServices $dateServices
     ) {
         $this->fixedAssetItemServices = $fixedAssetItemServices;
         $this->accountServices        = $accountServices;
         $this->itemServices           = $itemServices;
         $this->depreciationServices   = $depreciationServices;
+        $this->dateServices           = $dateServices;
     }
-
+    
     #[On('open-asset-item')]
     public function openModal($result)
     {
@@ -101,7 +105,7 @@ class FixedAssetItemForm extends Component
             $this->AQ_COST       = 0;
             $this->USEFUL_LIFE   = 1;
             $this->INACTIVE      = false;
-            $this->PO_DATE       = "";
+            $this->PO_DATE       =  '' ;
         }
 
         $this->getDisplay();
@@ -113,7 +117,6 @@ class FixedAssetItemForm extends Component
         $use  = $this->USEFUL_LIFE > 0 ? $this->USEFUL_LIFE : 1;
 
         $this->PER_YEAR = $cost / $use;
-
         $this->PER_MONTH = $this->PER_YEAR / 12;
     }
     private function getDisplay()
@@ -146,7 +149,7 @@ class FixedAssetItemForm extends Component
             'PO_DATE'                => 'Purchase Order Date',
         ]);
 
-        $this->YEAR_PURCHASE = date("Y", $this->PO_DATE);
+        $this->YEAR_PURCHASE = $this->dateServices->dateToYear($this->PO_DATE);
 
         if ($this->ID > 0) {
             $this->fixedAssetItemServices->Update(
