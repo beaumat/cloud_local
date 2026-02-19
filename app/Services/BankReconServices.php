@@ -177,12 +177,14 @@ class BankReconServices
                 'account_reconciliation.CODE',
                 'account_reconciliation.DATE',
                 'a.NAME as ACCOUNT_NAME',
+                'account_reconciliation.BEGINNING_BALANCE',
                 'account_reconciliation.ENDING_BALANCE',
                 'l.NAME as LOCATION_NAME',
                 's.DESCRIPTION as STATUS',
                 'account_reconciliation.NOTES',
             ])
             ->leftJoin('account as a', 'a.ID', '=', 'account_reconciliation.ACCOUNT_ID')
+            ->leftJoin('bank_statement as bs','bs.ID','account_reconciliation.BANK_STATEMENT_ID')
             ->join('location as l', function ($join) use (&$LOCATION_ID) {
                 $join->on('l.ID', '=', 'account_reconciliation.LOCATION_ID');
                 if ($LOCATION_ID > 0) {

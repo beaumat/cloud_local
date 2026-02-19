@@ -8,12 +8,12 @@
                <th class="col-1">DEBIT</th>
                <th class="col-1">CREDIT</th>
                <th class="col-1">BALANCE</th>
-               <th class="col-1 bg-purple">DOC TYPE</th>
-               <th class="col-1 bg-purple">DOC REF#</th>
-               <th class="col-1 bg-purple">AMOUNT</th>
-               <th class="col-1 bg-purple">LOCATION</th>
+               <th class="col-1 bg-success">DOC TYPE</th>
+               <th class="col-1 bg-success">DOC REF#</th>
+               <th class="col-1 bg-success">AMOUNT</th>
+               <th class="col-1 bg-success">LOCATION</th>
                @if ($STATUS != 15)
-                   <th class="col-1 bg-success"> <button class="btn btn-xs btn-success w-100" wire:click='autoMatch()'
+                   <th class="col-1 bg-purple"> <button class="btn btn-xs btn-success w-100" wire:click='autoMatch()'
                            wire:confirm='Are you sure ?'>Auto match</button></th>
                @endif
            </tr>
@@ -64,7 +64,6 @@
                                <div class="col-4"></div>
                                <div class="col-4"></div>
                            </div>
-
                        </td>
                    @endif
                </tr>

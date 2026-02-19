@@ -238,14 +238,16 @@
                                             @if ($STATUS != 16 && $ID > 0)
                                                 @can('banking.bank-recon.print')
                                                     <a type="button" target="_BLANK"
-                                                        href="{{ route('vendorsbills_print', ['id' => $ID]) }}"
+                                                        href="{{ route('bankingbank_recon_print', ['id' => $ID]) }}"
                                                         class="btn btn-sm btn-dark">
                                                         <i class="fa fa-print" aria-hidden="true"></i> Print
                                                     </a>
-                                                    {{-- <button type="button" wire:click='OpenJournal()'
-                                                        class="btn btn-sm btn-warning">
-                                                        <i class="fa fa-file-text-o" aria-hidden="true"></i> Journal
-                                                    </button> --}}
+                                                    @if($IE_RATE > 0 || $SC_RATE > 0 )
+                                                        <button type="button" wire:click='OpenJournal()'
+                                                            class="btn btn-sm btn-warning">
+                                                            <i class="fa fa-file-text-o" aria-hidden="true"></i> Journal
+                                                        </button> 
+                                                    @endif
                                                 @endcan
                                             @endif
                                             @can('banking.bank-recon.create')
