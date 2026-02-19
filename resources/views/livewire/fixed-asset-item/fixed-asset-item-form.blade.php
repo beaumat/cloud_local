@@ -52,8 +52,8 @@
                                 </div>
                                 <div class="col-4"></div>
                                 <div class="col-1">
-                                    <livewire:number-input name="YEAR_PURCHASE" titleName="Year Purchase"
-                                        wire:model='YEAR_PURCHASE' :vertical="false" :isDisabled="false" />
+                                    <livewire:date-input name="PO_DATE" titleName="Purchase Order Date"
+                                        wire:model='PO_DATE' :isDisabled="false" />
                                 </div>
                                 <div class="col-1">
                                     <livewire:number-input name="YEAR_MODEL" titleName="Year Modal"

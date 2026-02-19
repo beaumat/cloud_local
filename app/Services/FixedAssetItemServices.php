@@ -32,7 +32,8 @@ class FixedAssetItemServices
         int $YEAR_MODEL,
         int $QUANTITY,
         float $AQ_COST,
-        int $USEFUL_LIFE
+        int $USEFUL_LIFE,
+        string $PO_DATE
     ) {
 
         $ID = (int) $this->object->ObjectNextID('FIXED_ASSET_ITEM');
@@ -52,7 +53,8 @@ class FixedAssetItemServices
             'YEAR_MODEL'                => $YEAR_MODEL,
             'QUANTITY'                  => $QUANTITY,
             'AQ_COST'                   => $AQ_COST,
-            'USEFUL_LIFE'               => $USEFUL_LIFE
+            'USEFUL_LIFE'               => $USEFUL_LIFE,
+            'PO_DATE'                   => $PO_DATE
         ]);
     }
     public function Update(
@@ -70,7 +72,8 @@ class FixedAssetItemServices
         int $QUANTITY,
         float $AQ_COST,
         int $USEFUL_LIFE,
-        bool $INACTIVE
+        bool $INACTIVE,
+        string $PO_DATE
     ) {
         FixedAssetItem::where('ID', '=', $ID)
             ->update([
@@ -87,7 +90,8 @@ class FixedAssetItemServices
                 'QUANTITY'                  => $QUANTITY,
                 'AQ_COST'                   => $AQ_COST,
                 'USEFUL_LIFE'               => $USEFUL_LIFE,
-                'INACTIVE'                  => $INACTIVE
+                'INACTIVE'                  => $INACTIVE,
+                'PO_DATE'                   => $PO_DATE
             ]);
     }
 
