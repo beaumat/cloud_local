@@ -1,19 +1,19 @@
    <table class="table table-sm table-bordered table-hover">
        <thead class="text-xs bg-primary">
            <tr>
-               <th class="col-1">DATE TRANSACTION</th>
+               <th class="col-2">DATE TRANSACTION</th>
                <th class="col-1">REFERENCE</th>
-               <th class="col-1">DESCRIPTION</th>
-               <th class="col-1">CHECK NUMBER</th>
-               <th class="col-1">DEBIT</th>
-               <th class="col-1">CREDIT</th>
-               <th class="col-1">BALANCE</th>
+               <th class="col-3">DESCRIPTION</th>
+               <th class="">CHECK NUMBER</th>
+               <th class="">DEBIT</th>
+               <th class="">CREDIT</th>
+               <th class="">BALANCE</th>
                <th class="col-1 bg-success">DOC TYPE</th>
                <th class="col-1 bg-success">DOC REF#</th>
                <th class="col-1 bg-success">AMOUNT</th>
                <th class="col-1 bg-success">LOCATION</th>
                @if ($STATUS != 15)
-                   <th class="col-1 bg-purple"> <button class="btn btn-xs btn-success w-100" wire:click='autoMatch()'
+                   <th class="col-1 bg-success"> <button class="btn btn-xs btn-success font-weight-bold w-100" wire:click='autoMatch()'
                            wire:confirm='Are you sure ?'>Auto match</button></th>
                @endif
            </tr>
@@ -57,12 +57,18 @@
                    @if ($STATUS != 15)
                        <td>
                            <div class="row">
-                               <div class="col-4"><button class="btn btn-xs btn-success w-100"
+                               <div class="col-12">
+                                @if($list->TX_CODE == "")
+                                <button class="btn btn-xs btn-primary w-100"
                                        wire:click='FindEntry({{ $list->DEBIT }},{{ $list->CREDIT }},{{ $list->ID }})'>
                                        <i class="fa fa-plus" aria-hidden="true"></i>
-                                   </button></div>
-                               <div class="col-4"></div>
-                               <div class="col-4"></div>
+                                   </button>
+                                @else
+                                    <button class="btn btn-xs btn-secondary w-100" disabled >
+                                       <i class="fa fa-plus" aria-hidden="true"></i>
+                                   </button>
+                                @endif
+                                </div>                       
                            </div>
                        </td>
                    @endif

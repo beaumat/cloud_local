@@ -10,7 +10,7 @@ class BalanceSheetMonthly extends Component
 {
 
     public $isFocus   = true;
-    public $isRunning = true;
+    public $isRunning = false;
     public $YEAR;
     public $LOCATION_ID;
     public $dataList = [];
@@ -83,11 +83,7 @@ class BalanceSheetMonthly extends Component
         $e          = $this->SetData($equityList, '', true, true);
         $dataIS     = $this->getIncomeStatement(); // Current Year Earnings
 
-        // $LASTYEAR = $this->YEAR - 1;
-        // $lastdate = $this->financialStatementServices->lastDate($LASTYEAR, 12);
-        // $BS_BALANCE = (float) $this->financialStatementServices->getBalanceSheetBalance($lastdate, $this->LOCATION_ID);
-        // $IS_BALANCE = (float) $this->financialStatementServices->getIncomeStatementHistoryBalance($lastdate, $this->LOCATION_ID);
-
+    
         $E_JAN   = (float) $dataIS['JAN'] + $e['JAN'];
         $E_FEB   = (float) $dataIS['FEB'] + $e['FEB'];
         $E_MAR   = (float) $dataIS['MAR'] + $e['MAR'];
@@ -102,13 +98,24 @@ class BalanceSheetMonthly extends Component
         $E_DEC   = (float) $dataIS['DEC'] + $e['DEC'];
         $E_TOTAL = (float) $dataIS['TOTAL'] + $e['TOTAL'];
 
-        // $this->dataList[] = $this->getInsert(
-        //     0,
-        //     "Retaining Earnings",
-        //     "",
-        //     $BS_BALANCE != 0 ? $this->numberServices->AcctFormat($BS_BALANCE) : '-',
-        //     $E_FEB != 0 ? $this->numberServices->AcctFormat($E_FEB) : '-',
-        // );
+
+
+        // $E_JAN   = (float) $dataIS['JAN'] + $e['JAN'];
+        // $E_FEB   = (float) $dataIS['FEB'] + $e['FEB'];
+        // $E_MAR   = (float) $dataIS['MAR'] + $e['MAR'];
+        // $E_APR   = (float) $dataIS['APR'] + $e['APR'];
+        // $E_MAY   = (float) $dataIS['MAY'] + $e['MAY'];
+        // $E_JUN   = (float) $dataIS['JUN'] + $e['JUN'];
+        // $E_JUL   = (float) $dataIS['JUL'] + $e['JUL'];
+        // $E_AUG   = (float) $dataIS['AUG'] + $e['AUG'];
+        // $E_SEP   = (float) $dataIS['SEP'] + $e['SEP'];
+        // $E_OCT   = (float) $dataIS['OCT'] + $e['OCT'];
+        // $E_NOV   = (float) $dataIS['NOV'] + $e['NOV'];
+        // $E_DEC   = (float) $dataIS['DEC'] + $e['DEC'];
+        // $E_TOTAL = (float) $dataIS['TOTAL'] + $e['TOTAL'];
+
+
+
 
         $this->dataList[] = $this->getInsert(
             0,

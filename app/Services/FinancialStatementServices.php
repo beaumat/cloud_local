@@ -359,6 +359,7 @@ class FinancialStatementServices
             ->orderBy('a.TYPE')
             ->get();
 
+           
         return $result;
     }
     public function getBalanceSheetAccountTypeListByDateRange(array $type = [], string $DATE_FROM, string $DATE_TO, int $LOCATION_ID, bool $isCreditIncrease = false)

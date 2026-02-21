@@ -87,8 +87,8 @@ class FixedAssetItemForm extends Component
 
         } else {
 
-            $this->ITEM_ID                  = $result['ITEM_ID'];
-            $this->LOCATION_ID              = $result['LOCATION_ID'];
+            $this->ITEM_ID                  = (int) $result['ITEM_ID'];
+            $this->LOCATION_ID              = (int) $result['LOCATION_ID'];
             $this->ID                       = 0;
             $this->ACCUMULATED_ACCOUNT_ID   = $this->depreciationServices->ACCUMULATED_ACCOUNT_ID;
             $this->DEPRECIATION_ACCOUNT_ID  = $this->depreciationServices->DEPRECIATION_ACCOUNT_ID;
