@@ -64,4 +64,13 @@ class FixedAssetItemList extends Component
         $items = $this->fixedAssetItemServices->Search($this->search, $this->LOCATION_ID, 50);
         return view('livewire.fixed-asset-item.fixed-asset-item-list', ['items' => $items]);
     }
+        public function updatedlocationid()
+    {
+        try {
+            $this->userServices->SwapLocation($this->LOCATION_ID);
+        } catch (\Exception $e) {
+            $errorMessage = 'Error occurred: ' . $e->getMessage();
+            session()->flash('error', $errorMessage);
+        }
+    }
 }

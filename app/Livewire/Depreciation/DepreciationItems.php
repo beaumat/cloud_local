@@ -45,7 +45,7 @@ class DepreciationItems extends Component
                 if ($AQ_COST > 0) {
                     $PER_YEAR     = (float) $AQ_COST / $USEFULL_LIFE;
                     $PER_MONTH    = (float) $PER_YEAR / 12;
-                    $this->AMOUNT = (float)  $PER_MONTH;
+                    $this->AMOUNT = round( $PER_MONTH,2);
                     return;
                 }
 
