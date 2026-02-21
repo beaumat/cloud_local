@@ -51,7 +51,7 @@
                                         :isDisabled="false" />
                                 </div>
                                 <div class="col-4"></div>
-                                <div class="col-1">
+                                <div class="col-3">
                                     <livewire:date-input name="PO_DATE" titleName="Purchase Order Date"
                                         wire:model='PO_DATE' :isDisabled="false" />
                                 </div>
