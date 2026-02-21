@@ -31,44 +31,7 @@ class EquityByMonthly extends Component
         $this->YEAR = $result['YEAR'];
         $this->LOCATION_ID = $result['LOCATION_ID'];
 
-        // $assetList = $this->financialStatementServices->getBalanceSheetAccountTypeListByMonth([0, 1, 2, 3, 4], $this->YEAR, $this->LOCATION_ID, false, $this->isRunning, $this->isFocus);
-        // $a[] = $this->SetData($assetList, 'Assets');
-        // $liabilityList = $this->financialStatementServices->getBalanceSheetAccountTypeListByMonth([5, 6, 7, 8], $this->YEAR, $this->LOCATION_ID, true, $this->isRunning, $this->isFocus);
-        // $l[] = $this->SetData($liabilityList, 'Liabilities');
-
-        // $JAN = $a[0]['JAN'] - $l[0]['JAN'];
-        // $FEB = $a[0]['FEB'] - $l[0]['FEB'];
-        // $MAR = $a[0]['MAR'] - $l[0]['MAR'];
-        // $APR = $a[0]['APR'] - $l[0]['APR'];
-        // $MAY = $a[0]['MAY'] - $l[0]['MAY'];
-        // $JUN = $a[0]['JUN'] - $l[0]['JUN'];
-        // $JUL = $a[0]['JUL'] - $l[0]['JUL'];
-        // $AUG = $a[0]['AUG'] - $l[0]['AUG'];
-        // $SEP = $a[0]['SEP'] - $l[0]['SEP'];
-        // $OCT = $a[0]['OCT'] - $l[0]['OCT'];
-        // $NOV = $a[0]['NOV'] - $l[0]['NOV'];
-        // $DEC = $a[0]['DEC'] - $l[0]['DEC'];
-        // $TOTAL = $a[0]['TOTAL'] - $l[0]['TOTAL'];
-
-
-        // $this->dataList[] = $this->getInsert(
-        //     0,
-        //     'Net Assets ',
-        //     'total',
-        //     $JAN != 0 ? $this->numberServices->AcctFormat($JAN) : '-',
-        //     $FEB != 0 ? $this->numberServices->AcctFormat($FEB) : '-',
-        //     $MAR != 0 ? $this->numberServices->AcctFormat($MAR) : '-',
-        //     $APR != 0 ? $this->numberServices->AcctFormat($APR) : '-',
-        //     $MAY != 0 ? $this->numberServices->AcctFormat($MAY) : '-',
-        //     $JUN != 0 ? $this->numberServices->AcctFormat($JUN) : '-',
-        //     $JUL != 0 ? $this->numberServices->AcctFormat($JUL) : '-',
-        //     $AUG != 0 ? $this->numberServices->AcctFormat($AUG) : '-',
-        //     $SEP != 0 ? $this->numberServices->AcctFormat($SEP) : '-',
-        //     $OCT != 0 ? $this->numberServices->AcctFormat($OCT) : '-',
-        //     $NOV != 0 ? $this->numberServices->AcctFormat($NOV) : '-',
-        //     $DEC != 0 ? $this->numberServices->AcctFormat($DEC) : '-',
-        //     $TOTAL != 0 ? $this->numberServices->AcctFormat($TOTAL) : '-'
-        // );
+      
         $this->equitySide();
 
     }
@@ -85,11 +48,7 @@ class EquityByMonthly extends Component
         $e = $this->SetData($equityList, '', true, true);
         $dataIS = $this->getIncomeStatement(); // Current Year Earnings 
 
-        // $LASTYEAR = $this->YEAR - 1;
-        // $lastdate = $this->financialStatementServices->lastDate($LASTYEAR, 12);
-        // $BS_BALANCE = (float) $this->financialStatementServices->getBalanceSheetBalance($lastdate, $this->LOCATION_ID);
-        // $IS_BALANCE = (float) $this->financialStatementServices->getIncomeStatementHistoryBalance($lastdate, $this->LOCATION_ID);
-
+     
 
         $E_JAN = (float) $dataIS['JAN'] + $e['JAN'];
         $E_FEB = (float) $dataIS['FEB'] + $e['FEB'];
@@ -105,13 +64,6 @@ class EquityByMonthly extends Component
         $E_DEC = (float) $dataIS['DEC'] + $e['DEC'];
         $E_TOTAL = (float) $dataIS['TOTAL'] + $e['TOTAL'];
 
-        // $this->dataList[] = $this->getInsert(
-        //     0,
-        //     "Retaining Earnings",
-        //     "",
-        //     $BS_BALANCE != 0 ? $this->numberServices->AcctFormat($BS_BALANCE) : '-',
-        //     $E_FEB != 0 ? $this->numberServices->AcctFormat($E_FEB) : '-',
-        // );
 
         $this->dataList[] = $this->getInsert(
             0,

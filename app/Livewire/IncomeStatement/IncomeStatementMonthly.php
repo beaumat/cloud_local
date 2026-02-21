@@ -12,7 +12,7 @@ use Maatwebsite\Excel\Facades\Excel;
 class IncomeStatementMonthly extends Component
 {
 
-    public bool $isRun = true;
+    public bool $isRun = false;
     public bool $isFocus = true;
     public $dataList = [];
     public $LOCATION_ID;
