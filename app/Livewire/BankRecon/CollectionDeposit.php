@@ -105,7 +105,6 @@ class CollectionDeposit extends Component
             $this->dataList = $this->bankReconServices->getPaymentList(
                 $this->ACCOUNT_ID,
                 $this->LOCATION_ID,
-                0,
                 $this->search,
                 $this->dateList,
                 $this->AMOUNT

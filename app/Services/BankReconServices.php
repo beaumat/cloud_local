@@ -356,7 +356,7 @@ class BankReconServices
                 'STATUS_DATE' => $this->dateServices->NowDate(),
             ]);
     }
-    public function getPayList(int $ACCOUNT_ID, int $ENTRY_TYPE = 0, $dateList = [], float $AMOUNT = 0): array
+    public function getPayList(int $ACCOUNT_ID, $dateList = [], float $AMOUNT = 0): array
     {
         $result = DB::table('account_journal as aj')
             ->select([
@@ -368,7 +368,6 @@ class BankReconServices
             ])
             ->whereIn('aj.OBJECT_DATE', $dateList)
             ->where('aj.ACCOUNT_ID', '=', $ACCOUNT_ID)
-            ->where('aj.ENTRY_TYPE', '=', $ENTRY_TYPE)
             ->where('aj.AMOUNT', '=', $AMOUNT)
             ->whereNotExists(function ($query) {
                 $query->select(DB::raw(1))
@@ -385,6 +384,7 @@ class BankReconServices
                 'OBJECT_ID'   => $result->OBJECT_ID,
                 'OBJECT_TYPE' => $result->OBJECT_TYPE,
                 'OBJECT_DATE' => $result->OBJECT_DATE,
+                'ENTRY_TYPE' => $result->ENTRY_TYPE,
                 'IS_EXIST'    => true,
             ];
         }
@@ -393,11 +393,12 @@ class BankReconServices
             'OBJECT_ID'   => '',
             'OBJECT_TYPE' => '',
             'OBJECT_DATE' => '',
+            'ENTRY_TYPE' =>'',
             'IS_EXIST'    => false,
         ];
 
     }
-    public function getPaymentList(int $ACCOUNT_ID, int $LOCATION_ID = 0, int $ENTRY_TYPE = 0, $search, $dateList = [], float $AMOUNT = 0): object
+    public function getPaymentList(int $ACCOUNT_ID, int $LOCATION_ID = 0, $search, $dateList = [], float $AMOUNT = 0): object
     {
 
         $result = DB::table('account_journal as aj')
@@ -427,8 +428,7 @@ class BankReconServices
 
             ->whereIn('aj.OBJECT_DATE', $dateList)
             ->where('aj.ACCOUNT_ID', '=', $ACCOUNT_ID)
-            ->where('aj.ENTRY_TYPE', '=', $ENTRY_TYPE)
-
+           
             ->whereNotExists(function ($query) {
                 $query->select(DB::raw(1))
                     ->from('account_reconciliation_items as r')

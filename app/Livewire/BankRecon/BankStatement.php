@@ -50,15 +50,16 @@ class BankStatement extends Component
         DB::beginTransaction();
 
         try {
-            $this->getAllDate();
+            $this->getAllDate(); //
             $this->dataList = $this->bankStatementServices->getbankStatementRecon($this->BANK_STATEMENT_ID, $this->ACCOUNT_ID, $this->search);
 
             foreach ($this->dataList as $row) {
-                $EntryType = (int) $row->DEBIT > 0 ? 0 : 1;
-                $AMOUNT    = (float) $row->DEBIT > 0 ? $row->DEBIT : $row->CREDIT;
-                $result    = $this->bankRecordServices->getPayList($this->ACCOUNT_ID, $EntryType, $this->dateList, $AMOUNT);
+
+                $this->dateList[] = $this->dateServices->DateFormatOnly($row->DATE_TRANSACTION);
+                $AMOUNT           = (float) $row->DEBIT > 0 ? $row->DEBIT : $row->CREDIT;
+                $result           = $this->bankRecordServices->getPayList($this->ACCOUNT_ID, $this->dateList, $AMOUNT);
                 if ((bool) $result['IS_EXIST'] == true) {
-                    $this->AddItem((int) $result['OBJECT_ID'], (int) $result['OBJECT_TYPE'], $result['OBJECT_DATE'], $EntryType, $AMOUNT, $row->ID);
+                    $this->AddItem((int) $result['OBJECT_ID'], (int) $result['OBJECT_TYPE'], $result['OBJECT_DATE'], $result['ENTRY_TYPE'], $AMOUNT, $row->ID);
                 }
             }
             DB::commit();

@@ -100,7 +100,6 @@ class CheckPayment extends Component
             $this->dataList = $this->bankReconServices->getPaymentList(
                 $this->ACCOUNT_ID,
                 $this->LOCATION_ID,
-                1,
                 $this->search,
                 $this->dateList,
                 $this->AMOUNT
