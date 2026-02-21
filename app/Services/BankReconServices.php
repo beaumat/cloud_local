@@ -184,7 +184,7 @@ class BankReconServices
                 'account_reconciliation.NOTES',
             ])
             ->leftJoin('account as a', 'a.ID', '=', 'account_reconciliation.ACCOUNT_ID')
-            ->leftJoin('bank_statement as bs','bs.ID','account_reconciliation.BANK_STATEMENT_ID')
+            ->leftJoin('bank_statement as bs', 'bs.ID', 'account_reconciliation.BANK_STATEMENT_ID')
             ->join('location as l', function ($join) use (&$LOCATION_ID) {
                 $join->on('l.ID', '=', 'account_reconciliation.LOCATION_ID');
                 if ($LOCATION_ID > 0) {
@@ -298,7 +298,56 @@ class BankReconServices
 
         return $result;
     }
+    public function ItemListByEntry(int $ACCOUNT_RECONCILIATION_ID, int $ENTRY_TYPE)
+    {
+        $result = DB::table('account_reconciliation_items as recon_item')
+            ->select([
+                'recon_item.ID',
+                'aj.OBJECT_ID',
+                'aj.OBJECT_TYPE',
+                'aj.OBJECT_DATE',
+                'aj.ENTRY_TYPE',
+                'recon_item.AMOUNT',
+                'aj.OBJECT_DATE as DATE',
+                DB::raw($this->accountJournalServices->GetFullDescription()),
+                DB::raw($this->accountJournalServices->TX_CODE),
+                DB::raw($this->accountJournalServices->TX_NAME),
+                DB::raw($this->accountJournalServices->TX_NOTES),
+                DB::raw($this->accountJournalServices->TX_PO),
+                'l.NAME as LOCATION_NAME',
+                'a.BANK_ACCOUNT_NO'
+                
+            ])
+            ->join('account_reconciliation as recon', 'recon.ID', '=', 'recon_item.ACCOUNT_RECONCILIATION_ID')
+            ->leftJoin('account_journal as aj', function ($join) {
+                $join->on('aj.OBJECT_ID', '=', 'recon_item.OBJECT_ID');
+                $join->on('aj.OBJECT_TYPE', '=', 'recon_item.OBJECT_TYPE');
+                $join->on('aj.OBJECT_DATE', '=', 'recon_item.OBJECT_DATE');
+                $join->on('aj.ENTRY_TYPE', '=', 'recon_item.ENTRY_TYPE');
+                $join->on('aj.ACCOUNT_ID', '=', 'recon.ACCOUNT_ID');
 
+            })
+            ->leftJoin('account as a','a.ID','=','aj.ACCOUNT_ID')
+            ->leftJoin('location as l', 'l.ID', '=', 'aj.LOCATION_ID')
+            ->leftJoin('object_type_map as o', 'o.ID', '=', 'aj.OBJECT_TYPE')
+            ->leftJoin('document_type_map as d', 'd.ID', '=', 'o.DOCUMENT_TYPE')
+
+            ->where('recon_item.ACCOUNT_RECONCILIATION_ID', '=', $ACCOUNT_RECONCILIATION_ID)
+            ->whereExists(function ($query) use (&$ACCOUNT_RECONCILIATION_ID) {
+                $query->select(DB::raw(1))
+                    ->from('account_reconciliation_items as r')
+                    ->whereRaw('r.OBJECT_ID = aj.OBJECT_ID')
+                    ->whereRaw('r.OBJECT_TYPE = aj.OBJECT_TYPE')
+                    ->whereRaw('r.OBJECT_DATE = aj.OBJECT_DATE')
+                    ->whereRaw('r.ENTRY_TYPE = aj.ENTRY_TYPE')
+                    ->where('r.ACCOUNT_RECONCILIATION_ID', '=', $ACCOUNT_RECONCILIATION_ID);
+            })
+            ->where('aj.ENTRY_TYPE', '=', $ENTRY_TYPE)
+            ->orderBy('recon_item.LINE_NO', 'asc')
+            ->get();
+
+        return $result;
+    }
     public function StatusUpdate(int $ID, int $STATUS)
     {
         AccountReconciliation::where('ID', $ID)
@@ -407,9 +456,8 @@ class BankReconServices
 
         return $result;
     }
-    public function getSumDebitCredit(int $ACCOUNT_RECONCILIATION_ID, )
+    public function getSumDebitCredit(int $ACCOUNT_RECONCILIATION_ID)
     {
-
         $result = AccountReconciliationItems::query()
             ->select([
                 DB::raw('SUM(CLEARED_DEBIT) as TOTAL_DEBIT'),

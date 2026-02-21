@@ -11,7 +11,7 @@
             <td><strong>Account No:</strong>{{ $ACCOUNT_NO }}</td>
         </tr>
         <tr>
-            <td><strong>Statement Date:</strong> {{ $BANK_STATEMENT_DATE }}</td>
+            <td><strong>Statement Date:</strong> {{ date('m/d/Y', strtotime($BANK_STATEMENT_DATE))  }}</td>
             <td><strong>Reconciliation No:</strong> {{ $CODE }}</td>
         </tr>
         <tr>
@@ -20,4 +20,3 @@
         </tr>
     </table>
 </div>
-

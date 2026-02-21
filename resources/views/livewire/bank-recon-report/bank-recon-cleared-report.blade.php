@@ -14,15 +14,29 @@
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td>02/04/2026</td>
-                <td>FT260359WSQG</td>
-                <td>Bulk Instapay</td>
-                <td>-</td>
-                <td class="text-right">0.00</td>
-                <td class="text-right">10,010.00</td>
-                <td class="text-right">1,772,136.43</td>
-            </tr>
+            @foreach ($bankStatementList as $list)
+                <tr>
+                    <td> {{ date('m/d/Y H:i:s', strtotime($list->DATE_TRANSACTION)) }}</td>
+                    <td>{{ $list->REFERENCE }}</td>
+                    <td>{{ $list->DESCRIPTION }}</td>
+                    <td>{{ $list->CHECK_NUMBER }}</td>
+                    <td>
+                        @if ($list->DEBIT > 0)
+                            {{ number_format($list->DEBIT, 2) }}
+                        @endif
+                    </td>
+                    <td>
+                        @if ($list->CREDIT > 0)
+                            {{ number_format($list->CREDIT, 2) }}
+                        @endif
+                    </td>
+                    <td>
+                        @if ($list->BALANCE > 0)
+                            {{ number_format($list->BALANCE, 2) }}
+                        @endif
+                    </td>
+                </tr>
+            @endforeach
         </tbody>
     </table>
 </div>

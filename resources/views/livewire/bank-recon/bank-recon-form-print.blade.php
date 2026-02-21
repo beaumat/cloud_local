@@ -3,7 +3,7 @@
      <style>
         body {
             font-family: Arial, Helvetica, sans-serif;
-            font-size: 12px;
+            font-size: 15px;
             margin: 40px;
             color: #000;
         }
@@ -14,12 +14,12 @@
         }
 
         .company-name {
-            font-size: 16px;
+            font-size: 20px;
             font-weight: bold;
         }
 
         .report-title {
-            font-size: 14px;
+            font-size: 19px;
             font-weight: bold;
             margin-top: 5px;
         }

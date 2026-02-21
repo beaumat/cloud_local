@@ -37,11 +37,11 @@
         </tr>
         <tr>
             <td><strong>Difference</strong></td>
-            <td class="text-right"><strong>0.00</strong></td>
+            <td class="text-right"><strong>  {{ number_format($DIFFERENCE,2)  }}</strong></td>
         </tr>
         <tr>
             <td><strong>Status</strong></td>
-            <td class="text-right status-balanced">BALANCED</td>
+            <td class="text-right status-balanced">{{ $STATUS }}</td>
         </tr>
     </table>
 </div>

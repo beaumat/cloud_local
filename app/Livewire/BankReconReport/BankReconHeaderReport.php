@@ -40,8 +40,13 @@ class BankReconHeaderReport extends Component
         if ($data) {
             $this->CODE                = $data->CODE;
             $this->BANK_STATEMENT_DATE = $data->DATE;
-            $this->BANK_NAME           = $this->accountServices->get($data->ACCOUNT_ID)->NAME;
-            $loc                       = $this->locationServices->Get($data->LOCATION_ID);
+            $dAcct                     = $this->accountServices->get($data->ACCOUNT_ID);
+            if ($dAcct) {
+                $this->BANK_NAME  = $dAcct->NAME ?? '';
+                $this->ACCOUNT_NO = $dAcct->BANK_ACCOUNT_NO ?? '';
+            }
+
+            $loc = $this->locationServices->Get($data->LOCATION_ID);
             if ($loc) {
                 $this->LOCATION_NAME   = $loc->NAME;
                 $this->COMPANY_NAME    = $loc->NAME_OF_BUSINESS;
