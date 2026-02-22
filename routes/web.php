@@ -77,6 +77,7 @@ use App\Livewire\Hemodialysis\PrintFormBack;
 use App\Livewire\Hemodialysis\PrintFormFrontBack;
 use App\Livewire\Import\XeroImportForm;
 use App\Livewire\IncomeStatement\IncomeStatementAccountDetails;
+use App\Livewire\IncomeStatement\IncomeStatementAccountSummary;
 use App\Livewire\InventoryAdjustmentTypePage\InventoryAdjustmentTypeForm;
 use App\Livewire\InventoryAdjustmentTypePage\InventoryAdjustmentTypeList;
 use App\Livewire\InventoryAdjustment\InventoryAdjustmentForm;
@@ -342,11 +343,13 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/create', SalesReceiptForm::class)->name('sales_receipt_create')->middleware(['permission:customer.invoice.create']);
             Route::get('/{id}/edit', SalesReceiptForm::class)->name('sales_receipt_edit')->middleware(['permission:customer.invoice.view']);
         });
+
         Route::prefix('/payment')->group(function () {
             Route::get('/', PaymentList::class)->name('payment')->middleware(['permission:customer.received-payment.view']);
             Route::get('/create', PaymentForm::class)->name('payment_create')->middleware(['permission:customer.received-payment.create']);
             Route::get('/{id}/edit', PaymentForm::class)->name('payment_edit')->middleware(['permission:customer.received-payment.view']);
         });
+
         Route::prefix('/statement')->group(function () {
             Route::get('/', Statement::class)->name('statement')->middleware(['permission:customer.statement']);
             Route::get('/view/{id}', StatementView::class)->name('statement_view')->middleware(['permission:customer.statement']);
@@ -713,19 +716,13 @@ Route::middleware(['auth'])->group(function () {
             Route::prefix('/sales')->group(function () {
                 Route::get('/', PatientSalesReport2::class)->name('patient_sales_report')->middleware(['permission:report.patient.sales']);
                 Route::get('/{date_from}/{date_to}/{location_id}/print', PatientSalesReportPrint::class)->name('patient_sales_report_print')->middleware(['permission:report.patient.sales']);
-
-                // Route::get('/', PatientSalesReport::class)->name('patient_sales_report')->middleware(['permission:report.patient.sales']);
-                // Route::get('/{date_from}/{date_to}/{location_id}/{patient?}/{item?}/{method?}/view', PatientSalesReportView::class)->name('patient_sales_report_view')->middleware(['permission:report.patient.sales']);
-                // Route::get('/{date_from}/{date_to}/{location_id}/{patient?}/{item?}/{method?}/print', PatientSalesReportPrint::class)->name('patient_sales_report_print')->middleware(['permission:report.patient.sales']);
-
             });
             Route::prefix('/inventory')->group(function () {
                 Route::get('/', PatientInventoryReport::class)->name('patient_inventory_report')->middleware(['permission:report.patient.sales']);
                 Route::get('/usage', UsageReport::class)->name('inventory_usage_report');
             });
             Route::prefix('/treatment')->group(function () {
-                Route::get('/', PatientTreatmentReport::class)->name('patient_treatment_report')
-                    ->middleware(['permission:report.patient.treatment']);
+                Route::get('/', PatientTreatmentReport::class)->name('patient_treatment_report')->middleware(['permission:report.patient.treatment']);
             });
             Route::prefix('/balance')->group(function () {
                 Route::get('/', PatientBalanceReport::class)->name('patient_balance_report')->middleware(['permission:report.patient.balance']);
@@ -775,6 +772,8 @@ Route::middleware(['auth'])->group(function () {
             Route::prefix('/income-statement')->middleware(['permission:report.financial.income-statement'])->group(function () {
                 Route::get('/', IncomeStatementReport::class)->name('income_statement_report');
                 Route::get('/details/{id}/{year}/{month}/{locationid}', IncomeStatementAccountDetails::class)->name('income_statement_report_account_viewer');
+                Route::get('/summary/{id}/{datefrom}/{dateto}/{locationid}', IncomeStatementAccountSummary::class)->name('income_statement_report_account_viewer_summary');
+
             });
             Route::prefix('/balance-sheet')->middleware(['permission:report.financial.balance-sheet'])->group(function () {
                 Route::get('/', BalanceSheetReport::class)->name('balance_sheet_report');

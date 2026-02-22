@@ -16,7 +16,17 @@
                         &nbsp; {{ $list['ACCOUNT_NAME'] }}</td>
                     <td
                         class="text-right  @if ($list['ACCOUNT_TYPE'] == 'total' || $list['ACCOUNT_TYPE'] == 'grand') font-weight-bold @else font-weight-normal text-danger @endif">
-                        {{ $list['TOTAL'] }}</td>
+
+                        @if ($list['ACCOUNT_TYPE'] == 'total' || $list['ACCOUNT_TYPE'] == 'grand' || $list['ACCOUNT_ID'] == '0')
+                            {{ $list['TOTAL'] }}
+                        @else
+                            <a target="_blank"
+                                href="{{ route('reportsfinancialincome_statement_report_account_viewer_summary', ['id' => $list['ACCOUNT_ID'], 'datefrom' => $DATE_FROM, 'dateto' => $DATE_TO, 'locationid' => $LOCATION_ID]) }}">
+                                {{ $list['TOTAL'] }}</a>
+                        @endif
+
+
+                    </td>
                 </tr>
             @endforeach
         </tbody>
