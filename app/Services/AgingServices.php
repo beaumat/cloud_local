@@ -15,6 +15,7 @@ class AgingServices
             ->select([
                 'c.ID as CONTACT_ID',
                 'c.NAME as CONTACT_NAME',
+                't.DESCRIPTION as TYPE',
                 DB::raw(" SUM(CASE WHEN DATEDIFF('$AS_OF_DATE',i.DUE_DATE) <= 0 THEN i.BALANCE_DUE ELSE 0 END) AS DUE_CURRENT "),
                 DB::raw(" SUM(CASE WHEN DATEDIFF('$AS_OF_DATE',i.DUE_DATE) BETWEEN 1 AND 30 THEN i.BALANCE_DUE ELSE 0 END) AS DUE_1_30 "),
                 DB::raw(" SUM(CASE WHEN DATEDIFF('$AS_OF_DATE',i.DUE_DATE) BETWEEN 31 AND 60 THEN i.BALANCE_DUE ELSE 0 END) AS DUE_31_60 "),
@@ -22,6 +23,7 @@ class AgingServices
                 DB::raw(" SUM(CASE WHEN DATEDIFF('$AS_OF_DATE',i.DUE_DATE) > 90 THEN i.BALANCE_DUE ELSE 0 END) AS DUE_90_OVER "),
                 DB::raw(" SUM(i.BALANCE_DUE) AS BALANCE"),
             ])
+            ->join('contact_type_map as t', 't.ID', '=', 'c.TYPE')
             ->leftJoin('invoice as i', function ($join) {
                 $join->on('i.CUSTOMER_ID', '=', 'c.ID');
             })
@@ -44,6 +46,7 @@ class AgingServices
             ->select([
                 'c.ID as CONTACT_ID',
                 'c.NAME as CONTACT_NAME',
+                'ct.DESCRIPTION as TYPE',
                 DB::raw(" DATEDIFF('$AS_OF_DATE',i.DUE_DATE) as AGING"),
                 'i.DATE',
                 'i.CODE',
@@ -55,6 +58,7 @@ class AgingServices
 
             ])
             ->join('contact as c', 'c.ID', '=', 'i.CUSTOMER_ID')
+            ->join('contact_type_map as ct', 'ct.ID', '=', 'c.TYPE')
             ->join('payment_terms as t', 't.ID', '=', 'i.PAYMENT_TERMS_ID')
             ->join('location as l', 'l.ID', '=', 'i.LOCATION_ID')
             ->when($LOCATION_ID > 0, function ($query) use (&$LOCATION_ID) {
@@ -202,6 +206,7 @@ class AgingServices
             ->select([
                 'c.ID as CONTACT_ID',
                 'c.NAME as CONTACT_NAME',
+                't.DESCRIPTION as TYPE',
                 DB::raw(" SUM(CASE WHEN DATEDIFF('$AS_OF_DATE',i.DUE_DATE) <= 0 THEN i.BALANCE_DUE ELSE 0 END) AS DUE_CURRENT "),
                 DB::raw(" SUM(CASE WHEN DATEDIFF('$AS_OF_DATE',i.DUE_DATE) BETWEEN 1 AND 30 THEN i.BALANCE_DUE ELSE 0 END) AS DUE_1_30 "),
                 DB::raw(" SUM(CASE WHEN DATEDIFF('$AS_OF_DATE',i.DUE_DATE) BETWEEN 31 AND 60 THEN i.BALANCE_DUE ELSE 0 END) AS DUE_31_60 "),
@@ -209,6 +214,7 @@ class AgingServices
                 DB::raw(" SUM(CASE WHEN DATEDIFF('$AS_OF_DATE',i.DUE_DATE) > 90 THEN i.BALANCE_DUE ELSE 0 END) AS DUE_90_OVER "),
                 DB::raw(" SUM(i.BALANCE_DUE) AS BALANCE"),
             ])
+            ->join('contact_type_map as t', 't.ID', '=', 'c.TYPE')
             ->leftJoin('bill as i', function ($join) {
                 $join->on('i.VENDOR_ID', '=', 'c.ID');
             })
@@ -232,6 +238,7 @@ class AgingServices
             ->select([
                 'c.ID as CONTACT_ID',
                 'c.NAME as CONTACT_NAME',
+                'ct.DESCRIPTION as TYPE',
                 DB::raw(" DATEDIFF('$AS_OF_DATE',i.DUE_DATE) as AGING"),
                 'i.DATE',
                 'i.CODE',
@@ -243,6 +250,7 @@ class AgingServices
 
             ])
             ->join('contact as c', 'c.ID', '=', 'i.VENDOR_ID')
+            ->join('contact_type_map as ct', 'ct.ID', '=', 'c.TYPE')
             ->join('payment_terms as t', 't.ID', '=', 'i.PAYMENT_TERMS_ID')
             ->join('location as l', 'l.ID', '=', 'i.LOCATION_ID')
             ->when($LOCATION_ID > 0, function ($query) use (&$LOCATION_ID) {

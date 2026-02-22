@@ -29,15 +29,14 @@
                                             wire:model.live='DATE' :isDisabled="false" />
                                     </div>
                                     <div class="col-md-5">
-                                        {{-- <livewire:date-input name="DATE_TO" titleName="Date To"
-                                            wire:model.live='DATE_TO' :isDisabled="false" /> --}}
+
                                     </div>
                                     <div class='col-md-12 mt-1'>
                                         <div class="form-group">
-                                            <button class="btn btn-primary btn-xs w-25"
-                                                wire:click='summary()'  wire:loading.attr='disabled' wire:loading.attr='hidden'>Summary</button>
-                                            <button class="btn btn-info btn-xs w-25"
-                                                wire:click='details()'  wire:loading.attr='disabled' wire:loading.attr='hidden'>Details</button>
+                                            <button class="btn btn-primary btn-xs w-25" wire:click='summary()'
+                                                wire:loading.attr='disabled' wire:loading.attr='hidden'>Summary</button>
+                                            <button class="btn btn-info btn-xs w-25" wire:click='details()'
+                                                wire:loading.attr='disabled' wire:loading.attr='hidden'>Details</button>
                                             <button class="btn btn-success btn-xs w-25" wire:click='export()'
                                                 wire:loading.attr='disabled' wire:loading.attr='hidden'>Export</button>
                                             <div wire:loading.delay>
@@ -73,7 +72,7 @@
                         </div>
                     </div>
                 </div>
-                <div class=" col-12 col-sm-12 col-md-12  col-lg-8" style="max-height: 80vh; overflow-y: auto;">
+                <div class=" col-12 col-sm-12 col-md-12  col-lg-12" style="max-height: 80vh; overflow-y: auto;">
                     @if ($isSummary)
                         @php
                             $DUE_CURRENT = 0;
@@ -87,7 +86,8 @@
                         <table class="table table-sm  table-bordered table-hover ">
                             <thead class="bg-sky h1">
                                 <tr>
-                                    <th>Customer</th>
+                                    <th>Name</th>
+                                    <th>Type</th>
                                     <th class="text-left">Current</th>
                                     <th class="text-left">1-30</th>
                                     <th class="text-left">31-60</th>
@@ -100,6 +100,7 @@
                                 @foreach ($summaryList as $list)
                                     <tr>
                                         <td>{{ $list->CONTACT_NAME }}</td>
+                                        <td>{{ $list->TYPE }}</td>
                                         <td class="text-right">{{ number_format($list->DUE_CURRENT, 2) }}</td>
                                         <td class="text-right">{{ number_format($list->DUE_1_30, 2) }}</td>
                                         <td class="text-right">{{ number_format($list->DUE_31_60, 2) }}</td>
@@ -137,7 +138,8 @@
                                 <tr>
                                     <th class="text-left">Date</th>
                                     <th class="text-left">Reference #</th>
-                                    <th class="text-left">Customer</th>
+                                    <th class="text-left">Name</th>
+                                    <th class="text-left">Type</th>
                                     <th class="text-left">Terms</th>
                                     <th class="text-left">Due Date</th>
                                     <th class="text-left">Aging</th>
@@ -189,6 +191,7 @@
                                                     <td></td>
                                                     <td></td>
                                                     <td></td>
+                                                    <td></td>
                                                     <td class="text-right text-primary">
                                                         {{ number_format($RUN_BALANCE, 2) }}
                                                     </td>
@@ -213,6 +216,7 @@
                                             @if ($RUN_BALANCE > 0)
                                                 <tr>
                                                     <td class="text-primary">TOTAL {{ $TMP_AGING }}</td>
+                                                    <td></td>
                                                     <td></td>
                                                     <td></td>
                                                     <td></td>
@@ -246,6 +250,7 @@
                                                     <td></td>
                                                     <td></td>
                                                     <td></td>
+                                                    <td></td>
                                                     <td class="text-right text-primary">
                                                         {{ number_format($RUN_BALANCE, 2) }} </td>
                                                     <td></td>
@@ -268,6 +273,7 @@
                                             @if ($RUN_BALANCE > 0)
                                                 <tr>
                                                     <td class="text-primary">TOTAL {{ $TMP_AGING }}</td>
+                                                    <td></td>
                                                     <td></td>
                                                     <td></td>
                                                     <td></td>
@@ -308,6 +314,7 @@
                                         <td>{{ date('M/d/Y', strtotime($list->DATE)) }}</td>
                                         <td>{{ $list->CODE }}</td>
                                         <td>{{ $list->CONTACT_NAME }}</td>
+                                        <td>{{ $list->TYPE }}</td>
                                         <td>{{ $list->PAYMENT_TERMS }}</td>
                                         <td>{{ date('M/d/Y', strtotime($list->DUE_DATE)) }}</td>
                                         <td>{{ $list->AGING < 1 ? '' : $list->AGING }}</td>
@@ -329,6 +336,7 @@
                                     <td></td>
                                     <td></td>
                                     <td></td>
+                                    <td></td>
                                     <td class="text-right text-primary">
                                         {{ number_format($RUN_BALANCE, 2) }}
                                     </td>
@@ -341,19 +349,13 @@
                                     <td></td>
                                     <td></td>
                                     <td></td>
+                                    <td></td>
                                     <td class="text-right text-danger">{{ number_format($RUN_TOTAL, 2) }}</td>
                                     <td></td>
-
-
                                 </tr>
                             </tbody>
                         </table>
-
-
                     @endif
-
-
-
                 </div>
             </div>
         </div>
