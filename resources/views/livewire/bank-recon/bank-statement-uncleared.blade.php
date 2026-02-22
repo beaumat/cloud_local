@@ -1,5 +1,4 @@
      <table class="table table-sm table-bordered table-hover">
-
          <thead class="text-xs bg-primary">
              <tr>
                  <th class="col-2">DATE TRANSACTION</th>
@@ -14,8 +13,7 @@
                  <th class="col-1 bg-success">AMOUNT</th>
                  <th class="col-1 bg-success">LOCATION</th>
                  @if ($STATUS != 15)
-                     <th class="col-1 bg-dark"> <button class="btn btn-xs btn-dark font-weight-bold w-100"
-                             wire:click='autoMatch()' wire:confirm='Are you sure ?'>AUTO MATCH</button></th>
+                     <th class="col-1 bg-success text-center"> ACTION</th>
                  @endif
              </tr>
          </thead>
@@ -55,7 +53,7 @@
                      <td>
                          {{ $list->LOCATION_NAME }}
                      </td>
-                     @if ($STATUS != 15)
+                      @if ($STATUS != 15)
                          <td>
                              <div class="row">
                                  <div class="col-12">

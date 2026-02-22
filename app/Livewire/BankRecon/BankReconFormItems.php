@@ -30,9 +30,9 @@ class BankReconFormItems extends Component
         try {
             //code...
             $result = $this->bankReconServices->GetItem($ID);
-
+        
             if ($result) {
-
+           
                 $bsResult = $this->bankStatementServices->getDetails($result->OBJECT_DATE, $result->OBJECT_TYPE, $result->OBJECT_ID);
                 if ($bsResult) {
 

@@ -182,13 +182,15 @@
                                                                 {{ number_format($CLEARED_CREDIT, 2) }}</div>
                                                         </div>
 
-                                                          <div class="row">
+                                                        <div class="row">
                                                             <div class="col-2 ">Difference Debit :</div>
                                                             <div class="col-2 font-weight-bold text-danger">
-                                                                {{ number_format($BANK_DEBIT-$CLEARED_DEBIT, 2) }}</div>
+                                                                {{ number_format($BANK_DEBIT - $CLEARED_DEBIT, 2) }}
+                                                            </div>
                                                             <div class="col-2">Difference Credit :</div>
                                                             <div class="col-2 font-weight-bold text-danger">
-                                                                {{ number_format($BANK_CREDIT-$CLEARED_CREDIT, 2) }}</div>
+                                                                {{ number_format($BANK_CREDIT - $CLEARED_CREDIT, 2) }}
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -242,11 +244,11 @@
                                                         class="btn btn-sm btn-dark">
                                                         <i class="fa fa-print" aria-hidden="true"></i> Print
                                                     </a>
-                                                    @if($IE_RATE > 0 || $SC_RATE > 0 )
+                                                    @if ($IE_RATE > 0 || $SC_RATE > 0)
                                                         <button type="button" wire:click='OpenJournal()'
                                                             class="btn btn-sm btn-warning">
                                                             <i class="fa fa-file-text-o" aria-hidden="true"></i> Journal
-                                                        </button> 
+                                                        </button>
                                                     @endif
                                                 @endcan
                                             @endif
@@ -281,7 +283,7 @@
                                                     id="custom-tabs-four-bank-tab" wire:click="SelectTab('bank')"
                                                     data-toggle="pill" href="#custom-tabs-four-bank" role="tab"
                                                     aria-controls="custom-tabs-four-bank" aria-selected="true">Bank
-                                                    Statement</a>
+                                                    Statement </a>
                                             </li>
                                             <li class="nav-item">
                                                 <a class="nav-link @if ($tab == 'cleared') active @endif"
@@ -290,6 +292,14 @@
                                                     href="#custom-tabs-four-cleared" role="tab"
                                                     aria-controls="custom-tabs-four-cleared"
                                                     aria-selected="true">Cleared Entry</a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link @if ($tab == 'uncleared') active @endif"
+                                                    id="custom-tabs-four-uncleared-tab"
+                                                    wire:click="SelectTab('uncleared')" data-toggle="pill"
+                                                    href="#custom-tabs-four-uncleared" role="tab"
+                                                    aria-controls="custom-tabs-four-uncleared"
+                                                    aria-selected="true">Uncleared Bank Statement</a>
                                             </li>
                                             <li wire:loading.delay>
                                                 <span class="spinner"></span>
@@ -301,7 +311,7 @@
                                             <div class="tab-pane fade @if ($tab == 'bank') show active @endif "
                                                 id="custom-tabs-four-bank" role="tabpanel">
                                                 @if ($tab == 'bank')
-                                                    @livewire('BankRecon.BankStatement', ['BANK_STATEMENT_ID' => $BANK_STATEMENT_ID, 'ACCOUNT_RECONCILIATION_ID' => $ID, 'ACCOUNT_ID' => $ACCOUNT_ID , 'STATUS' => $STATUS])
+                                                    @livewire('BankRecon.BankStatement', ['BANK_STATEMENT_ID' => $BANK_STATEMENT_ID, 'ACCOUNT_RECONCILIATION_ID' => $ID, 'ACCOUNT_ID' => $ACCOUNT_ID, 'STATUS' => $STATUS])
                                                 @endif
                                             </div>
                                             <div class="tab-pane fade @if ($tab == 'cleared') show active @endif "
@@ -310,31 +320,24 @@
                                                     @livewire('BankRecon.BankReconFormItems', ['ACCOUNT_RECONCILIATION_ID' => $ID, 'STATUS' => $STATUS])
                                                 @endif
                                             </div>
+                                            <div class="tab-pane fade @if ($tab == 'uncleared') show active @endif "
+                                                id="custom-tabs-four-cleared" role="tabpanel">
+                                                @if ($tab == 'uncleared')
+                                                    @livewire('BankRecon.BankStatementUncleared', ['BANK_STATEMENT_ID' => $BANK_STATEMENT_ID, 'ACCOUNT_ID' => $ACCOUNT_ID, 'STATUS' => $STATUS])
+                                                @endif
+                                            </div>
                                         </div>
                                     </div>
 
                                 </div>
                             </div>
-                            {{-- <div class="col-12 col-md-2">
-                                @if ($STATUS == 0 || $STATUS == 16)
-                                    <div class="form-group">
-                                        <button wire:click='openSalesCollection()' class="btn btn-sm btn-success">
-                                            Collection & Deposit
-                                        </button>
-                                        <button wire:click='openCheckPayment()' class="btn btn-sm btn-primary">
-                                            Check Payment
-                                        </button>
-                                    </div>
-                                @endif
-                                @livewire('BankRecon.BankReconDetails', ['ACCOUNT_RECONCILIATION_ID' => $ID])
-                            </div> --}}
+
                         </div>
                     </div>
                 </div>
             </div>
         </section>
-        @livewire('BankRecon.CollectionDeposit', ['ACCOUNT_RECONCILIATION_ID' => $ID, 'ACCOUNT_ID' => $ACCOUNT_ID, 'BANK_STATEMENT_ID' => $BANK_STATEMENT_ID])
-        @livewire('BankRecon.CheckPayment', ['ACCOUNT_RECONCILIATION_ID' => $ID, 'ACCOUNT_ID' => $ACCOUNT_ID, 'BANK_STATEMENT_ID' => $BANK_STATEMENT_ID])
+        @livewire('BankRecon.EntryList', ['ACCOUNT_RECONCILIATION_ID' => $ID, 'ACCOUNT_ID' => $ACCOUNT_ID, 'BANK_STATEMENT_ID' => $BANK_STATEMENT_ID])
     @endif
 
 </div>

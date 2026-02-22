@@ -356,7 +356,7 @@ class BankReconServices
                 'STATUS_DATE' => $this->dateServices->NowDate(),
             ]);
     }
-    public function getPayList(int $ACCOUNT_ID, $dateList = [], float $AMOUNT = 0): array
+    public function getPayList(int $ACCOUNT_ID, $dateEntry, float $AMOUNT = 0): array
     {
         $result = DB::table('account_journal as aj')
             ->select([
@@ -366,7 +366,7 @@ class BankReconServices
                 'aj.ENTRY_TYPE',
                 'aj.AMOUNT',
             ])
-            ->whereIn('aj.OBJECT_DATE', $dateList)
+            ->whereDate('aj.OBJECT_DATE', '=', $dateEntry)
             ->where('aj.ACCOUNT_ID', '=', $ACCOUNT_ID)
             ->where('aj.AMOUNT', '=', $AMOUNT)
             ->whereNotExists(function ($query) {
@@ -398,7 +398,7 @@ class BankReconServices
         ];
 
     }
-    public function getPaymentList(int $ACCOUNT_ID, int $LOCATION_ID = 0, $search, $dateList = [], float $AMOUNT = 0): object
+    public function getPaymentList(int $ACCOUNT_ID, int $LOCATION_ID = 0, $search, string $dateEntry, float $AMOUNT = 0): object
     {
 
         $result = DB::table('account_journal as aj')
@@ -426,7 +426,7 @@ class BankReconServices
                 }
             })
 
-            ->whereIn('aj.OBJECT_DATE', $dateList)
+            ->whereDate('aj.OBJECT_DATE', '=', $dateEntry)
             ->where('aj.ACCOUNT_ID', '=', $ACCOUNT_ID)
 
             ->whereNotExists(function ($query) {

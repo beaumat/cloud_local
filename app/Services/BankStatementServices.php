@@ -138,12 +138,14 @@ class BankStatementServices
     }
     public function getDetails(string $OBJECT_DATE, int $OBJECT_TYPE, int $OBJECT_ID)
     {
-        return BankStatementDetails::query()
+        $result = BankStatementDetails::query()
             ->select(['ID'])
             ->whereDate('DATE_TRANSACTION', $OBJECT_DATE)
             ->where('OBJECT_TYPE', $OBJECT_TYPE)
             ->where('OBJECT_ID', $OBJECT_ID)
             ->first();
+
+        return $result;
     }
     public function listDetails(int $BANK_STATEMENT_ID): array | Collection
     {
@@ -329,6 +331,49 @@ class BankStatementServices
             ->get();
 
         return $result;
+    }
+    public function getbankStatementReconUncleared(int $BANK_STATEMENT_ID, int $BANK_ACCOUNT_ID, $search): array | Collection
+    {
+
+        $result = BankStatementDetails::query()
+            ->select([
+                'bank_statement_details.ID',
+                'bank_statement_details.DATE_TRANSACTION',
+                'bank_statement_details.REFERENCE',
+                'bank_statement_details.DESCRIPTION',
+                'bank_statement_details.CHECK_NUMBER',
+                'bank_statement_details.DEBIT',
+                'bank_statement_details.CREDIT',
+                'bank_statement_details.BALANCE',
+                DB::raw($this->accountJournalSerivces->TX_CODE),
+                DB::raw($this->accountJournalSerivces->GetFullDescription()),
+                'aj.AMOUNT',
+                'l.NAME as LOCATION_NAME',
+            ])
+            ->leftJoin('account_journal as aj', function ($join) use (&$BANK_ACCOUNT_ID) {
+                $join->on('aj.OBJECT_ID', '=', 'bank_statement_details.OBJECT_ID');
+                $join->on('aj.OBJECT_TYPE', '=', 'bank_statement_details.OBJECT_TYPE');
+                $join->on('aj.ACCOUNT_ID', '=', DB::raw($BANK_ACCOUNT_ID));
+                $join->on('aj.AMOUNT', '!=', DB::raw(0));
+            })
+            ->leftJoin('object_type_map as o', 'o.ID', '=', 'bank_statement_details.OBJECT_TYPE')
+            ->leftJoin('document_type_map as d', 'd.ID', '=', 'o.DOCUMENT_TYPE')
+            ->leftJoin('location as l', 'l.ID', '=', 'aj.LOCATION_ID')
+            ->where('bank_statement_details.BANK_STATEMENT_ID', '=', $BANK_STATEMENT_ID)
+            ->whereNull('bank_statement_details.RECON_LOG')
+            ->when($search, function ($query) use (&$search) {
+                $query->where(function ($q) use (&$search) {
+                    $q->where('bank_statement_details.REFERENCE', 'like', '%' . $search . '%')
+                        ->orWhere('bank_statement_details.DESCRIPTION', 'like', '%' . $search . '%')
+                        ->orWhere('bank_statement_details.DEBIT', 'like', '%' . $search . '%')
+                        ->orWhere('bank_statement_details.CREDIT', 'like', '%' . $search . '%');
+                });
+            })
+
+            ->get();
+
+        return $result;
+
     }
 
     public function getSumDebitCredit(int $BANK_STATEMENT_ID, )

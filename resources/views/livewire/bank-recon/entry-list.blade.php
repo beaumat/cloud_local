@@ -6,7 +6,7 @@
                     style="width: 90%; max-width: none; height: auto; margin: auto; top: 50%; transform: translateY(-50%);">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h6 class="modal-title"> Collection & Deposit</h6>
+                            <h6 class="modal-title"> Transaction Entries</h6>
                             <button type="button" class="close" wire:click="closeModal">
                                 <span aria-hidden="true">&times;</span>
                             </button>
@@ -87,7 +87,7 @@
                                         </div>
                                     </div>
                                     <div class="col-3">
-                                        {{-- @livewire('BankRecon.BankReconDetails', ['ACCOUNT_RECONCILIATION_ID' => $ACCOUNT_RECONCILIATION_ID]) --}}
+
                                     </div>
                                 </div>
 
