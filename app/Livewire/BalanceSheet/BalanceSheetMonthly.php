@@ -99,19 +99,6 @@ class BalanceSheetMonthly extends Component
         $E_DEC   = (float) $dataIS['DEC'] + $e['DEC'];
         $E_TOTAL = (float) $dataIS['TOTAL'] + $e['TOTAL'];
 
-        // $E_JAN   = (float) $dataIS['JAN'] + $e['JAN'];
-        // $E_FEB   = (float) $dataIS['FEB'] + $e['FEB'];
-        // $E_MAR   = (float) $dataIS['MAR'] + $e['MAR'];
-        // $E_APR   = (float) $dataIS['APR'] + $e['APR'];
-        // $E_MAY   = (float) $dataIS['MAY'] + $e['MAY'];
-        // $E_JUN   = (float) $dataIS['JUN'] + $e['JUN'];
-        // $E_JUL   = (float) $dataIS['JUL'] + $e['JUL'];
-        // $E_AUG   = (float) $dataIS['AUG'] + $e['AUG'];
-        // $E_SEP   = (float) $dataIS['SEP'] + $e['SEP'];
-        // $E_OCT   = (float) $dataIS['OCT'] + $e['OCT'];
-        // $E_NOV   = (float) $dataIS['NOV'] + $e['NOV'];
-        // $E_DEC   = (float) $dataIS['DEC'] + $e['DEC'];
-        // $E_TOTAL = (float) $dataIS['TOTAL'] + $e['TOTAL'];
 
         $this->dataList[] = $this->getInsert(
             0,

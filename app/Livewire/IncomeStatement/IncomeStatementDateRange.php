@@ -1,12 +1,10 @@
 <?php
-
 namespace App\Livewire\IncomeStatement;
 
-use App\Exports\IncomeStatementExport;
+use App\Exports\DynamicExport;
 use App\Services\FinancialStatementServices;
 use App\Services\NumberServices;
 use Livewire\Attributes\On;
-use Livewire\Attributes\Reactive;
 use Livewire\Component;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -22,22 +20,22 @@ class IncomeStatementDateRange extends Component
     public function boot(FinancialStatementServices $financialStatementServices, NumberServices $numberServices)
     {
         $this->financialStatementServices = $financialStatementServices;
-        $this->numberServices = $numberServices;
+        $this->numberServices             = $numberServices;
     }
     #[On('income-date-range')]
     public function generate($result)
     {
-        $this->dataList = [];
-        $this->DATE_FROM = $result['DATE_FROM'];
-        $this->DATE_TO = $result['DATE_TO'];
+        $this->dataList    = [];
+        $this->DATE_FROM   = $result['DATE_FROM'];
+        $this->DATE_TO     = $result['DATE_TO'];
         $this->LOCATION_ID = $result['LOCATION_ID'];
 
         $revenueList = $this->financialStatementServices->getIncomeStatementAccountTypeByDate([10], $this->DATE_FROM, $this->DATE_TO, $this->LOCATION_ID, true);
-        $r = $this->SetData($revenueList, "Trading Income");
+        $r           = $this->SetData($revenueList, "Trading Income");
 
         $costList = $this->financialStatementServices->getIncomeStatementAccountTypeByDate([11], $this->DATE_FROM, $this->DATE_TO, $this->LOCATION_ID, false);
-        $c = $this->SetData($costList, "Cost of Sales");
-        $G_TOTAL = $r['TOTAL'] - $c['TOTAL'];
+        $c        = $this->SetData($costList, "Cost of Sales");
+        $G_TOTAL  = $r['TOTAL'] - $c['TOTAL'];
 
         $this->dataList[] = $this->getInsert(
             0,
@@ -46,51 +44,70 @@ class IncomeStatementDateRange extends Component
             $G_TOTAL != 0 ? $this->numberServices->AcctFormat($G_TOTAL) : '-'
         );
         $otherincome = $this->financialStatementServices->getIncomeStatementAccountTypeByDate([13], $this->DATE_FROM, $this->DATE_TO, $this->LOCATION_ID, true);
-        $i = $this->SetData($otherincome, "");
+        $i           = $this->SetData($otherincome, "");
 
         $expense = $this->financialStatementServices->getIncomeStatementAccountTypeByDate([12], $this->DATE_FROM, $this->DATE_TO, $this->LOCATION_ID, false);
-        $e = $this->SetData($expense, "Operating Expenses");
+        $e       = $this->SetData($expense, "Operating Expenses");
         // operating profit
         $OP_TOTAL = $G_TOTAL - $e['TOTAL'];
 
-        $this->dataList[] = $this->getInsert( 0, 'Operating Proft ', 'grand', $OP_TOTAL != 0 ? $this->numberServices->AcctFormat($OP_TOTAL) : '-' );
+        $this->dataList[] = $this->getInsert(0, 'Operating Proft ', 'grand', $OP_TOTAL != 0 ? $this->numberServices->AcctFormat($OP_TOTAL) : '-');
 
         $otherExpense = $this->financialStatementServices->getIncomeStatementAccountTypeByDate([14], $this->DATE_FROM, $this->DATE_TO, $this->LOCATION_ID, true);
-        $ex = $this->SetData($otherExpense, "");
+        $ex           = $this->SetData($otherExpense, "");
 
         // NET profit
         $NET_TOTAL = $OP_TOTAL + $i['TOTAL'] - $ex['TOTAL'];
 
-        $this->dataList[] = $this->getInsert( 0, 'Net Proft ', 'grand', $NET_TOTAL != 0 ? $this->numberServices->AcctFormat($NET_TOTAL) : '-' );
+        $this->dataList[] = $this->getInsert(0, 'Net Proft ', 'grand', $NET_TOTAL != 0 ? $this->numberServices->AcctFormat($NET_TOTAL) : '-');
 
     }
-    #[On('income-date-range-export')]
-    public function exporting() {
-        
-        return Excel::download(new IncomeStatementExport(
-            $this->dataList
-        ), 'income-statement-export.xlsx');
+    #[On('export-daily-request')]
+    public function export()
+    {
+
+        if (! $this->dataList) {
+            session()->flash('error', 'Please click geenerate first ');
+            return;
+        }
+        try {
+
+            $headers = ['ACCOUNT_NAME', 'TOTAL']; // Could be dynamic based on UI
+            $rowdata = [];
+            foreach ($this->dataList as $item) {
+                $rowdata[] = [
+                    'ACCOUNT_NAME' => $item['ACCOUNT_NAME'],
+                    'TOTAL'        => $item['TOTAL'],
+                ];
+            }
+
+            return Excel::download(new DynamicExport($headers, $rowdata), 'Income_statement_Summary.xlsx');
+
+        } catch (\Exception $e) {
+            dd($e->getMessage());
+            session()->flash('error', 'Error generating Excel: ' . $e->getMessage());
+        }
     }
     private function getInsert(int $ID, string $NAME, string $TYPE, string $TOTAL = ''): array
     {
 
         return [
-            'ACCOUNT_ID' => $ID,
+            'ACCOUNT_ID'   => $ID,
             'ACCOUNT_NAME' => $NAME,
             'ACCOUNT_TYPE' => $TYPE,
-            'TOTAL' => $TOTAL
+            'TOTAL'        => $TOTAL,
         ];
 
     }
     private function SetData($list, string $title): array
     {
 
-        $TOTAL = 0;
+        $TOTAL   = 0;
         $T_TOTAL = 0;
 
-        $TMP = -1;
+        $TMP      = -1;
         $TMP_NAME = "";
-        if ($title <> "") {
+        if ($title != "") {
             $this->dataList[] = $this->getInsert(0, $title, 'grand');
         }
         foreach ($list as $data) {
@@ -98,34 +115,34 @@ class IncomeStatementDateRange extends Component
 
             if ($TMP == -1) {
                 $this->dataList[] = $this->getInsert(0, ' ' . $data->TYPE_NAME, 'total');
-                $TMP_NAME = $data->TYPE_NAME;
-            } elseif ($TMP <> $data->TYPE) {
+                $TMP_NAME         = $data->TYPE_NAME;
+            } elseif ($TMP != $data->TYPE) {
                 $this->dataList[] = $this->getInsert(0, ' Total ' . $TMP_NAME, 'total', $T_TOTAL != 0 ? $this->numberServices->AcctFormat($T_TOTAL) : '-');
 
                 //CLEAR
-                $T_TOTAL = 0;
+                $T_TOTAL          = 0;
                 $this->dataList[] = $this->getInsert(0, ' ' . $data->TYPE_NAME, 'total');
-                $TMP_NAME = $data->TYPE_NAME;
+                $TMP_NAME         = $data->TYPE_NAME;
             }
             $this->dataList[] = $this->getInsert($data->ID, '   ' . $data->ACCOUNT_NAME, $data->TYPE_NAME, $data->TOTAL != 0 ? $this->numberServices->AcctFormat($data->TOTAL) : '-');
 
             $T_TOTAL += $data->TOTAL;
-            $TMP = (int) $data->TYPE;
+            $TMP     = (int) $data->TYPE;
 
         }
-        if ($TMP_NAME <> '') {
+        if ($TMP_NAME != '') {
             $this->dataList[] = $this->getInsert(0, ' Total ' . $TMP_NAME, 'total', $T_TOTAL != 0 ? $this->numberServices->AcctFormat($T_TOTAL) : '-');
         }
         //CLEAR
         $T_TOTAL = 0;
 
-        if ($title <> "") {
+        if ($title != "") {
             $this->dataList[] = $this->getInsert(0, 'Total ' . $title, 'grand', $TOTAL != 0 ? $this->numberServices->AcctFormat($TOTAL) : '-');
         }
 
         // return total
         return [
-            'TOTAL' => $TOTAL
+            'TOTAL' => $TOTAL,
         ];
 
     }

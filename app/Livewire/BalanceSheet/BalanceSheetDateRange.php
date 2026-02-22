@@ -56,14 +56,6 @@ class BalanceSheetDateRange extends Component
             session()->flash('error', 'Please click geenerate first ');
             return;
         }
-
-        //  return [
-        //     'ACCOUNT_ID'   => $ID,
-        //     'ACCOUNT_NAME' => $NAME,
-        //     'ACCOUNT_TYPE' => $TYPE,
-        //     'TOTAL'        => $TOTAL,
-        // ];
-
         try {
 
             $headers = ['ACCOUNT_NAME', 'TOTAL']; // Could be dynamic based on UI

@@ -93,7 +93,5 @@
             </div>
         </div>
     </section>
-    {{-- <script>
-        window.open("{{ $url }}", "_blank");
-    </script> --}}
+ 
 </div>

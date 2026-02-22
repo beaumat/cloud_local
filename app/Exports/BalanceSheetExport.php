@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Exports;
 
 use Maatwebsite\Excel\Concerns\FromCollection;
@@ -8,7 +7,7 @@ use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 class BalanceSheetExport implements FromCollection, ShouldAutoSize
 {
 
-    protected  $dataList = [];
+    protected $dataList = [];
 
     public function __construct($dataList)
     {
@@ -23,16 +22,16 @@ class BalanceSheetExport implements FromCollection, ShouldAutoSize
         $finalData = [];
 
         $headers = [
-            'ACCOUNT'    => 'ACCOUNT',
-            'AMOUNT'    => 'AMOUNT',
+            'ACCOUNT' => 'ACCOUNT',
+            'AMOUNT'  => 'AMOUNT',
         ];
 
         $finalData[] = array_values($headers);
 
         foreach ($this->dataList as $list) {
             $rowData = [
-                'ACCOUNT'    => $list['ACCOUNT'],
-                'AMOUNT'    => $list['AMOUNT'],
+                'ACCOUNT' => $list['ACCOUNT'],
+                'AMOUNT'  => $list['AMOUNT'],
             ];
 
             $finalData[] = array_values($rowData);

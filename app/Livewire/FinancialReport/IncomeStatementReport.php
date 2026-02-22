@@ -1,10 +1,6 @@
 <?php
-
 namespace App\Livewire\FinancialReport;
 
-use App\Exports\IncomeStatementExport;
-use App\Services\AccountJournalServices;
-use App\Services\AccountServices;
 use App\Services\DateServices;
 use App\Services\FinancialStatementServices;
 use App\Services\LocationServices;
@@ -13,7 +9,6 @@ use App\Services\UserServices;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
 use Livewire\Component;
-use Maatwebsite\Excel\Facades\Excel;
 
 #[Title('Income Statement Report')]
 class IncomeStatementReport extends Component
@@ -38,39 +33,36 @@ class IncomeStatementReport extends Component
         NumberServices $numberServices
     ) {
         $this->financialStatementServices = $financialStatementServices;
-        $this->dateServices = $dateServices;
-        $this->locationServices = $locationServices;
-        $this->userServices = $userServices;
-        $this->numberServices = $numberServices;
+        $this->dateServices               = $dateServices;
+        $this->locationServices           = $locationServices;
+        $this->userServices               = $userServices;
+        $this->numberServices             = $numberServices;
     }
     public function mount()
     {
-        $this->YEAR = $this->dateServices->NowYear();
-        $this->DATE_TO = $this->userServices->getTransactionDateDefault();
-        $this->DATE_FROM = $this->dateServices->GetFirstDay_Month($this->DATE_TO);
-        $this->LOCATION_ID = $this->userServices->getLocationDefault();
+        $this->YEAR         = $this->dateServices->NowYear();
+        $this->DATE_TO      = $this->userServices->getTransactionDateDefault();
+        $this->DATE_FROM    = $this->dateServices->GetFirstDay_Month($this->DATE_TO);
+        $this->LOCATION_ID  = $this->userServices->getLocationDefault();
         $this->locationList = $this->locationServices->getList();
+    }
+    public string $tab = "date";
+    #[On('select-tab')]
+    public function SelectTab($tab)
+    {
+        $this->tab = $tab;
     }
     public function generate()
     {
         $this->isDate = true;
-        $this->dispatch('call-back');
+        $this->dispatch('income-date-range', result: ['DATE_FROM' => $this->DATE_FROM, 'DATE_TO' => $this->DATE_TO, 'LOCATION_ID' => $this->LOCATION_ID]);
+
     }
-    public function generateYear()
+    public function generateMonthly()
     {
 
         $this->isDate = false;
-        $this->dispatch('call-back');
-
-    }
-    #[On('call-back')]
-    public function callBackMe()
-    {
-        if ($this->isDate) {
-            $this->dispatch('income-date-range', result: ['DATE_FROM' => $this->DATE_FROM, 'DATE_TO' => $this->DATE_TO, 'LOCATION_ID' => $this->LOCATION_ID]);
-        } else {
-            $this->dispatch('income-monthly', result: ['YEAR' => $this->YEAR,'LOCATION_ID' => $this->LOCATION_ID]);
-        }
+        $this->dispatch('income-monthly', result: ['YEAR' => $this->YEAR, 'LOCATION_ID' => $this->LOCATION_ID]);
 
     }
     public function updatedlocationid()
@@ -83,14 +75,13 @@ class IncomeStatementReport extends Component
         }
     }
 
-    public function export()
+    public function exportDaily()
     {
-        if ($this->isDate) {
-            $this->dispatch('income-date-range-export', result: ['DATE_FROM' => $this->DATE_FROM, 'DATE_TO' => $this->DATE_TO, 'LOCATION_ID' => $this->LOCATION_ID]);
-        } else {
-            $this->dispatch('income-monthly-export', result: ['YEAR' => $this->YEAR, 'LOCATION_ID' => $this->LOCATION_ID]);
-        }
-
+        $this->dispatch('export-daily-request');
+    }
+    public function exportMonthly()
+    {
+        $this->dispatch('export-monthly-request');
     }
     public function render()
     {

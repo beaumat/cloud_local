@@ -21,7 +21,11 @@ class IncomeStatementAccountDetails extends Component
     {
         $this->dataList = $this->accountJournalServices->getTransactionJournalViewer($id, $year, $month, $locationid);
     }
-
+    public function openDetails(int $JN)
+    {
+        $url = $this->accountJournalServices->getUrlBy($JN);
+        $this->js("window.open('$url', '_blank')");
+    }
     public function render()
     {
         return view('livewire.income-statement.income-statement-account-details');

@@ -53,23 +53,14 @@ class BalanceSheetReport extends Component
     public function generateMonthly()
     {
         $this->isDate = false;
-        $this->dispatch('proccess-balance');
+        $this->dispatch('balance-sheet-monthly', result: ['YEAR' => $this->YEAR, 'LOCATION_ID' => $this->LOCATION_ID]);
     }
     public function generate()
     {
         $this->isDate = true;
-        $this->dispatch('proccess-balance');
+        $this->dispatch('balance-sheet-date-range', result: ['DATE_FROM' => $this->DATE_FROM, 'DATE_TO' => $this->DATE_TO, 'LOCATION_ID' => $this->LOCATION_ID]);
+    }
 
-    }
-    #[On('proccess-balance')]
-    public function getData()
-    {
-        if ($this->isDate) {
-            $this->dispatch('balance-sheet-date-range', result: ['DATE_FROM' => $this->DATE_FROM, 'DATE_TO' => $this->DATE_TO, 'LOCATION_ID' => $this->LOCATION_ID]);
-        } else {
-            $this->dispatch('balance-sheet-monthly', result: ['YEAR' => $this->YEAR, 'LOCATION_ID' => $this->LOCATION_ID]);
-        }
-    }
     public function exportDaily()
     {
         $this->dispatch('export-daily-request');
