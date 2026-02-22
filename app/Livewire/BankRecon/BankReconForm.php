@@ -110,17 +110,6 @@ class BankReconForm extends Component
     {
         $this->SelectBank();
         $this->getBankStateRefresh();
-
-        // $data = $this->bankReconServices->HavePreviousHistory($this->ACCOUNT_ID, $this->LOCATION_ID);
-
-        // if ($data) {
-        //     $this->PREVIOUS_ID       = $data->ID;
-        //     $this->BEGINNING_BALANCE = $data->ENDING_BALANCE ?? 0;
-        //     return;
-        // }
-        // $this->PREVIOUS_ID       = 0;
-        // $this->BEGINNING_BALANCE = 0;
-
     }
     public function updatedBankStatementId()
     {

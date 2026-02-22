@@ -1,10 +1,12 @@
 <?php
 namespace App\Livewire\BalanceSheet;
 
+use App\Exports\DynamicExport;
 use App\Services\FinancialStatementServices;
 use App\Services\NumberServices;
 use Livewire\Attributes\On;
 use Livewire\Component;
+use Maatwebsite\Excel\Facades\Excel;
 
 class BalanceSheetMonthly extends Component
 {
@@ -83,7 +85,6 @@ class BalanceSheetMonthly extends Component
         $e          = $this->SetData($equityList, '', true, true);
         $dataIS     = $this->getIncomeStatement(); // Current Year Earnings
 
-    
         $E_JAN   = (float) $dataIS['JAN'] + $e['JAN'];
         $E_FEB   = (float) $dataIS['FEB'] + $e['FEB'];
         $E_MAR   = (float) $dataIS['MAR'] + $e['MAR'];
@@ -98,8 +99,6 @@ class BalanceSheetMonthly extends Component
         $E_DEC   = (float) $dataIS['DEC'] + $e['DEC'];
         $E_TOTAL = (float) $dataIS['TOTAL'] + $e['TOTAL'];
 
-
-
         // $E_JAN   = (float) $dataIS['JAN'] + $e['JAN'];
         // $E_FEB   = (float) $dataIS['FEB'] + $e['FEB'];
         // $E_MAR   = (float) $dataIS['MAR'] + $e['MAR'];
@@ -113,9 +112,6 @@ class BalanceSheetMonthly extends Component
         // $E_NOV   = (float) $dataIS['NOV'] + $e['NOV'];
         // $E_DEC   = (float) $dataIS['DEC'] + $e['DEC'];
         // $E_TOTAL = (float) $dataIS['TOTAL'] + $e['TOTAL'];
-
-
-
 
         $this->dataList[] = $this->getInsert(
             0,
@@ -176,18 +172,18 @@ class BalanceSheetMonthly extends Component
 
         foreach ($list as $data) {
 
-            $JAN += $data->JAN;
-            $FEB += $data->FEB;
-            $MAR += $data->MAR;
-            $APR += $data->APR;
-            $MAY += $data->MAY;
-            $JUN += $data->JUN;
-            $JUL += $data->JUL;
-            $AUG += $data->AUG;
-            $SEP += $data->SEP;
-            $OCT += $data->OCT;
-            $NOV += $data->NOV;
-            $DEC += $data->DEC;
+            $JAN   += $data->JAN;
+            $FEB   += $data->FEB;
+            $MAR   += $data->MAR;
+            $APR   += $data->APR;
+            $MAY   += $data->MAY;
+            $JUN   += $data->JUN;
+            $JUL   += $data->JUL;
+            $AUG   += $data->AUG;
+            $SEP   += $data->SEP;
+            $OCT   += $data->OCT;
+            $NOV   += $data->NOV;
+            $DEC   += $data->DEC;
             $TOTAL += $data->TOTAL;
 
             if ($TMP == -1) {
@@ -261,18 +257,18 @@ class BalanceSheetMonthly extends Component
                 );
             }
 
-            $T_JAN += $data->JAN;
-            $T_FEB += $data->FEB;
-            $T_MAR += $data->MAR;
-            $T_APR += $data->APR;
-            $T_MAY += $data->MAY;
-            $T_JUN += $data->JUN;
-            $T_JUL += $data->JUL;
-            $T_AUG += $data->AUG;
-            $T_SEP += $data->SEP;
-            $T_OCT += $data->OCT;
-            $T_NOV += $data->NOV;
-            $T_DEC += $data->DEC;
+            $T_JAN   += $data->JAN;
+            $T_FEB   += $data->FEB;
+            $T_MAR   += $data->MAR;
+            $T_APR   += $data->APR;
+            $T_MAY   += $data->MAY;
+            $T_JUN   += $data->JUN;
+            $T_JUL   += $data->JUL;
+            $T_AUG   += $data->AUG;
+            $T_SEP   += $data->SEP;
+            $T_OCT   += $data->OCT;
+            $T_NOV   += $data->NOV;
+            $T_DEC   += $data->DEC;
             $T_TOTAL += $data->TOTAL;
 
             $TMP = (int) $data->TYPE;
@@ -452,6 +448,49 @@ class BalanceSheetMonthly extends Component
             'DEC'   => $NET_DEC,
             'TOTAL' => $NET_TOTAL,
         ];
+    }
+
+    #[On('export-monthly-request')]
+    public function export()
+    {
+
+        if (! $this->dataList) {
+            session()->flash('error', 'Please click geenerate first ');
+            return;
+        }
+
+      
+
+        try {
+
+            $headers = ['ACCOUNT_NAME', 'JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC', 'TOTAL']; // Could be dynamic based on UI
+            $rowdata = [];
+            foreach ($this->dataList as $item) {
+                $rowdata[] = [
+
+                    'ACCOUNT_NAME' => $item['ACCOUNT_NAME'],
+                    'JAN'          => $item['JAN'],
+                    'FEB'          => $item['FEB'],
+                    'MAR'          => $item['MAR'],
+                    'APR'          => $item['APR'],
+                    'MAY'          => $item['MAY'],
+                    'JUN'          => $item['JUN'],
+                    'JUL'          => $item['JUL'],
+                    'AUG'          => $item['AUG'],
+                    'SEP'          => $item['SEP'],
+                    'OCT'          => $item['OCT'],
+                    'NOV'          => $item['NOV'],
+                    'DEC'          => $item['DEC'],
+                    'TOTAL'        => $item['TOTAL'],
+                ];
+            }
+
+            return Excel::download(new DynamicExport($headers, $rowdata), 'Balance_Sheet_ByMonthly.xlsx');
+
+        } catch (\Exception $e) {
+            dd($e->getMessage());
+            session()->flash('error', 'Error generating Excel: ' . $e->getMessage());
+        }
     }
 
     private function getInsert(int $ID, string $NAME, string $TYPE, string $JAN = '', string $FEB = '', string $MAR = '', string $APR = '', string $MAY = '', string $JUN = '', string $JUL = '', string $AUG = '', string $SEP = '', string $OCT = '', string $NOV = '', string $DEC = '', string $TOTAL = ''): array

@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Livewire\FixedAssetItem;
 
 use App\Services\FixedAssetItemServices;
@@ -15,25 +14,25 @@ class FixedAssetItemList extends Component
 {
     use WithPagination;
     protected $paginationTheme = 'bootstrap';
-    protected $queryString = ['search' => ['except' => '']];
-    public $search = '';
+    protected $queryString     = ['search' => ['except' => '']];
+    public $search             = '';
     public $LOCATION_ID;
     public $locationList = [];
-    public int $perPage = 40;
+    public int $perPage  = 40;
     private $locationServices;
     private $userServices;
     private $fixedAssetItemServices;
     public function boot(LocationServices $locationServices, UserServices $userServices, FixedAssetItemServices $fixedAssetItemServices)
     {
 
-        $this->locationServices = $locationServices;
-        $this->userServices = $userServices;
+        $this->locationServices       = $locationServices;
+        $this->userServices           = $userServices;
         $this->fixedAssetItemServices = $fixedAssetItemServices;
     }
     public function mount()
     {
         $this->locationList = $this->locationServices->getList();
-        $this->LOCATION_ID = $this->userServices->getLocationDefault();
+        $this->LOCATION_ID  = $this->userServices->getLocationDefault();
     }
     public function edit(int $id)
     {
@@ -57,14 +56,14 @@ class FixedAssetItemList extends Component
         session()->forget('message');
         session()->forget('error');
     }
-    
+
     #[On('refresh-list')]
     public function render()
     {
         $items = $this->fixedAssetItemServices->Search($this->search, $this->LOCATION_ID, 50);
         return view('livewire.fixed-asset-item.fixed-asset-item-list', ['items' => $items]);
     }
-        public function updatedlocationid()
+    public function updatedlocationid()
     {
         try {
             $this->userServices->SwapLocation($this->LOCATION_ID);

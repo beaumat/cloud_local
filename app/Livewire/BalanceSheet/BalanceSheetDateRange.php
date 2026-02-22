@@ -1,10 +1,12 @@
 <?php
 namespace App\Livewire\BalanceSheet;
 
+use App\Exports\DynamicExport;
 use App\Services\FinancialStatementServices;
 use App\Services\NumberServices;
 use Livewire\Attributes\On;
 use Livewire\Component;
+use Maatwebsite\Excel\Facades\Excel;
 
 class BalanceSheetDateRange extends Component
 {
@@ -44,6 +46,41 @@ class BalanceSheetDateRange extends Component
             $TOTAL != 0 ? $this->numberServices->AcctFormat($TOTAL) : '-'
         );
         $this->equitySide();
+    }
+
+    #[On('export-daily-request')]
+    public function export()
+    {
+
+        if (! $this->dataList) {
+            session()->flash('error', 'Please click geenerate first ');
+            return;
+        }
+
+        //  return [
+        //     'ACCOUNT_ID'   => $ID,
+        //     'ACCOUNT_NAME' => $NAME,
+        //     'ACCOUNT_TYPE' => $TYPE,
+        //     'TOTAL'        => $TOTAL,
+        // ];
+
+        try {
+
+            $headers = ['ACCOUNT_NAME', 'TOTAL']; // Could be dynamic based on UI
+            $rowdata = [];
+            foreach ($this->dataList as $item) {
+                $rowdata[] = [
+                    'ACCOUNT_NAME' => $item['ACCOUNT_NAME'],
+                    'TOTAL'        => $item['TOTAL'],
+                ];
+            }
+
+            return Excel::download(new DynamicExport($headers, $rowdata), 'Balance_Sheet_Summary.xlsx');
+
+        } catch (\Exception $e) {
+            dd($e->getMessage());
+            session()->flash('error', 'Error generating Excel: ' . $e->getMessage());
+        }
     }
     private function equitySide()
     {

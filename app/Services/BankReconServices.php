@@ -315,8 +315,8 @@ class BankReconServices
                 DB::raw($this->accountJournalServices->TX_NOTES),
                 DB::raw($this->accountJournalServices->TX_PO),
                 'l.NAME as LOCATION_NAME',
-                'a.BANK_ACCOUNT_NO'
-                
+                'a.BANK_ACCOUNT_NO',
+
             ])
             ->join('account_reconciliation as recon', 'recon.ID', '=', 'recon_item.ACCOUNT_RECONCILIATION_ID')
             ->leftJoin('account_journal as aj', function ($join) {
@@ -327,7 +327,7 @@ class BankReconServices
                 $join->on('aj.ACCOUNT_ID', '=', 'recon.ACCOUNT_ID');
 
             })
-            ->leftJoin('account as a','a.ID','=','aj.ACCOUNT_ID')
+            ->leftJoin('account as a', 'a.ID', '=', 'aj.ACCOUNT_ID')
             ->leftJoin('location as l', 'l.ID', '=', 'aj.LOCATION_ID')
             ->leftJoin('object_type_map as o', 'o.ID', '=', 'aj.OBJECT_TYPE')
             ->leftJoin('document_type_map as d', 'd.ID', '=', 'o.DOCUMENT_TYPE')
@@ -384,7 +384,7 @@ class BankReconServices
                 'OBJECT_ID'   => $result->OBJECT_ID,
                 'OBJECT_TYPE' => $result->OBJECT_TYPE,
                 'OBJECT_DATE' => $result->OBJECT_DATE,
-                'ENTRY_TYPE' => $result->ENTRY_TYPE,
+                'ENTRY_TYPE'  => $result->ENTRY_TYPE,
                 'IS_EXIST'    => true,
             ];
         }
@@ -393,7 +393,7 @@ class BankReconServices
             'OBJECT_ID'   => '',
             'OBJECT_TYPE' => '',
             'OBJECT_DATE' => '',
-            'ENTRY_TYPE' =>'',
+            'ENTRY_TYPE'  => '',
             'IS_EXIST'    => false,
         ];
 
@@ -428,7 +428,7 @@ class BankReconServices
 
             ->whereIn('aj.OBJECT_DATE', $dateList)
             ->where('aj.ACCOUNT_ID', '=', $ACCOUNT_ID)
-           
+
             ->whereNotExists(function ($query) {
                 $query->select(DB::raw(1))
                     ->from('account_reconciliation_items as r')

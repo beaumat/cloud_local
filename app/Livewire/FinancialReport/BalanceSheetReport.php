@@ -1,15 +1,12 @@
 <?php
-
 namespace App\Livewire\FinancialReport;
 
-use App\Exports\BalanceSheetExport;
 use App\Services\DateServices;
 use App\Services\LocationServices;
 use App\Services\UserServices;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
 use Livewire\Component;
-use Maatwebsite\Excel\Facades\Excel;
 
 #[Title('Balance Sheet Report')]
 class BalanceSheetReport extends Component
@@ -20,12 +17,18 @@ class BalanceSheetReport extends Component
     public int $LOCATION_ID;
     public int $YEAR;
     public $locationList = [];
-    public $dataList = [];
+    public $dataList     = [];
 
     private $locationServices;
     private $userServices;
     private $dateServices;
 
+    public string $tab = "date";
+    #[On('select-tab')]
+    public function SelectTab($tab)
+    {
+        $this->tab = $tab;
+    }
     public function boot(
 
         LocationServices $locationServices,
@@ -35,16 +38,16 @@ class BalanceSheetReport extends Component
     ) {
 
         $this->locationServices = $locationServices;
-        $this->userServices = $userServices;
-        $this->dateServices = $dateServices;
+        $this->userServices     = $userServices;
+        $this->dateServices     = $dateServices;
 
     }
     public function mount()
     {
-        $this->YEAR = $this->dateServices->NowYear();
-        $this->DATE_TO = $this->userServices->getTransactionDateDefault();
-        $this->DATE_FROM = $this->dateServices->GetFirstDay_Year($this->DATE_TO);
-        $this->LOCATION_ID = $this->userServices->getLocationDefault();
+        $this->YEAR         = $this->dateServices->NowYear();
+        $this->DATE_TO      = $this->userServices->getTransactionDateDefault();
+        $this->DATE_FROM    = $this->dateServices->GetFirstDay_Year($this->DATE_TO);
+        $this->LOCATION_ID  = $this->userServices->getLocationDefault();
         $this->locationList = $this->locationServices->getList();
     }
     public function generateMonthly()
@@ -67,18 +70,25 @@ class BalanceSheetReport extends Component
             $this->dispatch('balance-sheet-monthly', result: ['YEAR' => $this->YEAR, 'LOCATION_ID' => $this->LOCATION_ID]);
         }
     }
-    public function export()
+    public function exportDaily()
     {
-        if (!$this->dataList) {
-            session()->flash('error', 'Please generate first.');
-            return;
-        }
-        return Excel::download(new BalanceSheetExport(
-            $this->dataList
-        ), 'balance-sheet-export.xlsx');
+        $this->dispatch('export-daily-request');
+    }
+    public function exportMonthly()
+    {
+        $this->dispatch('export-monthly-request');
     }
     public function render()
     {
         return view('livewire.financial-report.balance-sheet-report');
+    }
+    public function updatedlocationid()
+    {
+        try {
+            $this->userServices->SwapLocation($this->LOCATION_ID);
+        } catch (\Exception $e) {
+            $errorMessage = 'Error occurred: ' . $e->getMessage();
+            session()->flash('error', $errorMessage);
+        }
     }
 }
