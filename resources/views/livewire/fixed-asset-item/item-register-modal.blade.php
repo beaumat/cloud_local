@@ -1,6 +1,6 @@
 <div>
     <button wire:click="openModal" class="btn btn-success btn-xs text-xs w-100 ">
-        <i class="fa fa-plus" aria-hidden="true"></i>
+        <i class="fa fa-plus" aria-hidden="true"></i> NEW ASSET
     </button>
 
     @if ($showModal)

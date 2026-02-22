@@ -1,6 +1,7 @@
 <?php
 namespace App\Livewire\FixedAssetItem;
 
+use App\Services\DepreciationServices;
 use App\Services\FixedAssetItemServices;
 use App\Services\LocationServices;
 use App\Services\UserServices;
@@ -22,12 +23,16 @@ class FixedAssetItemList extends Component
     private $locationServices;
     private $userServices;
     private $fixedAssetItemServices;
-    public function boot(LocationServices $locationServices, UserServices $userServices, FixedAssetItemServices $fixedAssetItemServices)
-    {
+    private $depreciationServices;
+    public function boot(LocationServices $locationServices,
+        UserServices $userServices,
+        FixedAssetItemServices $fixedAssetItemServices,
+        DepreciationServices $depreciationServices) {
 
         $this->locationServices       = $locationServices;
         $this->userServices           = $userServices;
         $this->fixedAssetItemServices = $fixedAssetItemServices;
+        $this->depreciationServices   = $depreciationServices;
     }
     public function mount()
     {
@@ -38,9 +43,19 @@ class FixedAssetItemList extends Component
     {
         $this->dispatch('open-asset-item', result: ['ID' => $id]);
     }
+    public function dep(int $id)
+    {
+        $this->dispatch('open-depreciation', result: ['ID' => $id]);
+    }
     public function delete($id)
     {
         try {
+
+            if ($this->depreciationServices->IsFixedAssetAlreadyDepreciation($id)) {
+                session()->flash('error', 'This fixed asset cannot be deleted because it has already been depreciated.');
+                return;
+            }
+
             $this->fixedAssetItemServices->Delete($id);
             session()->flash('message', 'Successfully deleted.');
         } catch (\Exception $e) {

@@ -57,13 +57,19 @@
                                         <th>UNIT</th>
                                         <th>P.O No.</th>
                                         <th>SERIAL No.</th>
-                                        <th class="text-center">YEAR PURCHASE</th>
+                                        <th class="text-left">P.O DATE</th>
                                         <th class="text-center">YEAR MODEL</th>
                                         <th class="text-center">QTY</th>
-                                        <th>ACQUISITION COST</th>
+                                        <th>ACQ. COST</th>
                                         <th class="text-center">USEFUL LIFE</th>
                                         <th>LOCATION</th>
-                                        <th class="text-center">Inactive</th>
+                                        <th>YEARLY</th>
+                                        <th>MONTHLY</th>
+
+                                        <th class="bg-cyan">DEP.UNTIL</th>
+                                        <th class="bg-purple">DEP.COUNT</th>
+                                        <th class="bg-orange">DEP.REMAIN</th>
+                                        <th class="text-center">INACTIVE</th>
                                         <th class="text-center col-1 bg-success">
                                             @can('items.create')
                                                 @livewire('FixedAssetItem.ItemRegisterModal', ['LOCATION_ID' => $LOCATION_ID])
@@ -80,15 +86,23 @@
                                             <td>{{ $list->ITEM_CODE }}</td>
                                             <td>{{ $list->ITEM_NAME }}</td>
                                             <td>{{ $list->UNIT_NAME }}</td>
-
                                             <td>{{ $list->PO_NUMBER }}</td>
                                             <td>{{ $list->SERIAL_NO }}</td>
-                                            <td class="text-center">{{ $list->YEAR_PURCHASE }}</td>
+                                            <td> {{ date('m/d/Y', strtotime($list->PO_DATE)) }}</td>
+
                                             <td class="text-center">{{ $list->YEAR_MODEL }}</td>
                                             <td class="text-center">{{ $list->QUANTITY }}</td>
                                             <td class="text-right">{{ number_format($list->AQ_COST, 2) }}</td>
                                             <td class="text-center">{{ $list->USEFUL_LIFE }}</td>
                                             <td>{{ $list->LOCATION_NAME }}</td>
+                                            <td class="text-right">{{ number_format($list->PER_YEAR, 2) }}</td>
+                                            <td class="text-right">{{ number_format($list->PER_MONTH, 2) }}</td>
+
+                                            <td class="text-center">{{ number_format($list->DEPRECIATION_UNTIL, 0) }}
+                                            <td class="text-center">{{ number_format($list->DEPRECIATION_COUNT, 0) }}
+                                            <td class="text-center">
+                                                {{ number_format($list->DEPRECIATION_UNTIL - $list->DEPRECIATION_COUNT, 0) }}
+                                            </td>
                                             <td class="text-center">
                                                 @if ($list->INACTIVE)
                                                     Yes
@@ -98,13 +112,20 @@
                                             </td>
                                             <td>
                                                 <div class="row">
-                                                    <div class="col-6">
+                                                    <div class="col-4">
                                                         <button class="btn btn-primary btn-xs w-100"
                                                             wire:click='edit({{ $list->ID }})'>
                                                             <i class="fa fa-pencil" aria-hidden="true"></i>
                                                         </button>
                                                     </div>
-                                                    <div class="col-6">
+                                                    <div class="col-4">
+                                                        <button class="btn btn-warning btn-xs w-100"
+                                                            wire:click='dep({{ $list->ID }})'>
+                                                            <i class="fa fa-eye" aria-hidden="true"></i>
+                                                        </button>
+                                                    </div>
+
+                                                    <div class="col-4">
                                                         <button wire:confirm='Are you sure to delete?'
                                                             class="btn btn-danger btn-xs w-100"
                                                             wire:click='delete({{ $list->ID }})'>
@@ -127,4 +148,5 @@
         </div>
     </section>
     @livewire('FixedAssetItem.FixedAssetItemForm')
+    @livewire('FixedAssetItem.FixedAssetDepreciation')
 </div>

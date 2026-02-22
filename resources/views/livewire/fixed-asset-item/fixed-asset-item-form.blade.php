@@ -23,11 +23,7 @@
                                     <livewire:text-input name="SERIAL_NO" titleName="Serial No." wire:model='SERIAL_NO'
                                         :vertical="false" :isDisabled="false" />
                                 </div>
-                                {{-- <div class="col-3">
-                                    <livewire:select-option name="ACCOUNT_ID2" titleName="Depreciation Account"
-                                        :options="$accountList" :zero="true" :isDisabled="false"
-                                        wire:model='DEPRECIATION_ACCOUNT_ID' />
-                                </div> --}}
+                              
                                 <div class="col-3">
                                     <livewire:select-option name="ACCOUNT_ID1" titleName="Accumulated Account"
                                         :options="$accountList" :zero="true" :isDisabled="false"
@@ -51,7 +47,7 @@
                                         :isDisabled="false" />
                                 </div>
                                 <div class="col-4"></div>
-                                <div class="col-3">
+                                <div class="col-2">
                                     <livewire:date-input name="PO_DATE" titleName="Purchase Order Date"
                                         wire:model='PO_DATE' :isDisabled="false" />
                                 </div>

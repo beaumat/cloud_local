@@ -116,9 +116,6 @@ class DepreciationServices
             ->where('FIXED_ASSET_ITEM_ID', '=', $FIXED_ASSET_ITEM_ID)
             ->count();
 
-
-
-            
         return $itemCount;
     }
     private function IsExist(int $location_id): bool
@@ -307,5 +304,28 @@ class DepreciationServices
             ->get();
 
         return $result;
+    }
+    public function IsFixedAssetAlreadyDepreciation(int $FIXED_ASSET_ITEM_ID): bool
+    {
+        return DepreciationItems::query()
+            ->where('FIXED_ASSET_ITEM_ID', '=', $FIXED_ASSET_ITEM_ID)
+            ->exists();
+    }
+
+    public function ShowAssetHistory(int $FIXED_ASSET_ITEM_ID)
+    {
+        return DepreciationItems::query()
+            ->select([
+                'd.ID',
+                'd.CODE',
+                'd.DATE',
+                's.DESCRIPTION as STATUS',
+                'depreciation_items.AMOUNT',
+            ])
+            ->join('depreciation as d', 'd.ID', '=', 'depreciation_items.DEPRECIATION_ID')
+            ->join('document_status_map as s', 's.ID', '=', 'd.STATUS')
+            ->where('depreciation_items.FIXED_ASSET_ITEM_ID', '=', $FIXED_ASSET_ITEM_ID)
+            ->orderBy('d.DATE', 'asc')
+            ->get();
     }
 }
