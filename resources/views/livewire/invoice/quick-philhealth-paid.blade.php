@@ -21,12 +21,16 @@
                             <div class="row">
                                 <div class="col-md-12 mb-2">
                                     <div class="row">
-                                        <div class="col-md-9">
+                                        <div class="col-md-8">
                                             <div class="mt-0">
                                                 <label class="text-sm">Search:</label>
                                                 <input type="text" wire:model.live.debounce.150ms='search'
                                                     class="w-100 form-control form-control-sm" placeholder="Search" />
                                             </div>
+                                        </div>
+                                        <div class="col-2">
+                                            <livewire:checkbox-input name="SHOW_PAID" titleName="Show Paid"
+                                                wire:model.live='showPaid' :isDisabled="false" />
                                         </div>
                                         <div class="col-md-3">
                                             <div class="mt-0">
@@ -57,7 +61,6 @@
                                     <th>Patient</th>
                                     <th>Nephro</th>
                                     <th>Amount</th>
-
                                     <th>Location</th>
                                     <th>Action</th>
                                 </thead>

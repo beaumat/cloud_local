@@ -379,59 +379,7 @@ class QuickPhilhealthPaidPanel extends Component
             }
         }
     }
-    // private function setUpdateForPhilhealthPayment($INVOICE_ID)
-    // {
-    //     // TOBE CHECKED tommorow
-    //     $data = $this->invoiceServices->get($INVOICE_ID);
-    //     if ($data) {
-    //         $total = $this->invoiceServices->getPaid($INVOICE_ID);
-    //         $Stats = $this->philHealthServices->UpdatePayment($data->TRANSACTION_REF_ID, $total);
-    //         if ($Stats == 11) {
-    //             $PAYMENT_ID = $this->invoiceServices->getPaymentIdVIaInvoice($INVOICE_ID);
-    //             if ($PAYMENT_ID > 0) {
-    //                 $dataPayment = $this->paymentServices->get($PAYMENT_ID);
-    //                 if ($dataPayment) {
-    //                     $PATIENT_PAYMENT_ID = $this->patientPaymentServices->PH_exists($data->TRANSACTION_REF_ID);
-    //                     if ($PATIENT_PAYMENT_ID == 0) {
-    //                         $PATIENT_PAYMENT_ID = $this->patientPaymentServices->PH_Store(
-    //                             $data->TRANSACTION_REF_ID,
-    //                             $data->AMOUNT,
-    //                             $dataPayment->RECEIPT_REF_NO,
-    //                             $dataPayment->DATE,
-    //                             ""
-    //                         );
-    //                     } else {
-    //                         $this->patientPaymentServices->PH_Update(
-    //                             $PATIENT_PAYMENT_ID,
-    //                             $data->TRANSACTION_REF_ID,
-    //                             $data->AMOUNT,
-    //                             $dataPayment->RECEIPT_REF_NO,
-    //                             $dataPayment->DATE,
-    //                             ""
-    //                         );
-    //                     }
-
-    //                     $summaryList = $this->hemoServices->GetSummary($this->CUSTOMER_ID, $this->LOCATION_ID, $this->PH_DATE_ADMITTED, $this->PH_DATE_DISCHARGED);
-    //                     foreach ($summaryList as $sumList) {
-    //                         $PP_ITEM_ID = $this->patientPaymentServices->PaymentChargesExist($PATIENT_PAYMENT_ID, $sumList->SCI_ID);
-    //                         if ($PP_ITEM_ID > 0) {
-    //                             $this->patientPaymentServices->PaymentChargesUpdate($PP_ITEM_ID, $PATIENT_PAYMENT_ID, $sumList->SCI_ID, 0, $sumList->AMOUNT);
-    //                         } else {
-    //                             $this->patientPaymentServices->PaymentChargeStore($PATIENT_PAYMENT_ID, $sumList->SCI_ID, 0, $sumList->AMOUNT, 0, 0);
-    //                         }
-    //                         $this->serviceChargeServices->updateServiceChargesItemPaid($sumList->SCI_ID);
-    //                         $this->serviceChargeServices->updateServiceChargesBalance($sumList->SERVICE_CHARGES_ID);
-
-    //                     }
-    //                 }
-
-    //             }
-
-    //         }
-
-    //     }
-
-    // }
+   
     public function render()
     {
         return view('livewire.invoice.quick-philhealth-paid-panel');

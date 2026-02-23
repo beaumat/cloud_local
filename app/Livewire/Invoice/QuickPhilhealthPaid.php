@@ -20,6 +20,7 @@ class QuickPhilhealthPaid extends Component
     public $locationid;
     public $locationList = [];
     public $search;
+    public bool $showPaid = false;
     public bool $showModal = false;
     private $philHealthServices;
     private $paymentServices;
@@ -64,7 +65,7 @@ class QuickPhilhealthPaid extends Component
     public function render()
     {
 
-        $data = $this->philHealthServices->getLHIO_List($this->search, $this->locationid);
+        $data = $this->philHealthServices->getLHIO_List($this->search, $this->showPaid, $this->locationid);
 
         return view('livewire.invoice.quick-philhealth-paid', ['dataList' => $data]);
 

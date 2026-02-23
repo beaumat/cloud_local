@@ -1321,7 +1321,7 @@ class PhilHealthServices
         return $result;
     }
 
-    public function getLHIO_List($search, int $LOCATION_ID): object
+    public function getLHIO_List($search, bool $isPaid, int $LOCATION_ID): object
     {
         $result = DB::table('philhealth as ph')
             ->select([
@@ -1343,6 +1343,12 @@ class PhilHealthServices
                     $join->where('l.ID', $LOCATION_ID);
                 }
             })
+            ->when($isPaid == true,function ($query) {
+                $query->where('ph.AMOUNT','>',0);  
+            }) 
+             ->when($isPaid == false,function ($query) {
+                $query->where('ph.AMOUNT','=',0);  
+            }) 
             ->whereYear('ph.DATE_DISCHARGED', '>=', 2026)
             ->whereNotNull('ph.AR_NO')
             ->when($search, function ($query) use (&$search) {
@@ -1352,6 +1358,7 @@ class PhilHealthServices
                         ->orWhere('ph.AR_NO', 'like', '%' . $search . '%');
                 });
             })
+            ->orderBy('ph.AR_NO')
             ->paginate(15);
 
         return $result;
