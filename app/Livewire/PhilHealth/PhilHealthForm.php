@@ -167,17 +167,22 @@ class PhilHealthForm extends Component
     }
     public function print()
     {
+        if( $this->ID == 0) {
+
+        return;
+        }
+
 
         $ds = $this->philHealthServices->get($this->ID);
         if ($ds) {
-            if (! empty($ds->AR_NO)) {
-                session()->flash('error', 'cannot be print. this document already set AR info');
-                return;
-            }
-            if (floatval($ds->PAYMENT_AMOUNT ?? 0) > 0) {
-                session()->flash('error', 'cannot be print. this document having a payment collection');
-                return;
-            }
+            // if (! empty($ds->AR_NO)) {
+            //     session()->flash('error', 'cannot be print. this document already set AR info');
+            //     return;
+            // }
+            // if (floatval($ds->PAYMENT_AMOUNT ?? 0) > 0) {
+            //     session()->flash('error', 'cannot be print. this document having a payment collection');
+            //     return;
+            // }
 
             // restriction end
             $data = [

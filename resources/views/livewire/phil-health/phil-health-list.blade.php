@@ -163,7 +163,7 @@ use App\Services\UserServices;
                                                     class="btn btn-xs btn-info">
                                                     <i class="fas fa-eye" aria-hidden="true"></i>
                                                 </a>
-                                                @if ($list->PAYMENT_AMOUNT == 0 && $list->IN_PROGRESS == false && UserServices::GetUserRightAccess('patient.philhealth.print'))
+                                                @if (UserServices::GetUserRightAccess('patient.philhealth.print'))
                                                     <span class="btn btn-xs btn-primary" type="button"
                                                         title="Active Print" wire:click='print({{ $list->ID }})'>
                                                         <i class="fa fa-print" aria-hidden="true"></i>
