@@ -21,17 +21,14 @@
                             <div class="row">
                                 <div class="col-md-12 mb-2">
                                     <div class="row">
-                                        <div class="col-md-8">
+                                        <div class="col-md-7">
                                             <div class="mt-0">
                                                 <label class="text-sm">Search:</label>
                                                 <input type="text" wire:model.live.debounce.150ms='search'
                                                     class="w-100 form-control form-control-sm" placeholder="Search" />
                                             </div>
                                         </div>
-                                        <div class="col-2">
-                                            <livewire:checkbox-input name="SHOW_PAID" titleName="Show Paid"
-                                                wire:model.live='showPaid' :isDisabled="false" />
-                                        </div>
+
                                         <div class="col-md-3">
                                             <div class="mt-0">
                                                 <label class="text-sm">Location:</label>
@@ -45,6 +42,12 @@
                                                         </option>
                                                     @endforeach
                                                 </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-2">
+                                            <div class="mt-4">
+                                                <livewire:checkbox-input name="SHOW_PAID" titleName="Show Paid"
+                                                    wire:model.live='showPaid' :isDisabled="false" />
                                             </div>
                                         </div>
                                     </div>
@@ -62,7 +65,9 @@
                                     <th>Nephro</th>
                                     <th>Amount</th>
                                     <th>Location</th>
-                                    <th>Action</th>
+                                    @if (!$showPaid)
+                                        <th>Action</th>
+                                    @endif
                                 </thead>
                                 <tbody>
                                     @foreach ($dataList as $list)
@@ -83,10 +88,12 @@
                                             <td class="text-right">{{ number_format($list->AMOUNT, 2) }}</td>
                                             </td>
                                             <td>{{ $list->LOCATION_NAME }}</td>
-                                            <td>
-                                                <button class="btn btn-xs btn-success w-100"
-                                                    wire:click='makePaidNew({{ $list->PHILHEALTH_ID }})'>Paid</button>
-                                            </td>
+                                            @if (!$showPaid)
+                                                <td>
+                                                    <button class="btn btn-xs btn-success w-100"
+                                                        wire:click='makePaidNew({{ $list->PHILHEALTH_ID }})'>Paid</button>
+                                                </td>
+                                            @endif
                                         </tr>
                                     @endforeach
                                 </tbody>

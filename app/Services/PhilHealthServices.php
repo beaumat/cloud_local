@@ -1344,10 +1344,10 @@ class PhilHealthServices
                 }
             })
             ->when($isPaid == true,function ($query) {
-                $query->where('ph.AMOUNT','>',0);  
+                $query->where('ph.PAYMENT_AMOUNT','>',0);  
             }) 
              ->when($isPaid == false,function ($query) {
-                $query->where('ph.AMOUNT','=',0);  
+                $query->where('ph.PAYMENT_AMOUNT','=',0);  
             }) 
             ->whereYear('ph.DATE_DISCHARGED', '>=', 2026)
             ->whereNotNull('ph.AR_NO')
