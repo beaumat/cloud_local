@@ -20,7 +20,7 @@ class QuickPhilhealthPaid extends Component
     public $locationid;
     public $locationList = [];
     public $search;
-    public bool $showPaid = false;
+    public bool $showPaid  = false;
     public bool $showModal = false;
     private $philHealthServices;
     private $paymentServices;

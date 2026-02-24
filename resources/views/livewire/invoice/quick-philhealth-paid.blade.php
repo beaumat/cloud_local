@@ -67,6 +67,10 @@
                                     <th>Location</th>
                                     @if (!$showPaid)
                                         <th>Action</th>
+                                    @else
+                                        <th>Summary</th>
+                                        <th>Payment</th>
+                                        <th>Doc Bills</th>
                                     @endif
                                 </thead>
                                 <tbody>
@@ -92,6 +96,20 @@
                                                 <td>
                                                     <button class="btn btn-xs btn-success w-100"
                                                         wire:click='makePaidNew({{ $list->PHILHEALTH_ID }})'>Paid</button>
+                                                </td>
+                                            @else
+                                                <td>
+                                                    <a target="_blank" class="btn btn-xs btn-primary w-100"
+                                                        href="{{ route('patientspayment_period_details', ['id' => $list->PAYMENT_PERIOD_ID]) }}">View</a>
+
+                                                </td>
+                                                <td>
+                                                    <a target="_blank" class="btn btn-xs btn-success w-100"
+                                                        href="{{ route('customerspayment_edit', ['id' => $list->PAYMENT_ID]) }}">View</a>
+                                                </td>
+                                                <td>
+                                                    <a target="_blank" class="btn btn-xs btn-warning w-100"
+                                                        href="{{ route('vendorsbills_edit', ['id' => $list->BILL_ID]) }}">View</a>
                                                 </td>
                                             @endif
                                         </tr>

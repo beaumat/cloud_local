@@ -1336,19 +1336,23 @@ class PhilHealthServices
                 'ph.P1_TOTAL as AMOUNT',
                 DB::raw('(select count(*) from hemodialysis where hemodialysis.STATUS_ID = 2 and hemodialysis.CUSTOMER_ID = ph.CONTACT_ID and hemodialysis.DATE between ph.DATE_ADMITTED and ph.DATE_DISCHARGED) as TOTAL_TREATMENT '),
                 DB::raw('(select cd.NAME from philhealth_prof_fee as pf join contact as cd on cd.ID = pf.CONTACT_ID where pf.PHIC_ID = ph.ID) as DOCTOR_NAME'),
-            ])->join('contact as c', 'c.ID', '=', 'ph.CONTACT_ID')
+                'ph.PAYMENT_ID',
+                DB::raw("(select pt.PAYMENT_PERIOD_ID from payment as pt where  pt.ID = ph.PAYMENT_ID  limit 1 ) as PAYMENT_PERIOD_ID"),
+                DB::raw("(select  ifnull( ps.BILL_ID,0) from  philhealth_prof_fee as ps where ps.PHIC_ID = ph.ID LIMIT 1 ) as BILL_ID"),
+            ])
+            ->join('contact as c', 'c.ID', '=', 'ph.CONTACT_ID')
             ->join('location as l', function ($join) use (&$LOCATION_ID) {
                 $join->on('l.ID', '=', 'ph.LOCATION_ID');
                 if ($LOCATION_ID > 0) {
                     $join->where('l.ID', $LOCATION_ID);
                 }
             })
-            ->when($isPaid == true,function ($query) {
-                $query->where('ph.PAYMENT_AMOUNT','>',0);  
-            }) 
-             ->when($isPaid == false,function ($query) {
-                $query->where('ph.PAYMENT_AMOUNT','=',0);  
-            }) 
+            ->when($isPaid == true, function ($query) {
+                $query->where('ph.PAYMENT_AMOUNT', '>', 0);
+            })
+            ->when($isPaid == false, function ($query) {
+                $query->where('ph.PAYMENT_AMOUNT', '=', 0);
+            })
             ->whereYear('ph.DATE_DISCHARGED', '>=', 2026)
             ->whereNotNull('ph.AR_NO')
             ->when($search, function ($query) use (&$search) {

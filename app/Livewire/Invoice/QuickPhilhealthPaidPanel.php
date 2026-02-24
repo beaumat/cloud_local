@@ -273,7 +273,6 @@ class QuickPhilhealthPaidPanel extends Component
             $isGood = $this->paymentServices->getPosted($ID, $this->DATE, $this->LOCATION_ID);
             if ($isGood) {
                 $this->philHealthServices->makePayableForDoctor($this->PHIC_ID, $this->LOCATION_ID, $this->DATE);
-
                 $this->newUpdateForPhilhealthPayment($ID);
 
                 return true;
