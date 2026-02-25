@@ -599,19 +599,11 @@ class BillingServices
             ->where('bill.LOCATION_ID', '=', $LOCATION_ID)
             ->where('bill.BALANCE_DUE', '>', 0)
             ->groupBy([
-                 'bill.ID',
+                'bill.ID',
                 'bill.DATE',
                 'bill.CODE',
                 'bill.AMOUNT',
                 'bill.BALANCE_DUE',
-                'ph.DATE_ADMITTED',
-                'ph.DATE_DISCHARGED',
-                'ph.P1_TOTAL',
-                'pp.RECEIPT_NO as OR_NO',
-                'pp.DATE as OR_DATE',
-                'pp.DATE_FROM as DT_PERIOD_FORM',
-                'pp.DATE_TO as DT_PERIOD_TO',
-                'c.NAME as PATIENT_NAME',
             ])
             ->get();
 
