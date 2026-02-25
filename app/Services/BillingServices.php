@@ -598,13 +598,23 @@ class BillingServices
             ->where('bill.VENDOR_ID', '=', $VENDOR_ID)
             ->where('bill.LOCATION_ID', '=', $LOCATION_ID)
             ->where('bill.BALANCE_DUE', '>', 0)
-            ->groupBy([
+            ->groupBy(
+            [
                 'bill.ID',
                 'bill.DATE',
                 'bill.CODE',
                 'bill.AMOUNT',
                 'bill.BALANCE_DUE',
-            ])
+                'ph.DATE_ADMITTED',
+                'ph.DATE_DISCHARGED',
+                'ph.P1_TOTAL',
+                'pp.RECEIPT_NO',
+                'pp.DATE',
+                'pp.DATE_FROM',
+                'pp.DATE_TO',
+                'c.NAME',
+                'ph.CONTACT_ID'
+            ] )
             ->get();
 
         return $result;
