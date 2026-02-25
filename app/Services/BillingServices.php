@@ -584,7 +584,7 @@ class BillingServices
             ])
             ->join('philhealth_prof_fee as pf', 'pf.BILL_ID', '=', 'bill.ID')
             ->join('philhealth as ph', 'ph.ID', '=', 'pf.PHIC_ID')
-            ->join('payment_invoices as pv', 'pv.INVOICE_ID', '=', 'ph.INVOICE_ID')
+            ->join('payment_invoices as pv', 'pv.PAYMENT_ID', '=', 'ph.PAYMENT_ID')
             ->join('payment as p', 'p.ID', '=', 'pv.PAYMENT_ID')
             ->join('payment_period as pp', 'pp.ID', '=', 'p.PAYMENT_PERIOD_ID')
             ->join('contact as c', 'c.ID', '=', 'ph.CONTACT_ID')
