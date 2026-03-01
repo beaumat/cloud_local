@@ -121,6 +121,7 @@ class FixedAssetItemServices
                 'ACCUMULATED_ACCOUNT_ID',
                 'AQ_COST',
                 'USEFUL_LIFE',
+                DB::raw("TIMESTAMPDIFF(MONTH,CURDATE(),DATE_ADD(PO_DATE, INTERVAL USEFUL_LIFE YEAR)) as REMAINING_MONTHS"),
             ])
             ->where("LOCATION_ID", '=', $LOCATION_ID)
             ->where("INACTIVE", '=', false)
@@ -144,6 +145,7 @@ class FixedAssetItemServices
 
         return $result;
     }
+
     public function Search($search, int $LOCATION_ID, int $perPage)
     {
         $result = FixedAssetItem::query()
@@ -168,7 +170,8 @@ class FixedAssetItemServices
                 DB::raw('(fixed_asset_item.AQ_COST/fixed_asset_item.USEFUL_LIFE) as PER_YEAR'),
                 DB::raw('((fixed_asset_item.AQ_COST/fixed_asset_item.USEFUL_LIFE)/12) as PER_MONTH'),
                 DB::raw('(SELECT COUNT(*) FROM depreciation_items AS di INNER JOIN depreciation AS d ON d.ID = di.DEPRECIATION_ID  WHERE di.FIXED_ASSET_ITEM_ID = fixed_asset_item.ID AND d.STATUS = 15) as DEPRECIATION_COUNT '),
-                DB::raw('(fixed_asset_item.USEFUL_LIFE * 12 ) - (MONTH(PO_DATE)) as DEPRECIATION_UNTIL'),
+                DB::raw('(fixed_asset_item.USEFUL_LIFE * 12 ) as DEPRECIATION_UNTIL'),
+                DB::raw("TIMESTAMPDIFF(MONTH,CURDATE(),DATE_ADD(PO_DATE, INTERVAL USEFUL_LIFE YEAR)) as REMAINING_MONTHS"),
             ])
             ->join('item as i', 'i.ID', '=', 'fixed_asset_item.ITEM_ID')
             ->leftJoin('unit_of_measure as u', 'u.ID', '=', 'i.BASE_UNIT_ID')

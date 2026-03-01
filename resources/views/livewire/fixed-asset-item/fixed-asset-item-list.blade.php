@@ -65,10 +65,10 @@
                                         <th>LOCATION</th>
                                         <th>YEARLY</th>
                                         <th>MONTHLY</th>
-
                                         <th class="bg-cyan">DEP.UNTIL</th>
                                         <th class="bg-purple">DEP.COUNT</th>
                                         <th class="bg-orange">DEP.REMAIN</th>
+                                        <th class="bg-info">M.B REMAIN</th>
                                         <th class="text-center">INACTIVE</th>
                                         <th class="text-center col-1 bg-success">
                                             @can('items.create')
@@ -103,6 +103,7 @@
                                             <td class="text-center">
                                                 {{ number_format($list->DEPRECIATION_UNTIL - $list->DEPRECIATION_COUNT, 0) }}
                                             </td>
+                                            <td class="text-center">{{ number_format($list->REMAINING_MONTHS, 0) }} </td>
                                             <td class="text-center">
                                                 @if ($list->INACTIVE)
                                                     Yes

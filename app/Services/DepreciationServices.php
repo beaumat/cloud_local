@@ -26,13 +26,13 @@ class DepreciationServices
         $this->fixedAssetItemServices = $fixedAssetItemServices;
         $this->accountJournalServices = $accountJournalServices;
     }
-    public function monthlyExecute()
+    public function monthlyExecute(): string
     {
 
         // get the requirements
-        $dayIsNextMonth = $this->dateServices->isNextMonthIsChange();
+        $isTrue = $this->dateServices->isFirstDayOfMonth();
         // !  true or false
-        if ($dayIsNextMonth) {
+        if ($isTrue) {
             DB::beginTransaction();
             try {
                 $locationList = Locations::where('INACTIVE', '=', false)->get();
@@ -40,16 +40,20 @@ class DepreciationServices
                     $this->AutoMakeDeprecation($list->ID);
                 }
                 DB::commit();
+                return "success";
             } catch (\Throwable $th) {
                 DB::rollBack();
                 Log::error('Error executing Depreciation : ' . $th->getMessage());
+                return "failed: " . $th->getMessage();
             }
-            return;
+
         }
-        Log::error('Error dayIsNextMonth is fales');
+        Log::error('Error is First Day of Month is fales');
+        return "failed: dayIsNextMonth is false";
     }
     private function AutoMakeDeprecation(int $location_id)
     {
+
         // check if already added this month.
         $count = $this->fixedAssetItemServices->GetCount($location_id);
         if ($count > 0) {
@@ -67,20 +71,24 @@ class DepreciationServices
     }
     private function AutoMakeItem(int $DEP_ID, int $LOC_ID)
     {
-        $data = $this->fixedAssetItemServices->List($LOC_ID);
+        $allowedAllIn = true;
+        $data         = $this->fixedAssetItemServices->List($LOC_ID);
         foreach ($data as $list) {
-            $AMT       = (float) $list->AQ_COST / $list->USEFUL_LIFE;
-            $PER_MONTH = $AMT / 12;
-            $this->ItemStore(
-                $DEP_ID,
-                $list->ID,
-                $PER_MONTH,
-                $list->ACCUMULATED_ACCOUNT_ID ?? 0
-            );
-            // checking if max
-            $itemCount = (int) $this->GetCount($list->ID, $LOC_ID);
-            if ($itemCount >= $list->USEFUL_LIFE) {
-                $this->fixedAssetItemServices->AutoInactive($list->ID);
+            $RM = (int) $list->REMAINING_MONTHS;
+            if ($RM >= 0 || $allowedAllIn) {
+                $AMT       = (float) $list->AQ_COST / $list->USEFUL_LIFE;
+                $PER_MONTH = $AMT / 12;
+                $this->ItemStore(
+                    $DEP_ID,
+                    $list->ID,
+                    $PER_MONTH,
+                    $list->ACCUMULATED_ACCOUNT_ID ?? 0
+                );
+                // checking if max
+                $itemCount = (int) $this->GetCount($list->ID, $LOC_ID);
+                if ($itemCount >= $list->USEFUL_LIFE) {
+                    $this->fixedAssetItemServices->AutoInactive($list->ID);
+                }
             }
         }
     }
@@ -110,6 +118,7 @@ class DepreciationServices
     }
     private function GetCount(int $FIXED_ASSET_ITEM_ID, $LOC_ID): int
     {
+
         // ACTUAL_INPUT
         $itemCount = (int) DepreciationItems::query()->join('depreciation as d', 'd.ID', '=', 'DEPRECIATION_ID')
             ->where('d.LOCATION_ID', '=', $LOC_ID)

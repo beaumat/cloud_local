@@ -7,7 +7,8 @@
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item active">
+                        <li class="b readcrumb-item active">
+                            <button wire:click="autoDepreciation" wire:confirm="Are you sure?" class="btn btn-sm btn-primary">Auto Depreciation</button>
                         </li>
                     </ol>
                 </div>

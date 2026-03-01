@@ -298,18 +298,12 @@ class DateServices
 
         return $years;
     }
-    public function isNextMonthIsChange()
+    public function isFirstDayOfMonth()
     {
-        $todayDate = $this->NowDate();
-        $nextDate  = $this->NextDate();
-
-        $currentMonth = date('M', strtotime($todayDate));
-        $nextMonth    = date('M', strtotime($nextDate));
-
-        if ($currentMonth != $nextMonth) {
+        $today = date('d');
+        if ($today == 1) {
             return true;
         }
-
         return false;
     }
     public function isWholeMonth(string $startDate, string $endDate): bool

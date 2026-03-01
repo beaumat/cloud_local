@@ -53,6 +53,20 @@ class DepreciationList extends Component
         }
 
     }
+    public function autoDepreciation()
+    {
+        try {
+            $errorMessage = $this->depreciationServices->monthlyExecute();
+            if ($errorMessage !== "success") {
+                session()->flash('error', $errorMessage);
+            } else {
+                session()->flash('message', 'Depreciation executed successfully.');
+            }
+        } catch (\Exception $e) {
+            $errorMessage = 'Error occurred: ' . $e->getMessage();
+            session()->flash('error', $errorMessage);
+        }
+    }
     public function updatedlocationid()
     {
         try {
