@@ -23,6 +23,7 @@ class QuickPhilhealthPaidPanel extends Component
 
     public bool $refreshComponent = false;
     public int $PAYMENT_METHOD_ID = 5;
+    public int $DEFAULT_TAX_ID = 9; // EWT 2%
     public int $ACCOUNTS_RECEIVABLE_ID;
     public int $PHIC_ID;
     public int $CUSTOMER_ID;
@@ -140,11 +141,15 @@ class QuickPhilhealthPaidPanel extends Component
                 $this->DOCTOR_FEE     = $dataPF->FIRST_CASE ?? 0;
             }
 
+
         }
 
         $this->taxList   = $this->taxServices->getWTax();
         $this->showModal = true;
         $this->InvoiceTreatmentRecord();
+
+        $this->TAX_ID = $this->DEFAULT_TAX_ID;
+        $this->updatedTaxId();
     }
 
     private function InvoiceTreatmentRecord()
