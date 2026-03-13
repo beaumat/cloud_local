@@ -774,9 +774,9 @@ class ContactServices
             ->leftJoin('location as l', 'l.ID', '=', 'contact.LOCATION_ID')
             ->leftJoin('patient_doctor as pd', 'pd.PATIENT_ID', '=', 'contact.ID')
             ->leftJoin('contact as d', 'd.ID', '=', 'pd.DOCTOR_ID')
+            ->leftJoin('doctor_location as dl', 'dl.DOCTOR_ID', 'd.ID')
             ->leftJoin('patient_class as pc', 'pc.ID', '=', 'contact.CLASS_ID')
             ->when($doctorId > 0, function ($query) use (&$doctorId) {
-                $query->leftJoin('doctor_location as dl', 'dl.DOCTOR_ID', 'd.ID');
                 $query->where('pd.DOCTOR_ID', $doctorId);
             })
             ->when($search, function ($query) use (&$search) {
