@@ -143,6 +143,15 @@ class BillingServices
         }
         return false;
     }
+    public function ForceDelete(int $ID)
+    {
+        BillItems::where('BILL_ID', $ID)->delete();
+        BillExpenses::where('BILL_ID', $ID)->delete();
+        Bill::where('ID', $ID)->delete();
+        
+
+        $this->usersLogServices->AddLogs(TransType::DELETE, LogEntity::BILL, $ID);
+    }
     public function StatusUpdate(int $ID, int $STATUS)
     {
         Bill::where('ID', $ID)

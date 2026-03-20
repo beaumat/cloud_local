@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -8,10 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 class PhilHealth extends Model
 {
     use HasFactory;
-    protected $table = 'philhealth';
+    protected $table      = 'philhealth';
     protected $primaryKey = 'ID';
-    public $timestamps = false;
-    protected $fillable = [
+    public $timestamps    = false;
+    protected $fillable   = [
         'ID',
         'RECORDED_ON',
         'CODE',
@@ -111,7 +110,10 @@ class PhilHealth extends Model
         'PATIENT_PAYMENT_ID',
         'INVOICE_ID',
         'TIME_HIDE',
-        'CLAIM_NO'
+        'CLAIM_NO',
+        'IS_MANUAL',
+        'NO_TREATMENT',
+        'PAYMENT_ID',
     ];
 
 }
