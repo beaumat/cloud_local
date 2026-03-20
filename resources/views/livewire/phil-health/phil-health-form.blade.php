@@ -300,9 +300,9 @@
                                 </div>
                             </div>
                             <div class="card-footer h6 bg-light text-right">
-                                PAYMENT COLLECTION : <strong class="text-danger">{{ number_format($PAYMENT_AMOUNT, 2) }}</strong>
+                                PAYMENT COLLECTION : <strong class="text-danger" wire:click="deletePaymentProccess()" wire:confirm="Are you sure you want to delete this payment?">{{ number_format($PAYMENT_AMOUNT, 2) }}</strong>
                             </div>
-                        </div>
+                        </div>`
                     </div>
                 </div>
             </div>

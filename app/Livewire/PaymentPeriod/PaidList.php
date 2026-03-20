@@ -64,7 +64,7 @@ class PaidList extends Component
         try {
 
             if ($PAYMENT_ID > 0) {
-
+             $gotTaxCreditDelete = false;    
                 $tax_ID = $this->taxCreditServices->GetTaxID($PAYMENT_ID);
                 if ($this->TaxCreditdeleteEntry($tax_ID)) {
                     $gotTaxCreditDelete = true;
