@@ -64,8 +64,8 @@ class PaidList extends Component
         try {
 
             if ($PAYMENT_ID > 0) {
-             $gotTaxCreditDelete = false;    
-                $tax_ID = $this->taxCreditServices->GetTaxID($PAYMENT_ID);
+                $gotTaxCreditDelete = false;
+                $tax_ID             = $this->taxCreditServices->GetTaxID($PAYMENT_ID);
                 if ($this->TaxCreditdeleteEntry($tax_ID)) {
                     $gotTaxCreditDelete = true;
                     // NEW STYLE
@@ -82,13 +82,20 @@ class PaidList extends Component
                 }
                 $PH_DATA = $this->philHealthServices->getDataByPayment($PAYMENT_ID);
                 if ($PH_DATA) {
-               
-                    $this->getTreamentSummary($PH_DATA);
-                    $this->philHealthServices->deletePayableForDoctor($PH_DATA->ID);
 
+                    $this->getTreamentSummary($PH_DATA);
+
+                    if ($this->philHealthServices->deletePayableForDoctor($PH_DATA->ID)) {
+
+                        session()->flash('error', 'This payment cannot be deleted. This is Bill payment for doctor fee has already posted to accounts payable. Please delete the bill payment entry first to proceed deleting this payment');
+
+                        DB::rollBack();
+
+                        return;
+                    }
                     $this->philHealthServices->UpdatePayment($PH_DATA->ID, 0, $PAYMENT_ID);
-                    
-                     DB::commit();
+
+                    DB::commit();
                     session()->flash('message', 'Payment canceled');
                 }
 

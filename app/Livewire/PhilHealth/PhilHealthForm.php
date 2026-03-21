@@ -2,6 +2,7 @@
 namespace App\Livewire\PhilHealth;
 
 use App\Services\AccountJournalServices;
+use App\Services\BillPaymentServices;
 use App\Services\ContactServices;
 use App\Services\HemoServices;
 use App\Services\InvoiceServices;
@@ -62,16 +63,8 @@ class PhilHealthForm extends Component
     private $invoiceServices;
     private $accountJournalServices;
     private $serviceChargeServices;
-    public function SelectTab($tab)
-    {
-        $this->tab = $tab;
-    }
-    #[On('ar-form-data')]
-    public function arForm($ar)
-    {
-        $this->AR_DATE = $ar['AR_DATE'];
-        $this->AR_NO   = $ar['AR_NO'];
-    }
+    private $billPaymentServices;
+  
     public function boot(
         PhilHealthServices $philHealthServices,
         HemoServices $hemoServices,
@@ -84,7 +77,8 @@ class PhilHealthForm extends Component
         PaymentServices $paymentServices,
         InvoiceServices $invoiceServices,
         AccountJournalServices $accountJournalServices,
-        ServiceChargeServices $serviceChargeServices
+        ServiceChargeServices $serviceChargeServices,
+        BillPaymentServices $billPaymentServices
 
     ) {
         $this->philHealthServices          = $philHealthServices;
@@ -99,6 +93,18 @@ class PhilHealthForm extends Component
         $this->invoiceServices             = $invoiceServices;
         $this->accountJournalServices      = $accountJournalServices;
         $this->serviceChargeServices       = $serviceChargeServices;
+        $this->billPaymentServices         = $billPaymentServices;
+    }
+
+      public function SelectTab($tab)
+    {
+        $this->tab = $tab;
+    }
+    #[On('ar-form-data')]
+    public function arForm($ar)
+    {
+        $this->AR_DATE = $ar['AR_DATE'];
+        $this->AR_NO   = $ar['AR_NO'];
     }
     public function UpdatedContactId()
     {
@@ -200,16 +206,6 @@ class PhilHealthForm extends Component
 
         $ds = $this->philHealthServices->get($this->ID);
         if ($ds) {
-            // if (! empty($ds->AR_NO)) {
-            //     session()->flash('error', 'cannot be print. this document already set AR info');
-            //     return;
-            // }
-            // if (floatval($ds->PAYMENT_AMOUNT ?? 0) > 0) {
-            //     session()->flash('error', 'cannot be print. this document having a payment collection');
-            //     return;
-            // }
-
-            // restriction end
             $data = [
                 'PHILHEALTH_ID' => $this->ID,
             ];
@@ -364,12 +360,25 @@ class PhilHealthForm extends Component
                 if ($PH_DATA) {
 
                     $this->getTreamentSummary($PH_DATA);
-                    $this->philHealthServices->deletePayableForDoctor($PH_DATA->ID);
 
+                 
+
+                   if($this->philHealthServices->deletePayableForDoctor($PH_DATA->ID)) {
+                       
+                    session()->flash('error', 'This payment cannot be deleted. This is Bill payment for doctor fee has already posted to accounts payable. Please delete the bill payment entry first to proceed deleting this payment');
+                   
+                   DB::rollBack();
+
+                    return;
+                   }
                     $this->philHealthServices->UpdatePayment($PH_DATA->ID, 0, $PAYMENT_ID);
 
+
+
+
                     DB::commit();
-                    session()->flash('message', 'Payment canceled');
+            
+                    return Redirect::route('patientsphic_edit', ['id' => $this->ID])->with('message', 'Payment canceled');
                 }
 
                 // delete service charge from patient_payment_
