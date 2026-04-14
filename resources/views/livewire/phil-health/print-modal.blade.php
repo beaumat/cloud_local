@@ -119,7 +119,7 @@
                                             </a>
 
                                              <!-- <a target="_BLANK"
-                    href="{{ route('patientsprintout_cf2', ['id' => $PHILHEALTH_ID]) }}"
+                    href="{{ route('patientsprintout_ncr', ['id' => $PHILHEALTH_ID]) }}"
                     class="btn btn-sm btn-info m-1">
                     <i class="fa fa-print mr-1"></i> BPN Consent Form
                 </a>-->
