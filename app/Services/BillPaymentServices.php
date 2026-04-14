@@ -51,6 +51,7 @@ class BillPaymentServices
     {
 
         $result = CheckBills::where('BILL_ID', $BILL_ID)->get()->first();
+
         if ($result) {
             $payResult = Check::where('ID', '=', $result->CHECK_ID)
                 ->where('TYPE', '=', $this->CHECK_TYPE_ID)
@@ -62,9 +63,11 @@ class BillPaymentServices
             }
 
             // Delete CHECK BILLS
-            $result = CheckBills::where('BILL_ID', $BILL_ID)->where('CHECK_ID', '=', $result->CHECK_ID)->delete();
+            CheckBills::where('BILL_ID', $BILL_ID)->where('CHECK_ID', '=', $result->CHECK_ID)->delete();
+       
             // Update CHECK Amount
             $AMOUNT = (float) $this->getTotalApplied($result->CHECK_ID);
+       
             $this->UpdateAmount($result->CHECK_ID, $AMOUNT);
         }
 
@@ -337,10 +340,13 @@ class BillPaymentServices
     }
     public function getTotalApplied(int $CHECK_ID): float
     {
+
+
         if ($CHECK_ID == 0) {
             return 0;
         }
 
+        
         $result = CheckBills::query()
             ->select([
                 DB::raw('IFNULL(SUM(check_bills.AMOUNT_PAID),0) as PAID'),

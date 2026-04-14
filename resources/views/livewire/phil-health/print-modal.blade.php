@@ -117,6 +117,13 @@
                                                 <i class="fa fa-print" aria-hidden="true"></i>
                                                 CF2
                                             </a>
+
+                                             <!-- <a type="button" target="_BLANK" title="Print Philheath CF2 Form"
+                                                href="{{ route('patientsprintout_cf2', ['id' => $PHILHEALTH_ID]) }}"
+                                                class="btn btn-info btn-sm mx-1">
+                                                <i class="fa fa-print" aria-hidden="true"></i>
+                                                 
+                                            </a> -->
                                         @endif
 
                                     </div>

@@ -39,7 +39,7 @@
                                     </div>
                                 </div>
                                 <div class="col-12">
-                                    <h5>VIDA DIALYSIS CENTER PHILS.</h5>
+                                    <h5>LIFESTREAM DIALYSIS CENTER PHILS.</h5>
                                     {{ $REPORT_HEADER_1 }} <br />
                                     {{ $REPORT_HEADER_2 }}<br />
                                     {{ $REPORT_HEADER_3 }}</b>
@@ -142,7 +142,7 @@
                                         </div>
                                         <div class="col-12 text-left"
                                             @if (!$OUTPUT_SIGN) style="opacity: 0.0" @endif>
-                                            CONTACT No. {{ $USER_CONTACT }}</div>
+                                            CONTACT No. 0948-350-2140</div>
                                     </div>
                                 </div>
                                 <div class="col-2"></div>
