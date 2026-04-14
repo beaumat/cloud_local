@@ -6793,7 +6793,15 @@ a.disabled.mailbox-attachment-close {
 }
 
 .modal-footer>* {
+<<<<<<< HEAD
     margin: .15rem
+=======
+<<<<<<< HEAD
+    margin: .15rem
+=======
+    margin: .25rem
+>>>>>>> 3c71ebe73138bc062399be5f2d00a80bc03c62a2
+>>>>>>> cad6f31879e7447d848943a8d4d247d12b40e9a1
 }
 
 .modal-scrollbar-measure {

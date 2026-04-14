@@ -306,7 +306,15 @@ class PatientNCRtemplate extends Component
                 $this->IS_DEPENDENT = $contact->IS_DEPENDENT;
                 $this->PIN = $contact->PIN ?? '';
                 $this->EMAIL = $contact->EMAIL ?? '';
+<<<<<<< HEAD
   $this->MOBILE_NO = $contact->MOBILE_NO ?? '';
+=======
+<<<<<<< HEAD
+  $this->MOBILE_NO = $contact->MOBILE_NO ?? '';
+=======
+                $this->MOBILE_NO = $contact->MOBILE_NO ?? '';
+>>>>>>> 3c71ebe73138bc062399be5f2d00a80bc03c62a2
+>>>>>>> cad6f31879e7447d848943a8d4d247d12b40e9a1
                 if ($this->IS_DEPENDENT) {
                     $this->PIN_DEPENDENT = $contact->PIN_DEPENDENT;
                 } else {

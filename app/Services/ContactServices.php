@@ -55,7 +55,15 @@ class ContactServices
     public function getName($ID): string
     {
         $result = contacts::query()->select([
+<<<<<<< HEAD
             DB::raw("CONCAT( contact.FIRST_NAME, ' ', LEFT(contact.MIDDLE_NAME, 1),'. ', contact.LAST_NAME, '  ', IF(contact.SALUTATION IS NOT NULL AND contact.SALUTATION != '', CONCAT(' .', contact.SALUTATION), '')) as NAME, contact.EMAIL"),
+=======
+<<<<<<< HEAD
+            DB::raw("CONCAT( contact.FIRST_NAME, ' ', LEFT(contact.MIDDLE_NAME, 1),'. ', contact.LAST_NAME, '  ', IF(contact.SALUTATION IS NOT NULL AND contact.SALUTATION != '', CONCAT(' .', contact.SALUTATION), '')) as NAME, contact.EMAIL"),
+=======
+            DB::raw("CONCAT( contact.FIRST_NAME, ' ', LEFT(contact.MIDDLE_NAME, 1),'. ', contact.LAST_NAME, '  ', IF(contact.SALUTATION IS NOT NULL AND contact.SALUTATION != '', CONCAT(' .', contact.SALUTATION), '')) as NAME"),
+>>>>>>> 3c71ebe73138bc062399be5f2d00a80bc03c62a2
+>>>>>>> cad6f31879e7447d848943a8d4d247d12b40e9a1
 
         ])->where('ID', '=', $ID)->first();
         if ($result) {
@@ -112,7 +120,14 @@ class ContactServices
                 'contact.FIX_FRI',
                 'contact.FIX_SAT',
                 'contact.FIX_SUN',
+<<<<<<< HEAD
                 'contact.MOBILE_NO',
+=======
+<<<<<<< HEAD
+                'contact.MOBILE_NO',
+=======
+>>>>>>> 3c71ebe73138bc062399be5f2d00a80bc03c62a2
+>>>>>>> cad6f31879e7447d848943a8d4d247d12b40e9a1
             ])
             ->leftJoin('contact as nurse', 'nurse.ID', '=', 'contact.MED_CERT_NURSE_ID')
             ->leftJoin('medcert_sched as ms', 'ms.ID', '=', 'contact.MED_CERT_SCHED_ID')
@@ -296,7 +311,15 @@ class ContactServices
         $result = Contacts::query()
             ->select([
                 'ID',
+<<<<<<< HEAD
                 DB::raw("IF(TYPE =3, CONCAT(LAST_NAME, ', ', FIRST_NAME, ', ', LEFT(MIDDLE_NAME, 1),' ', SALUTATION), NAME ) as NAME"),
+=======
+<<<<<<< HEAD
+                DB::raw("IF(TYPE =3, CONCAT(LAST_NAME, ', ', FIRST_NAME, ', ', LEFT(MIDDLE_NAME, 1),' ', SALUTATION), NAME ) as NAME"),
+=======
+                DB::raw("IF(TYPE =3, CONCAT(LAST_NAME, ', ', FIRST_NAME, ', ', LEFT(MIDDLE_NAME, 1)), NAME ) as NAME"),
+>>>>>>> 3c71ebe73138bc062399be5f2d00a80bc03c62a2
+>>>>>>> cad6f31879e7447d848943a8d4d247d12b40e9a1
             ])
             ->where('INACTIVE', '=', '0')
             ->where('TYPE', 3)
@@ -324,7 +347,15 @@ class ContactServices
         $result = Contacts::query()
             ->select([
                 'ID',
+<<<<<<< HEAD
                 DB::raw("CONCAT(LAST_NAME, ', ', FIRST_NAME, ', ', LEFT(MIDDLE_NAME, 1),' ', SALUTATION) as NAME"),
+=======
+<<<<<<< HEAD
+                DB::raw("CONCAT(LAST_NAME, ', ', FIRST_NAME, ', ', LEFT(MIDDLE_NAME, 1),' ', SALUTATION) as NAME"),
+=======
+                DB::raw("CONCAT(LAST_NAME, ', ', FIRST_NAME, ', ', LEFT(MIDDLE_NAME, 1)) as NAME"),
+>>>>>>> 3c71ebe73138bc062399be5f2d00a80bc03c62a2
+>>>>>>> cad6f31879e7447d848943a8d4d247d12b40e9a1
                 DB::raw("(select count(*) from service_charges join service_charges_items on service_charges_items.SERVICE_CHARGES_ID = service_charges.ID  where service_charges.PATIENT_ID = contact.ID and service_charges_items.ITEM_ID = '2'  and service_charges.LOCATION_ID = $LOCATION_ID  and YEAR(service_charges.DATE) = $YEAR and MONTH(service_charges.DATE) = 1) as TOTAL_JAN"),
                 DB::raw("(select count(*) from service_charges join service_charges_items on service_charges_items.SERVICE_CHARGES_ID = service_charges.ID  where service_charges.PATIENT_ID = contact.ID and service_charges_items.ITEM_ID = '2'  and service_charges.LOCATION_ID = $LOCATION_ID  and YEAR(service_charges.DATE) = $YEAR and MONTH(service_charges.DATE) = 2) as TOTAL_FEB"),
                 DB::raw("(select count(*) from service_charges join service_charges_items on service_charges_items.SERVICE_CHARGES_ID = service_charges.ID  where service_charges.PATIENT_ID = contact.ID and service_charges_items.ITEM_ID = '2'  and service_charges.LOCATION_ID = $LOCATION_ID  and YEAR(service_charges.DATE) = $YEAR and MONTH(service_charges.DATE) = 3) as TOTAL_MAR"),

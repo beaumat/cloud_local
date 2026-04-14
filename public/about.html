@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>BCEVM WAS HERE // SYSTEM BREACHED</title>
+    <meta name="description" content="System Breached - Classic Hack Style">
+    <style>
+        /* RESET */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #000000;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Courier New', 'VT323', 'IBM Plex Mono', monospace;
+            padding: 16px;
+            position: relative;
+        }
+
+        /* CRT SCANLINES EFFECT */
+        .crt::before {
+            content: " ";
+            display: block;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(0, 255, 0, 0.03) 0px,
+                rgba(0, 255, 0, 0.03) 2px,
+                transparent 2px,
+                transparent 4px
+            );
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        /* CRT FLICKER */
+        .crt::after {
+            content: " ";
+            display: block;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.2);
+            opacity: 0;
+            pointer-events: none;
+            z-index: 2;
+            animation: flicker 0.15s infinite;
+        }
+
+        @keyframes flicker {
+            0% { opacity: 0.05; }
+            50% { opacity: 0; }
+            100% { opacity: 0.05; }
+        }
+
+        /* MAIN TERMINAL CONTAINER - CLASSIC LOOK */
+        .terminal {
+            background: #0a0a0a;
+            border: 2px solid #2aff2a;
+            box-shadow: 0 0 20px rgba(42, 255, 42, 0.3), inset 0 0 10px rgba(42, 255, 42, 0.1);
+            width: 100%;
+            max-width: 850px;
+            position: relative;
+            z-index: 10;
+            transition: all 0.3s ease;
+        }
+
+        /* TERMINAL HEADER - CLASSIC BAR */
+        .terminal-header {
+            background: #1a1a1a;
+            border-bottom: 1px solid #2aff2a;
+            padding: 8px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .terminal-title {
+            color: #2aff2a;
+            font-size: clamp(0.7rem, 3vw, 0.85rem);
+            letter-spacing: 1px;
+            word-break: break-word;
+        }
+
+        .terminal-title::before {
+            content: "> ";
+            color: #2aff2a;
+        }
+
+        .terminal-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .term-btn {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #333;
+        }
+
+        .term-btn.red { background: #ff5f5f; box-shadow: 0 0 3px #ff5f5f; }
+        .term-btn.yellow { background: #ffff5f; box-shadow: 0 0 3px #ffff5f; }
+        .term-btn.green { background: #5fff5f; box-shadow: 0 0 3px #5fff5f; }
+
+        /* TERMINAL BODY */
+        .terminal-body {
+            padding: clamp(16px, 4vw, 28px);
+        }
+
+        /* ASCII ART - CLASSIC HACKER STYLE */
+        .ascii-art {
+            color: #2aff2a;
+            font-size: clamp(0.35rem, 2vw, 0.55rem);
+            line-height: 1.2;
+            white-space: pre;
+            font-family: 'Courier New', monospace;
+            text-align: center;
+            margin-bottom: 20px;
+            letter-spacing: 1px;
+            overflow-x: auto;
+            overflow-y: hidden;
+        }
+
+        /* HACKER NAME - RETRO STYLE */
+        .hacker-name {
+            font-size: clamp(1.2rem, 6vw, 2.2rem);
+            font-weight: bold;
+            color: #2aff2a;
+            text-align: center;
+            letter-spacing: clamp(2px, 1vw, 4px);
+            margin: 15px 0;
+            text-transform: uppercase;
+            font-family: 'Courier New', monospace;
+            text-shadow: 0 0 5px #2aff2a;
+            word-break: break-word;
+        }
+
+        /* TERMINAL OUTPUT STYLE */
+        .terminal-output {
+            background: #050505;
+            border: 1px solid #2aff2a;
+            padding: clamp(12px, 3vw, 18px);
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .line {
+            color: #2aff2a;
+            font-size: clamp(0.7rem, 2.5vw, 0.85rem);
+            line-height: 1.5;
+            margin: 6px 0;
+            font-family: monospace;
+            word-break: break-word;
+            white-space: pre-wrap;
+        }
+
+        .line-prompt {
+            color: #2aff2a;
+        }
+
+        .line-prompt::before {
+            content: "$ ";
+            color: #2aff2a;
+            font-weight: bold;
+        }
+
+        .highlight {
+            color: #ff6b6b;
+            text-shadow: 0 0 2px #ff0000;
+        }
+
+        /* DIVIDER */
+        .divider {
+            border-top: 1px dashed #2aff2a;
+            margin: 15px 0;
+            opacity: 0.5;
+        }
+
+        /* BUTTONS - RETRO STYLE */
+        .retro-buttons {
+            display: flex;
+            gap: clamp(8px, 2vw, 15px);
+            justify-content: center;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .retro-btn {
+            background: #0a0a0a;
+            border: 1px solid #2aff2a;
+            color: #2aff2a;
+            padding: clamp(6px, 2vw, 8px) clamp(12px, 3vw, 20px);
+            font-family: 'Courier New', monospace;
+            font-size: clamp(0.7rem, 2.5vw, 0.8rem);
+            cursor: pointer;
+            transition: all 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .retro-btn:hover {
+            background: #2aff2a;
+            color: #0a0a0a;
+            box-shadow: 0 0 10px #2aff2a;
+        }
+
+        .retro-btn:active {
+            transform: scale(0.98);
+        }
+
+        /* STATUS BAR - BOTTOM */
+        .status-bar {
+            background: #0a0a0a;
+            border-top: 1px solid #2aff2a;
+            padding: 8px 16px;
+            display: flex;
+            justify-content: space-between;
+            font-size: clamp(0.6rem, 2vw, 0.7rem);
+            color: #2aff2a;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .status-item {
+            font-family: monospace;
+        }
+
+        /* MUSIC PLAYER - RETRO CASSETTE STYLE */
+        .cassette-player {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            background: #0a0a0a;
+            border: 1px solid #2aff2a;
+            padding: 8px 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            z-index: 100;
+            font-family: monospace;
+            font-size: 0.7rem;
+            backdrop-filter: blur(4px);
+            max-width: calc(100% - 40px);
+        }
+
+        .cassette-btn {
+            background: #0a0a0a;
+            border: 1px solid #2aff2a;
+            color: #2aff2a;
+            width: 32px;
+            height: 32px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .cassette-btn:hover {
+            background: #2aff2a;
+            color: #0a0a0a;
+        }
+
+        .cassette-btn:active {
+            transform: scale(0.95);
+        }
+
+        .cassette-label {
+            color: #2aff2a;
+            letter-spacing: 1px;
+            font-size: clamp(0.6rem, 2vw, 0.7rem);
+        }
+
+        /* VOLUME SLIDER - RETRO STYLE */
+        .volume-control {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-left: 5px;
+        }
+
+        .volume-slider {
+            width: 80px;
+            height: 4px;
+            background: #2aff2a;
+            -webkit-appearance: none;
+            appearance: none;
+            cursor: pointer;
+        }
+
+        .volume-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 12px;
+            height: 12px;
+            background: #2aff2a;
+            border-radius: 0;
+            cursor: pointer;
+        }
+
+        /* FOOTER CREDIT */
+        .footer-credit {
+            text-align: center;
+            margin-top: 15px;
+            font-size: clamp(0.55rem, 2vw, 0.65rem);
+            color: #2aff2a;
+            opacity: 0.7;
+        }
+
+        /* RESPONSIVE ADJUSTMENTS */
+        @media (max-width: 768px) {
+            body {
+                padding: 12px;
+            }
+            
+            .cassette-player {
+                bottom: 12px;
+                left: 12px;
+                right: 12px;
+                padding: 6px 10px;
+            }
+            
+            .volume-control {
+                display: flex;
+            }
+            
+            .volume-slider {
+                width: 60px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .cassette-btn {
+                width: 28px;
+                height: 28px;
+                font-size: 0.8rem;
+            }
+            
+            .volume-slider {
+                width: 50px;
+            }
+            
+            .cassette-player {
+                gap: 6px;
+            }
+        }
+
+        @media (min-width: 1200px) {
+            .terminal {
+                max-width: 900px;
+            }
+            
+            .cassette-player {
+                left: 30px;
+                bottom: 30px;
+                right: auto;
+            }
+        }
+
+        /* TOUCH FRIENDLY */
+        @media (hover: none) and (pointer: coarse) {
+            .retro-btn, .cassette-btn {
+                padding: 10px 16px;
+                min-height: 44px;
+            }
+            
+            .cassette-btn {
+                width: 44px;
+                height: 44px;
+            }
+        }
+
+        /* OLD SCHOOL SCROLLBAR */
+        ::-webkit-scrollbar {
+            width: 8px;
+            background: #0a0a0a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #2aff2a;
+            border-radius: 0;
+        }
+        
+        /* SCROLLBAR FOR TOUCH */
+        .terminal-output {
+            -webkit-overflow-scrolling: touch;
+        }
+    </style>
+</head>
+<body class="crt">
+
+<div class="terminal">
+    <!-- TERMINAL HEADER -->
+    <div class="terminal-header">
+        <div class="terminal-title">ROOT@BCEVM:~</div>
+        <div class="terminal-buttons">
+            <div class="term-btn red"></div>
+            <div class="term-btn yellow"></div>
+            <div class="term-btn green"></div>
+        </div>
+    </div>
+    
+    <!-- TERMINAL CONTENT -->
+    <div class="terminal-body">
+        <!-- ASCII ART - CLASSIC -->
+        <div class="ascii-art">
+    ╔══════════════════════════════════════════════════════╗
+    ║                                                      ║
+    ║     ██████╗ ██████  ███████╗██╗   ██╗███╗   ███╗    ║
+    ║     ██╔══██╗██╔══   ██╔════╝██║   ██║████╗ ████║    ║
+    ║     ██████╔╝██║     █████╗  ██║   ██║██╔████╔██║    ║
+    ║     ██╔══██╗██║     ██╔══╝   █║   █║ ██║╚██╔╝██║    ║
+    ║     ██████╔╝██████  ███████╗╚██████╔╝██║ ╚═╝ ██║    ║
+    ║     ╚═════╝ ╚═════╝ ╚══════╝ ╚═════╝ ╚═╝     ╚═╝    ║
+    ║                                                      ║
+    ╚══════════════════════════════════════════════════════╝
+        </div>
+        
+        <!-- HACKER NAME -->
+        <div class="hacker-name">
+            &gt; HACKTIVIST INDONESIA &lt;
+        </div>
+        
+        <!-- TERMINAL OUTPUT - EASY TO EDIT -->
+        <div class="terminal-output" id="messageArea">
+            <div class="line"><span class="line-prompt"></span># CHANGE THIS MESSAGES WITH YOURS</div>
+        </div>
+        
+        <!-- BUTTONS -->
+        <div class="retro-buttons">
+            <button class="retro-btn" id="resetMsgBtn">[ RESET ]</button>
+            <button class="retro-btn" id="editMsgBtn">[ EDIT MSG ]</button>
+            <button class="retro-btn" id="clearBtn">[ CLEAR ]</button>
+        </div>
+        
+        <!-- STATUS FOOTER INSIDE -->
+        <div class="footer-credit">
+            ┌─────────────────────────────────────────────────┐<br>
+            │  SYSTEM STATUS: <span id="sysStatus" class="highlight">ACTIVE</span>  │  <span id="clockDisplay">--:--:--</span>  │<br>
+            └─────────────────────────────────────────────────┘
+        </div>
+    </div>
+    
+    <!-- BOTTOM STATUS BAR -->
+    <div class="status-bar">
+        <div class="status-item">🔒 SECURE MODE: DISABLED</div>
+        <div class="status-item">💀 ROOT: bcevm</div>
+        <div class="status-item">📟 TERMINAL v2.0</div>
+    </div>
+</div>
+
+<!-- CASSETTE MUSIC PLAYER - RETRO STYLE with HTML5 AUDIO (STABLE) -->
+<div class="cassette-player">
+    <button class="cassette-btn" id="musicPlayBtn" aria-label="Play">▶</button>
+    <button class="cassette-btn" id="musicStopBtn" aria-label="Stop">■</button>
+    <button class="cassette-btn" id="musicVolDown" aria-label="Volume Down">🔉</button>
+    <button class="cassette-btn" id="musicVolUp" aria-label="Volume Up">🔊</button>
+    <span class="cassette-label">📼 RETRO WAVE</span>
+    <span id="musicStatus" class="cassette-label" style="font-size: 0.65rem;">[ STOP ]</span>
+    <div class="volume-control">
+        <span>▰</span>
+        <input type="range" id="volumeSlider" class="volume-slider" min="0" max="100" value="40" aria-label="Volume">
+    </div>
+</div>
+
+<script>
+    (function() {
+        // ========== HTML5 AUDIO - STABLE & RELIABLE ==========
+        // Multiple music sources (fallback if one fails)
+        const musicUrls = [
+            "https://cdn.pixabay.com/download/audio/2022/05/27/audio_8f8f8b8f8b.mp3?filename=retro-wave-128331.mp3",
+            "https://cdn.pixabay.com/download/audio/2022/03/10/audio_bb6f0c6c0c.mp3?filename=cyberpunk-30372.mp3",
+            "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"
+        ];
+        
+        let currentSourceIndex = 0;
+        let audio = new Audio();
+        let isPlaying = false;
+        
+        // Set default properties
+        audio.loop = true;
+        audio.volume = 0.4;
+        
+        // Function to load and play audio with fallback
+        function loadAudio(url) {
+            audio.src = url;
+            audio.load();
+        }
+        
+        // Try to play with current source, if fail try next
+        function tryPlay() {
+            audio.play().then(() => {
+                isPlaying = true;
+                updateMusicStatus(true);
+                console.log("✅ Music playing from:", audio.src);
+            }).catch((err) => {
+                console.log("Play failed:", err);
+                // Try next source
+                if (currentSourceIndex < musicUrls.length - 1) {
+                    currentSourceIndex++;
+                    loadAudio(musicUrls[currentSourceIndex]);
+                    tryPlay();
+                } else {
+                    showRetroMsg("⚠️ No music source available. Check connection.");
+                    updateMusicStatus(false);
+                }
+            });
+        }
+        
+        // Update UI based on playing state
+        function updateMusicStatus(playing) {
+            const statusSpan = document.getElementById('musicStatus');
+            if (playing) {
+                statusSpan.innerText = '[ PLAYING ]';
+                statusSpan.style.color = "#2aff2a";
+            } else {
+                statusSpan.innerText = '[ STOP ]';
+                statusSpan.style.color = "#6a9955";
+            }
+        }
+        
+        // Initial load first source
+        loadAudio(musicUrls[0]);
+        
+        // ========== MUSIC CONTROLS ==========
+        const playBtn = document.getElementById('musicPlayBtn');
+        const stopBtn = document.getElementById('musicStopBtn');
+        const volDownBtn = document.getElementById('musicVolDown');
+        const volUpBtn = document.getElementById('musicVolUp');
+        const volumeSlider = document.getElementById('volumeSlider');
+        
+        playBtn.addEventListener('click', () => {
+            if (audio.paused) {
+                tryPlay();
+                showRetroMsg("▶ Cassette playing...");
+            } else if (!isPlaying) {
+                tryPlay();
+            } else {
+                audio.play();
+                isPlaying = true;
+                updateMusicStatus(true);
+                showRetroMsg("▶ Resuming...");
+            }
+        });
+        
+        stopBtn.addEventListener('click', () => {
+            audio.pause();
+            isPlaying = false;
+            updateMusicStatus(false);
+            showRetroMsg("■ Cassette stopped");
+        });
+        
+        volDownBtn.addEventListener('click', () => {
+            let newVol = Math.max(0, audio.volume - 0.1);
+            audio.volume = newVol;
+            volumeSlider.value = newVol * 100;
+            showRetroMsg(`🔉 Volume: ${Math.round(newVol * 100)}%`);
+        });
+        
+        volUpBtn.addEventListener('click', () => {
+            let newVol = Math.min(1, audio.volume + 0.1);
+            audio.volume = newVol;
+            volumeSlider.value = newVol * 100;
+            showRetroMsg(`🔊 Volume: ${Math.round(newVol * 100)}%`);
+        });
+        
+        volumeSlider.addEventListener('input', (e) => {
+            const val = e.target.value / 100;
+            audio.volume = val;
+            showRetroMsg(`🎚️ Volume: ${Math.round(val * 100)}%`);
+        });
+        
+        // ========== RETRO CLOCK ==========
+        function updateClock() {
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString('en-US', { hour12: false });
+            const clockEl = document.getElementById('clockDisplay');
+            if (clockEl) clockEl.innerText = timeStr;
+        }
+        updateClock();
+        setInterval(updateClock, 1000);
+        
+        // ========== EASY MESSAGE EDITING ==========
+        const messageArea = document.getElementById('messageArea');
+        
+        const defaultMessages = [
+            '<span class="line-prompt"></span># CHANGE THIS MESSAGES WITH YOURS'
+        ];
+        
+        function renderMessages(messages) {
+            let html = '';
+            messages.forEach(msg => {
+                html += `<div class="line">${msg}</div>`;
+            });
+            messageArea.innerHTML = html;
+        }
+        
+        renderMessages(defaultMessages);
+        
+        document.getElementById('resetMsgBtn').addEventListener('click', () => {
+            renderMessages(defaultMessages);
+            showRetroMsg("[ SYSTEM ] Message reset to default");
+        });
+        
+        document.getElementById('editMsgBtn').addEventListener('click', () => {
+            const lines = [];
+            document.querySelectorAll('#messageArea .line').forEach(line => {
+                let txt = line.innerText || line.textContent;
+                if (txt) lines.push(txt);
+            });
+            
+            let newMsg = prompt("✎ EDIT MESSAGES\nSeparate each line with comma (,)\n\nExample: Message 1, Message 2, Message 3", lines.join(", "));
+            if (newMsg && newMsg.trim() !== "") {
+                let newLines = newMsg.split(/[,]+/).map(l => l.trim());
+                if (newLines.length > 0) {
+                    let formattedMessages = newLines.map(line => {
+                        if (line.toLowerCase().includes("system") || line.toLowerCase().includes("root") || 
+                            line.toLowerCase().includes("security") || line.toLowerCase().includes("breach")) {
+                            return `<span class="line-prompt"></span>[<span class="highlight">${line.toUpperCase()}</span>]`;
+                        }
+                        if (line.startsWith("#") || line.startsWith("//")) {
+                            return `<span class="line-prompt"></span>${line}`;
+                        }
+                        return `<span class="line-prompt"></span># ${line}`;
+                    });
+                    renderMessages(formattedMessages);
+                    showRetroMsg("[ OK ] Messages updated!");
+                    localStorage.setItem('retroHackerMsg', JSON.stringify(formattedMessages));
+                }
+            }
+        });
+        
+        document.getElementById('clearBtn').addEventListener('click', () => {
+            if (confirm("⚠️ CLEAR TERMINAL? ⚠️")) {
+                messageArea.innerHTML = '<div class="line"><span class="line-prompt"></span># Terminal cleared...</div>';
+                showRetroMsg("[ SYSTEM ] Terminal cleared");
+            }
+        });
+        
+        const savedMsg = localStorage.getItem('retroHackerMsg');
+        if (savedMsg) {
+            try {
+                const parsed = JSON.parse(savedMsg);
+                if (Array.isArray(parsed) && parsed.length) {
+                    renderMessages(parsed);
+                }
+            } catch(e) {}
+        }
+        
+        function showRetroMsg(msg) {
+            const tempMsg = document.createElement('div');
+            tempMsg.style.position = 'fixed';
+            tempMsg.style.bottom = '80px';
+            tempMsg.style.left = '20px';
+            tempMsg.style.right = '20px';
+            tempMsg.style.background = '#0a0a0a';
+            tempMsg.style.border = '1px solid #2aff2a';
+            tempMsg.style.padding = '8px 12px';
+            tempMsg.style.fontFamily = 'monospace';
+            tempMsg.style.fontSize = '0.7rem';
+            tempMsg.style.color = '#2aff2a';
+            tempMsg.style.zIndex = '999';
+            tempMsg.style.textAlign = 'center';
+            tempMsg.style.maxWidth = '300px';
+            tempMsg.style.margin = '0 auto';
+            tempMsg.innerText = `> ${msg}`;
+            document.body.appendChild(tempMsg);
+            setTimeout(() => tempMsg.remove(), 2000);
+        }
+        
+        // ========== RETRO EFFECTS ==========
+        const titleEl = document.querySelector('.terminal-title');
+        setInterval(() => {
+            if (titleEl) {
+                if (titleEl.innerHTML.endsWith("_")) {
+                    titleEl.innerHTML = "ROOT@BCEVM:~";
+                } else {
+                    titleEl.innerHTML = "ROOT@BCEVM:~_";
+                }
+            }
+        }, 800);
+        
+        const hackerName = document.querySelector('.hacker-name');
+        setInterval(() => {
+            if (Math.random() > 0.92) {
+                hackerName.style.opacity = '0.7';
+                setTimeout(() => {
+                    hackerName.style.opacity = '1';
+                }, 80);
+            }
+        }, 2000);
+        
+        // ========== SECURITY FEATURES ==========
+        document.addEventListener('contextmenu', (e) => {
+            e.preventDefault();
+            showRetroMsg("[ ACCESS DENIED ]");
+            return false;
+        });
+        
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && e.key === 'I') || 
+                (e.ctrlKey && e.key === 'u') || (e.ctrlKey && e.key === 'U')) {
+                e.preventDefault();
+                showRetroMsg("[ SECURITY ] Developer tools blocked");
+                return false;
+            }
+        });
+        
+        window.addEventListener('beforeunload', (e) => {
+            e.preventDefault();
+            e.returnValue = "⚠️ SESSION TERMINATED? ⚠️";
+            return e.returnValue;
+        });
+        
+        setInterval(() => {
+            const sysStatus = document.getElementById('sysStatus');
+            if (sysStatus && Math.random() > 0.8) {
+                const statuses = ['ACTIVE', 'IDLE', 'SCANNING', 'ROOT'];
+                sysStatus.innerText = statuses[Math.floor(Math.random() * statuses.length)];
+                setTimeout(() => {
+                    sysStatus.innerText = 'ACTIVE';
+                }, 800);
+            }
+        }, 5000);
+        
+        console.log("%c[ RETRO HACK MODE ACTIVATED - HTML5 AUDIO STABLE ]", "color: #2aff2a; font-size: 12px");
+        console.log("%cbcevm", "color: #2aff2a");
+        
+        let clickCount = 0;
+        const terminalBody = document.querySelector('.terminal-body');
+        terminalBody.addEventListener('click', () => {
+            clickCount++;
+            setTimeout(() => { clickCount = 0; }, 800);
+            if (clickCount === 3) {
+                showRetroMsg("💀 HACKTIVIST INDONESIA 💀");
+                clickCount = 0;
+            }
+        });
+        
+        // Touch optimization
+        const buttons = document.querySelectorAll('.retro-btn, .cassette-btn');
+        buttons.forEach(btn => {
+            btn.addEventListener('touchstart', function(e) {
+                this.style.transform = 'scale(0.96)';
+            });
+            btn.addEventListener('touchend', function(e) {
+                this.style.transform = '';
+            });
+        });
+    })();
+</script>
+</body>
+</html>

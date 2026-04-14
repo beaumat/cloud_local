@@ -97,11 +97,23 @@ class PaymentPeriodForm extends Component
                 'DATE_FROM'  => 'required|date',
                 'DATE_TO'    => 'required|date',
                 'RECEIPT_NO' => 'required|numeric',
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> cad6f31879e7447d848943a8d4d247d12b40e9a1
 
             ],
             [],
             [
 
+<<<<<<< HEAD
+=======
+=======
+            ],
+            [],
+            [
+>>>>>>> 3c71ebe73138bc062399be5f2d00a80bc03c62a2
+>>>>>>> cad6f31879e7447d848943a8d4d247d12b40e9a1
                 'DATE'       => 'OR Date',
                 'DATE_FROM'  => 'Date From',
                 'DATE_TO'    => 'Date To',
@@ -160,7 +172,15 @@ class PaymentPeriodForm extends Component
                     $this->accountJournalServices->updateObjectDate($TAX_JOURNAL_NO, $this->DATE);
                 }
                 // BILL
+<<<<<<< HEAD
                 if ($list->BILL_ID) {
+=======
+<<<<<<< HEAD
+                if ($list->BILL_ID) {
+=======
+                if ($list->BILL_ID > 0) {
+>>>>>>> 3c71ebe73138bc062399be5f2d00a80bc03c62a2
+>>>>>>> cad6f31879e7447d848943a8d4d247d12b40e9a1
                     $this->billingServices->billingUpdateDateOnly($list->BILL_ID, $this->DATE);
                     $BILL_JOURNAL_NO = $this->accountJournalServices->getRecord($this->billingServices->object_type_map_bill, $list->BILL_ID);
                     $this->accountJournalServices->updateObjectDate($BILL_JOURNAL_NO, $this->DATE);
