@@ -115,11 +115,11 @@
                     <i class="fa fa-print mr-1"></i> CF2
                 </a>
 
-                <a target="_BLANK"
+                {{-- <a target="_BLANK"
                     href="{{ route('patientsprintout_ncr', ['id' => $PHILHEALTH_ID]) }}"
                     class="btn btn-sm btn-info m-1">
                     <i class="fa fa-print mr-1"></i> BPN Consent Form
-                </a>
+                </a> --}}
             @endif
 
             <!-- CLOSE BUTTON (same row) -->
