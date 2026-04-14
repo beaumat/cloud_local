@@ -75,9 +75,6 @@ class PhilHealthServices
         ItemSoaItemizedServices $itemSoaItemizedServices,
         ItemSoaServices $itemSoaServices,
         PhilHealthProfFeeServices $philHealthProfFeeServices,
-<<<<<<< HEAD
-        UsersLogServices $usersLogServices
-=======
         UsersLogServices $usersLogServices,
         BillPaymentServices $billPaymentServices
 >>>>>>> 3c71ebe73138bc062399be5f2d00a80bc03c62a2
