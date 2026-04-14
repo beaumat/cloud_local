@@ -11,7 +11,11 @@
                 <th class="col-1 text-right">Cost</th>
                 <th class="col-1 text-right">Amount</th>
                 <th class="col-1 text-center">Tax</th>
+<<<<<<< HEAD
                 @if ($STATUS == $openStatus )
+=======
+                @if ($STATUS == $openStatus || $STATUS == 16)
+>>>>>>> 3c71ebe73138bc062399be5f2d00a80bc03c62a2
                     <th class="text-center col-2">Action</th>
                 @endif
             </tr>

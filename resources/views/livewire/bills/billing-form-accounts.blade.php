@@ -59,7 +59,11 @@
                             {{ $list->CLASS_NAME }}
                         @endif
                     </td>
+<<<<<<< HEAD
                     @if ($STATUS == $openStatus || $STATUS == 0)
+=======
+                    @if ($STATUS == $openStatus || $STATUS == 16)
+>>>>>>> 3c71ebe73138bc062399be5f2d00a80bc03c62a2
                         <td class="text-center">
                             @if ($editExpensesId === $list->ID)
                                 <button title="Update" id="updatebtn" wire:click="updateExpenses({{ $list->ID }})"

@@ -58,6 +58,10 @@ class PhilHealthServices
     private $itemSoaServices;
     private $philHealthProfFeeServices;
     private $usersLogServices;
+<<<<<<< HEAD
+=======
+    private $billPaymentServices;
+>>>>>>> 3c71ebe73138bc062399be5f2d00a80bc03c62a2
     public function __construct(
         ObjectServices $objectService,
         DateServices $dateServices,
@@ -71,7 +75,12 @@ class PhilHealthServices
         ItemSoaItemizedServices $itemSoaItemizedServices,
         ItemSoaServices $itemSoaServices,
         PhilHealthProfFeeServices $philHealthProfFeeServices,
+<<<<<<< HEAD
         UsersLogServices $usersLogServices
+=======
+        UsersLogServices $usersLogServices,
+        BillPaymentServices $billPaymentServices
+>>>>>>> 3c71ebe73138bc062399be5f2d00a80bc03c62a2
 
     ) {
         $this->object                      = $objectService;
@@ -87,6 +96,11 @@ class PhilHealthServices
         $this->itemSoaServices             = $itemSoaServices;
         $this->philHealthProfFeeServices   = $philHealthProfFeeServices;
         $this->usersLogServices            = $usersLogServices;
+<<<<<<< HEAD
+=======
+        $this->billPaymentServices         = $billPaymentServices;
+
+>>>>>>> 3c71ebe73138bc062399be5f2d00a80bc03c62a2
     }
     public function get($ID)
     {
@@ -997,6 +1011,35 @@ class PhilHealthServices
 
         return null;
     }
+<<<<<<< HEAD
+=======
+    public function deletePayableForDoctor(int $PHILHEALTH_ID): bool
+    {
+        $data = PhilHealthProfFee::where('PHIC_ID', '=', $PHILHEALTH_ID)->whereNotNull('BILL_ID')->first();
+
+        if ($data) {
+            $BILL_ID = (int) $data->BILL_ID;
+
+            if ($this->billPaymentServices->deletePaymentBill($BILL_ID)) {
+                return true;
+            }
+
+            $JOURNAL_NO = (int) $this->accountJournalServices->getRecord($this->billingServices->object_type_map_bill, $BILL_ID);
+            if ($JOURNAL_NO > 0) {
+                $this->accountJournalServices->UpdatedJournalAmountZero($JOURNAL_NO);
+            }
+
+            PhilHealthProfFee::where('PHIC_ID', '=', $PHILHEALTH_ID)
+                ->whereNotNull('BILL_ID')
+                ->update(['BILL_ID' => null]);
+
+            $this->billingServices->ForceDelete($BILL_ID);
+
+        }
+
+        return false;
+    }
+>>>>>>> 3c71ebe73138bc062399be5f2d00a80bc03c62a2
     public function makePayableForDoctor(int $PHILHEALTH_ID, int $LOCATION_ID, string $DATE_BILL)
     {
 
@@ -1367,4 +1410,11 @@ class PhilHealthServices
 
         return $result;
     }
+<<<<<<< HEAD
+=======
+    public function getDataByPayment(int $PAYMENT_ID)
+    {
+        return PhilHealth::where('PAYMENT_ID', $PAYMENT_ID)->get()->first() ?? null;
+    }
+>>>>>>> 3c71ebe73138bc062399be5f2d00a80bc03c62a2
 }

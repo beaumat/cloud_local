@@ -10,7 +10,11 @@ use App\Services\UserServices;
         <div class="container-fluid">
             <div class="row">
                 <div class="col-sm-6">
+<<<<<<< HEAD
                     <h5 class="m-0"><a href="{{ route('patientsphic') }}"> PhilHealth</a></h5>
+=======
+                    <h5 class="m-0"><a href="{{ route('patientsphic') }}"> PhilHealth </a></h5>
+>>>>>>> 3c71ebe73138bc062399be5f2d00a80bc03c62a2
                 </div>
                 <div class="col-sm-6 text-right">
                     @livewire('PhilHealth.QuickCreate', ['LOCATION_ID' => $locationid])

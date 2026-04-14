@@ -18,7 +18,11 @@
                 </div>
                 <div class="col-12">
                     <div class="row">
+<<<<<<< HEAD
                         <div class="col-1">
+=======
+                        <div class="col-6">
+>>>>>>> 3c71ebe73138bc062399be5f2d00a80bc03c62a2
                             <b class="bottom-line2"
                                 @if ($HEADER) style="opacity: 0.0" @endif>PHILHEALTH ACCREDITED:</b>
                             <div class="row mt-1">

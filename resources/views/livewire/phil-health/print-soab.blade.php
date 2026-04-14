@@ -142,7 +142,11 @@
                                         </div>
                                         <div class="col-12 text-left"
                                             @if (!$OUTPUT_SIGN) style="opacity: 0.0" @endif>
+<<<<<<< HEAD
                                             CONTACT No. {{ $USER_CONTACT }}</div>
+=======
+                                            CONTACT No. 0948-350-2140</div>
+>>>>>>> 3c71ebe73138bc062399be5f2d00a80bc03c62a2
                                     </div>
                                 </div>
                                 <div class="col-2"></div>

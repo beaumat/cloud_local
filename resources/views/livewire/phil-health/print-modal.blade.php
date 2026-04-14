@@ -58,6 +58,7 @@
 
                         </div>
                     </div>
+<<<<<<< HEAD
                      <div class='modal-footer'>
     <div class="w-100 text-center">
 
@@ -132,6 +133,89 @@
 
     </div>
 </div>
+=======
+                    <div class='modal-footer'>
+                        <div class="container">
+                            <div class="row">
+
+                                <div class="col-10 text-left">
+                                    <div class="row">
+
+                                        @if ($BASE_PRESIGN)
+                                            <a type="button" target="_BLANK" title="Print Statement of Accounts"
+                                                href="{{ route('patientsprintout_soa_temp_out', ['id' => $PHILHEALTH_ID]) }}"
+                                                class=" btn  btn-sm btn-primary mx-1">
+                                                <i class="fa fa-print" aria-hidden="true"></i> SOA
+                                            </a>
+                                            <a type="button" target="_BLANK" title="Print Treatment Summary"
+                                                href="{{ route('patientsprintout_summary_temp_out', ['id' => $PHILHEALTH_ID]) }}"
+                                                class=" btn  btn-sm btn-primary mx-1">
+                                                <i class="fa fa-print" aria-hidden="true"></i> Treatment
+                                            </a>
+                                        @else
+                                            <a type="button" target="_BLANK" title="Print Statement of Accounts"
+                                                href="{{ route('patientsprintout_soa', ['id' => $PHILHEALTH_ID]) }}"
+                                                class=" btn  btn-sm btn-primary ">
+                                                <i class="fa fa-print" aria-hidden="true"></i> SOA
+                                            </a>
+                                            <a type="button" target="_BLANK" title="Print Treatment Summary"
+                                                href="{{ route('patientsprintout_summary', ['id' => $PHILHEALTH_ID]) }}"
+                                                class=" btn  btn-sm btn-primary mx-1">
+                                                <i class="fa fa-print" aria-hidden="true"></i> Treatment
+                                            </a>
+                                        @endif
+
+
+
+                                        @if ($BASE_PRESIGN)
+                                            <a type="button" target="_BLANK" title="Print Philheath Form"
+                                                href="{{ route('patientsprintout_csf_temp_out', ['id' => $PHILHEALTH_ID]) }}"
+                                                class="btn btn-info btn-sm mx-1">
+                                                <i class="fa fa-print" aria-hidden="true"></i>
+                                                CSF
+                                            </a>
+                                        @else
+                                            <a type="button" target="_BLANK" title="Print Philheath Form"
+                                                href="{{ route('patientsprintout_csf', ['id' => $PHILHEALTH_ID]) }}"
+                                                class="btn btn-info btn-sm mx-1">
+                                                <i class="fa fa-print" aria-hidden="true"></i>
+                                                CSF
+                                            </a>
+                                            <a type="button" target="_BLANK" title="Print Philheath Form"
+                                                href="{{ route('patientsprintout_cf4', ['id' => $PHILHEALTH_ID]) }}"
+                                                class="btn btn-info btn-sm mx-1">
+                                                <i class="fa fa-print" aria-hidden="true"></i>
+                                                CF4
+                                            </a>
+                                            <a type="button" target="_BLANK" title="Print Philheath CF2 Form"
+                                                href="{{ route('patientsprintout_cf2', ['id' => $PHILHEALTH_ID]) }}"
+                                                class="btn btn-info btn-sm mx-1">
+                                                <i class="fa fa-print" aria-hidden="true"></i>
+                                                CF2
+                                            </a>
+
+                                             <!-- <a type="button" target="_BLANK" title="Print Philheath CF2 Form"
+                                                href="{{ route('patientsprintout_cf2', ['id' => $PHILHEALTH_ID]) }}"
+                                                class="btn btn-info btn-sm mx-1">
+                                                <i class="fa fa-print" aria-hidden="true"></i>
+                                                 
+                                            </a> -->
+                                        @endif
+
+                                    </div>
+
+                                </div>
+                                <div class="col-2 text-right">
+
+                                    <button type="button" wire:click='closeModal()' class="btn btn-danger btn-sm mx-1">
+                                        Close
+                                    </button>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+>>>>>>> 3c71ebe73138bc062399be5f2d00a80bc03c62a2
                 </div>
             </div>
         </div>

@@ -193,7 +193,11 @@ class TaxCreditServices
                 ]
             );
 
+<<<<<<< HEAD
              $this->usersLogServices->AddLogs(TransType::UPDATE, LogEntity::TAX_CREDIT_INVOICES, $TAX_CREDIT_ID);
+=======
+        $this->usersLogServices->AddLogs(TransType::UPDATE, LogEntity::TAX_CREDIT_INVOICES, $TAX_CREDIT_ID);
+>>>>>>> 3c71ebe73138bc062399be5f2d00a80bc03c62a2
     }
     public function TaxCreditInvoiceExists(int $TAX_CREDIT_ID, int $INVOICE_ID): bool
     {
@@ -219,7 +223,11 @@ class TaxCreditServices
     {
         TaxCreditInvoices::where('ID', '=', $ID)->delete();
 
+<<<<<<< HEAD
          $this->usersLogServices->AddLogs(TransType::DELETE, LogEntity::TAX_CREDIT_INVOICES, $TAX_CREDIT_ID);
+=======
+        $this->usersLogServices->AddLogs(TransType::DELETE, LogEntity::TAX_CREDIT_INVOICES, $TAX_CREDIT_ID);
+>>>>>>> 3c71ebe73138bc062399be5f2d00a80bc03c62a2
     }
     public function GetTaxCreditInvoice(int $ID)
     {
@@ -484,4 +492,24 @@ class TaxCreditServices
         return $result;
     }
 
+<<<<<<< HEAD
+=======
+    public function GetTaxID(int $PAYMENT_ID): int
+    {
+        //SELECT TAX_CREDIT_ID FROM tax_credit_invoices INNER JOIN payment_invoices ON tax_credit_invoices.INVOICE_ID = payment_invoices.INVOICE_ID WHERE payment_invoices.PAYMENT_ID = 321
+        $result = TaxCreditInvoices::query()
+            ->select(['tax_credit_invoices.TAX_CREDIT_ID'])
+            ->join('payment_invoices', 'payment_invoices.INVOICE_ID', '=', 'tax_credit_invoices.INVOICE_ID')
+            ->where('payment_invoices.PAYMENT_ID', '=', $PAYMENT_ID)
+            ->get()
+            ->first();
+
+
+        if ($result) {
+            return (int) $result->TAX_CREDIT_ID;
+        }
+
+        return 0;
+    }
+>>>>>>> 3c71ebe73138bc062399be5f2d00a80bc03c62a2
 }
