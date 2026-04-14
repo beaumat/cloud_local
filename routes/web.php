@@ -142,7 +142,7 @@ use App\Livewire\PaymentTerm\PaymentTermList;
 use App\Livewire\Payment\PaymentForm;
 use App\Livewire\Payment\PaymentList;
 use App\Livewire\PhilhealthPrint\PrintOutCf2;
-use App\Livewire\PhilhealthPrint\PrintOutNCR;
+//use App\Livewire\PhilhealthPrint\PrintOutNCR;
 use App\Livewire\PhilhealthPrint\PrintOutCf4;
 use App\Livewire\PhilhealthPrint\PrintOutCf4TempOut;
 use App\Livewire\PhilhealthPrint\PrintOutCsf;
@@ -283,15 +283,13 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/{id}/printout-csf', PrintOutCsf::class)->name('printout_csf')->middleware(['permission:patient.philhealth.print']);
             Route::get('/{id}/printout-cf4', PrintOutCf4::class)->name('printout_cf4')->middleware(['permission:patient.philhealth.print']);
             Route::get('/{id}/printout-cf2', PrintOutCf2::class)->name('printout_cf2')->middleware(['permission:patient.philhealth.print']);
-            Route::get('/{id}/printout-ncr', PrintOutNCR::class)->name('printout_ncr')->middleware(['permission:patient.philhealth.print']);
-<<<<<<< HEAD
+           // Route::get('/{id}/printout-ncr', PrintOutNCR::class)->name('printout_ncr')->middleware(['permission:patient.philhealth.print']);
             
-=======
->>>>>>> 3c71ebe73138bc062399be5f2d00a80bc03c62a2
             // Print Temporary Pre-sign
             Route::get('/{id}/printout-soa-temp', PrintOutSoaTemp::class)->name('printout_soa_temp')->middleware(['permission:patient.philhealth.print']);
             Route::get('/{id}/printout-summary-temp', PrintOutSummaryTemp::class)->name('printout_summary_temp')->middleware(['permission:patient.philhealth.print']);
             Route::get('/{id}/printout-csf-temp', PrintOutCsfTemp::class)->name('printout_csf_temp')->middleware(['permission:patient.philhealth.print']);
+
 
             // Print Temporary Pre-sign Result Only
             Route::get('/{id}/printout-soa-temp-out', PrintOutSoaTempOut::class)->name('printout_soa_temp_out')->middleware(['permission:patient.philhealth.print']);

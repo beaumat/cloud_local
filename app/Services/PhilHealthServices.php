@@ -58,10 +58,7 @@ class PhilHealthServices
     private $itemSoaServices;
     private $philHealthProfFeeServices;
     private $usersLogServices;
-<<<<<<< HEAD
-=======
     private $billPaymentServices;
->>>>>>> 3c71ebe73138bc062399be5f2d00a80bc03c62a2
     public function __construct(
         ObjectServices $objectService,
         DateServices $dateServices,
@@ -77,7 +74,6 @@ class PhilHealthServices
         PhilHealthProfFeeServices $philHealthProfFeeServices,
         UsersLogServices $usersLogServices,
         BillPaymentServices $billPaymentServices
->>>>>>> 3c71ebe73138bc062399be5f2d00a80bc03c62a2
 
     ) {
         $this->object                      = $objectService;
@@ -93,11 +89,8 @@ class PhilHealthServices
         $this->itemSoaServices             = $itemSoaServices;
         $this->philHealthProfFeeServices   = $philHealthProfFeeServices;
         $this->usersLogServices            = $usersLogServices;
-<<<<<<< HEAD
-=======
         $this->billPaymentServices         = $billPaymentServices;
 
->>>>>>> 3c71ebe73138bc062399be5f2d00a80bc03c62a2
     }
     public function get($ID)
     {
