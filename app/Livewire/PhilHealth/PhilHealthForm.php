@@ -2,12 +2,17 @@
 namespace App\Livewire\PhilHealth;
 
 <<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> cad6f31879e7447d848943a8d4d247d12b40e9a1
 use App\Services\ContactServices;
 use App\Services\HemoServices;
 use App\Services\LocationServices;
 use App\Services\PhilHealthServices;
 use App\Services\PhilHealthSoaCustomServices;
 use App\Services\UserServices;
+<<<<<<< HEAD
+=======
 =======
 use App\Services\AccountJournalServices;
 use App\Services\BillPaymentServices;
@@ -24,6 +29,7 @@ use App\Services\TaxCreditServices;
 use App\Services\UserServices;
 use Illuminate\Support\Facades\DB;
 >>>>>>> 3c71ebe73138bc062399be5f2d00a80bc03c62a2
+>>>>>>> cad6f31879e7447d848943a8d4d247d12b40e9a1
 use Illuminate\Support\Facades\Redirect;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
@@ -69,6 +75,9 @@ class PhilHealthForm extends Component
 <<<<<<< HEAD
     public function SelectTab($tab)
 =======
+<<<<<<< HEAD
+    public function SelectTab($tab)
+=======
     private $taxCreditServices;
     private $patientPaymentServices;
     private $paymentServices;
@@ -110,6 +119,7 @@ class PhilHealthForm extends Component
 
       public function SelectTab($tab)
 >>>>>>> 3c71ebe73138bc062399be5f2d00a80bc03c62a2
+>>>>>>> cad6f31879e7447d848943a8d4d247d12b40e9a1
     {
         $this->tab = $tab;
     }
@@ -120,6 +130,9 @@ class PhilHealthForm extends Component
         $this->AR_NO   = $ar['AR_NO'];
     }
 <<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> cad6f31879e7447d848943a8d4d247d12b40e9a1
     public function boot(
         PhilHealthServices $philHealthServices,
         HemoServices $hemoServices,
@@ -135,8 +148,11 @@ class PhilHealthForm extends Component
         $this->userServices                = $userServices;
         $this->philHealthSoaCustomServices = $philHealthSoaCustomServices;
     }
+<<<<<<< HEAD
+=======
 =======
 >>>>>>> 3c71ebe73138bc062399be5f2d00a80bc03c62a2
+>>>>>>> cad6f31879e7447d848943a8d4d247d12b40e9a1
     public function UpdatedContactId()
     {
 
@@ -231,6 +247,9 @@ class PhilHealthForm extends Component
     public function print()
     {
 <<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> cad6f31879e7447d848943a8d4d247d12b40e9a1
         if( $this->ID == 0) {
 
         return;
@@ -249,6 +268,8 @@ class PhilHealthForm extends Component
             // }
 
             // restriction end
+<<<<<<< HEAD
+=======
 =======
         if ($this->ID == 0) {
 
@@ -258,6 +279,7 @@ class PhilHealthForm extends Component
         $ds = $this->philHealthServices->get($this->ID);
         if ($ds) {
 >>>>>>> 3c71ebe73138bc062399be5f2d00a80bc03c62a2
+>>>>>>> cad6f31879e7447d848943a8d4d247d12b40e9a1
             $data = [
                 'PHILHEALTH_ID' => $this->ID,
             ];
@@ -350,8 +372,11 @@ class PhilHealthForm extends Component
     }
 <<<<<<< HEAD
 =======
+<<<<<<< HEAD
+=======
 
 >>>>>>> 3c71ebe73138bc062399be5f2d00a80bc03c62a2
+>>>>>>> cad6f31879e7447d848943a8d4d247d12b40e9a1
     public function getChangeDoctor()
     {
         $this->dispatch('call-open-update-pf');
@@ -374,6 +399,8 @@ class PhilHealthForm extends Component
     {
         $this->dispatch('open-finder');
     }
+<<<<<<< HEAD
+=======
 <<<<<<< HEAD
 =======
     public function deletePaymentProccess()
@@ -597,6 +624,7 @@ class PhilHealthForm extends Component
     }
 
 >>>>>>> 3c71ebe73138bc062399be5f2d00a80bc03c62a2
+>>>>>>> cad6f31879e7447d848943a8d4d247d12b40e9a1
     public function render()
     {
         return view('livewire.phil-health.phil-health-form');

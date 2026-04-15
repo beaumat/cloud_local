@@ -2,7 +2,11 @@
 <<<<<<< HEAD
 
 =======
+<<<<<<< HEAD
+
+=======
 >>>>>>> 3c71ebe73138bc062399be5f2d00a80bc03c62a2
+>>>>>>> cad6f31879e7447d848943a8d4d247d12b40e9a1
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -12,16 +16,22 @@ class PhilHealth extends Model
 {
     use HasFactory;
 <<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> cad6f31879e7447d848943a8d4d247d12b40e9a1
     protected $table = 'philhealth';
     protected $primaryKey = 'ID';
     public $timestamps = false;
     protected $fillable = [
+<<<<<<< HEAD
+=======
 =======
     protected $table      = 'philhealth';
     protected $primaryKey = 'ID';
     public $timestamps    = false;
     protected $fillable   = [
 >>>>>>> 3c71ebe73138bc062399be5f2d00a80bc03c62a2
+>>>>>>> cad6f31879e7447d848943a8d4d247d12b40e9a1
         'ID',
         'RECORDED_ON',
         'CODE',
@@ -124,11 +134,15 @@ class PhilHealth extends Model
 <<<<<<< HEAD
         'CLAIM_NO'
 =======
+<<<<<<< HEAD
+        'CLAIM_NO'
+=======
         'CLAIM_NO',
         'IS_MANUAL',
         'NO_TREATMENT',
         'PAYMENT_ID',
 >>>>>>> 3c71ebe73138bc062399be5f2d00a80bc03c62a2
+>>>>>>> cad6f31879e7447d848943a8d4d247d12b40e9a1
     ];
 
 }

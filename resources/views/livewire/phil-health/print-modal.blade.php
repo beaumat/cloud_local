@@ -59,6 +59,9 @@
                         </div>
                     </div>
 <<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> cad6f31879e7447d848943a8d4d247d12b40e9a1
                      <div class='modal-footer'>
     <div class="w-100 text-center">
 
@@ -116,11 +119,19 @@
                     <i class="fa fa-print mr-1"></i> CF2
                 </a>
 
+<<<<<<< HEAD
+                <a target="_BLANK"
+                    href="{{ route('patientsprintout_ncr', ['id' => $PHILHEALTH_ID]) }}"
+                    class="btn btn-sm btn-info m-1">
+                    <i class="fa fa-print mr-1"></i> BPN Consent Form
+                </a>
+=======
                 {{-- <a target="_BLANK"
                     href="{{ route('patientsprintout_ncr', ['id' => $PHILHEALTH_ID]) }}"
                     class="btn btn-sm btn-info m-1">
                     <i class="fa fa-print mr-1"></i> BPN Consent Form
                 </a> --}}
+>>>>>>> cad6f31879e7447d848943a8d4d247d12b40e9a1
             @endif
 
             <!-- CLOSE BUTTON (same row) -->
@@ -133,6 +144,8 @@
 
     </div>
 </div>
+<<<<<<< HEAD
+=======
 =======
                     <div class='modal-footer'>
                         <div class="container">
@@ -216,6 +229,7 @@
                         </div>
                     </div>
 >>>>>>> 3c71ebe73138bc062399be5f2d00a80bc03c62a2
+>>>>>>> cad6f31879e7447d848943a8d4d247d12b40e9a1
                 </div>
             </div>
         </div>

@@ -2,7 +2,11 @@
 <<<<<<< HEAD
 
 =======
+<<<<<<< HEAD
+
+=======
 >>>>>>> 3c71ebe73138bc062399be5f2d00a80bc03c62a2
+>>>>>>> cad6f31879e7447d848943a8d4d247d12b40e9a1
 namespace App\Livewire\Patient;
 
 use App\Models\ContactGroup;
@@ -29,7 +33,12 @@ use Livewire\Component;
 
 
 =======
+<<<<<<< HEAD
+
+
+=======
 >>>>>>> 3c71ebe73138bc062399be5f2d00a80bc03c62a2
+>>>>>>> cad6f31879e7447d848943a8d4d247d12b40e9a1
 #[Title('Patients')]
 class PatientForm extends Component
 {
@@ -71,6 +80,9 @@ class PatientForm extends Component
     public string $NICKNAME;
     public string $HIRE_DATE;
 <<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> cad6f31879e7447d848943a8d4d247d12b40e9a1
     public $taxList = [];
     public $contactGroup = [];
     public $paymentTermList = [];
@@ -83,6 +95,8 @@ class PatientForm extends Component
     public int $SCHEDULE_TYPE;
     public $scheduleTypeList = [];
     public $locationList = [];
+<<<<<<< HEAD
+=======
 =======
     public $taxList         = [];
     public $contactGroup    = [];
@@ -97,6 +111,7 @@ class PatientForm extends Component
     public $scheduleTypeList = [];
     public $locationList     = [];
 >>>>>>> 3c71ebe73138bc062399be5f2d00a80bc03c62a2
+>>>>>>> cad6f31879e7447d848943a8d4d247d12b40e9a1
     public int $PATIENT_TYPE_ID;
     public int $PATIENT_STATUS_ID;
     public bool $ADMITTED;
@@ -115,9 +130,14 @@ class PatientForm extends Component
     public string $PIN = '';
     public string $PEN = '';
 =======
+<<<<<<< HEAD
+    public string $PIN = '';
+    public string $PEN = '';
+=======
     public string $PIN      = '';
     public string $PEN      = '';
 >>>>>>> 3c71ebe73138bc062399be5f2d00a80bc03c62a2
+>>>>>>> cad6f31879e7447d848943a8d4d247d12b40e9a1
     public bool $IS_PATIENT = true;
     public string $MEMBER_TEL_NO;
     public string $MEMBER_MOBILE;
@@ -179,8 +199,12 @@ class PatientForm extends Component
 <<<<<<< HEAD
     public $patientTypeList = [];
 =======
+<<<<<<< HEAD
+    public $patientTypeList = [];
+=======
     public $patientTypeList   = [];
 >>>>>>> 3c71ebe73138bc062399be5f2d00a80bc03c62a2
+>>>>>>> cad6f31879e7447d848943a8d4d247d12b40e9a1
     public $patientStatusList = [];
     public string $DATE_ADMISSION;
 
@@ -195,12 +219,17 @@ class PatientForm extends Component
         PatientClassServices $patientClassServices
     ) {
 <<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> cad6f31879e7447d848943a8d4d247d12b40e9a1
         $this->contactServices = $contactServices;
         $this->locationServices = $locationServices;
         $this->userServices = $userServices;
         $this->contactRequirementServices = $contactRequirementServices;
         $this->dateServices = $dateServices;
         $this->patientClassServices = $patientClassServices;
+<<<<<<< HEAD
+=======
 =======
         $this->contactServices            = $contactServices;
         $this->locationServices           = $locationServices;
@@ -209,6 +238,7 @@ class PatientForm extends Component
         $this->dateServices               = $dateServices;
         $this->patientClassServices       = $patientClassServices;
 >>>>>>> 3c71ebe73138bc062399be5f2d00a80bc03c62a2
+>>>>>>> cad6f31879e7447d848943a8d4d247d12b40e9a1
     }
 
     public $refreshToggle = false;
@@ -219,8 +249,12 @@ class PatientForm extends Component
 <<<<<<< HEAD
         $this->refreshToggle = !$this->refreshToggle;
 =======
+<<<<<<< HEAD
+        $this->refreshToggle = !$this->refreshToggle;
+=======
         $this->refreshToggle = ! $this->refreshToggle;
 >>>>>>> 3c71ebe73138bc062399be5f2d00a80bc03c62a2
+>>>>>>> cad6f31879e7447d848943a8d4d247d12b40e9a1
     }
     public function mount($id = null, $locationId = null)
     {
@@ -234,6 +268,9 @@ class PatientForm extends Component
         }
 
 <<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> cad6f31879e7447d848943a8d4d247d12b40e9a1
         $this->patientClassList = $this->patientClassServices->getList();
         $this->taxList = Tax::query()->select('ID', 'NAME')->where('TAX_TYPE', '=', 3)->orderBy('ID', 'desc')->get();
         $this->salesMan = Contacts::query()->select('ID', 'NAME')->where('INACTIVE', '0')->where('TYPE', '2')->get();
@@ -244,6 +281,8 @@ class PatientForm extends Component
         $this->locationList = $this->locationServices->getList();
         $this->scheduleTypeList = ScheduleType::all();
         $this->patientTypeList = HemodialysisMachines::select(['ID', 'DESCRIPTION'])->get();
+<<<<<<< HEAD
+=======
 =======
         $this->patientClassList  = $this->patientClassServices->getList();
         $this->taxList           = Tax::query()->select('ID', 'NAME')->where('TAX_TYPE', '=', 3)->orderBy('ID', 'desc')->get();
@@ -256,12 +295,16 @@ class PatientForm extends Component
         $this->scheduleTypeList  = ScheduleType::all();
         $this->patientTypeList   = HemodialysisMachines::select(['ID', 'DESCRIPTION'])->get();
 >>>>>>> 3c71ebe73138bc062399be5f2d00a80bc03c62a2
+>>>>>>> cad6f31879e7447d848943a8d4d247d12b40e9a1
         $this->patientStatusList = PatientStatus::all();
 
         if (is_numeric($id)) {
             $contact = $this->contactServices->get($id, $this->TYPE);
             if ($contact) {
 <<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> cad6f31879e7447d848943a8d4d247d12b40e9a1
                 $this->LOCATION_ID = $locationId > 0 ? $locationId : $contact->LOCATION_ID;
                 $this->TYPE = $contact->TYPE ?? 3;
                 $this->ID = $contact->ID;
@@ -354,6 +397,8 @@ class PatientForm extends Component
 
                 $this->PIN_DEPENDENT = $contact->PIN_DEPENDENT ?? '';
                 $this->IS_DEPENDENT = $contact->IS_DEPENDENT ?? false;
+<<<<<<< HEAD
+=======
 =======
                 $this->LOCATION_ID             = $locationId > 0 ? $locationId : $contact->LOCATION_ID;
                 $this->TYPE                    = $contact->TYPE ?? 3;
@@ -447,6 +492,7 @@ class PatientForm extends Component
                 $this->PIN_DEPENDENT = $contact->PIN_DEPENDENT ?? '';
                 $this->IS_DEPENDENT  = $contact->IS_DEPENDENT ?? false;
 >>>>>>> 3c71ebe73138bc062399be5f2d00a80bc03c62a2
+>>>>>>> cad6f31879e7447d848943a8d4d247d12b40e9a1
                 $this->CUSTOM_FIELD2 = $contact->CUSTOM_FIELD2 ?? '';
                 $this->CUSTOM_FIELD3 = $contact->CUSTOM_FIELD3 ?? '';
                 $this->CUSTOM_FIELD4 = $contact->CUSTOM_FIELD4 ?? '';
@@ -463,6 +509,9 @@ class PatientForm extends Component
         }
 
 <<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> cad6f31879e7447d848943a8d4d247d12b40e9a1
         $this->ID = 0;
         $this->NAME = '';
         $this->COMPANY_NAME = '';
@@ -555,6 +604,8 @@ class PatientForm extends Component
         $this->PIN_DEPENDENT = '';
         $this->IS_DEPENDENT = false;
         $this->HEIGHT = 0;
+<<<<<<< HEAD
+=======
 =======
         $this->ID                         = 0;
         $this->NAME                       = '';
@@ -649,6 +700,7 @@ class PatientForm extends Component
         $this->IS_DEPENDENT  = false;
         $this->HEIGHT        = 0;
 >>>>>>> 3c71ebe73138bc062399be5f2d00a80bc03c62a2
+>>>>>>> cad6f31879e7447d848943a8d4d247d12b40e9a1
         $this->CUSTOM_FIELD3 = '';
         $this->CUSTOM_FIELD4 = '';
         $this->CUSTOM_FIELD5 = '';
@@ -656,11 +708,16 @@ class PatientForm extends Component
     public function updatedISPATIENT()
     {
 <<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> cad6f31879e7447d848943a8d4d247d12b40e9a1
         $this->MEMBER_IS_CHILD = false;
         $this->MEMBER_IS_PARENT = false;
         $this->MEMBER_IS_SPOUSE = false;
 
         $this->IS_DEPENDENT = false;
+<<<<<<< HEAD
+=======
 =======
         $this->MEMBER_IS_CHILD  = false;
         $this->MEMBER_IS_PARENT = false;
@@ -668,6 +725,7 @@ class PatientForm extends Component
 
         $this->IS_DEPENDENT  = false;
 >>>>>>> 3c71ebe73138bc062399be5f2d00a80bc03c62a2
+>>>>>>> cad6f31879e7447d848943a8d4d247d12b40e9a1
         $this->PIN_DEPENDENT = '';
     }
     public function updatedADMITTED()
@@ -685,8 +743,12 @@ class PatientForm extends Component
 <<<<<<< HEAD
             $fullname = $this->FIRST_NAME . ' ' . $firstLetter . '. ' . $this->LAST_NAME;
 =======
+<<<<<<< HEAD
+            $fullname = $this->FIRST_NAME . ' ' . $firstLetter . '. ' . $this->LAST_NAME;
+=======
             $fullname    = $this->FIRST_NAME . ' ' . $firstLetter . '. ' . $this->LAST_NAME;
 >>>>>>> 3c71ebe73138bc062399be5f2d00a80bc03c62a2
+>>>>>>> cad6f31879e7447d848943a8d4d247d12b40e9a1
         } else {
             $fullname = $this->FIRST_NAME . ' ' . $this->MIDDLE_NAME . ' ' . $this->LAST_NAME;
         }
@@ -694,8 +756,12 @@ class PatientForm extends Component
 <<<<<<< HEAD
         $this->NAME = strtoupper($fullname);
 =======
+<<<<<<< HEAD
+        $this->NAME = strtoupper($fullname);
+=======
         $this->NAME          = strtoupper($fullname);
 >>>>>>> 3c71ebe73138bc062399be5f2d00a80bc03c62a2
+>>>>>>> cad6f31879e7447d848943a8d4d247d12b40e9a1
         $this->PRINT_NAME_AS = $this->NAME;
     }
     public function updatedlastname()
@@ -716,6 +782,9 @@ class PatientForm extends Component
             ->where('TYPE', '=', $this->TYPE)
             ->update([
 <<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> cad6f31879e7447d848943a8d4d247d12b40e9a1
                 'LOCATION_ID' => $this->LOCATION_ID,
                 'ADDRESS_UNIT_ROOM_FLOOR' => $this->ADDRESS_UNIT_ROOM_FLOOR,
                 'ADDRESS_BUILDING_NAME' => $this->ADDRESS_BUILDING_NAME,
@@ -765,6 +834,8 @@ class PatientForm extends Component
                 'DATE_ADMISSION' => $this->DATE_ADMISSION,
                 'DATE_EXPIRED' => $this->DATE_EXPIRED ? $this->DATE_EXPIRED : null,
                 'CLASS_ID' => $this->CLASS_ID > 0 ? $this->CLASS_ID : 0
+<<<<<<< HEAD
+=======
 =======
                 'LOCATION_ID'                => $this->LOCATION_ID,
                 'ADDRESS_UNIT_ROOM_FLOOR'    => $this->ADDRESS_UNIT_ROOM_FLOOR,
@@ -816,6 +887,7 @@ class PatientForm extends Component
                 'DATE_EXPIRED'               => $this->DATE_EXPIRED ? $this->DATE_EXPIRED : null,
                 'CLASS_ID'                   => $this->CLASS_ID > 0 ? $this->CLASS_ID : 0,
 >>>>>>> 3c71ebe73138bc062399be5f2d00a80bc03c62a2
+>>>>>>> cad6f31879e7447d848943a8d4d247d12b40e9a1
             ]);
     }
     public function save()
@@ -824,6 +896,9 @@ class PatientForm extends Component
         $this->validate(
             [
 <<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> cad6f31879e7447d848943a8d4d247d12b40e9a1
                 'NAME' => 'required|max:100|unique:contact,name,' . $this->ID,
                 'FIRST_NAME' => 'required',
                 'LAST_NAME' => 'required',
@@ -833,6 +908,8 @@ class PatientForm extends Component
                 'DATE_ADMISSION' => 'required|date',
                 'PATIENT_TYPE_ID' => 'required|not_in:0',
                 'CLASS_ID' => 'required|exists:patient_class,id',
+<<<<<<< HEAD
+=======
 =======
                 'NAME'            => 'required|max:100|unique:contact,name,' . $this->ID,
                 'FIRST_NAME'      => 'required',
@@ -844,11 +921,15 @@ class PatientForm extends Component
                 'PATIENT_TYPE_ID' => 'required|not_in:0',
                 'CLASS_ID'        => 'required|exists:patient_class,id',
 >>>>>>> 3c71ebe73138bc062399be5f2d00a80bc03c62a2
+>>>>>>> cad6f31879e7447d848943a8d4d247d12b40e9a1
 
             ],
             [],
             [
 <<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> cad6f31879e7447d848943a8d4d247d12b40e9a1
                 'NAME' => 'Name',
                 'FIRST_NAME' => 'Firstname',
                 'LAST_NAME' => 'Lastname',
@@ -858,6 +939,8 @@ class PatientForm extends Component
                 'DATE_ADMISSION' => 'Date Admission',
                 'PATIENT_TYPE_ID' => 'Type',
                 'CLASS_ID' => 'Classification',
+<<<<<<< HEAD
+=======
 =======
                 'NAME'            => 'Name',
                 'FIRST_NAME'      => 'Firstname',
@@ -869,6 +952,7 @@ class PatientForm extends Component
                 'PATIENT_TYPE_ID' => 'Type',
                 'CLASS_ID'        => 'Classification',
 >>>>>>> 3c71ebe73138bc062399be5f2d00a80bc03c62a2
+>>>>>>> cad6f31879e7447d848943a8d4d247d12b40e9a1
 
             ]
         );
@@ -882,6 +966,9 @@ class PatientForm extends Component
                     [],
                     [
 <<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> cad6f31879e7447d848943a8d4d247d12b40e9a1
                         'SECOND_CASE_RATE' => 'PDD Registration No.'
                     ]
                 );
@@ -895,6 +982,8 @@ class PatientForm extends Component
 
 
 
+<<<<<<< HEAD
+=======
 =======
                         'SECOND_CASE_RATE' => 'PDD Registration No.',
                     ]
@@ -907,6 +996,7 @@ class PatientForm extends Component
         }
 
 >>>>>>> 3c71ebe73138bc062399be5f2d00a80bc03c62a2
+>>>>>>> cad6f31879e7447d848943a8d4d247d12b40e9a1
         if ($this->contactServices->is12CharRequired($this->PIN)) {
             session()->flash('error', 'Invalid (PIN). must 12 character only.');
             return;

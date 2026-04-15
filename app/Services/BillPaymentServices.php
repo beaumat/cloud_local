@@ -42,6 +42,8 @@ class BillPaymentServices
     }
 <<<<<<< HEAD
 =======
+<<<<<<< HEAD
+=======
     public function billExist(int $BILL_ID): bool
     {
         $data = CheckBills::where('BILL_ID', $BILL_ID)
@@ -76,6 +78,7 @@ class BillPaymentServices
         return false;
     }
 >>>>>>> 3c71ebe73138bc062399be5f2d00a80bc03c62a2
+>>>>>>> cad6f31879e7447d848943a8d4d247d12b40e9a1
     public function Store(string $CODE, string $DATE, int $BANK_ACCOUNT_ID, int $PAY_TO_ID, int $LOCATION_ID, float $AMOUNT, string $NOTES, int $ACCOUNTS_PAYABLE_ID): int
     {
 
@@ -345,17 +348,23 @@ class BillPaymentServices
     {
 <<<<<<< HEAD
 =======
+<<<<<<< HEAD
+=======
 
 
 >>>>>>> 3c71ebe73138bc062399be5f2d00a80bc03c62a2
+>>>>>>> cad6f31879e7447d848943a8d4d247d12b40e9a1
         if ($CHECK_ID == 0) {
             return 0;
         }
 
 <<<<<<< HEAD
 =======
+<<<<<<< HEAD
+=======
         
 >>>>>>> 3c71ebe73138bc062399be5f2d00a80bc03c62a2
+>>>>>>> cad6f31879e7447d848943a8d4d247d12b40e9a1
         $result = CheckBills::query()
             ->select([
                 DB::raw('IFNULL(SUM(check_bills.AMOUNT_PAID),0) as PAID'),

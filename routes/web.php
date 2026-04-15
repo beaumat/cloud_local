@@ -283,8 +283,13 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/{id}/printout-csf', PrintOutCsf::class)->name('printout_csf')->middleware(['permission:patient.philhealth.print']);
             Route::get('/{id}/printout-cf4', PrintOutCf4::class)->name('printout_cf4')->middleware(['permission:patient.philhealth.print']);
             Route::get('/{id}/printout-cf2', PrintOutCf2::class)->name('printout_cf2')->middleware(['permission:patient.philhealth.print']);
+<<<<<<< HEAD
            // Route::get('/{id}/printout-ncr', PrintOutNCR::class)->name('printout_ncr')->middleware(['permission:patient.philhealth.print']);
             
+=======
+            Route::get('/{id}/printout-ncr', PrintOutNCR::class)->name('printout_ncr')->middleware(['permission:patient.philhealth.print']);
+
+>>>>>>> dbf5be49ebf3745f8b47f8f654069dd2dc81c3fe
             // Print Temporary Pre-sign
             Route::get('/{id}/printout-soa-temp', PrintOutSoaTemp::class)->name('printout_soa_temp')->middleware(['permission:patient.philhealth.print']);
             Route::get('/{id}/printout-summary-temp', PrintOutSummaryTemp::class)->name('printout_summary_temp')->middleware(['permission:patient.philhealth.print']);

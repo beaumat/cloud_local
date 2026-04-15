@@ -58,7 +58,17 @@ class PhilHealthServices
     private $itemSoaServices;
     private $philHealthProfFeeServices;
     private $usersLogServices;
+<<<<<<< HEAD
     private $billPaymentServices;
+=======
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+=======
+    private $billPaymentServices;
+>>>>>>> 3c71ebe73138bc062399be5f2d00a80bc03c62a2
+>>>>>>> cad6f31879e7447d848943a8d4d247d12b40e9a1
+>>>>>>> dbf5be49ebf3745f8b47f8f654069dd2dc81c3fe
     public function __construct(
         ObjectServices $objectService,
         DateServices $dateServices,
@@ -72,8 +82,21 @@ class PhilHealthServices
         ItemSoaItemizedServices $itemSoaItemizedServices,
         ItemSoaServices $itemSoaServices,
         PhilHealthProfFeeServices $philHealthProfFeeServices,
+<<<<<<< HEAD
         UsersLogServices $usersLogServices,
         BillPaymentServices $billPaymentServices
+=======
+<<<<<<< HEAD
+        UsersLogServices $usersLogServices
+=======
+<<<<<<< HEAD
+        UsersLogServices $usersLogServices
+=======
+        UsersLogServices $usersLogServices,
+        BillPaymentServices $billPaymentServices
+>>>>>>> 3c71ebe73138bc062399be5f2d00a80bc03c62a2
+>>>>>>> cad6f31879e7447d848943a8d4d247d12b40e9a1
+>>>>>>> dbf5be49ebf3745f8b47f8f654069dd2dc81c3fe
 
     ) {
         $this->object                      = $objectService;
@@ -89,8 +112,19 @@ class PhilHealthServices
         $this->itemSoaServices             = $itemSoaServices;
         $this->philHealthProfFeeServices   = $philHealthProfFeeServices;
         $this->usersLogServices            = $usersLogServices;
+<<<<<<< HEAD
         $this->billPaymentServices         = $billPaymentServices;
 
+=======
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+=======
+        $this->billPaymentServices         = $billPaymentServices;
+
+>>>>>>> 3c71ebe73138bc062399be5f2d00a80bc03c62a2
+>>>>>>> cad6f31879e7447d848943a8d4d247d12b40e9a1
+>>>>>>> dbf5be49ebf3745f8b47f8f654069dd2dc81c3fe
     }
     public function get($ID)
     {
@@ -1003,6 +1037,8 @@ class PhilHealthServices
     }
 <<<<<<< HEAD
 =======
+<<<<<<< HEAD
+=======
     public function deletePayableForDoctor(int $PHILHEALTH_ID): bool
     {
         $data = PhilHealthProfFee::where('PHIC_ID', '=', $PHILHEALTH_ID)->whereNotNull('BILL_ID')->first();
@@ -1030,6 +1066,7 @@ class PhilHealthServices
         return false;
     }
 >>>>>>> 3c71ebe73138bc062399be5f2d00a80bc03c62a2
+>>>>>>> cad6f31879e7447d848943a8d4d247d12b40e9a1
     public function makePayableForDoctor(int $PHILHEALTH_ID, int $LOCATION_ID, string $DATE_BILL)
     {
 
@@ -1402,9 +1439,12 @@ class PhilHealthServices
     }
 <<<<<<< HEAD
 =======
+<<<<<<< HEAD
+=======
     public function getDataByPayment(int $PAYMENT_ID)
     {
         return PhilHealth::where('PAYMENT_ID', $PAYMENT_ID)->get()->first() ?? null;
     }
 >>>>>>> 3c71ebe73138bc062399be5f2d00a80bc03c62a2
+>>>>>>> cad6f31879e7447d848943a8d4d247d12b40e9a1
 }

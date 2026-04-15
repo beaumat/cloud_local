@@ -305,10 +305,16 @@
                             </div>
                         </div>
 =======
+<<<<<<< HEAD
+                                PAYMENT COLLECTION : <strong class="text-danger">{{ number_format($PAYMENT_AMOUNT, 2) }}</strong>
+                            </div>
+                        </div>
+=======
                                 PAYMENT COLLECTION : <strong class="text-danger" wire:click="deletePaymentProccess()" wire:confirm="Are you sure you want to delete this payment?">{{ number_format($PAYMENT_AMOUNT, 2) }}</strong>
                             </div>
                         </div>`
 >>>>>>> 3c71ebe73138bc062399be5f2d00a80bc03c62a2
+>>>>>>> cad6f31879e7447d848943a8d4d247d12b40e9a1
                     </div>
                 </div>
             </div>

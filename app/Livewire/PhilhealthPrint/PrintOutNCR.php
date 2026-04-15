@@ -6,7 +6,11 @@ use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 
+<<<<<<< HEAD
+#[Title('PhilHealth Print CF2')]
+=======
 #[Title('PhilHealth Print BPN Consent Form')]
+>>>>>>> cad6f31879e7447d848943a8d4d247d12b40e9a1
 class PrintOutNCR extends Component
 {
     

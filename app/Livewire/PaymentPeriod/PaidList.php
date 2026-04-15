@@ -6,6 +6,10 @@ use App\Services\AccountJournalServices;
 use App\Services\InvoiceServices;
 use App\Services\PaymentServices;
 =======
+<<<<<<< HEAD
+use App\Services\InvoiceServices;
+use App\Services\PaymentServices;
+=======
 use App\Services\HemoServices;
 use App\Services\InvoiceServices;
 use App\Services\PatientPaymentServices;
@@ -13,6 +17,7 @@ use App\Services\PaymentServices;
 use App\Services\PhilHealthServices;
 use App\Services\ServiceChargeServices;
 >>>>>>> 3c71ebe73138bc062399be5f2d00a80bc03c62a2
+>>>>>>> cad6f31879e7447d848943a8d4d247d12b40e9a1
 use App\Services\TaxCreditServices;
 use App\Services\UserServices;
 use Illuminate\Support\Facades\DB;
@@ -35,6 +40,10 @@ class PaidList extends Component
     public function boot(PaymentServices $paymentServices, AccountJournalServices $accountJournalServices, InvoiceServices $invoiceServices, TaxCreditServices $taxCreditServices)
     {
 =======
+<<<<<<< HEAD
+    public function boot(PaymentServices $paymentServices, AccountJournalServices $accountJournalServices, InvoiceServices $invoiceServices, TaxCreditServices $taxCreditServices)
+    {
+=======
     private $philHealthServices;
     private $patientPaymentServices;
     private $hemoServices;
@@ -49,10 +58,13 @@ class PaidList extends Component
         ServiceChargeServices $serviceChargeServices
     ) {
 >>>>>>> 3c71ebe73138bc062399be5f2d00a80bc03c62a2
+>>>>>>> cad6f31879e7447d848943a8d4d247d12b40e9a1
         $this->paymentServices        = $paymentServices;
         $this->accountJournalServices = $accountJournalServices;
         $this->invoiceServices        = $invoiceServices;
         $this->taxCreditServices      = $taxCreditServices;
+<<<<<<< HEAD
+=======
 <<<<<<< HEAD
 =======
         $this->philHealthServices     = $philHealthServices;
@@ -60,21 +72,28 @@ class PaidList extends Component
         $this->hemoServices           = $hemoServices;
         $this->serviceChargeServices  = $serviceChargeServices;
 >>>>>>> 3c71ebe73138bc062399be5f2d00a80bc03c62a2
+>>>>>>> cad6f31879e7447d848943a8d4d247d12b40e9a1
     }
     private function loadData()
     {
         $this->dataList = $this->paymentServices->getListInvoicePaymentTaxBillPhic($this->PAYMENT_PERIOD_ID);
     }
 <<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> cad6f31879e7447d848943a8d4d247d12b40e9a1
     public function callTaxCreditByPaymentID(int $PAYMENT_ID)
     {
 
         // call URL and new TAB
 
     }
+<<<<<<< HEAD
+=======
 =======
 
 >>>>>>> 3c71ebe73138bc062399be5f2d00a80bc03c62a2
+>>>>>>> cad6f31879e7447d848943a8d4d247d12b40e9a1
     public function DeletePaid(int $PAYMENT_ID)
     {
         if (! UserServices::GetUserRightAccess('customer.received-payment.delete')) {
@@ -86,6 +105,8 @@ class PaidList extends Component
         try {
 
             if ($PAYMENT_ID > 0) {
+<<<<<<< HEAD
+=======
 <<<<<<< HEAD
 =======
                 $gotTaxCreditDelete = false;
@@ -100,12 +121,16 @@ class PaidList extends Component
                     return;
                 }
 >>>>>>> 3c71ebe73138bc062399be5f2d00a80bc03c62a2
+>>>>>>> cad6f31879e7447d848943a8d4d247d12b40e9a1
                 if (! $this->PaymentdeleteEntry($PAYMENT_ID)) {
                     session()->flash('error', 'this payment already deposited');
                     DB::rollBack();
                     return;
                 }
 <<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> cad6f31879e7447d848943a8d4d247d12b40e9a1
                 $taxCredit = $this->taxCreditServices->GetListViaPayments($PAYMENT_ID);
                 foreach ($taxCredit as $tax) {
                     if ($tax->TAX_CREDIT_ID > 0) {
@@ -115,6 +140,8 @@ class PaidList extends Component
 
                 DB::commit();
                 session()->flash('message', 'Successuflly Canceld');
+<<<<<<< HEAD
+=======
 =======
                 $PH_DATA = $this->philHealthServices->getDataByPayment($PAYMENT_ID);
                 if ($PH_DATA) {
@@ -141,6 +168,7 @@ class PaidList extends Component
                 session()->flash('error', 'No philhealth entry found for this payment');
 
 >>>>>>> 3c71ebe73138bc062399be5f2d00a80bc03c62a2
+>>>>>>> cad6f31879e7447d848943a8d4d247d12b40e9a1
             }
 
         } catch (\Throwable $th) {
@@ -149,6 +177,8 @@ class PaidList extends Component
         }
 
     }
+<<<<<<< HEAD
+=======
 <<<<<<< HEAD
 =======
 
@@ -172,6 +202,7 @@ class PaidList extends Component
         $this->patientPaymentServices->PH_Delete($PATIENT_PAYMENT_ID, $phData->ID);
     }
 >>>>>>> 3c71ebe73138bc062399be5f2d00a80bc03c62a2
+>>>>>>> cad6f31879e7447d848943a8d4d247d12b40e9a1
     public function PaymentdeleteEntry(int $id): bool
     {
         $data = $this->paymentServices->get($id);

@@ -10,10 +10,16 @@
             <div class="modal-dialog modal-xl" role="document">
                 <div class="modal-content">
 =======
+<<<<<<< HEAD
+        <div class="modal" tabindex="-1" role="dialog" style="display: block; background-color: rgba(0, 0, 0, 0.5);">
+            <div class="modal-dialog modal-xl" role="document">
+                <div class="modal-content">
+=======
     <div class="modal" tabindex="-1" role="dialog" style="display: block; background-color: rgba(0, 0, 0, 0.5);">
             <div class="modal-dialog modal-xl modal-dialog-scrollable" role="document">
                 <div class="modal-content text-left">
 >>>>>>> 3c71ebe73138bc062399be5f2d00a80bc03c62a2
+>>>>>>> cad6f31879e7447d848943a8d4d247d12b40e9a1
                     <div class="modal-header">
                         <h6 class="modal-title"> Paid List </h6>
                         <button type="button" class="close" wire:click="closeModal">
